@@ -14,42 +14,42 @@ public class UIManager : Singleton<UIManager>
     public static T Show<T>(params object[] param) where T : UIBase 
     {
         var ui = Instance.uiList.Find(obj => obj.name == typeof(T).ToString());
-        //uiList¿¡ ¾ø´Ù¸é
+        //uiListì— ì—†ë‹¤ë©´
         if (ui == null)
         {
-            //UI »ı¼º , (Clone) Á¦°Å
+            //UI ìƒì„± , (Clone) ì œê±°
             var prefab = ResourceManager.Instance.LoadUIToKey<T>("UI/" + typeof(T).ToString());
             ui = Instantiate(prefab, Instance.parents[(int)prefab.uiPosition]);
             ui.name = ui.name.Replace("(Clone)", ""); 
             Instance.uiList.Add(ui);
         }
-        if (ui.uiPosition == eUIType.UI) //ShowÇÑ°Ô UI¶ó¸é
+        if (ui.uiPosition == eUIType.UI) //Showí•œê²Œ UIë¼ë©´
         {
-            //¶ç¿öÁø UI ÀüºÎ ²ö´Ù.
+            //ë„ì›Œì§„ UI ì „ë¶€ ëˆë‹¤.
             Instance.uiList.ForEach(obj =>
             {
                 if (obj.uiPosition == eUIType.UI) obj.gameObject.SetActive(false);
             });
         }
-        //UI¸¦ ÄÑÁØ´Ù.
+        //UIë¥¼ ì¼œì¤€ë‹¤.
         ui.gameObject.SetActive(true);
-        //UI ÃÊ±âÈ­
+        //UI ì´ˆê¸°í™”
         ui.Opened(param);
         return (T)ui;
     }
 
     public static void Hide<T>(params object[] param) where T : UIBase
     {
-        //ÀÖ´ÂÁö ¸ÕÀú Ã£¾Æº»´Ù.
+        //ìˆëŠ”ì§€ ë¨¼ì € ì°¾ì•„ë³¸ë‹¤.
         var ui = Instance.uiList.Find(obj => obj.name == typeof(T).ToString());
 
         if (ui != null)
         {
-            //¸®½ºÆ®¿¡¼­ Á¦°Å
+            //ë¦¬ìŠ¤íŠ¸ì—ì„œ ì œê±°
             Instance.uiList.Remove(ui);
-            if (ui.uiPosition == eUIType.UI) //UI¶ó¸é 
+            if (ui.uiPosition == eUIType.UI) //UIë¼ë©´ 
             {
-                //Àü¿¡ ¿­·ÁÀÖ´ø UI¸¦ Ã£¾Æ¼­ ¿­¾îÁÜ
+                //ì „ì— ì—´ë ¤ìˆë˜ UIë¥¼ ì°¾ì•„ì„œ ì—´ì–´ì¤Œ
                 var prevUI = Instance.uiList.FindLast(obj => obj.uiPosition == eUIType.UI);
                 prevUI.gameObject.SetActive(true);
             }
@@ -59,11 +59,11 @@ public class UIManager : Singleton<UIManager>
 
     public static T Get<T>() where T : UIBase
     {
-        //¿­·ÁÀÖ´Â UIÁ¢±Ù
+        //ì—´ë ¤ìˆëŠ” UIì ‘ê·¼
         return (T)Instance.uiList.Find(obj => obj.name == typeof(T).ToString());
     }
 
-    public static bool IsOpened<T>() where T : UIBase //UI ¿­·È´ÂÁö Ã¼Å©
+    public static bool IsOpened<T>() where T : UIBase //UI ì—´ë ¸ëŠ”ì§€ ì²´í¬
     {
         var ui = Instance.uiList.Find(obj => obj.name == typeof(T).ToString());
         return ui != null && ui.gameObject.activeInHierarchy;
