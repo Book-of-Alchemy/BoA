@@ -74,4 +74,4 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
 # ThirdParty Ignore
-[Tt]hird[Pp]arty/
+/[Aa]ssets/[Tt]hird[Pp]arty/
