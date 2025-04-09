@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class ResourceManager : Singleton<ResourceManager>
 {
-    public Dictionary<string, Object> uiList = new Dictionary<string, Object>();
+    public Dictionary<string, UIBase> uiList = new Dictionary<string, UIBase>();
     public Dictionary<string, Object> objList = new Dictionary<string, Object>();
 
-    public T LoadUIToKey<T>(string key) where T : UnityEngine.Object
+    public T LoadUIToKey<T>(string key) where T : UIBase
     {
         if (uiList.TryGetValue(key, out var obj))
         {
@@ -21,7 +21,7 @@ public class ResourceManager : Singleton<ResourceManager>
         }
     }
 
-    public T InstantiateUI<T>(string key, Transform parent = null) where T : Object
+    public T InstantiateUI<T>(string key, Transform parent = null) where T : UIBase
     {
         var asset = Instantiate(LoadUIToKey<T>(key), parent);
         return asset;

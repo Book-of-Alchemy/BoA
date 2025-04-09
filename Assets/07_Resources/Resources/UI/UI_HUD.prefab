@@ -2023,7 +2023,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 8737646691190684182}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5526132447080045211}
+        m_TargetAssemblyTypeName: UI_HUD, Assembly-CSharp
+        m_MethodName: OnClickMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &7033720217610711718
 GameObject:
   m_ObjectHideFlags: 0
@@ -2518,6 +2530,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1441600404166028396}
   - component: {fileID: 3655773796302966043}
+  - component: {fileID: 5526132447080045211}
   m_Layer: 5
   m_Name: UI_HUD
   m_TagString: Untagged
@@ -2555,6 +2568,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8423717058574918216}
   m_CullTransparentMesh: 1
+--- !u!114 &5526132447080045211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8423717058574918216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec57244766d236a4a9dd5f52f1da7a26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiPosition: 0
 --- !u!1 &8452535639243413007
 GameObject:
   m_ObjectHideFlags: 0

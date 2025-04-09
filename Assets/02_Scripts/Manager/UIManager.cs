@@ -3,7 +3,13 @@ using UnityEngine;
 public class UIManager : Singleton<UIManager>
 {
     [SerializeField] private List<Transform> parents;
-    private List<UIBase> uiList = new List<UIBase>();
+    [SerializeField] private List<UIBase> uiList = new List<UIBase>(); // SerializeField for Debugging
+
+    private void Start()
+    {
+        Show<UI_Main>();
+    }
+
 
     public static void SetParents(List<Transform> parents)
     {
@@ -51,7 +57,8 @@ public class UIManager : Singleton<UIManager>
             {
                 //전에 열려있던 UI를 찾아서 열어줌
                 var prevUI = Instance.uiList.FindLast(obj => obj.uiPosition == eUIType.UI);
-                prevUI.gameObject.SetActive(true);
+                if(prevUI != null)
+                    prevUI.gameObject.SetActive(true);
             }
             Destroy(ui.gameObject);
         }
