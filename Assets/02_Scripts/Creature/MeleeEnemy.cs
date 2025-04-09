@@ -9,7 +9,7 @@ public class MeleeEnemy : EnemyController
     {
         float tileDistance = Mathf.Abs(_player.position.x - transform.position.x) + Mathf.Abs(_player.position.y - transform.position.y);
         Vector3 targetPos = transform.position;
-
+        //적뒤에 위치한다면 감지 불가 시야범위 방향이 정해져있음.(나중에 수정할 내용)
         if (tileDistance <= _detectionRange)
         {
             Vector3 dir = (_player.position - transform.position).normalized;
