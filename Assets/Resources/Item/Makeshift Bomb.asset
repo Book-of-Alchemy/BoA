@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e179a6d497c3984fb6aa4845759d7a0, type: 3}
+  m_Name: Makeshift Bomb
+  m_EditorClassIdentifier: 
+  item_id: I0002
+  name_en: Makeshift Bomb
+  name_kr: "\uAC04\uC774 \uD3ED\uD0C4"
+  item_type: 0
+  attribute: 1
+  target_range: 5
+  effect_range: 2
+  effect_type: 0
+  tags: 000000000000000000000000
+  effect_value: 20
+  max_stack: 99
+  iteminfo_kr: "\uD3ED\uD0C4\uC744 \uB358\uC838 \uBC94\uC704 \uB0B4\uC5D0 \uD53C\uD574\uB97C
+    \uC90D\uB2C8\uB2E4."
+  icon_sprite: 
