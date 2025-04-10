@@ -34,7 +34,7 @@ public class Tile
     public bool isWalkable => CalculateIsWalkable();
     public bool isOccupied;
 
-    public bool isExplored;//향후 옵저버패턴 적용
+    public bool isExplored;//향후 옵저버패턴 적용 이는 화면 표시방식에 적용 될예정이며 실제 entity의 시야와는 별개로 이용
     public bool isOnSight;
     //위에 올라간 entity
     //위에 올라간 mapObject 인스턴스

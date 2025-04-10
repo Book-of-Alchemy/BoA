@@ -24,7 +24,7 @@ public class AstarNode
     /// </summary>
     /// <param name="forPathfinding"></param>
     /// <returns></returns>
-    public bool IsWalkable(bool forPathfinding = true)
+    public bool IsWalkable(bool forPathfinding = true)//통로생성용으로 사용시 empty는 이동 가능 길찾기용은 불가능 isDoorPoint일경우 wall도 이동가능으로 취급
     {
 
         if (tile == null) return false;

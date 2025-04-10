@@ -45,4 +45,9 @@ public class Leaf
 
         return true;
     }
+
+    public void CreateRoom()
+    {
+
+    }
 }
