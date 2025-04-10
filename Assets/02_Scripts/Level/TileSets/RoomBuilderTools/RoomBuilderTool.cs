@@ -6,7 +6,9 @@ using System.Collections.Generic;
 public class RoomBuilderTool : EditorWindow
 {
     private string roomName = "NewRoom";
+    private int id;
     private RoomType roomType = RoomType.normal;
+    private int biome_id;
     private Vector2Int roomSize = new Vector2Int(10, 10);
     private GameObject root;
 
@@ -19,7 +21,9 @@ public class RoomBuilderTool : EditorWindow
     private void OnGUI()
     {
         GUILayout.Label("Room Preset 생성", EditorStyles.boldLabel);
+        id = EditorGUILayout.IntField("Room id", id);
         roomName = EditorGUILayout.TextField("Room 이름", roomName);
+        biome_id = EditorGUILayout.IntField("Boim id", biome_id);
         roomType = (RoomType)EditorGUILayout.EnumPopup("Room 타입", roomType);
         roomSize = EditorGUILayout.Vector2IntField("Room 크기", roomSize);
         root = (GameObject)EditorGUILayout.ObjectField("Tile Root Object", root, typeof(GameObject), true);
@@ -53,9 +57,10 @@ public class RoomBuilderTool : EditorWindow
             {
                 tileInfos[pos].position = pos;
                 tileInfos[pos].tileType = tile.tileType;
+                tileInfos[pos].isDoorPoint = tile.isDoorPoint;
 
             }
-            else tileInfos.Add(pos, new TileInfoForRoom(pos, tile.tileType));
+            else tileInfos.Add(pos, new TileInfoForRoom(pos, tile.tileType, EnvironmentType.none, tile.isDoorPoint));
         }
 
         foreach (Transform child in allChildren)
@@ -78,7 +83,9 @@ public class RoomBuilderTool : EditorWindow
         //향후 맵 오브젝트 추가 예정
 
         RoomPreset preset = ScriptableObject.CreateInstance<RoomPreset>();
+        preset.id = id;
         preset.roomName = roomName;
+        preset.biome_id = biome_id;
         preset.roomType = roomType;
         preset.roomSize = roomSize;
         preset.tileInfo = tileInfos;

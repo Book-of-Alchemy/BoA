@@ -11,6 +11,8 @@ public enum BiomeType
 [CreateAssetMenu(menuName = "Map/Biome Set")]
 public class BiomeSet : ScriptableObject
 {
+    public int id;
+    public string name_kr;
     public BiomeType biomeType;
     public List<Sprite> groundTiles;
     public List<GameObject> mapObjectList;
