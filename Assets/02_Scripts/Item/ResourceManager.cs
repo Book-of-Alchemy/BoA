@@ -7,15 +7,17 @@ using static UnityEditor.Progress;
 public class ResourceManager : Singleton<ResourceManager>
 {
     private ItemData[] itemDatas;
-    private RecipeData[] recipeDatas;
+    public RecipeData[] recipeDatas;
     public Dictionary<string, ItemData> dicItemData = new Dictionary<string, ItemData>();
-    public Dictionary<string, RecipeData> dicRecipeData = new Dictionary<string, RecipeData>();
+    public Dictionary<Effect_Type,BaseItem> effectTypeData = new Dictionary<Effect_Type, BaseItem>();
+
 
 
     private const string itemPath = "Item";
     private const string recipePath = "Recipe";
-    void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         GetResources();
     }
 
@@ -37,10 +39,16 @@ public class ResourceManager : Singleton<ResourceManager>
             Debug.Log("레시피 리소스를 찾지 못했습니다.");
             return;
         }
-        for (int i = 0; i < recipeDatas.Length; i++)
-        {
-            dicRecipeData.Add(recipeDatas[i].recipe_id, recipeDatas[i]);
-        }
+        EffectTypeAdd();
+        //for (int i = 0; i < recipeDatas.Length; i++)
+        //{
+        //    dicRecipeData.Add(recipeDatas[i].recipe_id, recipeDatas[i]);
+        //}
+    }
+
+    void EffectTypeAdd()
+    {
+        effectTypeData.Add(Effect_Type.Damage, new DamageItem());
     }
 
 
