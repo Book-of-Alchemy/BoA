@@ -20,6 +20,12 @@ public class UIManager : Singleton<UIManager>
     public static T Show<T>(params object[] param) where T : UIBase 
     {
         var ui = Instance.uiList.Find(obj => obj.name == typeof(T).ToString());
+        if(IsOpened<T>())
+        {
+            Hide<T>();
+            return (T)ui;
+        }
+
         //uiList에 없다면
         if (ui == null)
         {
@@ -39,6 +45,7 @@ public class UIManager : Singleton<UIManager>
         }
         //UI를 켜준다.
         ui.gameObject.SetActive(true);
+
         //UI 초기화
         ui.Opened(param);
         return (T)ui;

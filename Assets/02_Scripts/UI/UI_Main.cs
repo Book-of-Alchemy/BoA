@@ -1,17 +1,18 @@
+using System;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class UI_Main : UIBase
 {
     [Header("Buttons")]
     [SerializeField] private Button[] _menuBtn;
+    
 
     private void Start()
     {
         _menuBtn[0].Select();
-        
-
     }
 
     public void OnClickNewGame()
