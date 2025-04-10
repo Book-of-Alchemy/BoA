@@ -11,7 +11,7 @@ public class TESTESTSETS : MonoBehaviour
     {
         GameObject Prefa = Instantiate(prefab);
         controller = Prefa.GetComponent<ItemController>();
-        controller.Init(ResourceManager.Instance.dicItemData["I0001"]);
+        controller.Init(ResourceManager.Instance.dicItemData[200001]);
     }
 
     // Update is called once per frame

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class BaseItem
 {
-    private string item_id;
+    private int? item_id;
     private string name_en;
     private Item_Type item_type;
     private Attribute attribute;
@@ -20,7 +20,7 @@ public abstract class BaseItem
 
     public virtual void Init(ItemData data)
     {
-        item_id = data.item_id;
+        item_id = data.id;
         name_en = data.name_en;
         item_type = data.item_type;
         attribute = data.attribute;

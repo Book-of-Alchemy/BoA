@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9a246e2c950990e44b1704eb4d89ffac, type: 3}
-  m_Name: Throwing Dagger
+  m_Name: Fireball Scroll
   m_EditorClassIdentifier: 
-  id: 210001
-  recipe_name_kr: "\uD22C\uCC99\uC6A9 \uB2E8\uAC80"
-  output_item_id: 200001
+  id: 210101
+  recipe_name_kr: "\uD654\uC5FC\uAD6C \uC2A4\uD06C\uB864"
+  output_item_id: 200101
   output_amount: 1
-  material_1_item_id: 201001
-  material_1_count: 2
-  material_2_item_id: 201002
-  material_2_count: 2
-  material_3_item_id: -1
-  material_3_count: 0
+  material_1_item_id: 201006
+  material_1_count: 1
+  material_2_item_id: 201007
+  material_2_count: 3
+  material_3_item_id: 201008
+  material_3_count: 2
   tags: 
   unlock_condition: default
   efficiency_rating: 0

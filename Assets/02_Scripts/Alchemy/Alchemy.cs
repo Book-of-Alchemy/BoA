@@ -8,12 +8,13 @@ public class Alchemy : MonoBehaviour
 {
     public RecipeData resultRecipe;
     public Dictionary<string, RecipeData> recipeKey = new Dictionary<string, RecipeData>();
+    private int intNullValue = -1;
     private bool isReady = false;
 
     private void Start()
     {
         Init();
-        CreateItem(ResourceManager.Instance.dicItemData["I1003"], 4, ResourceManager.Instance.dicItemData["I1005"], 3, ResourceManager.Instance.dicItemData["I1004"],6);
+        CreateItem(ResourceManager.Instance.dicItemData[201003], 4, ResourceManager.Instance.dicItemData[201006], 3, ResourceManager.Instance.dicItemData[201008],6);
     }
 
     private void Init()
@@ -31,27 +32,27 @@ public class Alchemy : MonoBehaviour
 
     private string ChangeKey(RecipeData data)
     {
-        var recipeMaterials = new List<string>();
-        if (data.material_1_item_id != null) recipeMaterials.Add(data.material_1_item_id);
-        if (data.material_2_item_id != null) recipeMaterials.Add(data.material_2_item_id);
-        if (data.material_3_item_id != null) recipeMaterials.Add(data.material_3_item_id);
+        var recipeMaterials = new List<int>();
+        if (data.material_1_item_id != intNullValue) recipeMaterials.Add(data.material_1_item_id);
+        if (data.material_2_item_id != intNullValue) recipeMaterials.Add(data.material_2_item_id);
+        if (data.material_3_item_id != intNullValue) recipeMaterials.Add(data.material_3_item_id);
         recipeMaterials.Sort();
         return string.Join("", recipeMaterials);
     }
     private string GetMaterialsKey(List<(ItemData materials, int amount)> materials)
     {
-        var curMaterials = new List<string>();
+        var curMaterials = new List<int?>();
         foreach (var material in materials)
         {
             if(material.materials!= null)
             {
-                curMaterials.Add(material.materials.item_id);
+                curMaterials.Add(material.materials.id);
             }
         }
         curMaterials.Sort();
         return string.Join("", curMaterials);
     }
-    public bool CreateItem(ItemData material1, int material1Amount, ItemData material2, int material2Amount, ItemData material3 = null, int material3Amount = 0)
+    public (bool, RecipeData) CreateItem(ItemData material1, int material1Amount, ItemData material2, int material2Amount, ItemData material3 = null, int material3Amount = 0)
     {
         List<(ItemData materials, int amount)> materials = new List<(ItemData materials, int amount)>();
         materials.Add((material1, material1Amount));
@@ -63,24 +64,27 @@ public class Alchemy : MonoBehaviour
             resultRecipe = recipeKey[curMaterialKey];
             // 레시피 존재한다면 수량 확인 후 제작
             CheckMaterial(materials[0], resultRecipe);
+            if (isReady == false) return (isReady, null);
             CheckMaterial(materials[1], resultRecipe);
+            if (isReady == false) return (isReady, null);
             CheckMaterial(materials[2], resultRecipe);
+            if (isReady == false) return (isReady, null);
         }
         else 
         {
             Debug.Log("레시피가 없습니다.");
-            return false;
+            return (isReady, null);
         }
 
         if (isReady)
         {
             Debug.Log($"제작 성공 {resultRecipe.recipe_name_kr} : {resultRecipe.output_amount} ");
-            return true; 
+            return (isReady, resultRecipe); 
         }
         else
         {
             Debug.Log("제작 실패");
-            return false;
+            return (isReady, null);
         }
         // 레시피 결과물 리턴 추가
 
@@ -94,16 +98,16 @@ public class Alchemy : MonoBehaviour
             Debug.Log("재료가 없습니다.");
             return;
         }
-        else if (materials.materials.item_id == recipe.material_1_item_id)
+        else if (materials.materials.id == recipe.material_1_item_id)
         {
             // 수량 체크
             CheckAmount(materials, recipe.material_1_count);
         }
-        else if (materials.materials.item_id == recipe.material_2_item_id)
+        else if (materials.materials.id == recipe.material_2_item_id)
         {
             CheckAmount(materials, recipe.material_2_count);
         }
-        else if (materials.materials.item_id == recipe.material_3_item_id)
+        else if (materials.materials.id == recipe.material_3_item_id)
         {
             CheckAmount(materials, recipe.material_3_count);
         }

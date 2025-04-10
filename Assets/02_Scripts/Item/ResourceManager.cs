@@ -8,9 +8,9 @@ public class ResourceManager : Singleton<ResourceManager>
 {
     private ItemData[] itemDatas;
     public RecipeData[] recipeDatas;
-    public Dictionary<string, ItemData> dicItemData = new Dictionary<string, ItemData>();
+    public Dictionary<int, ItemData> dicItemData = new Dictionary<int, ItemData>();
     public Dictionary<Effect_Type,BaseItem> effectTypeData = new Dictionary<Effect_Type, BaseItem>();
-
+    private int intNullvalue = -1;
 
 
     private const string itemPath = "Item";
@@ -31,7 +31,8 @@ public class ResourceManager : Singleton<ResourceManager>
         }
         for (int i = 0; i < itemDatas.Length; i++)
         {
-            dicItemData.Add(itemDatas[i].item_id, itemDatas[i]);
+            if (itemDatas[i].id != intNullvalue)
+            dicItemData.Add(itemDatas[i].id, itemDatas[i]);
         }
         recipeDatas = Resources.LoadAll<RecipeData>($"{recipePath}");
         if (itemDatas == null)

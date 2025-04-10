@@ -68,7 +68,7 @@ public enum Tag
 [CreateAssetMenu(fileName = "New Item", menuName = "Item")]
 public class ItemData : ScriptableObject
 {
-    public string item_id;
+    public int id;
     public string name_en;
     public string name_kr;
     public Item_Type item_type;
@@ -78,6 +78,10 @@ public class ItemData : ScriptableObject
     public Effect_Type effect_type;
     public Tag[] tags;
     public int effect_value;
+    public int effect_id;
+    public int effect_duration;
+    public int effect_strength;
+    public int mp_cost;
     public int max_stack;
     public string iteminfo_kr;
     public string icon_sprite;
