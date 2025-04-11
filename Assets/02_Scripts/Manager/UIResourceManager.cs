@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ResourceManager : Singleton<ResourceManager>
+public class UIResourceManager : Singleton<UIResourceManager>
 {
     public Dictionary<string, UIBase> uiList = new Dictionary<string, UIBase>();
     public Dictionary<string, Object> objList = new Dictionary<string, Object>();
