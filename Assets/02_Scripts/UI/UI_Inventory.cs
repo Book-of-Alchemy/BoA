@@ -26,8 +26,8 @@ public class UI_Inventory : UIBase
     }
 
     public void OnClickAddItem()
-    {
-        if(slotCount < slots.Count)
+    { 
+        if (slotCount < slots.Count)
         {
             SlotItem item = UIResourceManager.Instance.LoadAsset<SlotItem>();
             item.Init(test[Random.Range(0, test.Count)]);
