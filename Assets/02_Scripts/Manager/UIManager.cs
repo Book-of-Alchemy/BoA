@@ -31,7 +31,7 @@ public class UIManager : Singleton<UIManager>
         if (ui == null)
         {
             //UI 생성 , (Clone) 제거
-            var prefab = ResourceManager.Instance.LoadUIToKey<T>("UI/" + typeof(T).ToString());
+            var prefab = UIResourceManager.Instance.LoadUIToKey<T>("UI/" + typeof(T).ToString());
             ui = Instantiate(prefab, Instance.parents[(int)prefab.uiPosition]);
             ui.name = ui.name.Replace("(Clone)", ""); 
             Instance.uiList.Add(ui);

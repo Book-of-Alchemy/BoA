@@ -29,9 +29,9 @@ public class UI_Inventory : UIBase
     {
         if(slotCount < slots.Count)
         {
-            SlotItem item = ResourceManager.Instance.LoadAsset<SlotItem>();
+            SlotItem item = UIResourceManager.Instance.LoadAsset<SlotItem>();
             item.Init(test[Random.Range(0, test.Count)]);
-            ResourceManager.Instance.InstantiateAsset<SlotItem>(slots[slotCount++].transform);
+            UIResourceManager.Instance.InstantiateAsset<SlotItem>(slots[slotCount++].transform);
         }
     }
 }
