@@ -1,5 +1,6 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Presets;
 using UnityEngine;
 
 public enum BiomeType
@@ -16,9 +17,9 @@ public class BiomeSet : ScriptableObject
     public BiomeType biomeType;
     public List<RoomPreset> roomPresets;
     [HideInInspector]
-    public List<RoomPreset> nomalRooms;
+    public Dictionary<RoomType, List<RoomPreset>> roomsByType = new();
 
-    public List<Sprite> groundTiles;
+    public List<GroundTileSet> groundTiles;
     public List<GameObject> mapObjectList;
 
 
@@ -27,6 +28,31 @@ public class BiomeSet : ScriptableObject
 
     private void OnValidate()
     {
-        
+        CategorizeRoomPresets();
+    }
+
+    void CategorizeRoomPresets()
+    {
+        roomsByType = new();
+
+        foreach (RoomPreset preset in roomPresets)
+        {
+            if (!roomsByType.ContainsKey(preset.roomType))
+            {
+                roomsByType[preset.roomType] = new List<RoomPreset>();
+            }
+
+            roomsByType[preset.roomType].Add(preset);
+        }
+    }
+
+    public List<RoomPreset> GetPresets(RoomType type)
+    {
+        if (roomsByType.TryGetValue(type, out var presets))
+        {
+            return presets;
+        }
+
+        return new List<RoomPreset>(); // 없는 경우 빈 리스트 반환
     }
 }

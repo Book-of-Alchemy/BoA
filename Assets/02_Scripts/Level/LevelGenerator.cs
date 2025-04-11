@@ -1,4 +1,5 @@
-﻿using System.Collections;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,22 +8,57 @@ public class LevelGenerator : MonoBehaviour
     public Leaf root;
     public int roomCnt;
     public BiomeSet biomeSet;
-    List<Leaf> seletedLeaf;
-    Leaf startLeaf;
-    Leaf endLeaf;
-    List<(Leaf, Leaf)> Edges;
 
-    public Level GenerateLevel(int rootWidth, int rootHeight, int minSize, int maxSize)
+
+    public Level GenerateLevel(int rootWidth, int rootHeight, int minSize = 6, bool isBoosRoom = false)
     {
         Level level = new Level();
 
+        List<Leaf> seletedLeaves;
+        List<Leaf> extraLeaves;
+        Leaf startLeaf;
+        Leaf endLeaf;
+        Leaf trapLeaf;
+        Leaf treasureLeaf;
+        Leaf scretLeaf;
+        List<(Leaf, Leaf)> Edges;
 
         SetRoot(rootWidth, rootHeight);
-        seletedLeaf = SeletedLeaf(roomCnt, SplitMap(minSize, maxSize));
-        SelectStartAndEndLeaf(seletedLeaf, out startLeaf, out endLeaf);
-        Edges = GenerateKruskalMST(seletedLeaf);
+        SeletedLeaf(roomCnt, SplitMap(minSize), out seletedLeaves, out extraLeaves);
+        SelectStartAndEndLeaf(seletedLeaves, out startLeaf, out endLeaf);
+        Edges = GenerateKruskalMST(seletedLeaves);
+        SelectTrapAndTreasureLeaf(extraLeaves, out trapLeaf, out treasureLeaf);
+        SelectScretLeaf(extraLeaves, out scretLeaf);
 
-        return null;
+        if (trapLeaf != null && treasureLeaf != null)
+        {
+            Edges.Add((trapLeaf, treasureLeaf));
+            Edges.Add((trapLeaf, FindClosestLeaf(trapLeaf, seletedLeaves)));
+        }
+
+        if (scretLeaf != null)
+        {
+            Edges.Add((scretLeaf, FindClosestLeaf(scretLeaf, seletedLeaves)));
+        }
+
+        seletedLeaves.Add(trapLeaf);
+        seletedLeaves.Add(treasureLeaf);
+        seletedLeaves.Add(scretLeaf);
+
+        SetRoomOnLeaves(seletedLeaves);
+
+        Dictionary<Vector2Int, Tile> tiles = GenerateTilesFromLeaf(root);//우선 empty 깔고 시작
+        foreach (var tile in GatherTiles(seletedLeaves))
+        {
+            tiles[tile.Key] = tile.Value;
+        }
+
+        level.tiles = tiles;
+
+        ConnectEdgesWithPaths(Edges, level);
+
+
+        return level;
     }
 
     public void SetRoot(int width, int height)
@@ -30,7 +66,7 @@ public class LevelGenerator : MonoBehaviour
         root = new Leaf(new RectInt(0, height, width, height));
     }
 
-    public List<Leaf> SplitMap(int minSize, int maxSize)
+    public List<Leaf> SplitMap(int minSize)
     {
         List<Leaf> leaves = new List<Leaf>();
         Queue<Leaf> queue = new Queue<Leaf>();
@@ -42,35 +78,28 @@ public class LevelGenerator : MonoBehaviour
         {
             Leaf leaf = queue.Dequeue();
 
-            if (leaf.rect.width > maxSize || leaf.rect.height > maxSize)
+            if (leaf.Split(minSize))
             {
-                if (leaf.Split(minSize))
-                {
-                    queue.Enqueue(leaf.left);
-                    queue.Enqueue(leaf.right);
-                    leaves.Add(leaf.left);
-                    leaves.Add(leaf.right);
-                }
+                queue.Enqueue(leaf.left);
+                queue.Enqueue(leaf.right);
+                leaves.Add(leaf.left);
+                leaves.Add(leaf.right);
             }
-        }
 
+        }
 
         return leaves;
     }
 
-    int Compare(Leaf a, Leaf b)
+    void SeletedLeaf(int roomCnt, List<Leaf> leaves, out List<Leaf> selected, out List<Leaf> extra)
     {
-        return a.rect.x.CompareTo(b.rect.x);
-    }
-
-    List<Leaf> SeletedLeaf(int roomCnt, List<Leaf> leaves)
-    {
-        List<Leaf> selected = new List<Leaf>();
+        selected = new List<Leaf>();
+        extra = new List<Leaf>(leaves);
         HashSet<int> usedIndices = new HashSet<int>();
 
         while (selected.Count < roomCnt && usedIndices.Count < leaves.Count)
         {
-            int index = Random.Range(0, leaves.Count);
+            int index = UnityEngine.Random.Range(0, leaves.Count);
 
             if (!usedIndices.Contains(index))
             {
@@ -79,8 +108,10 @@ public class LevelGenerator : MonoBehaviour
             }
         }
 
-        selected.Sort();
-        return selected;
+        foreach (Leaf leaf in leaves)
+        {
+            extra.Remove(leaf);
+        }
     }
 
     void SelectStartAndEndLeaf(List<Leaf> selectedLeaves, out Leaf startLeaf, out Leaf endLeaf)
@@ -107,7 +138,73 @@ public class LevelGenerator : MonoBehaviour
         }
     }
 
-    public List<(Leaf, Leaf)> GenerateKruskalMST(List<Leaf> leaves,float extraConnectionChance = 0.3f)//최소신장트리 즉 모든 Leaf를 노드로 잡고 각 방의 거리를 오름차순으로 정렬하여 빠짐없이 연결하는 로직
+    void SelectTrapAndTreasureLeaf(List<Leaf> extraLeaves, out Leaf trapLeaf, out Leaf treasureLeaf)
+    {
+        trapLeaf = null;
+        treasureLeaf = null;
+
+        if (extraLeaves == null || extraLeaves.Count < 2) return;
+
+
+        int maxTries = 20;
+        int tryCount = 0;
+
+        while (tryCount < maxTries)
+        {
+            tryCount++;
+
+            Leaf baseLeaf = extraLeaves[UnityEngine.Random.Range(0, extraLeaves.Count)];
+
+            foreach (var leaf in extraLeaves)
+            {
+                if (leaf == baseLeaf) continue;
+
+                if (IsAdjacent(baseLeaf, leaf))
+                {
+                    trapLeaf = baseLeaf;
+                    treasureLeaf = leaf;
+                    return;
+                }
+            }
+        }
+
+        trapLeaf.roomType = RoomType.trap;
+        treasureLeaf.roomType = RoomType.treasure;
+        extraLeaves.Remove(trapLeaf);
+        extraLeaves.Remove(treasureLeaf);
+    }
+
+    void SelectScretLeaf(List<Leaf> extraLeaves, out Leaf scretLeaf, float scretLeafChance = 0.5f)
+    {
+        scretLeaf = null;
+
+        if (extraLeaves == null) return;
+
+        if (UnityEngine.Random.value < scretLeafChance)
+            scretLeaf = extraLeaves[UnityEngine.Random.Range(0, extraLeaves.Count)];
+
+        scretLeaf.roomType = RoomType.secret;
+        extraLeaves.Remove(scretLeaf);
+    }
+
+    Leaf FindClosestLeaf(Leaf leaf, List<Leaf> leaves)
+    {
+        float minDistance = float.MaxValue;
+        Leaf closestLeaf = null;
+        foreach (var compare in leaves)
+        {
+            if (compare == leaf) continue;
+
+            float distance = Vector2.Distance(leaf.rect.center, compare.rect.center);
+            if (distance < minDistance)
+                closestLeaf = compare;
+        }
+
+        return closestLeaf;
+    }
+
+
+    public List<(Leaf, Leaf)> GenerateKruskalMST(List<Leaf> leaves, float extraConnectionChance = 0.3f)//최소신장트리 즉 모든 Leaf를 노드로 잡고 각 방의 거리를 오름차순으로 정렬하여 빠짐없이 연결하는 로직
     {
         List<(Leaf, Leaf, float)> edges = new();//튜플리스트 처음써봄 ㄹㅇ
 
@@ -120,7 +217,7 @@ public class LevelGenerator : MonoBehaviour
             }
         }
 
-        edges.Sort((a, b) => a.Item3.CompareTo(b.Item3));//거리에 따라 오름차순 정렬 튜플 람다식알아보다 머리터짐 ㄹㅇ 가까운방부터 순서대로 정렬한다.
+        edges.Sort((a, b) => a.Item3.CompareTo(b.Item3));//거리에 따라 오름차순 정렬  가까운방부터 순서대로 정렬한다.
 
 
         Dictionary<Leaf, Leaf> parent = new(); //  유니온-파인드 구조 초기화 쿠르스칼에서 쓰는 방식 Prisma에선 start에서 가장가까운것을 연결하나 연결구조가 좋지않다.
@@ -145,16 +242,6 @@ public class LevelGenerator : MonoBehaviour
                 parent[rootA] = rootB;
         }
 
-        bool IsAdjacent(Leaf a, Leaf b)
-        {
-            return a.rect.Overlaps(ExpandRect(b.rect,1)); //b 크기를 1 늘려서 겹치는지 확인
-        }
-
-        RectInt ExpandRect(RectInt rect, int amount)
-        {
-            return new RectInt(rect.x - amount, rect.y - amount, rect.width + 2 * amount, rect.height + 2 * rect.height);
-        }
-
         List<(Leaf, Leaf)> mstEdges = new();//간선 리스트
         List<(Leaf, Leaf)> extraEdges = new();//추가 연결 위한 리스트
         foreach (var (a, b, _) in edges)//_는 사용하지 않는다는 의미 아무거나 넣어도 무방 튜플 역시 var()로 통일가능
@@ -172,7 +259,7 @@ public class LevelGenerator : MonoBehaviour
 
         foreach (var (a, b) in extraEdges)
         {
-            if (IsAdjacent(a, b) && Random.value < extraConnectionChance)
+            if (IsAdjacent(a, b) && UnityEngine.Random.value < extraConnectionChance)
             {
                 mstEdges.Add((a, b)); //30퍼 확률로 연결된 인접한 leaf연결
             }
@@ -180,14 +267,250 @@ public class LevelGenerator : MonoBehaviour
 
         return mstEdges;
     }
-
-
-
-    Dictionary<Vector2Int, Tile> SetTiles(List<Leaf> leaves, RoomPreset room = null)
+    bool IsAdjacent(Leaf a, Leaf b)
     {
-        Dictionary<Vector2Int, Tile> tiles = new ();
+        return a.rect.Overlaps(ExpandRect(b.rect, 1)); //b 크기를 1 늘려서 겹치는지 확인
+    }
 
+    RectInt ExpandRect(RectInt rect, int amount)
+    {
+        return new RectInt(rect.x - amount, rect.y - amount, rect.width + 2 * amount, rect.height + 2 * rect.height);
+    }
+
+    RoomPreset GetFittableRoom(Leaf leaf, RoomType type)
+    {
+        if (biomeSet == null) return null;
+
+        List<RoomPreset> roomList = biomeSet.GetPresets(type);
+        RoomPreset room = null;
+
+        int maxTries = 20;
+        int tryCount = 0;
+
+        while (tryCount < maxTries)
+        {
+            tryCount++;
+
+            room = roomList[UnityEngine.Random.Range(0, roomList.Count)];
+
+            Vector2Int roomSize = room.roomSize;
+            LeafSizeType leafType = leaf.leafSizeType;
+
+            switch (leafType)
+            {
+                case LeafSizeType.small:
+                    if (roomSize.x > leaf.maxSmallSize - 1 || roomSize.y > leaf.maxSmallSize - 1)
+                        return null; // 너무 큼
+                    if (roomSize.x < leaf.minSmallSize - 1 || roomSize.y < leaf.minSmallSize - 1)
+                        continue; // 너무 작음
+                    return room;
+
+                case LeafSizeType.medium:
+                    if (roomSize.x > leaf.maxMediumSize - 1 || roomSize.y > leaf.maxMediumSize - 1)
+                        return null;
+                    if (roomSize.x < leaf.minMediumSize - 1 || roomSize.y < leaf.minMediumSize - 1)
+                        continue;
+                    return room;
+
+                case LeafSizeType.large:
+                    if (roomSize.x > leaf.maxLargesize - 1 || roomSize.y > leaf.maxLargesize - 1)
+                        return null;
+                    if (roomSize.x < leaf.minLargeSize - 1 || roomSize.y < leaf.minLargeSize - 1)
+                        continue;
+                    return room;
+            }
+        }
+
+        return null; // 조건에 맞는 방을 찾지 못함
+    }
+
+    void SetRoomOnLeaves(List<Leaf> leaves)
+    {
+        foreach (Leaf leaf in leaves)
+        {
+            switch (leaf.roomType)
+            {
+                case RoomType.secret:
+                    leaf.room = GetFittableRoom(leaf, RoomType.secret);
+                    if (leaf.room == null)
+                    {
+                        leaf.room = GetFittableRoom(leaf, RoomType.normal);
+                    }
+                    break;
+                case RoomType.trap:
+                    leaf.room = GetFittableRoom(leaf, RoomType.trap);
+                    if (leaf.room == null)
+                    {
+                        leaf.room = GetFittableRoom(leaf, RoomType.normal);
+                    }
+                    break;
+                case RoomType.treasure:
+                    leaf.room = GetFittableRoom(leaf, RoomType.treasure);
+                    if (leaf.room == null)
+                    {
+                        leaf.room = GetFittableRoom(leaf, RoomType.normal);
+                    }
+                    break;
+                default:
+                    leaf.room = GetFittableRoom(leaf, RoomType.normal);
+                    break;
+            }
+        }
+    }
+
+    Dictionary<Vector2Int, Tile> GenerateTilesFromLeaf(Leaf leaf)
+    {
+        Dictionary<Vector2Int, Tile> tiles = new();
+        RectInt rect = leaf.rect;
+
+        if (leaf.room != null && leaf.room.tileInfo != null)
+        {
+            int maxX = rect.width - leaf.room.roomSize.x;
+            int maxY = rect.height - leaf.room.roomSize.y;
+            Vector2Int randOffset = new Vector2Int(UnityEngine.Random.Range(0, maxX), UnityEngine.Random.Range(0, maxY));
+            Vector2Int centerPos = (rect.position + randOffset + leaf.room.roomSize) / 2;
+            // RoomPreset 기반 타일 생성
+            foreach (var tileInfo in leaf.room.tileInfo)
+            {
+                Vector2Int pos = rect.position + randOffset + tileInfo.Key;
+                TileInfoForRoom info = tileInfo.Value;
+
+                Tile tile = new Tile
+                {
+                    gridPosition = pos,
+                    tileType = info.tileType,
+                    environment = info.environmentType,
+                    isDoorPoint = info.isDoorPoint,
+                    isOccupied = false,
+                    isExplored = false,
+                    isOnSight = false
+                };
+
+                tiles[pos] = tile;
+
+                if (tile.isDoorPoint)
+                    leaf.doorPoint.Add(tile);
+
+                if (pos == centerPos)
+                    leaf.centerTile = tile;
+            }
+        }
+        else
+        {
+            for (int x = rect.x; x < rect.x + rect.width; x++)
+            {
+                for (int y = rect.y; y < rect.y - rect.height; y--)
+                {
+                    Vector2Int pos = new Vector2Int(x, y);
+                    Tile tile = new Tile
+                    {
+                        gridPosition = pos,
+                        tileType = TileType.empty,
+                        environment = EnvironmentType.none,
+                        isDoorPoint = false,
+                        isOccupied = false,
+                        isExplored = false,
+                        isOnSight = false
+                    };
+
+                    tiles[pos] = tile;
+                }
+            }
+        }
 
         return tiles;
     }
+
+
+    Dictionary<Vector2Int, Tile> GatherTiles(List<Leaf> leaves)
+    {
+        Dictionary<Vector2Int, Tile> allTiles = new();
+
+        foreach (var leaf in leaves)
+        {
+            Dictionary<Vector2Int, Tile> leafTiles = GenerateTilesFromLeaf(leaf);
+
+            foreach (var tiles in leafTiles)
+            {
+                allTiles[tiles.Key] = tiles.Value;
+            }
+        }
+
+        return allTiles;
+    }
+
+    void ConnectEdgesWithPaths(List<(Leaf, Leaf)> edges, Level level)
+    {
+        foreach (var (a, b) in edges)
+        {
+            if (a.centerTile == null || b.centerTile == null) continue;
+
+            Tile doorA = FindClosestDoorPoint(a, b.centerTile.gridPosition);
+            Tile doorB = FindClosestDoorPoint(b, a.centerTile.gridPosition);
+
+            if (doorA == null || doorB == null) continue;
+
+            List<Tile> path = AStarPathfinder.FindPath(doorA, doorB, level, false);
+
+            if (path != null)
+            {
+                foreach (var tile in path)
+                {
+                    level.tiles[tile.gridPosition].tileType = TileType.ground;
+                }
+
+                level.tiles[doorA.gridPosition].tileType = TileType.ground;
+                level.tiles[doorB.gridPosition].tileType = TileType.ground;
+                level.tiles[doorA.gridPosition].isDoorPoint = false;
+                level.tiles[doorB.gridPosition].isDoorPoint = false;
+            }
+        }
+    }
+
+    Tile FindClosestDoorPoint(Leaf leaf, Vector2Int target)
+    {
+        float minDist = float.MaxValue;
+        Tile closest = null;
+
+        foreach (var door in leaf.doorPoint)
+        {
+            float dist = Vector2Int.Distance(door.gridPosition, target);
+            if (dist < minDist)
+            {
+                minDist = dist;
+                closest = door;
+            }
+        }
+
+        return closest;
+    }
+
+    void FillAutoWalls(Level level)
+    {
+        Dictionary<Vector2Int, Tile> tiles = level.tiles;
+        Dictionary<Vector2Int, Tile> newWalls = new();
+
+
+
+        
+        foreach (var wall in newWalls)
+        {
+            tiles[wall.Key] = wall.Value;
+        }
+    }
+
+    Tile CreateWallTile(Vector2Int pos)
+    {
+        return new Tile
+        {
+            gridPosition = pos,
+            tileType = TileType.wall,
+            environment = EnvironmentType.none,
+            isDoorPoint = false,
+            isOccupied = false,
+            isExplored = false,
+            isOnSight = false
+        };
+    }
+
 }

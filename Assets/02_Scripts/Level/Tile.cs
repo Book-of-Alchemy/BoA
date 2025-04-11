@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
@@ -21,6 +21,8 @@ public enum EnvironmentType
     water,
 }
 
+
+
 [System.Serializable]
 public class Tile
 {
@@ -31,11 +33,12 @@ public class Tile
 
     public int MoveCost => CalculateMoveCost();
     public int AstarCost => CalculateAstarCost();
-    public bool isWalkable => CalculateIsWalkable();
+    public bool IsWalkable => CalculateIsWalkable();
     public bool isOccupied;
 
     public bool isExplored;//향후 옵저버패턴 적용 이는 화면 표시방식에 적용 될예정이며 실제 entity의 시야와는 별개로 이용
     public bool isOnSight;
+    public CharacterStats characterStats;
     //위에 올라간 entity
     //위에 올라간 mapObject 인스턴스
 
@@ -81,4 +84,5 @@ public class Tile
 
         return isWalkable;
     }
+
 }
