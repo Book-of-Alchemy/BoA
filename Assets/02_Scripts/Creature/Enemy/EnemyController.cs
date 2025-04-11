@@ -10,8 +10,8 @@ public enum EnemyAIType
 public class EnemyController : MonoBehaviour
 {
     public EnemyAIType AIType = EnemyAIType.BasicTracking;
-    public float MoveSpeed = 3f;      // 기본 이동 속도 (카드널 기준)
-    public float DetectionRange = 10f; // 플레이어 인식 범위 (그리드 단위)
+    public float MoveSpeed = 3f;      // 기본 이동 속도
+    public float DetectionRange = 10f; // 플레이어 인식 범위
 
     private bool _isMoving = false;
     private PlayerStats _playerStats;
@@ -80,12 +80,12 @@ public class EnemyController : MonoBehaviour
     }
 
     // 대상 셀까지 부드럽게 이동하는 코루틴  
-    // targetCell은 바닥 좌표이므로, 목표 센터는 targetCell + (0.5, 0.5)
+    // targetCell은 바닥 좌표, 목표 센터는 targetCell + (0.5, 0.5)
     private IEnumerator MoveToTarget(Vector3 targetCell, bool isDiagonal = false)
     {
         _isMoving = true;
         Vector3 destination = targetCell + new Vector3(0.5f, 0.5f, 0);
-        float effectiveSpeed = MoveSpeed; // 필요시 isDiagonal에 따라 조정 가능
+        float effectiveSpeed = MoveSpeed; // 필요하면 조정 가능
 
         while ((destination - transform.position).sqrMagnitude > 0.001f)
         {
