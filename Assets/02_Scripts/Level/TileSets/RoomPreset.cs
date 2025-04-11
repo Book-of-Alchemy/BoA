@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -29,7 +29,9 @@ public class TileInfoForRoom
         this.isDoorPoint = isDoorPoint;
     }
 }
-
+/// <summary>
+/// 타일 배치는 항상 roomsize에서 상하좌우로 한칸씩 이격하여 만들어야함!!
+/// </summary>
 [CreateAssetMenu(fileName = "RoomPreset", menuName = "Map/Room Preset")]
 public class RoomPreset : ScriptableObject
 {

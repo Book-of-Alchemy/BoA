@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -29,6 +29,6 @@ public class AstarNode
 
         if (tile == null) return false;
 
-        return forPathfinding ? tile.isWalkable : tile.isDoorPoint || tile.tileType == TileType.empty || tile.isWalkable;
+        return forPathfinding ? tile.IsWalkable : tile.isDoorPoint || tile.tileType == TileType.empty || tile.IsWalkable;
     }
 }
