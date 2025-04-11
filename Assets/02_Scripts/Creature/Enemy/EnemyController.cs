@@ -40,12 +40,24 @@ public class EnemyController : MonoBehaviour
         yield break;
     }
 
-    // 기본 추적형 AI: 플레이어가 인식 범위 내이면 한 셀 단위 직선으로 이동
+    // 기본 추적형 AI: 플레이어가 인식 범위 내이면 한 칸 단위 직선으로 이동
     private IEnumerator HandleBasicTracking()
     {
-        Vector3 enemyCenter = GetGridCenter(transform.position);
-        Vector3 playerCenter = _playerStats != null ? GetGridCenter(_playerStats.transform.position) : enemyCenter;
-        float distance = Vector2.Distance(new Vector2(enemyCenter.x, enemyCenter.y), new Vector2(playerCenter.x, playerCenter.y));
+        // 현재 위치의 바닥 좌표 계산 (바둑판 셀의 좌측 하단 좌표)
+        Vector3 currentCell = new Vector3(Mathf.Floor(transform.position.x),
+                                          Mathf.Floor(transform.position.y),
+                                          transform.position.z);
+        // 현재 셀의 중앙 위치 구함
+        Vector3 enemyCenter = currentCell + new Vector3(0.5f, 0.5f, 0);
+
+        // 플레이어 위치도 동일하게 계산
+        Vector3 playerCell = new Vector3(Mathf.Floor(_playerStats.transform.position.x),
+                                         Mathf.Floor(_playerStats.transform.position.y),
+                                         _playerStats.transform.position.z);
+        Vector3 playerCenter = playerCell + new Vector3(0.5f, 0.5f, 0);
+
+        float distance = Vector2.Distance(new Vector2(enemyCenter.x, enemyCenter.y),
+                                          new Vector2(playerCenter.x, playerCenter.y));
 
         if (distance <= DetectionRange)
         {
@@ -54,7 +66,10 @@ public class EnemyController : MonoBehaviour
             float dirY = Mathf.Abs(delta.y) > 0.1f ? Mathf.Sign(delta.y) : 0f;
 
             bool isDiagonal = (dirX != 0f && dirY != 0f);
-            Vector3 targetCell = enemyCenter + new Vector3(dirX, dirY, 0);
+
+            // 목표 셀의 바닥 좌표: 현재 셀에서 (dirX, dirY)만큼 이동
+            Vector3 targetCell = currentCell + new Vector3(dirX, dirY, 0);
+            // MoveToTarget()에서는 바닥 좌표에 (0.5, 0.5)를 더해 센터를 구함
             yield return StartCoroutine(MoveToTarget(targetCell, isDiagonal));
         }
         else
@@ -64,22 +79,13 @@ public class EnemyController : MonoBehaviour
         yield break;
     }
 
-    // 현재 pos를 기준으로 그리드 셀 중앙 좌표 반환
-    private Vector3 GetGridCenter(Vector3 pos)
-    {
-        float x = Mathf.Floor(pos.x) + 0.5f;
-        float y = Mathf.Floor(pos.y) + 0.5f;
-        return new Vector3(x, y, pos.z);
-    }
-
     // 대상 셀까지 부드럽게 이동하는 코루틴  
-    // MoveSpeed는 카드널 이동 속도이며, 대각 이동이면 피타고라스 계산에 따라 effective 속도 사용
+    // targetCell은 바닥 좌표이므로, 목표 센터는 targetCell + (0.5, 0.5)
     private IEnumerator MoveToTarget(Vector3 targetCell, bool isDiagonal = false)
     {
         _isMoving = true;
-        // 목표 pos = target 셀의 중심 (0.5 오프셋)
         Vector3 destination = targetCell + new Vector3(0.5f, 0.5f, 0);
-        float effectiveSpeed = isDiagonal ? MoveSpeed / Mathf.Sqrt(2f) : MoveSpeed;
+        float effectiveSpeed = MoveSpeed; // 필요시 isDiagonal에 따라 조정 가능
 
         while ((destination - transform.position).sqrMagnitude > 0.001f)
         {

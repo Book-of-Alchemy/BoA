@@ -78,6 +78,7 @@ public class TurnManager : MonoBehaviour
         Player.ActionPoints = 1.0f;
         CurrentTurn = TurnState.PlayerTurn;
         _isEnemyTurnRunning = false;
+        Debug.Log("복구된 행동력: " + Player.ActionPoints);
         yield break;
     }
 }

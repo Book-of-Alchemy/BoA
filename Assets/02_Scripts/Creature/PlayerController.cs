@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     public float MoveSpeed = 5f;    // 기본 이동 속도 (카드널 이동 기준)
     public float DashSpeed = 10f;   // 대시 속도 (참고용)
     private bool _isMoving = false;
+    public float MoveActionCost = 1.0f; // 이동 시 소모하는 행동력
     private Vector3 _targetPosition;
 
     public LayerMask ObstacleLayer; // 대시 중 장애물 체크용
@@ -111,7 +112,6 @@ public class PlayerController : MonoBehaviour
     }
 
     // 목표 pos까지 부드럽게 이동하는 코루틴
-    // isDiagonal이 true이면 대각 이동이므로 effective 속도를 조정
     IEnumerator MoveToTarget(Vector3 destination, bool isDiagonal = false)
     {
         _isMoving = true;
@@ -124,6 +124,13 @@ public class PlayerController : MonoBehaviour
         }
         transform.position = destination;
         _isMoving = false;
+        // 이동이 끝난 후 ActionPoints 차감
+        PlayerStats playerStats = GetComponent<PlayerStats>();
+        if (playerStats != null)
+        {
+            playerStats.ActionPoints -= MoveActionCost;
+            Debug.Log("ActionPoints 소모됨: " + MoveActionCost + " 남은 행동력: " + playerStats.ActionPoints);
+        }
         yield break;
     }
 

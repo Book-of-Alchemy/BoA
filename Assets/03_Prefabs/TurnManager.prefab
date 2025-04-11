@@ -44,5 +44,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5da92866adc06e049992bf8d27f69083, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _enemies:
-  - {fileID: 0}
+  CurrentTurn: 0
+  Player: {fileID: 0}
