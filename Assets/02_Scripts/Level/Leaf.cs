@@ -6,7 +6,7 @@ public class Leaf
 {
     public RectInt rect; 
     public Leaf left, right; // 분할된 자식
-    public RectInt? room; 
+    public RoomPreset room; 
 
     public Leaf(RectInt rect)
     {

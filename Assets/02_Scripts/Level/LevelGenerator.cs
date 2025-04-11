@@ -6,6 +6,7 @@ public class LevelGenerator : MonoBehaviour
 {
     public Leaf root;
     public int roomCnt;
+    public BiomeSet biomeSet;
     List<Leaf> seletedLeaf;
     Leaf startLeaf;
     Leaf endLeaf;
@@ -182,8 +183,11 @@ public class LevelGenerator : MonoBehaviour
 
 
 
-    void SetRoomPreset(List<Leaf> leaves)
+    Dictionary<Vector2Int, Tile> SetTiles(List<Leaf> leaves, RoomPreset room = null)
     {
+        Dictionary<Vector2Int, Tile> tiles = new ();
 
+
+        return tiles;
     }
 }
