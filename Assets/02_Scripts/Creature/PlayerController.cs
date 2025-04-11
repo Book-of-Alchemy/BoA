@@ -10,19 +10,19 @@ public class PlayerController : MonoBehaviour
     private InputAction _menuAction;
     private InputAction _dashAction;
 
-    public float MoveSpeed = 5f;    // 이동 속도
+    public float MoveSpeed = 5f;    // 기본 이동 속도 (카드널 이동 기준)
     public float DashSpeed = 10f;   // 대시 속도 (참고용)
     private bool _isMoving = false;
     private Vector3 _targetPosition;
 
-    public LayerMask ObstacleLayer; // 대시 중 장애물(적, 함정, 이동 불가 타일 등) 체크용
+    public LayerMask ObstacleLayer; // 대시 중 장애물 체크용
 
     // 마지막 이동 방향 (대시 시 사용)
     private Vector2 _lastMoveDirection = Vector2.down;
 
     void Awake()
     {
-        // 이동 액션 (WASD, 2D 벡터 조합)
+        // 이동 액션 (WASD, 2D 벡터 조합 - 대각 입력도 가능)
         _moveAction = new InputAction("Move", InputActionType.Value, binding: "2DVector");
         _moveAction.AddCompositeBinding("2DVector")
             .With("Up", "<Keyboard>/w")
@@ -71,41 +71,55 @@ public class PlayerController : MonoBehaviour
             // 마지막 이동 방향 갱신
             _lastMoveDirection = input;
 
-            // 현재 pos를 그리드 좌표로 변환 후 이동 벡터 더함
-            Vector3 currentGrid = new Vector3(Mathf.Floor(transform.position.x), Mathf.Floor(transform.position.y), transform.position.z);
-            Vector3 moveVector = new Vector3(input.x, input.y, 0);
-            Vector3 newGridPos = currentGrid + moveVector;
+            // 현재 위치의 그리드 셀 좌측 하단 좌표
+            Vector3 currentCell = new Vector3(Mathf.Floor(transform.position.x), Mathf.Floor(transform.position.y), transform.position.z);
+            Vector3 offset;
+            bool isDiagonal = false;
 
-            // 그리드 셀 중앙(오프셋 0.5)으로 목표 pos 설정
-            _targetPosition = new Vector3(newGridPos.x + 0.5f, newGridPos.y + 0.5f, transform.position.z);
+            // x, y 모두 0이 아니면 대각 이동으로 판단
+            if (Mathf.Abs(input.x) > 0.01f && Mathf.Abs(input.y) > 0.01f)
+            {
+                isDiagonal = true;
+                offset = new Vector3(Mathf.Sign(input.x), Mathf.Sign(input.y), 0);
+            }
+            else
+            {
+                offset = new Vector3(input.x, input.y, 0);
+            }
+            // 최종 목적지: 현재 셀에 offset 후, 셀 중심 오프셋 (0.5, 0.5)
+            Vector3 targetCell = currentCell + offset;
+            _targetPosition = targetCell + new Vector3(0.5f, 0.5f, 0);
 
-            // 목표 pos로 이동 코루틴 호출
-            StartCoroutine(MoveToTarget(_targetPosition));
+            // 대각이면 effective 속도를 조정해서 최종 목적지까지 직선 이동
+            StartCoroutine(MoveToTarget(_targetPosition, isDiagonal));
         }
 
         if (_confirmAction.triggered)
-            Debug.Log("상호작용"); // 상호작용, 아이템 사용, 대화, 메뉴 진입 등 처리
+            Debug.Log("Confirm pressed"); // 상호작용, 아이템 사용, 대화, 메뉴 진입 등 처리
 
         if (_cancelAction.triggered)
-            Debug.Log("취소 누름"); // 선택 취소, 메뉴 닫기, 대화 스킵 등 처리
+            Debug.Log("Cancel pressed");  // 선택 취소, 메뉴 닫기, 대화 스킵 등 처리
 
         if (_menuAction.triggered)
-            Debug.Log("메뉴누름"); // 인벤토리/제작 등 주요 메뉴 호출 처리
+            Debug.Log("Menu pressed");    // 인벤토리/제작 메뉴 호출 처리
 
         if (_dashAction.triggered)
         {
-            Debug.Log("대쉬 활성화");
+            Debug.Log("Dash activated");
             StartCoroutine(Dash(_lastMoveDirection));
         }
     }
 
     // 목표 pos까지 부드럽게 이동하는 코루틴
-    IEnumerator MoveToTarget(Vector3 destination)
+    // isDiagonal이 true이면 대각 이동이므로 effective 속도를 조정
+    IEnumerator MoveToTarget(Vector3 destination, bool isDiagonal = false)
     {
         _isMoving = true;
+        float effectiveSpeed = MoveSpeed;//혹시 속도를 빨리해야될수도 있을것같아서 추가
+
         while ((destination - transform.position).sqrMagnitude > 0.001f)
         {
-            transform.position = Vector3.MoveTowards(transform.position, destination, MoveSpeed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, destination, effectiveSpeed * Time.deltaTime);
             yield return null;
         }
         transform.position = destination;
@@ -113,23 +127,25 @@ public class PlayerController : MonoBehaviour
         yield break;
     }
 
-    // 대시 코루틴: 최대 지정 칸만큼 이동, 장애물 감지 시 중지
+    // 대시 코루틴: 대시도 입력이 대각이면 동일하게 처리 (여기서는 단순히 여러 칸을 연속 직선 이동)
     IEnumerator Dash(Vector2 direction)
     {
         int maxCells = 3;  // 대시 최대 칸 수
         int cellsMoved = 0;
 
+        // 대시 시에도 대각, 단일 방향 모두 적용
+        bool isDiagonal = Mathf.Abs(direction.x) > 0.01f && Mathf.Abs(direction.y) > 0.01f;
+
         while (cellsMoved < maxCells)
         {
-            Vector3 currentGrid = new Vector3(Mathf.Floor(transform.position.x), Mathf.Floor(transform.position.y), transform.position.z);
-            Vector3 nextGrid = currentGrid + new Vector3(direction.x, direction.y, 0);
-            Vector3 destination = new Vector3(nextGrid.x + 0.5f, nextGrid.y + 0.5f, transform.position.z);
+            Vector3 currentCell = new Vector3(Mathf.Floor(transform.position.x), Mathf.Floor(transform.position.y), transform.position.z);
+            Vector3 nextCell = currentCell + new Vector3(Mathf.Sign(direction.x), Mathf.Sign(direction.y), 0);
+            Vector3 destination = nextCell + new Vector3(0.5f, 0.5f, 0);
 
-            // 목적지가 장애물인 경우 대시 중지
             if (Physics2D.OverlapPoint(destination, ObstacleLayer))
                 break;
 
-            yield return StartCoroutine(MoveToTarget(destination));
+            yield return StartCoroutine(MoveToTarget(destination, isDiagonal));
             cellsMoved++;
         }
         yield break;
