@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e179a6d497c3984fb6aa4845759d7a0, type: 3}
+  m_Name: Lesser Weakening Scroll
+  m_EditorClassIdentifier: 
+  id: 200103
+  name_en: "\uD558\uAE09 \uC57D\uD654 \uC2A4\uD06C\uB864"
+  name_kr: Lesser Weakening Scroll
+  item_type: 0
+  attribute: 9
+  target_range: 0
+  effect_range: 3
+  effect_type: 3
+  tags: 
+  effect_value: 0
+  effect_id: 220001
+  effect_duration: 5
+  effect_strength: 30
+  mp_cost: 10
+  max_stack: 99
+  iteminfo_kr: "\uC8FC\uBCC0 \uC801\uB4E4\uC758 \uACF5\uACA9\uB825\uC744 5\uD134\uAC04
+    \uB0AE\uCDA5\uB2C8\uB2E4."
+  icon_sprite: 
