@@ -4,13 +4,6 @@ using System.Collections;
 public abstract class EnemyController : Character
 {
     [SerializeField] protected Transform _player;
-    protected EnemyState _state = EnemyState.Patrol;
-
-    protected virtual void Awake()
-    {
-        if (TurnManager.Instance != null)
-            TurnManager.Instance.AddEnemy(this);
-    }
 
     protected virtual void Start()
     {
@@ -18,12 +11,23 @@ public abstract class EnemyController : Character
             _player = GameManager.Instance.PlayerTransform;
     }
 
-    public IEnumerator ExecuteTurn()
+    public virtual void Act()
+    {
+        StartCoroutine(ExecuteTurn());
+    }
+
+    private IEnumerator ExecuteTurn()
     {
         yield return StartCoroutine(EnemyTurnRoutine());
     }
 
     protected abstract IEnumerator EnemyTurnRoutine();
+
+    protected override void Die()
+    {
+        base.Die();
+        TurnManager.Instance.RemoveEnemy(this);
+    }
 }
 
 public enum EnemyState

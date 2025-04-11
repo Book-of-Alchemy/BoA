@@ -3,28 +3,43 @@ using System.Collections;
 
 public class MeleeEnemy : EnemyController
 {
-    [SerializeField] private float _detectionRange = 5f;
+    [SerializeField] private int _detectionRange = 5;
 
     protected override IEnumerator EnemyTurnRoutine()
     {
-        float tileDistance = Mathf.Abs(_player.position.x - transform.position.x) + Mathf.Abs(_player.position.y - transform.position.y);
-        Vector3 targetPos = transform.position;
-        //적뒤에 위치한다면 감지 불가 시야범위 방향이 정해져있음.(나중에 수정할 내용)
-        if (tileDistance <= _detectionRange)
+        if (_player == null || Stats.CurrentHp <= 0)
+            yield break;
+
+        Vector3Int playerCell = Vector3Int.FloorToInt(_player.position);
+        Vector3Int selfCell = Vector3Int.FloorToInt(transform.position);
+
+        int dist = Mathf.Abs(playerCell.x - selfCell.x) + Mathf.Abs(playerCell.y - selfCell.y);
+
+        if (dist == 1)
+        {
+            Character target = _player.GetComponent<Character>();
+            if (target != null)
+            {
+                Attack(target);
+                yield return new WaitForSeconds(0.2f);
+                yield break;
+            }
+        }
+
+        if (dist <= _detectionRange)
         {
             Vector3 dir = (_player.position - transform.position).normalized;
-            Vector2 moveDir = Mathf.Abs(dir.x) > Mathf.Abs(dir.y)
-                ? new Vector2(Mathf.Sign(dir.x), 0)
-                : new Vector2(0, Mathf.Sign(dir.y));
-            targetPos += new Vector3(moveDir.x, moveDir.y, 0);
+            Vector2Int moveDir = Mathf.Abs(dir.x) > Mathf.Abs(dir.y)
+                ? new Vector2Int((int)Mathf.Sign(dir.x), 0)
+                : new Vector2Int(0, (int)Mathf.Sign(dir.y));
+
+            yield return StartCoroutine(Move(moveDir));
         }
         else
         {
-            Vector2[] dirs = { Vector2.up, Vector2.down, Vector2.left, Vector2.right };
-            Vector2 randDir = dirs[Random.Range(0, dirs.Length)];
-            targetPos += new Vector3(randDir.x, randDir.y, 0);
+            Vector2Int[] dirs = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+            Vector2Int randDir = dirs[Random.Range(0, dirs.Length)];
+            yield return StartCoroutine(Move(randDir));
         }
-
-        yield return StartCoroutine(Move(targetPos));
     }
 }

@@ -10,7 +10,6 @@ public class TurnManager : MonoBehaviour
     public Turn CurrentTurn { get; private set; } = Turn.Player;
 
     [SerializeField] private List<EnemyController> _enemies = new List<EnemyController>();
-    private bool _isProcessingTurn = false;
 
     private void Awake()
     {
@@ -20,12 +19,10 @@ public class TurnManager : MonoBehaviour
 
     public void EndTurn()
     {
-        if (_isProcessingTurn) return;
-
         if (CurrentTurn == Turn.Player)
         {
             CurrentTurn = Turn.Enemy;
-            StartCoroutine(EnemyTurnRoutine());
+            StartCoroutine(EnemyTurnCycle());
         }
         else
         {
@@ -33,24 +30,35 @@ public class TurnManager : MonoBehaviour
         }
     }
 
-    private IEnumerator EnemyTurnRoutine()
+    private IEnumerator EnemyTurnCycle()
     {
-        _isProcessingTurn = true;
-
+        Debug.Log("적 턴 사이클 시작");
         foreach (EnemyController enemy in _enemies)
         {
-            yield return enemy.ExecuteTurn();
+            if (enemy == null || !enemy.gameObject.activeInHierarchy || enemy.Stats.CurrentHp <= 0)
+                continue;
+
+            enemy.Act();
+            Debug.Log("적 행동 시작");
+            while (enemy.IsMoving)
+                yield return null;
+
             yield return new WaitForSeconds(0.1f);
         }
-
-        CurrentTurn = Turn.Player;
-        _isProcessingTurn = false;
+        Debug.Log("모든 적 턴 종료됨");
+        TurnManager.Instance.EndTurn();
     }
 
     public void AddEnemy(EnemyController enemy)
     {
         if (!_enemies.Contains(enemy))
             _enemies.Add(enemy);
+    }
+
+    public void RemoveEnemy(EnemyController enemy)
+    {
+        if (_enemies.Contains(enemy))
+            _enemies.Remove(enemy);
     }
 
     public void SetEnemies(List<EnemyController> enemies)
