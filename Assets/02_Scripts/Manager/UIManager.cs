@@ -20,7 +20,8 @@ public class UIManager : Singleton<UIManager>
     public static T Show<T>(params object[] param) where T : UIBase 
     {
         var ui = Instance.uiList.Find(obj => obj.name == typeof(T).ToString());
-        if(IsOpened<T>())
+
+        if(IsOpened<T>()) // 이미 열려있는데 Show를 호출시 UI를 숨기고 리턴
         {
             Hide<T>();
             return (T)ui;
