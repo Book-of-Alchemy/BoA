@@ -28,7 +28,7 @@ public class Level : MonoBehaviour
     public Dictionary<Vector2Int, Tile> tiles = new Dictionary<Vector2Int, Tile>();
 
 
-    public Tile CheckTile(Tile tile, FourDir dir)
+    public Tile GetAdjacentTile(Tile tile, FourDir dir)
     {
         Vector2Int offset = dir switch
         {
@@ -49,7 +49,7 @@ public class Level : MonoBehaviour
         return null; 
     }
 
-    public Tile CheckTile(Tile tile, EightDir dir)
+    public Tile GetAdjacentTile(Tile tile, EightDir dir)
     {
         Vector2Int offset = dir switch
         {
@@ -74,14 +74,14 @@ public class Level : MonoBehaviour
         return null;
     }
 
-    List<Tile> CheckList(Tile tile ,bool isEightDir = false)
+    public List<Tile> GetAdjacentTileList(Tile tile ,bool isEightDir = false)
     {
         if (!isEightDir)
         {
             List<Tile> checkList = new List<Tile>();
             for (int i = 0; i < Enum.GetValues(typeof(FourDir)).Length; i++)
             {
-                checkList.Add(CheckTile(tile, (FourDir)i));
+                checkList.Add(GetAdjacentTile(tile, (FourDir)i));
             }
             return checkList;
         }
@@ -90,7 +90,7 @@ public class Level : MonoBehaviour
             List<Tile> checkList = new List<Tile>();
             for (int i = 0; i < Enum.GetValues(typeof(EightDir)).Length; i++)
             {
-                checkList.Add(CheckTile(tile, (EightDir)i));
+                checkList.Add(GetAdjacentTile(tile, (EightDir)i));
             }
             return checkList;
         }

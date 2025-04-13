@@ -9,11 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 473e717e9976ce844a3e75fa12cfa7ab, type: 3}
-  m_Name: RoomPreset
+  m_Script: {fileID: 11500000, guid: a2f6dc05d640a2941a06dae761ebaa24, type: 3}
+  m_Name: New Biome Set
   m_EditorClassIdentifier: 
-  roomName: 
-  roomSize: {x: 10, y: 10}
-  roomType: 0
-  roomPrefab: {fileID: 0}
-  tileInfo: []
+  id: 0
+  name_kr: 
+  biomeType: 0
+  roomPresets:
+  - {fileID: 11400000, guid: 661dfafd749e8e844a815fcc36e7a073, type: 2}
+  groundTiles: []
+  mapObjectList: []
+  wallAutoTileSet: []

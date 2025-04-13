@@ -9,10 +9,15 @@ public class LevelGenerator : MonoBehaviour
     public int roomCnt;
     public BiomeSet biomeSet;
 
+    private void Start()
+    {
+        TileManger.Instance.levelGenerator = this;
+        TileManger.Instance.curLevel = GenerateLevel(24, 24);
+    }
 
     public Level GenerateLevel(int rootWidth, int rootHeight, int minSize = 6, bool isBoosRoom = false)
     {
-        Level level = new Level();
+        Level level = new GameObject("Level").AddComponent<Level>();
 
         List<Leaf> seletedLeaves;
         List<Leaf> extraLeaves;
@@ -37,13 +42,16 @@ public class LevelGenerator : MonoBehaviour
         }
 
         if (scretLeaf != null)
-        {
             Edges.Add((scretLeaf, FindClosestLeaf(scretLeaf, seletedLeaves)));
-        }
 
-        seletedLeaves.Add(trapLeaf);
-        seletedLeaves.Add(treasureLeaf);
-        seletedLeaves.Add(scretLeaf);
+        if (trapLeaf != null)
+            seletedLeaves.Add(trapLeaf);
+
+        if (treasureLeaf != null)
+            seletedLeaves.Add(treasureLeaf);
+
+        if (scretLeaf != null)
+            seletedLeaves.Add(scretLeaf);
 
         SetRoomOnLeaves(seletedLeaves);
 
@@ -63,7 +71,7 @@ public class LevelGenerator : MonoBehaviour
 
     public void SetRoot(int width, int height)
     {
-        root = new Leaf(new RectInt(0, height, width, height));
+        root = new Leaf(new RectInt(0, 0, width, height));
     }
 
     public List<Leaf> SplitMap(int minSize)
@@ -84,6 +92,7 @@ public class LevelGenerator : MonoBehaviour
                 queue.Enqueue(leaf.right);
                 leaves.Add(leaf.left);
                 leaves.Add(leaf.right);
+                leaves.Remove(leaf);
             }
 
         }
@@ -178,7 +187,7 @@ public class LevelGenerator : MonoBehaviour
     {
         scretLeaf = null;
 
-        if (extraLeaves == null) return;
+        if (extraLeaves == null || extraLeaves.Count <= 0) return;
 
         if (UnityEngine.Random.value < scretLeafChance)
             scretLeaf = extraLeaves[UnityEngine.Random.Range(0, extraLeaves.Count)];
@@ -284,7 +293,7 @@ public class LevelGenerator : MonoBehaviour
         List<RoomPreset> roomList = biomeSet.GetPresets(type);
         RoomPreset room = null;
 
-        int maxTries = 20;
+        int maxTries = 10;
         int tryCount = 0;
 
         while (tryCount < maxTries)
@@ -300,28 +309,37 @@ public class LevelGenerator : MonoBehaviour
             {
                 case LeafSizeType.small:
                     if (roomSize.x > leaf.maxSmallSize - 1 || roomSize.y > leaf.maxSmallSize - 1)
-                        return null; // 너무 큼
+                    {
+                        room = null; // 너무 큼
+                        continue;
+                    }
                     if (roomSize.x < leaf.minSmallSize - 1 || roomSize.y < leaf.minSmallSize - 1)
                         continue; // 너무 작음
                     return room;
 
                 case LeafSizeType.medium:
                     if (roomSize.x > leaf.maxMediumSize - 1 || roomSize.y > leaf.maxMediumSize - 1)
-                        return null;
+                    {
+                        room = null; // 너무 큼
+                        continue;
+                    }
                     if (roomSize.x < leaf.minMediumSize - 1 || roomSize.y < leaf.minMediumSize - 1)
                         continue;
                     return room;
 
                 case LeafSizeType.large:
                     if (roomSize.x > leaf.maxLargesize - 1 || roomSize.y > leaf.maxLargesize - 1)
-                        return null;
+                    {
+                        room = null; // 너무 큼
+                        continue;
+                    }
                     if (roomSize.x < leaf.minLargeSize - 1 || roomSize.y < leaf.minLargeSize - 1)
                         continue;
                     return room;
             }
         }
 
-        return null; // 조건에 맞는 방을 찾지 못함
+        return room; 
     }
 
     void SetRoomOnLeaves(List<Leaf> leaves)
@@ -399,7 +417,7 @@ public class LevelGenerator : MonoBehaviour
         {
             for (int x = rect.x; x < rect.x + rect.width; x++)
             {
-                for (int y = rect.y; y < rect.y - rect.height; y--)
+                for (int y = rect.y; y < rect.y + rect.height; y++)
                 {
                     Vector2Int pos = new Vector2Int(x, y);
                     Tile tile = new Tile
@@ -463,6 +481,11 @@ public class LevelGenerator : MonoBehaviour
                 level.tiles[doorB.gridPosition].tileType = TileType.ground;
                 level.tiles[doorA.gridPosition].isDoorPoint = false;
                 level.tiles[doorB.gridPosition].isDoorPoint = false;
+
+                foreach (var tile in path)
+                {
+                    FillWallByCorridor(tile, level);
+                }
             }
         }
     }
@@ -485,14 +508,28 @@ public class LevelGenerator : MonoBehaviour
         return closest;
     }
 
-    void FillAutoWalls(Level level)
+    void FillWallByCorridor(Tile tile, Level level)
     {
+        if (tile.tileType != TileType.ground) return;
+
         Dictionary<Vector2Int, Tile> tiles = level.tiles;
         Dictionary<Vector2Int, Tile> newWalls = new();
 
 
+        foreach (var t in level.GetAdjacentTileList(tile))
+        {
+            if (t == null)
+            {
+                continue;
+            }
 
-        
+            if (t.tileType == TileType.empty)
+            {
+                t.tileType = TileType.wall;
+                continue;
+            }
+        }
+
         foreach (var wall in newWalls)
         {
             tiles[wall.Key] = wall.Value;
