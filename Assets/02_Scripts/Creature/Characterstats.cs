@@ -1,78 +1,82 @@
-using System.Collections.Generic;
 using UnityEngine;
 
-public enum ElementType
+public abstract class CharacterStats : MonoBehaviour
 {
-    None, Fire, Water, Ice, Electric, Earth, Wind, Light, Dark
-}
-
-[System.Serializable]
-public class CharacterStats
-{
-    // 기본 정보
+    [Header("기본 스탯")]
     public int Level = 1;
-    public int Exp = 0;
-    public int ExpToNextLevel => 100 + (Level - 1) * 20;
+    public int Experience = 0;
 
-    // 전투 능력치
-    public int MaxHp;
-    public int CurrentHp;
+    [Header("체력 및 마나")]
+    public float MaxHealth = 100f;
+    public float CurrentHealth = 100f;
+    public float MaxMana = 50f;
+    public float CurrentMana = 50f;
 
-    public int MaxMp;
-    public int CurrentMp;
+    [Header("공격력")]
+    public float AttackMin = 5f;
+    public float AttackMax = 10f;
 
-    public int Atk; // 공격력
-    public int Def; // 방어력
+    [Header("방어 및 전투 스탯")]
+    public float Defense = 5f;
+    public float CritChance = 0.1f;   // 치명타 확률 10%
+    public float CritDamage = 1.5f;   // 치명타 시 1.5배 데미지
+    public float Evasion = 0.05f;     // 회피율 5%
+    public float Accuracy = 1.0f;     // 명중률 기본값 1
 
-    public float CritRate;   // 치명타 확률 (ex: 0.2f → 20%)
-    public float CritDmg;    // 치명타 배율 (ex: 1.5f → 150%)
+    [Header("행동력")]
+    [SerializeField]
+    private float _actionPoints = 1.0f;
 
-    public float DodgeRate;  // 회피율
-    public float Accuracy;   // 명중률
-
-    public float MoveSpeed = 5f; // 이동 속도
-
-    public Dictionary<ElementType, float> Resistances = new();
-
-    // 초기화 및 레벨업
-    public void Initialize(int level = 1)
+    public float ActionPoints
     {
-        Level = Mathf.Max(1, level);
-        MaxHp = 100 + (Level - 1) * 10;
-        MaxMp = 50 + (Level - 1) * 10;
-        Atk = 20 + (Level - 1) * 10;
-        Def = 10 + (Level - 1) * 10;
-
-        CurrentHp = MaxHp;
-        CurrentMp = MaxMp;
-
-        CritRate = 0.1f;
-        CritDmg = 1.5f;
-        DodgeRate = 0.05f;
-        Accuracy = 0.95f;
+        get { return _actionPoints; }
+        set { _actionPoints = Mathf.Clamp(value, 0f, 1f); }
     }
 
-    public void LevelUp()
-    {
-        Level++;
-        MaxHp += 10;
-        MaxMp += 10;
-        Atk += 10;
-        Def += 10;
+    [Header("속성")]
+    public float Fire = 0f;
+    public float Water = 0f;
+    public float Ice = 0f;
+    public float Electric = 0f;
+    public float Earth = 0f;
+    public float Wind = 0f;
+    public float Light = 0f;
+    public float Dark = 0f;
 
-        CurrentHp = MaxHp;
-        CurrentMp = MaxMp;
-        Exp = 0;
-    }
-
-    public bool GainExp(int amount)
+    public virtual void Attack(CharacterStats target)
     {
-        Exp += amount;
-        if (Exp >= ExpToNextLevel)
+        // 최소/최대 공격력 사이에서 랜덤 데미지 계산
+        float damage = Random.Range(AttackMin, AttackMax);
+
+        // 치명타 발생 체크
+        if (Random.value < CritChance)
         {
-            LevelUp();
-            return true;
+            damage *= CritDamage;
+            Debug.Log(gameObject.name + "이(가) 치명적인 공격을 했습니다!");
         }
-        return false;
+
+        Debug.Log(gameObject.name + "이(가) " + target.gameObject.name + "을 공격합니다. (데미지: " + damage + ")");
+        target.TakeDamage(damage);
+    }
+
+    public virtual void TakeDamage(float amount)
+    {
+        float damage = Mathf.Max(amount - Defense, 1f);
+        CurrentHealth -= damage;
+        if (CurrentHealth < 0f)
+        {
+            CurrentHealth = 0f;
+        }
+        Debug.Log(gameObject.name + " 는 " + damage + " 의 데미지를 받음");
+    }
+
+    public virtual void Heal(float amount)
+    {
+        CurrentHealth += amount;
+        if (CurrentHealth > MaxHealth)
+        {
+            CurrentHealth = MaxHealth;
+        }
+        Debug.Log(gameObject.name + " 는 " + amount + " 만큼 회복됨");
     }
 }
