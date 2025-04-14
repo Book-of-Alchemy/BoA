@@ -6,9 +6,9 @@ using UnityEngine;
 public enum FourDir
 {
     up,
-    down,
-    left,
     right,
+    down,
+    left,    
 }
 
 public enum EightDir
@@ -25,6 +25,7 @@ public enum EightDir
 
 public class Level : MonoBehaviour
 {
+    public BiomeSet biomeSet;
     public Dictionary<Vector2Int, Tile> tiles = new Dictionary<Vector2Int, Tile>();
 
 

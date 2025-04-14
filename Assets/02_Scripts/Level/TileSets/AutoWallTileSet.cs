@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,15 +7,27 @@ public class AutoWallTileSet : ScriptableObject
 {
     public int id;
     public string name_kr;
-
     /// <summary>
-    /// 연결 상태(0~15)에 따른 벽 스프라이트
+    /// bitmask 순서는 상 우 하 좌
+    /// 상 +1 우 +2 하 +4 좌 +8
     /// </summary>
-    public List<Sprite> wallSprites = new List<Sprite>(16);
+    [Header("Front Wall Sprites")]
+    public List<Sprite> frontBaseSprites = new(16);
+    public List<Sprite> frontUpperSprites = new(16);
 
+    [Header("Back Wall Sprites")]
+    public List<Sprite> backBaseSprites = new(16);
+    public List<Sprite> backUpperSprites = new(16);
 
-    public Sprite GetSprite(int bitmask)
+    public Sprite GetBaseSprite(int bitmask, bool isFront)
     {
-        return (bitmask >= 0 && bitmask < wallSprites.Count) ? wallSprites[bitmask] : null;
+        var list = isFront ? frontBaseSprites : backBaseSprites;
+        return (bitmask >= 0 && bitmask < list.Count) ? list[bitmask] : null;
+    }
+
+    public Sprite GetUpperSprite(int bitmask, bool isFront)
+    {
+        var list = isFront ? frontUpperSprites : backUpperSprites;
+        return (bitmask >= 0 && bitmask < list.Count) ? list[bitmask] : null;
     }
 }

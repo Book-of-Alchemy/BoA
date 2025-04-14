@@ -92,8 +92,4 @@ public class Leaf
         return LeafSizeType.large;
     }
 
-    public void CreateRoom()
-    {
-
-    }
 }

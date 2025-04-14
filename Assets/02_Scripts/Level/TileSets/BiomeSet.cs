@@ -19,12 +19,14 @@ public class BiomeSet : ScriptableObject
     [HideInInspector]
     public Dictionary<RoomType, List<RoomPreset>> roomsByType = new();
 
-    public List<GroundTileSet> groundTiles;
+    [Header("TileSets")]
+    public List<GroundTileSet> groundTileSet;
+    public List<AutoWallTileSet> wallAutoTileSet;
+    public List<AutoEnvironmentalSet> environmentalTileSet;
     public List<GameObject> mapObjectList;
 
 
-    [Header("AutoWall")]
-    public List<AutoWallTileSet> wallAutoTileSet;
+   
 
     private void OnValidate()
     {

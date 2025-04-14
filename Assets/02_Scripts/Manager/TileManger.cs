@@ -8,6 +8,6 @@ public class TileManger : Singleton<TileManger>
     public LevelGenerator levelGenerator;
     public GameObject groundPrefab;
     public GameObject wallPrefab;
-
+    public GameObject environmentalPrefab;
 
 }

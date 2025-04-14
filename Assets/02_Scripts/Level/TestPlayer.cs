@@ -12,7 +12,7 @@ public class TestPlayer : MonoBehaviour
         curTile = new Tile {
             gridPosition = new Vector2Int(Mathf.RoundToInt( transform.position.x), Mathf.RoundToInt(transform.position.y)),
             tileType = TileType.ground,
-            environment = EnvironmentType.none,
+            environmentType = EnvironmentType.none,
             isDoorPoint = false,
             isOccupied = false,
             isExplored = false,

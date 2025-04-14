@@ -28,7 +28,7 @@ public class Tile
 {
     public Vector2Int gridPosition;
     public TileType tileType;
-    public EnvironmentType environment;
+    public EnvironmentType environmentType;
     public bool isDoorPoint;
 
     public int MoveCost => CalculateMoveCost();
@@ -44,7 +44,7 @@ public class Tile
 
     private int CalculateMoveCost()
     {
-        int cost = environment switch
+        int cost = environmentType switch
         {
             EnvironmentType.swamp => 2,
             EnvironmentType.lava => 2,
@@ -58,7 +58,7 @@ public class Tile
 
     private int CalculateAstarCost()
     {
-        int cost = environment switch
+        int cost = environmentType switch
         {
             EnvironmentType.swamp => 6,
             EnvironmentType.lava => 6,

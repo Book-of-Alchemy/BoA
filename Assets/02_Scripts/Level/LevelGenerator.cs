@@ -115,7 +115,7 @@ public class LevelGenerator : MonoBehaviour
             }
         }
 
-        foreach (Leaf leaf in leaves)
+        foreach (Leaf leaf in selected)
         {
             extra.Remove(leaf);
         }
@@ -376,7 +376,7 @@ public class LevelGenerator : MonoBehaviour
                 {
                     gridPosition = pos,
                     tileType = info.tileType,
-                    environment = info.environmentType,
+                    environmentType = info.environmentType,
                     isDoorPoint = info.isDoorPoint,
                     isOccupied = false,
                     isExplored = false,
@@ -403,7 +403,7 @@ public class LevelGenerator : MonoBehaviour
                     {
                         gridPosition = pos,
                         tileType = TileType.empty,
-                        environment = EnvironmentType.none,
+                        environmentType = EnvironmentType.none,
                         isDoorPoint = false,
                         isOccupied = false,
                         isExplored = false,
@@ -522,7 +522,7 @@ public class LevelGenerator : MonoBehaviour
         {
             gridPosition = pos,
             tileType = TileType.wall,
-            environment = EnvironmentType.none,
+            environmentType = EnvironmentType.none,
             isDoorPoint = false,
             isOccupied = false,
             isExplored = false,
