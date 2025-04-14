@@ -21,6 +21,8 @@ public class PlayerController : MonoBehaviour
 
     // 마지막 이동 방향 (대시 시 사용)
     private Vector2 _lastMoveDirection = Vector2.down;
+    // 공격 모드에서 공격 방향 결정용 변수
+    private Vector2 _attackDirection = Vector2.zero;
 
     private PlayerStats _playerStats;
 
@@ -62,72 +64,91 @@ public class PlayerController : MonoBehaviour
     }
 
     void Start()
-    { 
+    {
         // 같은 오브젝트의 PlayerStats 컴포넌트를 캐싱합니다.
         _playerStats = GetComponent<PlayerStats>();
     }
 
     void Update()
     {
-        Vector2 input = _moveAction.ReadValue<Vector2>();
-
-        // 입력이 있고, 아직 이동 중이 아닐 때
-        if (input != Vector2.zero && !_isMoving)
+        // 만약 왼쪽 컨트롤 키가 눌렸다면 방향 입력만 받아서 공격 방향을 업데이트합니다.
+        if (Keyboard.current.leftCtrlKey.isPressed)
         {
-            // 행동력 확인: 충분한 행동력이 있을 때만 이동 실행
-            if (_playerStats != null && _playerStats.ActionPoints >= MoveActionCost)
+            Vector2 input = _moveAction.ReadValue<Vector2>();
+            if (input != Vector2.zero)
             {
-                // 마지막 이동 방향 갱신
-                _lastMoveDirection = input;
-
-                // 현재 위치의 그리드 셀 좌측 하단 좌표
-                Vector3 currentCell = new Vector3(Mathf.Floor(transform.position.x),
-                                                  Mathf.Floor(transform.position.y),
-                                                  transform.position.z);
-                Vector3 offset;
-                bool isDiagonal = false;
-
-                // 대각 이동 여부 판정
-                if (Mathf.Abs(input.x) > 0.01f && Mathf.Abs(input.y) > 0.01f)
-                {
-                    isDiagonal = true;
-                    offset = new Vector3(Mathf.Sign(input.x), Mathf.Sign(input.y), 0);
-                }
-                else
-                {
-                    offset = new Vector3(input.x, input.y, 0);
-                }
-                // 목표 셀 계산: 현재 셀 + offset 후 셀 중심 좌표 (0.5, 0.5)
-                Vector3 targetCell = currentCell + offset;
-                _targetPosition = targetCell + new Vector3(0.5f, 0.5f, 0);
-
-                // 이동 시작 전에 목표칸에 이미 다른 유닛이 있는지 검사
-                Collider2D hit = Physics2D.OverlapPoint(_targetPosition, UnitLayer);
-                if (hit != null && hit.gameObject != gameObject)
-                {
-                    Debug.Log("타일이 다른 유닛에 의해 점유되어 이동할 수 없습니다.");
-                    return;
-                }
-
-                // 이동 코루틴 실행
-                StartCoroutine(MoveToTarget(_targetPosition, isDiagonal));
-            }
-            else
-            {
-                Debug.Log("행동력이 부족하여 이동할 수 없습니다.");
+                _attackDirection = input;
+                _lastMoveDirection = input;  // 마지막 이동 방향 업데이트
             }
         }
 
-        // 나머지 입력 처리 (확인, 취소, 메뉴, 대시)
+        // 공격 실행은 컨트롤키와 무관하게 확인 액션(Z 또는 Enter)로 처리합니다.
         if (_confirmAction.triggered)
-            Debug.Log("Confirm pressed");
+        {
+            // 설정된 공격 방향이 없으면 마지막 이동 방향을 사용합니다.
+            Vector2 attackDir = _attackDirection != Vector2.zero ? _attackDirection : _lastMoveDirection;
+            AttackInDirection(attackDir);
+        }
+
+        // 컨트롤 키가 눌려 있지 않은 경우에만 이동 로직을 실행합니다.
+        if (!Keyboard.current.leftCtrlKey.isPressed)
+        {
+            Vector2 moveInput = _moveAction.ReadValue<Vector2>();
+            if (moveInput != Vector2.zero && !_isMoving)
+            {
+                // 행동력 확인: 충분한 행동력이 있을 때만 이동 실행
+                if (_playerStats != null && _playerStats.ActionPoints >= MoveActionCost)
+                {
+                    // 마지막 이동 방향 갱신
+                    _lastMoveDirection = moveInput;
+
+                    // 현재 그리드 셀 계산 (바닥 좌표)
+                    Vector3 currentCell = new Vector3(Mathf.Floor(transform.position.x),
+                                                      Mathf.Floor(transform.position.y),
+                                                      transform.position.z);
+                    Vector3 offset;
+                    bool isDiagonal = false;
+
+                    // 대각 이동 여부 판정
+                    if (Mathf.Abs(moveInput.x) > 0.01f && Mathf.Abs(moveInput.y) > 0.01f)
+                    {
+                        isDiagonal = true;
+                        offset = new Vector3(Mathf.Sign(moveInput.x), Mathf.Sign(moveInput.y), 0);
+                    }
+                    else
+                    {
+                        offset = new Vector3(moveInput.x, moveInput.y, 0);
+                    }
+                    // 목표 셀 계산: 현재 셀 + offset 후 셀 중심 좌표 (0.5, 0.5)
+                    Vector3 targetCell = currentCell + offset;
+                    _targetPosition = targetCell + new Vector3(0.5f, 0.5f, 0);
+
+                    // 이동 시작 전에 목표칸에 이미 다른 유닛이 있는지 검사
+                    Collider2D hit = Physics2D.OverlapPoint(_targetPosition, UnitLayer);
+                    if (hit != null && hit.gameObject != gameObject)
+                    {
+                        Debug.Log("타일이 다른 유닛에 의해 점유되어 이동할 수 없습니다.");
+                        return;
+                    }
+
+                    // 이동 코루틴 실행
+                    StartCoroutine(MoveToTarget(_targetPosition, isDiagonal));
+                }
+                else
+                {
+                    Debug.Log("행동력이 부족하여 이동할 수 없습니다.");
+                }
+            }
+        }
+
+        // 나머지 입력 처리 (취소, 메뉴, 대시)
         if (_cancelAction.triggered)
-            Debug.Log("Cancel pressed");
+            Debug.Log("취소 눌림");
         if (_menuAction.triggered)
-            Debug.Log("Menu pressed");
+            Debug.Log("메뉴 눌림");
         if (_dashAction.triggered)
         {
-            Debug.Log("Dash activated");
+            Debug.Log("대쉬 활성화");
             StartCoroutine(Dash(_lastMoveDirection));
         }
     }
@@ -193,4 +214,48 @@ public class PlayerController : MonoBehaviour
         }
         yield break;
     }
+
+    void AttackInDirection(Vector2 direction)
+    {
+        // 공격 방향을 단위 벡터로 만들고
+        Vector2 attackDir = direction.normalized;
+
+        Collider2D myCollider = GetComponent<Collider2D>();
+        float offsetDistance = myCollider != null ? myCollider.bounds.extents.magnitude + 0.1f : 0.1f;
+
+        // 오프셋을 적용하여 레이의 시작점을 결정합니다.
+        Vector2 origin = (Vector2)transform.position + attackDir * offsetDistance;
+
+        // 레이 길이 설정
+        float rayDistance = 0.5f;
+
+        // Raycast 실행 (UnitLayer에 속한 오브젝트 검사)
+        RaycastHit2D hit = Physics2D.Raycast(origin, attackDir, rayDistance, UnitLayer);
+
+        // 디버그용: 레이 경로를 Scene 뷰에 표시합니다.
+        Debug.DrawRay(origin, attackDir * rayDistance, Color.red, 1f);
+
+        if (hit.collider != null && hit.collider.CompareTag("Enemy"))
+        {
+            EnemyStats enemyStats = hit.collider.GetComponent<EnemyStats>();
+            if (enemyStats != null)
+            {
+                GetComponent<PlayerStats>().Attack(enemyStats);
+                // 행동력소비
+                _playerStats.ActionPoints -= MoveActionCost;
+                _playerStats.ActionPoints = Mathf.Clamp(_playerStats.ActionPoints, 0f, 1f);
+                Debug.Log("공격 후 행동력 소비됨: " + MoveActionCost + " 남은 행동력: " + _playerStats.ActionPoints);
+            }
+            else
+            {
+                Debug.Log("공격 대상이 아님");
+            }
+        }
+        else
+        {
+            Debug.Log("공격할 적이 없음.");
+        }
+    }
+
+
 }

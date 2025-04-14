@@ -43,6 +43,22 @@ public abstract class CharacterStats : MonoBehaviour
     public float Light = 0f;
     public float Dark = 0f;
 
+    public virtual void Attack(CharacterStats target)
+    {
+        // 최소/최대 공격력 사이에서 랜덤 데미지 계산
+        float damage = Random.Range(AttackMin, AttackMax);
+
+        // 치명타 발생 체크
+        if (Random.value < CritChance)
+        {
+            damage *= CritDamage;
+            Debug.Log(gameObject.name + "이(가) 치명적인 공격을 했습니다!");
+        }
+
+        Debug.Log(gameObject.name + "이(가) " + target.gameObject.name + "을 공격합니다. (데미지: " + damage + ")");
+        target.TakeDamage(damage);
+    }
+
     public virtual void TakeDamage(float amount)
     {
         float damage = Mathf.Max(amount - Defense, 1f);
