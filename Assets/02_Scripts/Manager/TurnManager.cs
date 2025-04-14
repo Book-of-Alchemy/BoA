@@ -60,9 +60,13 @@ public class TurnManager : MonoBehaviour
         _isEnemyTurnRunning = true;
         CurrentTurn = TurnState.EnemyTurn;
 
+        
         // 각 적들이 생성된 순서대로 턴 진행
         foreach (EnemyStats enemy in _enemies)
         {
+            // 이미 파괴되어 null인 경우 건너뛰기(예외처리)
+            if (enemy == null)
+                continue;
             // EnemyController 컴포넌트가 붙어 있다면 TakeTurn 코루틴 호출
             EnemyController enemyController = enemy.GetComponent<EnemyController>();
             if (enemyController != null)

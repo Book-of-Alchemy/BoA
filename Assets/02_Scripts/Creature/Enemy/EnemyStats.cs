@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class EnemyStats : CharacterStats
 {
-    public void OnDeath()
+    public override void Die()
     {
-        Debug.Log(gameObject.name + " 가 사망");
+        Destroy(gameObject);
     }
 }
