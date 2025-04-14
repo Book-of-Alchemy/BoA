@@ -16,7 +16,10 @@ MonoBehaviour:
   name_kr: 
   biomeType: 0
   roomPresets:
+  - {fileID: 11400000, guid: b09d0c516d8009842bdc4772e19f0153, type: 2}
+  - {fileID: 11400000, guid: 19c604319bf93db44939bae5ffa4c8a2, type: 2}
   - {fileID: 11400000, guid: 661dfafd749e8e844a815fcc36e7a073, type: 2}
+  - {fileID: 11400000, guid: 438a883bf289d2a449c33b8d2e84c4cd, type: 2}
   groundTiles: []
   mapObjectList: []
   wallAutoTileSet: []

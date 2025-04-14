@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 473e717e9976ce844a3e75fa12cfa7ab, type: 3}
-  m_Name: NewRoom_Preset
+  m_Name: middleRoom_Preset
   m_EditorClassIdentifier: 
   id: 0
   roomName: NewRoom

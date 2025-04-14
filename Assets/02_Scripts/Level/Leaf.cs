@@ -17,7 +17,7 @@ public class Leaf
     public List<Tile> doorPoint = new List<Tile>();
     public RoomType roomType = RoomType.normal;
     public LeafSizeType leafSizeType => GetLeafSizeType();
-    public int minSmallSize = 6;
+    public int minSmallSize = 7;
     public int maxSmallSize = 9;
     public int minMediumSize = 10;
     public int maxMediumSize = 14;
@@ -47,7 +47,7 @@ public class Leaf
 
         if (max <= minSize) return false;
 
-
+        targetSize = Mathf.Clamp(GetTargetRoomSize(), minSize, max);
         int split = UnityEngine.Random.Range(targetSize, max);
 
         if (splitHorizontally)

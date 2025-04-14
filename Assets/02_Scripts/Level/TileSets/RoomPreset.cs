@@ -48,11 +48,28 @@ public class RoomPreset : ScriptableObject
     [SerializeField]
     private List<TileInfoForRoom> tileList;
 
+    private void OnValidate()
+    {
+        RebuildDictionaryFromTileList();
+    }
+
     public void RebuildTileListFromDictionary()
     {
         if (tileInfo != null)
             tileList = new List<TileInfoForRoom>(tileInfo.Values);
     }
 
+    void RebuildDictionaryFromTileList()
+    {
+        if (tileInfo == null)
+            tileInfo = new Dictionary<Vector2Int, TileInfoForRoom>();
+
+        tileInfo.Clear(); // 중복 방지 (선택사항)
+
+        foreach (var tile in tileList)
+        {
+            tileInfo[tile.position] = tile;
+        }
+    }
 }
 
