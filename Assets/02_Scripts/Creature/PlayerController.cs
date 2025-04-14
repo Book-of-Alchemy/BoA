@@ -10,14 +10,14 @@ public class PlayerController : MonoBehaviour
     private InputAction _menuAction;
     private InputAction _dashAction;
 
-    public float MoveSpeed = 5f;         // 기본 이동 속도 (카드널 이동 기준)
-    public float DashSpeed = 10f;        // 대시 속도 (참고용)
+    public float MoveSpeed = 5f;         // 기본 이동 속도
+    public float DashSpeed = 10f;        // 대시 속도
     private bool _isMoving = false;
     public float MoveActionCost = 1.0f;    // 이동 시 소모하는 행동력
     private Vector3 _targetPosition;
 
     public LayerMask ObstacleLayer;      // 대시 중 장애물 체크용
-    public LayerMask UnitLayer;          // 플레이어 및 적들이 속한 레이어 (타일 점유 확인에 사용)
+    public LayerMask UnitLayer;          // 플레이어 및 적들이 속한 레이어
 
     // 마지막 이동 방향 (대시 시 사용)
     private Vector2 _lastMoveDirection = Vector2.down;
@@ -65,13 +65,13 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        // 같은 오브젝트의 PlayerStats 컴포넌트를 캐싱합니다.
+        // 같은 오브젝트의 PlayerStats 컴포넌트를 캐싱
         _playerStats = GetComponent<PlayerStats>();
     }
 
     void Update()
     {
-        // 만약 왼쪽 컨트롤 키가 눌렸다면 방향 입력만 받아서 공격 방향을 업데이트합니다.
+        // 만약 왼쪽 컨트롤 키가 눌렸다면 방향 입력만 받아서 공격 방향을 업데이트
         if (Keyboard.current.leftCtrlKey.isPressed)
         {
             Vector2 input = _moveAction.ReadValue<Vector2>();
@@ -82,15 +82,15 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        // 공격 실행은 컨트롤키와 무관하게 확인 액션(Z 또는 Enter)로 처리합니다.
+        // 공격 실행은 컨트롤키와 무관하게 확인 액션(Z 또는 Enter)로 처리
         if (_confirmAction.triggered)
         {
-            // 설정된 공격 방향이 없으면 마지막 이동 방향을 사용합니다.
+            // 설정된 공격 방향이 없으면 마지막 이동 방향을 사용
             Vector2 attackDir = _attackDirection != Vector2.zero ? _attackDirection : _lastMoveDirection;
             AttackInDirection(attackDir);
         }
 
-        // 컨트롤 키가 눌려 있지 않은 경우에만 이동 로직을 실행합니다.
+        // 컨트롤 키가 눌려 있지 않은 경우에만 이동 로직을 실행
         if (!Keyboard.current.leftCtrlKey.isPressed)
         {
             Vector2 moveInput = _moveAction.ReadValue<Vector2>();
@@ -177,7 +177,7 @@ public class PlayerController : MonoBehaviour
         yield break;
     }
 
-    // 대시 코루틴 (타일 점유 확인 로직 추가 가능)
+    // 대시 코루틴
     IEnumerator Dash(Vector2 direction)
     {
         int maxCells = 3;  // 대시 최대 칸 수
@@ -223,16 +223,16 @@ public class PlayerController : MonoBehaviour
         Collider2D myCollider = GetComponent<Collider2D>();
         float offsetDistance = myCollider != null ? myCollider.bounds.extents.magnitude + 0.1f : 0.1f;
 
-        // 오프셋을 적용하여 레이의 시작점을 결정합니다.
+        // 오프셋을 적용하여 레이의 시작점을 결정
         Vector2 origin = (Vector2)transform.position + attackDir * offsetDistance;
 
         // 레이 길이 설정
         float rayDistance = 0.5f;
 
-        // Raycast 실행 (UnitLayer에 속한 오브젝트 검사)
+        // Raycast 실행
         RaycastHit2D hit = Physics2D.Raycast(origin, attackDir, rayDistance, UnitLayer);
 
-        // 디버그용: 레이 경로를 Scene 뷰에 표시합니다.
+        // 디버그용
         Debug.DrawRay(origin, attackDir * rayDistance, Color.red, 1f);
 
         if (hit.collider != null && hit.collider.CompareTag("Enemy"))

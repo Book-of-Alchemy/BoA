@@ -2,6 +2,11 @@ using UnityEngine;
 
 public class PlayerStats : CharacterStats
 {
+    void Awake()
+    {
+        // 씬에서 생성된 플레이어는 GameManager에 등록
+        GameManager.Instance.RegisterPlayer(transform);
+    }
     public void GainExperience(int exp)
     {
         Experience += exp;

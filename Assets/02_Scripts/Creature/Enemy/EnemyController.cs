@@ -17,14 +17,16 @@ public class EnemyController : MonoBehaviour
     public LayerMask UnitLayer;          // 플레이어 및 적들이 속한 레이어 (타일 점유 확인)
     public LayerMask ObstacleLayer;      // 장애물 체크용
 
-    // 플레이어 참조 (예: PlayerStats 등)
+    // 플레이어 참조
     private PlayerStats _playerStats;
 
+    void Awake()
+    {
+        GameManager.Instance.RegisterEnemy(GetComponent<EnemyStats>());
+    }
     void Start()
     {
-        // TurnManager나 다른 방법으로 플레이어 참조를 가져오거나,
-        // 씬 내에서 PlayerStats 컴포넌트를 찾습니다.
-        _playerStats = FindObjectOfType<PlayerStats>();
+        _playerStats = GameManager.Instance.PlayerTransform.GetComponent<PlayerStats>();
     }
 
     // 적 턴에 호출되는 루틴
@@ -60,7 +62,7 @@ public class EnemyController : MonoBehaviour
         float distance = Vector2.Distance(new Vector2(enemyCenter.x, enemyCenter.y),
                                           new Vector2(playerCenter.x, playerCenter.y));
 
-        // 만약 플레이어가 인접한 칸에 있다면 공격 (대략 1.0 이하)
+        // 만약 플레이어가 인접한 칸에 있다면 공격
         if (distance <= 1.0f)
         {
             Debug.Log(gameObject.name + "이(가) 플레이어를 공격합니다.");
@@ -99,7 +101,6 @@ public class EnemyController : MonoBehaviour
     }
 
     // 목표 셀까지 부드럽게 이동하는 코루틴
-    // targetCell은 바닥 좌표이므로, 실제 목적지는 (targetCell + (0.5, 0.5))
     private IEnumerator MoveToTarget(Vector3 targetCell, bool isDiagonal = false)
     {
         _isMoving = true;
