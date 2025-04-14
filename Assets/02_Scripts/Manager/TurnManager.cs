@@ -8,10 +8,8 @@ public enum TurnState
     EnemyTurn
 }
 
-public class TurnManager : MonoBehaviour
+public class TurnManager : Singleton<TurnManager>
 {
-    public static TurnManager Instance { get; private set; }
-
     // 현재 턴 상태 (플레이어 혹은 적)
     public TurnState CurrentTurn;
 
@@ -23,14 +21,6 @@ public class TurnManager : MonoBehaviour
 
     // 적 턴 진행 중 여부
     private bool _isEnemyTurnRunning = false;
-
-    void Awake()
-    {
-        if (Instance == null)
-            Instance = this;
-        else
-            Destroy(gameObject);
-    }
 
     void Start()
     {
@@ -60,9 +50,8 @@ public class TurnManager : MonoBehaviour
         _isEnemyTurnRunning = true;
         CurrentTurn = TurnState.EnemyTurn;
 
-        
         // 각 적들이 생성된 순서대로 턴 진행
-        foreach (EnemyStats enemy in _enemies)
+        foreach (EnemyStats enemy in _enemies.ToArray())
         {
             // 이미 파괴되어 null인 경우 건너뛰기(예외처리)
             if (enemy == null)
