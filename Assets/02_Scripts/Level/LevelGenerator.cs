@@ -15,7 +15,7 @@ public class LevelGenerator : MonoBehaviour
         TileManger.Instance.curLevel = GenerateLevel(30, 30);
     }
 
-    public Level GenerateLevel(int rootWidth, int rootHeight, int minSize = 7, bool isBoosRoom = false)
+    public Level GenerateLevel(int rootWidth, int rootHeight, int minSize = 7, bool isBossRoom = false)
     {
         Level level = new GameObject("Level").AddComponent<Level>();
 
@@ -213,7 +213,7 @@ public class LevelGenerator : MonoBehaviour
 
     public List<(Leaf, Leaf)> GenerateKruskalMST(List<Leaf> leaves, float extraConnectionChance = 0.3f)//최소신장트리 즉 모든 Leaf를 노드로 잡고 각 방의 거리를 오름차순으로 정렬하여 빠짐없이 연결하는 로직
     {
-        List<(Leaf, Leaf, float)> edges = new();//튜플리스트 처음써봄 ㄹㅇ
+        List<(Leaf, Leaf, float)> edges = new();
 
         for (int i = 0; i < leaves.Count; i++)
         {
