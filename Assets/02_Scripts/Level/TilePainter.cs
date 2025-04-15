@@ -21,7 +21,7 @@ public static class TilePainter
             switch (tile.Value.tileType)
             {
                 case TileType.ground:
-                    SetGroundTile(tile.Value, groundTileSets, groundPrefab);
+                    SetGroundTile(tile.Value, level, groundTileSets, groundPrefab);
                     break;
                 case TileType.wall:
                     SetWallTile(tile.Value, level, wallTileSets, wallPrefab);
@@ -40,7 +40,7 @@ public static class TilePainter
         }
     }
 
-    private static void SetGroundTile(Tile tile, List<GroundTileSet> groundTileSets, GameObject groundPrefab)
+    private static void SetGroundTile(Tile tile, Level level, List<GroundTileSet> groundTileSets, GameObject groundPrefab)
     {
         GameObject TileGO = UnityEngine.Object.Instantiate(groundPrefab, new Vector3Int(tile.gridPosition.x, tile.gridPosition.y, 0), Quaternion.identity);
         TilePrefab tilePrefab = TileGO.GetComponent<TilePrefab>();
@@ -49,6 +49,7 @@ public static class TilePainter
 
         tilePrefab.baseRenderer.sprite = groundTileSets[0].groundSprite;
         tilePrefab.baseRenderer.sortingOrder = -1000;
+        TileGO.transform.SetParent(level.transform);
     }
 
     private static void SetWallTile(Tile tile, Level level, List<AutoWallTileSet> wallTileSets, GameObject wallPrefab)
@@ -64,6 +65,7 @@ public static class TilePainter
         tilePrefab.upperRenderer.sprite = wallTileSets[0].GetUpperSprite(bitask, isFront);
         tilePrefab.baseRenderer.sortingOrder = -tile.gridPosition.y;
         tilePrefab.upperRenderer.sortingOrder = -tile.gridPosition.y;
+        TileGO.transform.SetParent(level.transform);
     }
 
     private static bool IsFrontWall(Tile tile, Level level)
@@ -106,6 +108,7 @@ public static class TilePainter
         int bitask = CalculateEnvironmentBitmask(tile, level, tile.environmentType);
         tilePrefab.baseRenderer.sprite = environmentalSets[0].GetSprite(bitask);
         tilePrefab.baseRenderer.sortingOrder = -900;
+        TileGO.transform.SetParent(level.transform);
     }
 
     public static int CalculateEnvironmentBitmask(Tile tile, Level level, EnvironmentType type)
