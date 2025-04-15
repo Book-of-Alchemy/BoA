@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2f6dc05d640a2941a06dae761ebaa24, type: 3}
+  m_Name: ForestBiomeSet
+  m_EditorClassIdentifier: 
+  id: 0
+  name_kr: 
+  biomeType: 0
+  roomPresets:
+  - {fileID: 11400000, guid: b09d0c516d8009842bdc4772e19f0153, type: 2}
+  - {fileID: 11400000, guid: 19c604319bf93db44939bae5ffa4c8a2, type: 2}
+  - {fileID: 11400000, guid: 661dfafd749e8e844a815fcc36e7a073, type: 2}
+  - {fileID: 11400000, guid: 438a883bf289d2a449c33b8d2e84c4cd, type: 2}
+  groundTileSet:
+  - {fileID: 11400000, guid: 129f38778de4b894484dc2d3ff170003, type: 2}
+  wallAutoTileSet:
+  - {fileID: 11400000, guid: 21c3871fcaeb26c49bd7f91a874963b9, type: 2}
+  mapObjectList: []
