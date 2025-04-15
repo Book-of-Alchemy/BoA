@@ -7,10 +7,10 @@ public enum eTestItemType
     Quest
 }
 
-[CreateAssetMenu(fileName = "TestItem", menuName= "New TestItem")]
-public class TestItem : ScriptableObject
+[CreateAssetMenu(fileName = "TestItem", menuName= "Inventory/New TestItem")]
+public class TestItem : ScriptableObject // 아이템의 데이터를 가진 클래스
 {
-    public string name;
+    public string Name;
     public eTestItemType type;
     [TextArea]public string description;
     public int maxStack;

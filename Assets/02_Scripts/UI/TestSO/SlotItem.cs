@@ -1,24 +1,21 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using static UnityEditor.Progress;
 
 [RequireComponent(typeof(CanvasGroup))]
-public class SlotItem : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
+[RequireComponent(typeof(Image))]
+public class SlotItem : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler 
 {
-    private TestItem _itemData; //테스트 아이템정보
-    public Image _image; // 아이템 Sprite
-
-    public int quantity;
-    public bool isEmpty => _itemData == null || quantity == 0;
-
-    [SerializeField] private Canvas canvas; //최상단 캔버스
-    [SerializeField] private RectTransform rectTransform; 
-    [SerializeField] private CanvasGroup canvasGroup; // S의 CanvasGroup
+    [HideInInspector] public TestItem TestItemData; //테스트 아이템정보
 
     //원래의 위치값(알맞은 위치에 드롭하지 못했을 경우 복귀 위치)
-    public Vector2 originalPosition;
-    public Transform originalParent;
+    [HideInInspector] public Vector2 originalPosition;
+    [HideInInspector] public Transform originalParent;
+
+    [SerializeField] private Image _image; // 아이템 Sprite
+    [SerializeField] private CanvasGroup canvasGroup; // S의 CanvasGroup
+    [SerializeField] private Canvas canvas; //최상단 캔버스
+    private RectTransform rectTransform; 
 
     private void Awake()
     {
@@ -27,18 +24,12 @@ public class SlotItem : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
         originalParent = GetComponentInParent<Transform>().parent;
     }
 
-    public void Init(TestItem item)
+    public void UpdateSlotItem(TestItem item)
     {
-        _itemData = item;
+        TestItemData = item;
         _image.sprite = item._Icon;
+        gameObject.SetActive(true);
     }
-
-    public void Clear()
-    {
-        _itemData = null;
-        _image.sprite = null;
-    }
-
 
     void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
     {

@@ -13,5 +13,8 @@ MonoBehaviour:
   m_Name: TestItem 2
   m_EditorClassIdentifier: 
   Name: Heart
-  Value: 1
+  type: 1
+  description: Its heart
+  maxStack: 5
+  isEquippable: 0
   _Icon: {fileID: 21300000, guid: dfccf6516ca7a8a4994c10e3f6d67b2a, type: 3}
