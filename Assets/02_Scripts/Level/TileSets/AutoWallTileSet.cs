@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,22 +13,22 @@ public class AutoWallTileSet : ScriptableObject
     /// 상 +1 우 +2 하 +4 좌 +8
     /// </summary>
     [Header("Front Wall Sprites")]
-    public List<Sprite> frontBaseSprites = new(16);
-    public List<Sprite> frontUpperSprites = new(16);
+    public Sprite[] frontBaseSprites = new Sprite[16];
+    public Sprite[] frontUpperSprites = new Sprite[16];
 
     [Header("Back Wall Sprites")]
-    public List<Sprite> backBaseSprites = new(16);
-    public List<Sprite> backUpperSprites = new(16);
+    public Sprite[] backBaseSprites = new Sprite[16];
+    public Sprite[] backUpperSprites = new Sprite[16];
 
     public Sprite GetBaseSprite(int bitmask, bool isFront)
     {
         var list = isFront ? frontBaseSprites : backBaseSprites;
-        return (bitmask >= 0 && bitmask < list.Count) ? list[bitmask] : null;
+        return (bitmask >= 0 && bitmask < list.Length) ? list[bitmask] : null;
     }
 
     public Sprite GetUpperSprite(int bitmask, bool isFront)
     {
         var list = isFront ? frontUpperSprites : backUpperSprites;
-        return (bitmask >= 0 && bitmask < list.Count) ? list[bitmask] : null;
+        return (bitmask >= 0 && bitmask < list.Length) ? list[bitmask] : null;
     }
 }

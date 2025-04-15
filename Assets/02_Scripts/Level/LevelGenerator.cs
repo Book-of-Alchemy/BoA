@@ -7,17 +7,25 @@ public class LevelGenerator : MonoBehaviour
 {
     public Leaf root;
     public int roomCnt;
-    public BiomeSet biomeSet;
+    public BiomeSet curBiomeSet;
 
     private void Start()
     {
         TileManger.Instance.levelGenerator = this;
-        TileManger.Instance.curLevel = GenerateLevel(30, 30);
     }
 
-    public Level GenerateLevel(int rootWidth, int rootHeight, int minSize = 7, bool isBossRoom = false)
+    public void SetLevelGenerator(BiomeSet biomeSet, int roomCnt, int rootWidth, int rootHeight)
+    {
+        SetRoot(rootWidth, rootHeight);
+        this.roomCnt = roomCnt;
+        curBiomeSet = biomeSet;
+    }
+
+    public Level GenerateLevel(int minSize = 7, bool isBossRoom = false)
     {
         Level level = new GameObject("Level").AddComponent<Level>();
+        level.biomeSet = curBiomeSet;
+        level.tileDataBase = TileManger.Instance.tileData;
 
         List<Leaf> seletedLeaves;
         List<Leaf> extraLeaves;
@@ -28,7 +36,7 @@ public class LevelGenerator : MonoBehaviour
         Leaf scretLeaf;
         List<(Leaf, Leaf)> Edges;
 
-        SetRoot(rootWidth, rootHeight);
+
         SeletedLeaf(roomCnt, SplitMap(minSize), out seletedLeaves, out extraLeaves);
         SelectStartAndEndLeaf(seletedLeaves, out startLeaf, out endLeaf);
         Edges = GenerateKruskalMST(seletedLeaves);
@@ -62,8 +70,13 @@ public class LevelGenerator : MonoBehaviour
         level.tiles = tiles;
 
         ConnectEdgesWithPaths(Edges, level);
+        foreach (var tile in level.tiles)
+        {
+            FillWallByCorridor(tile.Value, level);
+        }
 
-
+        level.startTile = startLeaf.centerTile != null ? startLeaf.centerTile : null;
+        level.endTile = endLeaf.centerTile != null ? endLeaf.centerTile : null;
         return level;
     }
 
@@ -189,9 +202,11 @@ public class LevelGenerator : MonoBehaviour
 
         if (UnityEngine.Random.value < scretLeafChance)
             scretLeaf = extraLeaves[UnityEngine.Random.Range(0, extraLeaves.Count)];
-
+        else
+            return;
         scretLeaf.roomType = RoomType.secret;
         extraLeaves.Remove(scretLeaf);
+        Debug.Log($"scretLeaf = {scretLeaf.rect.center}");
     }
 
     Leaf FindClosestLeaf(Leaf leaf, List<Leaf> leaves)
@@ -286,9 +301,9 @@ public class LevelGenerator : MonoBehaviour
 
     RoomPreset GetFittableRoom(Leaf leaf, RoomType type)
     {
-        if (biomeSet == null) return null;
+        if (curBiomeSet == null) return null;
 
-        List<RoomPreset> roomList = biomeSet.GetPresets(type);
+        List<RoomPreset> roomList = curBiomeSet.GetPresets(type);
         List<RoomPreset> fittableRoomList = new List<RoomPreset>();
 
         foreach (var list in roomList)
@@ -466,11 +481,6 @@ public class LevelGenerator : MonoBehaviour
 
                 level.tiles[doorA.gridPosition].isDoorPoint = false;
                 level.tiles[doorB.gridPosition].isDoorPoint = false;
-
-                foreach (var tile in path)
-                {
-                    FillWallByCorridor(tile, level);
-                }
             }
         }
     }
@@ -488,6 +498,11 @@ public class LevelGenerator : MonoBehaviour
                 minDist = dist;
                 closest = door;
             }
+        }
+
+        if (closest != null)
+        {
+            leaf.doorPoint.Remove(closest);
         }
 
         return closest;

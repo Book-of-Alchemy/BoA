@@ -5,12 +5,12 @@ using UnityEngine;
 public static class TilePainter
 {
     public static GameObject game;
-    public static void GenerateTileObject(Level level, BiomeSet biomeSet)
+    public static void GenerateTileObject(Level level, TileDataBase tileDataBase)
     {
         Dictionary<Vector2Int, Tile> tiles = level.tiles;
         List<GroundTileSet> groundTileSets = level.biomeSet.groundTileSet;
         List<AutoWallTileSet> wallTileSets = level.biomeSet.wallAutoTileSet;
-        List<AutoEnvironmentalSet> environmentalSets = level.biomeSet.environmentalTileSet;
+        List<AutoEnvironmentalSet> environmentalSets = level.tileDataBase.environmentalTileSet;
         GameObject groundPrefab = TileManger.Instance.groundPrefab;
         GameObject wallPrefab = TileManger.Instance.wallPrefab;
         GameObject environmentalPrefab = TileManger.Instance.environmentalPrefab;
@@ -24,7 +24,7 @@ public static class TilePainter
                     SetGroundTile(tile.Value, groundTileSets, groundPrefab);
                     break;
                 case TileType.wall:
-                    SetWallTile(tile.Value,level, wallTileSets, wallPrefab);
+                    SetWallTile(tile.Value, level, wallTileSets, wallPrefab);
                     break;
                 default:
                     break;
@@ -33,7 +33,7 @@ public static class TilePainter
 
         foreach (var tile in tiles)
         {
-            if(tile.Value.environmentType == EnvironmentType.none)
+            if (tile.Value.environmentType == EnvironmentType.none)
                 continue;
 
             SetEnvironmentTile(tile.Value, level, environmentalSets, environmentalPrefab);
@@ -45,8 +45,10 @@ public static class TilePainter
         GameObject TileGO = UnityEngine.Object.Instantiate(groundPrefab, new Vector3Int(tile.gridPosition.x, tile.gridPosition.y, 0), Quaternion.identity);
         TilePrefab tilePrefab = TileGO.GetComponent<TilePrefab>();
         tilePrefab.tile = tile;
-        if (tilePrefab.baseRenderer != null)
-            tilePrefab.baseRenderer.sprite = groundTileSets[0].groundSprite;
+        if (tilePrefab.baseRenderer == null) return;
+
+        tilePrefab.baseRenderer.sprite = groundTileSets[0].groundSprite;
+        tilePrefab.baseRenderer.sortingOrder = -1000;
     }
 
     private static void SetWallTile(Tile tile, Level level, List<AutoWallTileSet> wallTileSets, GameObject wallPrefab)
@@ -58,8 +60,10 @@ public static class TilePainter
 
         bool isFront = IsFrontWall(tile, level);
         int bitask = CalculateWallBitmask(tile, level);
-        tilePrefab.baseRenderer.sprite = wallTileSets[0].GetBaseSprite(bitask,isFront);
+        tilePrefab.baseRenderer.sprite = wallTileSets[0].GetBaseSprite(bitask, isFront);
         tilePrefab.upperRenderer.sprite = wallTileSets[0].GetUpperSprite(bitask, isFront);
+        tilePrefab.baseRenderer.sortingOrder = -tile.gridPosition.y;
+        tilePrefab.upperRenderer.sortingOrder = -tile.gridPosition.y;
     }
 
     private static bool IsFrontWall(Tile tile, Level level)
@@ -99,8 +103,9 @@ public static class TilePainter
         EnvironmentPrefab tilePrefab = TileGO.GetComponent<EnvironmentPrefab>();
         if (tilePrefab.baseRenderer == null) return;
 
-        int bitask = CalculateEnvironmentBitmask(tile, level,tile.environmentType);
+        int bitask = CalculateEnvironmentBitmask(tile, level, tile.environmentType);
         tilePrefab.baseRenderer.sprite = environmentalSets[0].GetSprite(bitask);
+        tilePrefab.baseRenderer.sortingOrder = -900;
     }
 
     public static int CalculateEnvironmentBitmask(Tile tile, Level level, EnvironmentType type)
@@ -113,7 +118,7 @@ public static class TilePainter
         for (int i = 0; i < 4; i++)
         {
             Tile neighbor = level.GetAdjacentTile(tile, (FourDir)i);
-            if (IsEnvironmentByType(neighbor,type))
+            if (IsEnvironmentByType(neighbor, type))
                 bitmask |= 1 << i;
         }
 

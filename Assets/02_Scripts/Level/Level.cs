@@ -25,8 +25,12 @@ public enum EightDir
 
 public class Level : MonoBehaviour
 {
+    public TileDataBase tileDataBase;
     public BiomeSet biomeSet;
+    public Tile startTile;
+    public Tile endTile;
     public Dictionary<Vector2Int, Tile> tiles = new Dictionary<Vector2Int, Tile>();
+    public bool isPainted = false;
 
 
     public Tile GetAdjacentTile(Tile tile, FourDir dir)
