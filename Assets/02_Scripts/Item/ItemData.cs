@@ -1,12 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json;
+
+[JsonConverter(typeof(StringEnumConverter))]
 public enum Item_Type
 {
     Consumable,
     Material,
 }
 
+[JsonConverter(typeof(StringEnumConverter))]
 public enum Attribute
 {
     Non_elemental,
@@ -21,6 +26,7 @@ public enum Attribute
     None,
 }
 
+[JsonConverter(typeof(StringEnumConverter))]
 public enum Effect_Type
 {
     Damage,
@@ -28,9 +34,11 @@ public enum Effect_Type
     Buff,
     Debuff,
     Move,
+    Place_Trap,
     None,
 }
 
+[JsonConverter(typeof(StringEnumConverter))]
 public enum Tag
 {
     Throw,
@@ -76,7 +84,7 @@ public class ItemData : ScriptableObject
     public int target_range;
     public int effect_range;
     public Effect_Type effect_type;
-    public Tag[] tags;
+    ///public Tag[] tags;
     public int effect_value;
     public int effect_id;
     public int effect_duration;
@@ -86,3 +94,4 @@ public class ItemData : ScriptableObject
     public string iteminfo_kr;
     public string icon_sprite;
 }
+

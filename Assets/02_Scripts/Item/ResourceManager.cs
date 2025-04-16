@@ -13,8 +13,8 @@ public class ResourceManager : Singleton<ResourceManager>
     private int intNullvalue = -1;
 
 
-    private const string itemPath = "Item";
-    private const string recipePath = "Recipe";
+    private const string itemPath = "Items";
+    private const string recipePath = "Recipes";
     protected override void Awake()
     {
         base.Awake();
@@ -50,6 +50,10 @@ public class ResourceManager : Singleton<ResourceManager>
     void EffectTypeAdd()
     {
         effectTypeData.Add(Effect_Type.Damage, new DamageItem());
+        effectTypeData.Add(Effect_Type.Buff, new BuffItem());
+        effectTypeData.Add(Effect_Type.Debuff, new DeBuffItem());
+        effectTypeData.Add(Effect_Type.Heal, new HealItem());
+        effectTypeData.Add(Effect_Type.Move, new MoveItem());
     }
 
 
