@@ -71,7 +71,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        // 만약 왼쪽 컨트롤 키가 눌렸다면 방향 입력만 받아서 공격 방향을 업데이트
+        // 왼쪽 컨트롤 키가 눌렸다면 방향 입력만 받아서 공격 방향 업데이트
         if (Keyboard.current.leftCtrlKey.isPressed)
         {
             Vector2 input = _moveAction.ReadValue<Vector2>();
@@ -82,7 +82,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        // 공격 실행은 컨트롤키와 무관하게 확인 액션(Z 또는 Enter)로 처리
+        // 공격 실행은 컨트롤 키와 무관하게 확인 액션(Z 또는 Enter)로 처리
         if (_confirmAction.triggered)
         {
             // 설정된 공격 방향이 없으면 마지막 이동 방향을 사용
@@ -90,7 +90,7 @@ public class PlayerController : MonoBehaviour
             AttackInDirection(attackDir);
         }
 
-        // 컨트롤 키가 눌려 있지 않은 경우에만 이동 로직을 실행
+        // 컨트롤 키가 눌려 있지 않은 경우에만 이동 로직 실행
         if (!Keyboard.current.leftCtrlKey.isPressed)
         {
             Vector2 moveInput = _moveAction.ReadValue<Vector2>();
@@ -123,7 +123,7 @@ public class PlayerController : MonoBehaviour
                     Vector3 targetCell = currentCell + offset;
                     _targetPosition = targetCell + new Vector3(0.5f, 0.5f, 0);
 
-                    // 이동 시작 전에 목표칸에 이미 다른 유닛이 있는지 검사
+                    // 이동 시작 전에 목표 칸에 이미 다른 유닛이 있는지 검사
                     Collider2D hit = Physics2D.OverlapPoint(_targetPosition, UnitLayer);
                     if (hit != null && hit.gameObject != gameObject)
                     {
@@ -141,7 +141,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        // 나머지 입력 처리 (취소, 메뉴, 대시)
+        // 취소, 메뉴, 대시 입력 처리
         if (_cancelAction.triggered)
             Debug.Log("취소 눌림");
         if (_menuAction.triggered)
@@ -167,12 +167,12 @@ public class PlayerController : MonoBehaviour
         transform.position = destination;
         _isMoving = false;
 
-        // 이동 후 행동력 차감 및 클램프 처리 (행동력 범위를 0~1로 유지)
+        // 이동 후 행동력 차감 및 계산 (버프 시스템을 이용하여 소비)
         if (_playerStats != null)
         {
-            _playerStats.ActionPoints -= MoveActionCost;
-            _playerStats.ActionPoints = Mathf.Clamp(_playerStats.ActionPoints, 0f, 1f);
-            Debug.Log("ActionPoints 소모됨: " + MoveActionCost + " 남은 행동력: " + _playerStats.ActionPoints);
+            // 행동력 소비: 이동과 같은 코스트만큼 소비 후 BuffManager에서 최종 AP 재계산
+            _playerStats.BuffManager.ApplyBuff(-MoveActionCost, 0); // 지속 턴 0은 즉시 소비
+            Debug.Log("ActionPoints 소모됨: " + MoveActionCost + ", 남은 AP: " + _playerStats.BuffManager.GetFinalActionPoints());
         }
         yield break;
     }
@@ -186,7 +186,7 @@ public class PlayerController : MonoBehaviour
 
         while (cellsMoved < maxCells)
         {
-            if (_playerStats != null && _playerStats.ActionPoints < MoveActionCost)
+            if (_playerStats != null && _playerStats.BuffManager.GetFinalActionPoints() < MoveActionCost)
             {
                 Debug.Log("행동력이 부족하여 대시 중단");
                 break;
@@ -215,15 +215,16 @@ public class PlayerController : MonoBehaviour
         yield break;
     }
 
+    // 공격 방향에 따라 공격 실행 (Raycast를 사용)
     void AttackInDirection(Vector2 direction)
     {
-        // 공격 방향을 단위 벡터로 만들고
+        // 공격 방향을 단위 벡터로 만듦
         Vector2 attackDir = direction.normalized;
 
         Collider2D myCollider = GetComponent<Collider2D>();
         float offsetDistance = myCollider != null ? myCollider.bounds.extents.magnitude + 0.1f : 0.1f;
 
-        // 오프셋을 적용하여 레이의 시작점을 결정
+        // 오프셋을 적용하여 레이 시작점 결정
         Vector2 origin = (Vector2)transform.position + attackDir * offsetDistance;
 
         // 레이 길이 설정
@@ -231,8 +232,6 @@ public class PlayerController : MonoBehaviour
 
         // Raycast 실행
         RaycastHit2D hit = Physics2D.Raycast(origin, attackDir, rayDistance, UnitLayer);
-
-        // 디버그용
         Debug.DrawRay(origin, attackDir * rayDistance, Color.red, 1f);
 
         if (hit.collider != null && hit.collider.CompareTag("Enemy"))
@@ -240,11 +239,10 @@ public class PlayerController : MonoBehaviour
             EnemyStats enemyStats = hit.collider.GetComponent<EnemyStats>();
             if (enemyStats != null)
             {
-                GetComponent<PlayerStats>().Attack(enemyStats);
-                // 행동력소비
-                _playerStats.ActionPoints -= MoveActionCost;
-                _playerStats.ActionPoints = Mathf.Clamp(_playerStats.ActionPoints, 0f, 1f);
-                Debug.Log("공격 후 행동력 소비됨: " + MoveActionCost + " 남은 행동력: " + _playerStats.ActionPoints);
+                _playerStats.Attack(enemyStats);
+                // 공격 후 행동력 소비 (이동과 같은 코스트)
+                _playerStats.BuffManager.ApplyBuff(-MoveActionCost, 0);
+                Debug.Log("공격 후 행동력 소비됨: " + MoveActionCost + ", 남은 AP: " + _playerStats.BuffManager.GetFinalActionPoints());
             }
             else
             {
@@ -256,6 +254,4 @@ public class PlayerController : MonoBehaviour
             Debug.Log("공격할 적이 없음.");
         }
     }
-
-
 }
