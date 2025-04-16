@@ -473,7 +473,7 @@ public class LevelGenerator : MonoBehaviour
 
             List<Tile> path = AStarPathfinder.FindPath(doorA, doorB, level, false);
 
-            if (path != null)
+            if (path != null || path.Count >= 2)
             {
                 foreach (var tile in path)
                 {

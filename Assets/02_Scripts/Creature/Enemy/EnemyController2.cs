@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class EnemyController2 : MonoBehaviour
 {
+    public Level curLevel;
     public EnemyAIType AIType = EnemyAIType.BasicTracking;
     public float MoveSpeed = 3f;         // 기본 이동 속도
     public float DetectionRange = 10f;   // 플레이어 감지 범위 (그리드 단위)
