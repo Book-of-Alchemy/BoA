@@ -19,7 +19,7 @@ MonoBehaviour:
   roomSize: {x: 9, y: 8}
   tileList:
   - position: {x: 8, y: 6}
-    tileType: 0
+    tileType: 2
     environmentType: 0
     isDoorPoint: 0
   - position: {x: 8, y: 5}
@@ -39,7 +39,7 @@ MonoBehaviour:
     environmentType: 0
     isDoorPoint: 0
   - position: {x: 1, y: 4}
-    tileType: 0
+    tileType: 2
     environmentType: 0
     isDoorPoint: 0
   - position: {x: 1, y: 3}
@@ -55,43 +55,43 @@ MonoBehaviour:
     environmentType: 0
     isDoorPoint: 0
   - position: {x: 1, y: 7}
-    tileType: 0
+    tileType: 2
     environmentType: 0
     isDoorPoint: 0
   - position: {x: 1, y: 5}
-    tileType: 0
+    tileType: 2
     environmentType: 0
     isDoorPoint: 0
   - position: {x: 1, y: 6}
-    tileType: 0
+    tileType: 2
     environmentType: 0
     isDoorPoint: 0
   - position: {x: 2, y: 7}
-    tileType: 0
+    tileType: 2
     environmentType: 0
     isDoorPoint: 0
   - position: {x: 6, y: 7}
-    tileType: 0
+    tileType: 2
     environmentType: 0
     isDoorPoint: 0
   - position: {x: 7, y: 7}
-    tileType: 0
+    tileType: 2
     environmentType: 0
     isDoorPoint: 0
   - position: {x: 8, y: 7}
-    tileType: 0
+    tileType: 2
     environmentType: 0
     isDoorPoint: 0
   - position: {x: 3, y: 7}
-    tileType: 0
+    tileType: 2
     environmentType: 0
     isDoorPoint: 1
   - position: {x: 4, y: 7}
-    tileType: 0
+    tileType: 2
     environmentType: 0
     isDoorPoint: 0
   - position: {x: 5, y: 7}
-    tileType: 0
+    tileType: 2
     environmentType: 0
     isDoorPoint: 0
   - position: {x: 2, y: 1}
