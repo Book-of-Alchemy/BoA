@@ -46,7 +46,8 @@ public class RoomPresetEditor : Editor
             );
 
             // 레이블 표시
-            Handles.Label(drawPos + Vector3.up * 0.3f, tile.tileType.ToString(), new GUIStyle()
+            float extraOffset = 0.12f * ((tile.environmentType == EnvironmentType.none ? 1f : 0f)+ (tile.isDoorPoint ? 1f : 0f));
+            Handles.Label(drawPos + Vector3.up *(0.3f+ extraOffset), $"{tile.tileType.ToString()}{(tile.environmentType == EnvironmentType.none ? "" : $"\n{tile.environmentType.ToString()}")}{(tile.isDoorPoint? "\nDoorPoint" : "")}", new GUIStyle()
             {
                 fontSize = 10,
                 normal = new GUIStyleState() { textColor = Color.white }

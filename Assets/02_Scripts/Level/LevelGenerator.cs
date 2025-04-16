@@ -393,6 +393,7 @@ public class LevelGenerator : MonoBehaviour
                     tileType = info.tileType,
                     environmentType = info.environmentType,
                     isDoorPoint = info.isDoorPoint,
+                    canSeeThrough = (info.tileType == TileType.wall ? false : true),
                     isOccupied = false,
                     isExplored = false,
                     isOnSight = false
@@ -513,23 +514,45 @@ public class LevelGenerator : MonoBehaviour
         if (tile.tileType != TileType.ground) return;
 
         Dictionary<Vector2Int, Tile> tiles = level.tiles;
-        List<Tile> checkList = level.GetAdjacentTileList(tile, true);
+        List<Tile> checkList = TileUtility.GetAdjacentTileList(level,tile, true);
+        List<Vector2Int> directions = GetEightDirectionOffsets(); // 방향 목록
 
-        foreach (var check in checkList)
+        for (int i = 0; i < checkList.Count; i++)
         {
+            Tile check = checkList[i];
+            Vector2Int offset = directions[i];
+            Vector2Int newPos = tile.gridPosition + offset;
+
             if (check == null)
             {
-                continue;//새로 만들어서 넣어야 될수도 있음
+                // 해당 위치에 Tile이 없으므로 새로 만들어서 추가
+                Tile newWallTile = CreateWallTile(newPos);
+                tiles[newPos] = newWallTile;
+                continue;
             }
 
             if (check.tileType == TileType.empty)
             {
                 check.tileType = TileType.wall;
-                continue;
             }
         }
-
     }
+
+    List<Vector2Int> GetEightDirectionOffsets()
+    {
+        return new List<Vector2Int>
+    {
+        new Vector2Int(0, 1),    // 위
+        new Vector2Int(1, 1),    // 우상
+        new Vector2Int(1, 0),    // 오른쪽
+        new Vector2Int(1, -1),   // 우하
+        new Vector2Int(0, -1),   // 아래
+        new Vector2Int(-1, -1),  // 좌하
+        new Vector2Int(-1, 0),   // 왼쪽
+        new Vector2Int(-1, 1)    // 좌상
+    };
+    }
+
 
     Tile CreateWallTile(Vector2Int pos)
     {
@@ -540,6 +563,7 @@ public class LevelGenerator : MonoBehaviour
             environmentType = EnvironmentType.none,
             isDoorPoint = false,
             isOccupied = false,
+            canSeeThrough = false,
             isExplored = false,
             isOnSight = false
         };

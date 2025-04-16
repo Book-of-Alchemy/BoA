@@ -70,7 +70,7 @@ public static class TilePainter
 
     private static bool IsFrontWall(Tile tile, Level level)
     {
-        return level.GetAdjacentTile(tile, FourDir.down).tileType == TileType.ground;
+        return TileUtility.GetAdjacentTile(level,tile, FourDir.down).tileType == TileType.ground;
     }
 
     public static int CalculateWallBitmask(Tile tile, Level level)
@@ -82,7 +82,7 @@ public static class TilePainter
 
         for (int i = 0; i < 4; i++)
         {
-            Tile neighbor = level.GetAdjacentTile(tile, (FourDir)i);
+            Tile neighbor = TileUtility.GetAdjacentTile(level, tile, (FourDir)i);
             if (IsWallLike(neighbor))
                 bitmask |= 1 << i;
         }
@@ -120,7 +120,7 @@ public static class TilePainter
 
         for (int i = 0; i < 4; i++)
         {
-            Tile neighbor = level.GetAdjacentTile(tile, (FourDir)i);
+            Tile neighbor = TileUtility.GetAdjacentTile(level,tile, (FourDir)i);
             if (IsEnvironmentByType(neighbor, type))
                 bitmask |= 1 << i;
         }
