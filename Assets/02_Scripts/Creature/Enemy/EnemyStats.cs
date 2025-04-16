@@ -2,15 +2,20 @@ using UnityEngine;
 
 public class EnemyStats : CharacterStats
 {
-    void Start()
+    public BuffManager BuffManager { get; private set; }
+
+    void Awake()
     {
-        // 이 적을 GameManager에 등록합니다.
+        BuffManager = GetComponent<BuffManager>();
+        if (BuffManager == null)
+            BuffManager = gameObject.AddComponent<BuffManager>();
+
+        // GameManager에 적 등록
         GameManager.Instance.RegisterEnemy(this);
     }
 
     void OnDestroy()
     {
-        // 파괴될 때 GameManager에서 제거합니다.
         if (GameManager.Instance != null)
             GameManager.Instance.UnregisterEnemy(this);
     }

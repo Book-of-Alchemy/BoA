@@ -15,9 +15,7 @@ public class TurnManager : MonoBehaviour
     public TurnState CurrentTurn;
     public PlayerStats Player;
 
-    // GameManager에서 가져온 리스트를 사용
-    private List<EnemyStats> _enemies;
-
+    private List<EnemyStats> enemies;
     private bool _isEnemyTurnRunning = false;
 
     void Awake()
@@ -31,39 +29,36 @@ public class TurnManager : MonoBehaviour
     void Start()
     {
         if (GameManager.Instance.PlayerTransform != null)
-        {
             Player = GameManager.Instance.PlayerTransform.GetComponent<PlayerStats>();
-        }
         else
-        {
             Debug.LogWarning("GameManager에 플레이어가 등록되지 않았습니다.");
-        }
 
-        // GameManager의 Enemies 리스트를 사용
-        _enemies = GameManager.Instance.Enemies;
-
+        enemies = GameManager.Instance.Enemies;
         CurrentTurn = TurnState.PlayerTurn;
     }
 
     void Update()
     {
-        if (CurrentTurn == TurnState.PlayerTurn && Player.ActionPoints <= 0 && !_isEnemyTurnRunning)
+        // 플레이어 턴 종료 조건: 행동력이 0 이하일 때
+        if (CurrentTurn == TurnState.PlayerTurn && Player.BuffManager.GetFinalActionPoints() <= 0 && !_isEnemyTurnRunning)
         {
+            // 플레이어의 상태 효과 업데이트 후 적 턴 실행
+            Player.BuffManager.UpdateBuffs();
             StartCoroutine(EnemyTurn());
         }
     }
 
-    // 적 턴 진행 코루틴
     IEnumerator EnemyTurn()
     {
         _isEnemyTurnRunning = true;
         CurrentTurn = TurnState.EnemyTurn;
 
-        // GameManager에서 등록된 적 리스트를 안전하게 순회
-        foreach (EnemyStats enemy in _enemies.ToArray())
+        // 적 턴 시작 전 각 적의 버프 업데이트
+        foreach (EnemyStats enemy in enemies.ToArray())
         {
             if (enemy == null)
                 continue;
+            enemy.BuffManager.UpdateBuffs();
             EnemyController enemyController = enemy.GetComponent<EnemyController>();
             if (enemyController != null)
                 yield return StartCoroutine(enemyController.TakeTurn());
@@ -74,10 +69,11 @@ public class TurnManager : MonoBehaviour
             }
         }
 
-        Player.ActionPoints = 1.0f;
+        // 적 턴 종료 후 플레이어 AP 복구 (버프 업데이트)
+        Player.BuffManager.ApplyBuff(0, 0);  // 효과 적용 없이 재계산
         CurrentTurn = TurnState.PlayerTurn;
         _isEnemyTurnRunning = false;
-        Debug.Log("복구된 행동력: " + Player.ActionPoints);
+        Debug.Log("복구된 행동력: " + Player.BuffManager.GetFinalActionPoints());
         yield break;
     }
 }
