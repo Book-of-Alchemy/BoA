@@ -1,60 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 public class UI_Inventory : UIBase
 {
-    public static UI_Inventory Instance { get; private set; }
-
-    public List<TestItem> randomItem; // AddItem에서 적용할 랜덤한 아이템 SO
-
-    public List<Slots> slots;
-
     [SerializeField] private ItemInfo _itemInfo;
-
-    private void Awake()
-    {
-        Instance = this;
-
-    }
-
-    void UpdateIntemInfo()
-    {
-
-    }
-
-    //public bool AddItem(TestItem item, int amount)
-    //{
-    //    foreach (var slot in inventoryData.slots)
-    //    {
-    //        //중복 또는 최대 수량 도달 안했을때 해당 인벤토리에 추가
-    //        if (!slot.IsEmpty && slot.item == item && slot.quantity < item.maxStack)
-    //        {
-    //            slot.quantity += amount;
-    //            return true;
-    //        }
-    //    }
-
-    //    foreach (var slot in inventoryData.slots)
-    //    {
-    //        if (slot.IsEmpty)
-    //        {
-    //            slot.item = item;
-    //            slot.quantity = amount;
-    //            return true;
-    //        }
-    //    }
-
-    //    return false;
-    //}
-
-    //public void RemoveItem(int slotIndex)
-    //{
-    //    if (slotIndex >= 0 && slotIndex < inventoryData.slots.Count)
-    //    {
-    //        inventoryData.slots[slotIndex].Clear();
-    //    }
-    //}
+    [SerializeField] private Inventory _inventory; //데이터를 가지고 있는 인벤토리
+    [SerializeField] private List<InventorySlotUI> _slotUIList; //= new(); //인벤토리 UI가 가지고있는 SlotUI를 리스트로 가지고 있음.
 
     public override void HideDirect() //Call at OnClick Event 
     {
@@ -66,43 +17,21 @@ public class UI_Inventory : UIBase
         
     }
 
-    public void OnClickAddItem() //Call at OnClick Event 
+    public void SetSlotItem(Sprite sprite, int index, int amount =1) //슬롯에 아이템 UI 갱신
     {
-        int i = Random.Range(0, randomItem.Count);
-        foreach (var slot in slots)
-        {
-            if(slot._item.TestItemData == null)
-            {
-                slot.UpdateItem(randomItem[i]);
-                break;
-            }
-        }
-        //foreach (var slot in inventoryData.slots)
-        //{
-        //    //중복 또는 최대 수량 도달 안했을때 해당 인벤토리에 추가
-        //    if (!slot.IsEmpty && slot.item == item && slot.quantity < item.maxStack)
-        //    {
-        //        slot.quantity += amount;
-        //        return true;
-        //    }
-        //}
-
-        //foreach (var slot in inventoryData.slots)
-        //{
-        //    if (slot.IsEmpty)
-        //    {
-        //        slot.item = item;
-        //        slot.quantity = amount;
-        //        return true;
-        //    }
-        //}
+        _slotUIList[index].SetItem(sprite);
+        _slotUIList[index].SetItemAmount(amount);
     }
 
-    public void OnSlotSelected(Slots slot)
+    public void RemoveItem(int index) // 슬롯에 아이템 아이콘, 갯수 제거
     {
-        
-        ItemInfo.Instance.ShowInfo(slot._item.TestItemData);
-       
+        _slotUIList[index].RemoveItem();
+    }
+
+
+    public void OnSlotSelected(InventorySlotUI slot)
+    {
+        //ItemInfo.Instance.ShowInfo(slot._item.TestItemData);
     }
 
     public void OnSlotDeselected()

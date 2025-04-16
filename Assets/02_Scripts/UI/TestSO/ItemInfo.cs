@@ -25,11 +25,11 @@ public class ItemInfo : MonoBehaviour
         _image.gameObject.SetActive(false);
     }
 
-    public void ShowInfo(TestItem data) // 인자 값에 정보를 UI에 보여줌
+    public void ShowInfo(InventoryItemData data) // 인자 값에 정보를 UI에 보여줌
     {
         _itemNameTxt.text = data.name;
         _itemDescTxt.text = data.description;
         _image.gameObject.SetActive(true);
-        _image.sprite = data._Icon;
+        _image.sprite = data.Icon;
     }
 }
