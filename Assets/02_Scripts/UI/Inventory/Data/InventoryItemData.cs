@@ -2,9 +2,8 @@ using UnityEngine;
 
 public enum eTestItemType
 {
-    Armor,
-    Consumable,
-    Quest
+    material,
+    consumable
 }
 
 [CreateAssetMenu(fileName = "TestItem", menuName= "Inventory/New TestItem")]

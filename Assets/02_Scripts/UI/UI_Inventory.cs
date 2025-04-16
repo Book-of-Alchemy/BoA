@@ -17,10 +17,9 @@ public class UI_Inventory : UIBase
         
     }
 
-    public void SetSlotItem(Sprite sprite, int index, int amount =1) //슬롯에 아이템 UI 갱신
+    public void SetSlotItem(int index, InventoryItem item) //슬롯에 아이템 UI 갱신
     {
-        _slotUIList[index].SetItem(sprite);
-        _slotUIList[index].SetItemAmount(amount);
+        _slotUIList[index].SetItem(item);
     }
 
     public void RemoveItem(int index) // 슬롯에 아이템 아이콘, 갯수 제거
