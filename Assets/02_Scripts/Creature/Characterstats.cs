@@ -66,6 +66,7 @@ public abstract class CharacterStats : MonoBehaviour
         if (CurrentHealth < 0f)
         {
             CurrentHealth = 0f;
+            Die();
         }
         Debug.Log(gameObject.name + " 는 " + damage + " 의 데미지를 받음");
     }
@@ -78,5 +79,13 @@ public abstract class CharacterStats : MonoBehaviour
             CurrentHealth = MaxHealth;
         }
         Debug.Log(gameObject.name + " 는 " + amount + " 만큼 회복됨");
+    }
+
+    public virtual void Die()
+    {
+        if (CurrentHealth == 0f)
+        {
+            Debug.Log(gameObject.name + "(이)가 사망함");
+        }
     }
 }
