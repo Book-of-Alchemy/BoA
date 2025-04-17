@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class TileManger : Singleton<TileManger>
 {
@@ -22,6 +23,12 @@ public class TileManger : Singleton<TileManger>
             if (enemy == null) continue;
 
             enemy.curLevel = curLevel;
+
+            if (curLevel.tiles.TryGetValue(new Vector2Int(Mathf.RoundToInt(enemy.transform.position.x), Mathf.RoundToInt(enemy.transform.position.y)), out Tile targerTile))
+            {
+                targerTile.characterStats = enemy;
+                enemy.curTile = targerTile;
+            }
         }
         
 

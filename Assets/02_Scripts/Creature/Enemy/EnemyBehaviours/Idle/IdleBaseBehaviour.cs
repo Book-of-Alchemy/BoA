@@ -6,16 +6,27 @@ public class IdleBaseBehaviour : BaseBehaviour
 {
     public override void Excute()
     {
-        List<Tile> vision = enemyStats.TilesOnVision;
+        if (StateCheck())
+            Action();
+    }
 
+    public override bool StateCheck()
+    {
         foreach (Tile tile in vision)
         {
             if (tile.characterStats is PlayerStats player)
             {
                 controller.ChangeState(EnemyState.Chase);
                 controller.lastCheckedTile = tile;
-                break;
+                return false;
             }
         }
+
+        return true;
+    }
+
+    public override void Action()
+    {
+        
     }
 }

@@ -1,5 +1,7 @@
 using UnityEngine;
 using DG.Tweening;
+using System;
+using System.Collections;
 
 public enum EnemyState
 {
@@ -10,25 +12,28 @@ public enum EnemyState
 
 public class EnemyController2 : MonoBehaviour
 {
-    public float MoveSpeed = 3f;
+    public float moveSpeed = 3f;
     public float DetectionRange = 10f;
     public EnemyState _currentState = EnemyState.Idle;
-    public EnemyController2 _controller;
     public Tile lastCheckedTile = null;
     IdleBaseBehaviour idleBehaviour;
     ChaseBaseBehaviour chaseBehaviour;
     AttackBaseBehaviour attackBehaviour;
+    IMovementStrategy moveStrategy;
+    EnemyAnimatorController animationController;
     PlayerStats _playerStats;
+    EnemyStats _enemyStats;
     Tween _currentTween;
 
     void Awake()
     {
         GameManager.Instance.RegisterEnemy(GetComponent<EnemyStats>());
-        _controller = GetComponent<EnemyController2>();
+        _enemyStats = gameObject.GetComponent<EnemyStats>();
         idleBehaviour = GetComponent<IdleBaseBehaviour>();
         chaseBehaviour = GetComponent<ChaseBaseBehaviour>();
         attackBehaviour = GetComponent<AttackBaseBehaviour>();
-
+        moveStrategy = GetComponent<IMovementStrategy>();
+        animationController = GetComponent<EnemyAnimatorController>();
     }
 
     void Start()
@@ -36,7 +41,7 @@ public class EnemyController2 : MonoBehaviour
         _playerStats = GameManager.Instance.PlayerTransform.GetComponent<PlayerStats>();
     }
 
-    public void TakeTurn()
+    public IEnumerator TakeTurn()
     {
         if (_currentTween != null && _currentTween.IsActive()) _currentTween.Kill();
 
@@ -52,69 +57,63 @@ public class EnemyController2 : MonoBehaviour
                 HandleAttack();
                 break;
         }
+
+        yield break;
     }
 
     public void ChangeState(EnemyState newState)
     {
         _currentState = newState;
-        TakeTurn(); // 상태 바뀌자마자 바로 행동
+        TakeTurn(); // 상태 바뀌자마자 바로 행동 즉 실질 행동시작 전에 상태체크를우선해야함
     }
 
     private void HandleIdle()
     {
-        float dist = GetDistanceToPlayer();
-        if (dist <= 1.0f)
-            _currentState = EnemyState.Attack;
-        else if (dist <= DetectionRange)
-            _currentState = EnemyState.Chase;
-
-        _currentTween = DOVirtual.DelayedCall(0.5f, TakeTurn);
+        idleBehaviour?.Excute();
     }
 
     private void HandleChase()
     {
-        float dist = GetDistanceToPlayer();
-
-        if (dist <= 1.0f)
-        {
-            _currentState = EnemyState.Attack;
-            TakeTurn(); // 즉시 다음 상태 처리
-            return;
-        }
-
-        if (dist > DetectionRange)
-        {
-            _currentState = EnemyState.Idle;
-            TakeTurn();
-            return;
-        }
-
-        Vector3 dir = (_playerStats.transform.position - transform.position);
-        float dirX = Mathf.Abs(dir.x) > 0.1f ? Mathf.Sign(dir.x) : 0f;
-        float dirY = Mathf.Abs(dir.y) > 0.1f ? Mathf.Sign(dir.y) : 0f;
-        Vector3 currentCell = new Vector3(Mathf.Floor(transform.position.x), Mathf.Floor(transform.position.y), 0);
-        Vector3 targetCell = currentCell + new Vector3(dirX, dirY, 0);
-        Vector3 targetPos = targetCell + new Vector3(0.5f, 0.5f, 0);
-
-        Collider2D hit = Physics2D.OverlapPoint(targetPos);
-        if (hit != null && hit.CompareTag("Player"))
-        {
-            _currentState = EnemyState.Attack;
-            TakeTurn();
-            return;
-        }
-
-        float duration = 1f / MoveSpeed;
-        _currentTween = transform.DOMove(targetPos, duration)
-            .SetEase(Ease.Linear)
-            .OnComplete(() =>
-            {
-                _currentState = EnemyState.Idle;
-                TakeTurn();
-            });
+        chaseBehaviour?.Excute();
     }
 
     private void HandleAttack()
+    {
+        attackBehaviour?.Excute();
+    }
+
+
+    public void MoveTo(Vector2Int targetPosition,  Action onComplete = null)
+    {
+        Vector3 position = new Vector3(targetPosition.x, targetPosition.y, 0);
+
+        if(moveStrategy != null)
+            moveStrategy.Move(this.transform , position, animationController, onComplete);
+        else
+            BasicMove(position, onComplete);
+    }
+
+    void BasicMove(Vector3 targetPosition,  Action onComplete = null)
+    {
+        animationController?.TriggerMove();
+
+        _currentTween?.Kill(); // 기존 움직임 취소
+        _currentTween = transform.DOMove(targetPosition, 1f / moveSpeed)
+            .SetEase(Ease.Linear)
+            .OnComplete(() =>
+            {
+                animationController?.TriggerIdle();
+                onComplete?.Invoke();
+                });
+    }
+
+    public void Attack( Action onComplete = null)
+    {
+        animationController?.TriggerAttack();
+
+        onComplete?.Invoke();
+    }
+    /*private void HandleAttack()
     {
         float dist = GetDistanceToPlayer();
         if (dist > 1.0f)
@@ -132,14 +131,6 @@ public class EnemyController2 : MonoBehaviour
             _currentState = EnemyState.Idle;
             TakeTurn();
         });
-    }
+    }*/
 
-    private float GetDistanceToPlayer()
-    {
-        Vector2 enemyPos = new Vector2(Mathf.Floor(transform.position.x) + 0.5f,
-                                       Mathf.Floor(transform.position.y) + 0.5f);
-        Vector2 playerPos = new Vector2(Mathf.Floor(_playerStats.transform.position.x) + 0.5f,
-                                        Mathf.Floor(_playerStats.transform.position.y) + 0.5f);
-        return Vector2.Distance(enemyPos, playerPos);
-    }
 }
