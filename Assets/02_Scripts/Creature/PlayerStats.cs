@@ -13,7 +13,7 @@ public class PlayerStats : CharacterStats
             BuffManager = gameObject.AddComponent<BuffManager>();
 
         // GameManager에 플레이어 등록
-        GameManager.Instance.RegisterPlayer(transform);
+        GameManager.Instance.RegisterPlayer(this);
     }
 
     public void GainExperience(int exp)

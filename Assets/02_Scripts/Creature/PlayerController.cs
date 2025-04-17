@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
+using DG.Tweening;
 
 public class PlayerController : MonoBehaviour
 {
@@ -121,7 +122,7 @@ public class PlayerController : MonoBehaviour
                     }
                     // 목표 셀 계산: 현재 셀 + offset 후 셀 중심 좌표 (0.5, 0.5)->(0,0)으로 바꿈
                     Vector3 targetCell = currentCell + offset;
-                    _targetPosition = targetCell + new Vector3(0, 0, 0);
+                    _targetPosition = targetCell;
 
                     // 이동 시작 전에 목표 칸에 이미 다른 유닛이 있는지 검사
                     Collider2D hit = Physics2D.OverlapPoint(_targetPosition, UnitLayer);
@@ -131,8 +132,7 @@ public class PlayerController : MonoBehaviour
                         return;
                     }
 
-                    // 이동 코루틴 실행
-                    StartCoroutine(MoveToTarget(_targetPosition, isDiagonal));
+                    MoveToTargetTween(_targetPosition);
                 }
                 else
                 {
@@ -149,72 +149,37 @@ public class PlayerController : MonoBehaviour
         if (_dashAction.triggered)
         {
             Debug.Log("대쉬 활성화");
-            StartCoroutine(Dash(_lastMoveDirection));
+            // 대시 메서드 실행할 장소
         }
     }
 
     // 목표 위치까지 부드럽게 이동하는 코루틴
-    IEnumerator MoveToTarget(Vector3 destination, bool isDiagonal = false)
+    private void MoveToTargetTween(Vector3 destination)
     {
         _isMoving = true;
-        float effectiveSpeed = MoveSpeed;
-        _playerStats.OnMoveTile(new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y)),
-            new Vector2Int(Mathf.RoundToInt(destination.x), Mathf.RoundToInt(destination.y)));// 임시로 tile 이동시 tile정보 갱신
 
-        while ((destination - transform.position).sqrMagnitude > 0.001f)
-        {
-            transform.position = Vector3.MoveTowards(transform.position, destination, effectiveSpeed * Time.deltaTime);
-            yield return null;
-        }
-        transform.position = destination;
-        _isMoving = false;
+        // 타일 정보갱신
+        _playerStats.OnMoveTile(
+            new Vector2Int(
+                Mathf.RoundToInt(transform.position.x),
+                Mathf.RoundToInt(transform.position.y)),
+            new Vector2Int(
+                Mathf.RoundToInt(destination.x),
+                Mathf.RoundToInt(destination.y))
+            );
+        float distance = Vector3.Distance(transform.position, destination);
+        float duration = distance / MoveSpeed;
 
-        // 이동 후 행동력 차감 및 계산 (버프 시스템을 이용하여 소비)
-        if (_playerStats != null)
-        {
-            // 행동력 소비: 이동과 같은 코스트만큼 소비 후 BuffManager에서 최종 AP 재계산
-            _playerStats.BuffManager.ApplyBuff(-MoveActionCost, 0); // 지속 턴 0은 즉시 소비
-            Debug.Log("ActionPoints 소모됨: " + MoveActionCost + ", 남은 AP: " + _playerStats.BuffManager.GetFinalActionPoints());
-        }
-        yield break;
-    }
-
-    // 대시 코루틴
-    IEnumerator Dash(Vector2 direction)
-    {
-        int maxCells = 3;  // 대시 최대 칸 수
-        int cellsMoved = 0;
-        bool isDiagonal = Mathf.Abs(direction.x) > 0.01f && Mathf.Abs(direction.y) > 0.01f;
-
-        while (cellsMoved < maxCells)
-        {
-            if (_playerStats != null && _playerStats.BuffManager.GetFinalActionPoints() < MoveActionCost)
+        transform
+            .DOMove(destination, duration)
+            .SetEase(Ease.Linear)
+            .OnComplete(() =>
             {
-                Debug.Log("행동력이 부족하여 대시 중단");
-                break;
-            }
-
-            Vector3 currentCell = new Vector3(Mathf.Floor(transform.position.x),
-                                              Mathf.Floor(transform.position.y),
-                                              transform.position.z);
-            Vector3 nextCell = currentCell + new Vector3(Mathf.Sign(direction.x), Mathf.Sign(direction.y), 0);
-            Vector3 destination = nextCell + new Vector3(0.5f, 0.5f, 0);
-
-            // 대시 시에도 목적지 칸 점유 확인
-            Collider2D hit = Physics2D.OverlapPoint(destination, UnitLayer);
-            if (hit != null && hit.gameObject != gameObject)
-            {
-                Debug.Log("대시 중인 칸이 다른 유닛에 의해 점유되어 대시 중단");
-                break;
-            }
-
-            if (Physics2D.OverlapPoint(destination, ObstacleLayer))
-                break;
-
-            yield return StartCoroutine(MoveToTarget(destination, isDiagonal));
-            cellsMoved++;
-        }
-        yield break;
+                _isMoving = false;
+                _playerStats.BuffManager.ApplyBuff(-MoveActionCost, 0);
+                Debug.Log(
+                  $"ActionPoints 소모됨: {MoveActionCost}, 남은 AP: {_playerStats.BuffManager.GetFinalActionPoints()}");
+            });
     }
 
     // 공격 방향에 따라 공격 실행 (Raycast를 사용)
