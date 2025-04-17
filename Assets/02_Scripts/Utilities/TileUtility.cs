@@ -8,6 +8,7 @@ public static class TileUtility
 {
     public static Tile GetAdjacentTile(Level level,Tile tile, FourDir dir)
     {
+        if (level == null || tile == null) return null;
         Vector2Int offset = dir switch
         {
             FourDir.up => Vector2Int.up,
@@ -29,6 +30,7 @@ public static class TileUtility
 
     public static Tile GetAdjacentTile(Level level,Tile tile, EightDir dir)
     {
+        if (level == null || tile == null) return null;
         Vector2Int offset = dir switch
         {
             EightDir.upperLeft => new Vector2Int(-1, 1),
@@ -54,6 +56,7 @@ public static class TileUtility
 
     public static List<Tile> GetAdjacentTileList(Level level,Tile tile, bool isEightDir = false)
     {
+        if (level == null || tile == null) return null;
         if (!isEightDir)
         {
             List<Tile> checkList = new List<Tile>();
@@ -76,6 +79,7 @@ public static class TileUtility
 
     public static List<Tile> GetRangedTile(Level level, Tile tile, int range, bool isIncludeSelf = false)
     {
+        if (level == null || tile == null) return null;
         List<Tile> rangedTiles = new List<Tile>();
 
         foreach (var kvp in level.tiles)
@@ -98,6 +102,7 @@ public static class TileUtility
 
     public static List<Tile> GetVisibleTiles(Level level, Tile tile, int viewRange)
     {
+        if (level == null || tile == null) return null;
         List<Tile> visibleTiles = new List<Tile>();
 
         foreach (var tilePair in level.tiles)
@@ -137,6 +142,7 @@ public static class TileUtility
 
     public static List<Tile> GetLineTile(Level level, Tile origin, Tile target, bool isIncludeSelf = false)
     {
+        if (level == null || origin == null) return null;
         List<Tile> tiles = new List<Tile>();
         List<Vector2Int> line = GetLine(origin.gridPosition, target.gridPosition);
 

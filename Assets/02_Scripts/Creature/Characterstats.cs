@@ -30,11 +30,13 @@ public abstract class CharacterStats : MonoBehaviour
 
     [Header("시야")]
     public int visionRange = 6;
+    public int attackRange = 1;
 
     [Header("Level&Tile")]
     public Level curLevel;
     public Tile curTile;
-    public List<Tile> TilesOnVision => TileUtility.GetVisibleTiles(curLevel, curTile, visionRange);
+    public List<Tile> TilesOnVision => (curLevel != null && curTile != null) ?
+    TileUtility.GetVisibleTiles(curLevel, curTile, visionRange) : new List<Tile>();
 
     public float ActionPoints
     {
@@ -102,7 +104,7 @@ public abstract class CharacterStats : MonoBehaviour
     {
         if (curLevel == null) return;
 
-        if(curLevel.tiles.TryGetValue(start ,out Tile startTile))
+        if (curLevel.tiles.TryGetValue(start, out Tile startTile))
             startTile.characterStats = null;
 
         if (curLevel.tiles.TryGetValue(target, out Tile targerTile))
