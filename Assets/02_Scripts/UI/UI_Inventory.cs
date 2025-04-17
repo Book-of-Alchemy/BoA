@@ -3,16 +3,20 @@ using UnityEngine;
 
 public class UI_Inventory : UIBase
 {
-    public GameObject prefab;
-
-    public List<Slots> slots;
-    private int slotCount;
-
-    public List<TestItem> test;
+    [SerializeField] private ItemInfo _itemInfo;
+    [SerializeField] private Inventory _inventory; //데이터를 가지고 있는 인벤토리
+    [SerializeField] private List<InventorySlotUI> _slotUIList; //= new(); //인벤토리 UI가 가지고있는 SlotUI를 리스트로 가지고 있음.
 
     private void Start()
     {
-   
+        for (int i = 0; i < _slotUIList.Count; i++)
+        {
+            var slot = _slotUIList[i];
+            slot.Index = i;
+
+            slot.OnSelected += OnSlotSelected;
+            slot.OnDeselected += OnSlotDeselected;
+        }
     }
 
     public override void HideDirect() //Call at OnClick Event 
@@ -25,13 +29,25 @@ public class UI_Inventory : UIBase
         
     }
 
-    public void OnClickAddItem()
+    public void SetSlotItem(int index, InventoryItem item) //슬롯에 아이템 UI 갱신
     {
-        if(slotCount < slots.Count)
-        {
-            SlotItem item = UIResourceManager.Instance.LoadAsset<SlotItem>();
-            item.Init(test[Random.Range(0, test.Count)]);
-            UIResourceManager.Instance.InstantiateAsset<SlotItem>(slots[slotCount++].transform);
-        }
+        _slotUIList[index].SetItem(item);
+    }
+
+    public void RemoveItem(int index) // 슬롯에 아이템 아이콘, 갯수 제거
+    {
+        _slotUIList[index].RemoveItem();
+    }
+
+
+    public void OnSlotSelected(int index)
+    {
+        if (_inventory._items[index] != null)
+            _itemInfo.ShowInfo(_inventory._items[index]);
+    }
+
+    public void OnSlotDeselected(int index)
+    {
+        _itemInfo.ClearInfo();
     }
 }
