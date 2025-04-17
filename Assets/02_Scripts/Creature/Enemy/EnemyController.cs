@@ -17,12 +17,14 @@ public class EnemyController : MonoBehaviour
     public LayerMask UnitLayer;          // 플레이어 및 적들이 속한 레이어 (타일 점유 확인)
     public LayerMask ObstacleLayer;      // 장애물 체크용
 
+    EnemyStats enemyStats;
     // 플레이어 참조
     private PlayerStats _playerStats;
 
     void Awake()
     {
         GameManager.Instance.RegisterEnemy(GetComponent<EnemyStats>());
+        enemyStats = GetComponent<EnemyStats>();
     }
     void Start()
     {
@@ -106,6 +108,8 @@ public class EnemyController : MonoBehaviour
         _isMoving = true;
         Vector3 destination = targetCell + new Vector3(0, 0, 0);
         float effectiveSpeed = MoveSpeed;
+        enemyStats.OnMoveTile(new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y)),
+            new Vector2Int(Mathf.RoundToInt(destination.x), Mathf.RoundToInt(destination.y)));// 임시로 tile 이동시 tile정보 갱신
 
         while ((destination - transform.position).sqrMagnitude > 0.001f)
         {

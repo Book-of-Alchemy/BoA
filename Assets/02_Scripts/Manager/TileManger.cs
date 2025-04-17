@@ -16,6 +16,15 @@ public class TileManger : Singleton<TileManger>
         SetLevelGenerator(tileData.biomeSet[0], 8, 40, 40);
         curLevel = GenerateLevel();
         PaintLevel(curLevel);
+        GameManager.Instance.PlayerTransform.GetComponent<CharacterStats>().curLevel = curLevel;
+        foreach( var enemy in GameManager.Instance.Enemies)
+        {
+            if (enemy == null) continue;
+
+            enemy.curLevel = curLevel;
+        }
+        
+
     }
 
     public void SetLevelGenerator(BiomeSet biomeSet, int roomCnt, int rootWidth, int rootHeight)

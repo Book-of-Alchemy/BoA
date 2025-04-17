@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class CharacterStats : MonoBehaviour
@@ -26,6 +27,14 @@ public abstract class CharacterStats : MonoBehaviour
     [Header("행동력")]
     [SerializeField]
     private float _actionPoints = 1.0f;
+
+    [Header("시야")]
+    public int visionRange = 6;
+
+    [Header("Level&Tile")]
+    public Level curLevel;
+    public Tile curTile;
+    public List<Tile> TilesOnVision => TileUtility.GetVisibleTiles(curLevel, curTile, visionRange);
 
     public float ActionPoints
     {
@@ -86,6 +95,20 @@ public abstract class CharacterStats : MonoBehaviour
         if (CurrentHealth == 0f)
         {
             Debug.Log(gameObject.name + "(이)가 사망함");
+        }
+    }
+
+    public void OnMoveTile(Vector2Int start, Vector2Int target)
+    {
+        if (curLevel == null) return;
+
+        if(curLevel.tiles.TryGetValue(start ,out Tile startTile))
+            startTile.characterStats = null;
+
+        if (curLevel.tiles.TryGetValue(target, out Tile targerTile))
+        {
+            targerTile.characterStats = this as CharacterStats;
+            curTile = targerTile;
         }
     }
 }

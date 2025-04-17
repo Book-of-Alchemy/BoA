@@ -158,6 +158,8 @@ public class PlayerController : MonoBehaviour
     {
         _isMoving = true;
         float effectiveSpeed = MoveSpeed;
+        _playerStats.OnMoveTile(new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y)),
+            new Vector2Int(Mathf.RoundToInt(destination.x), Mathf.RoundToInt(destination.y)));// 임시로 tile 이동시 tile정보 갱신
 
         while ((destination - transform.position).sqrMagnitude > 0.001f)
         {
