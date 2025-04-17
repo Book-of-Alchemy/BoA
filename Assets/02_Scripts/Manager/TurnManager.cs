@@ -2,67 +2,78 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum TurnState
+{
+    PlayerTurn,
+    EnemyTurn
+}
+
 public class TurnManager : MonoBehaviour
 {
-    public static TurnManager Instance;
+    public static TurnManager Instance { get; private set; }
 
-    public enum Turn { Player, Enemy }
-    public Turn CurrentTurn { get; private set; } = Turn.Player;
+    public TurnState CurrentTurn;
+    public PlayerStats Player;
 
-    [SerializeField] private List<EnemyController> _enemies = new List<EnemyController>();
+    private List<EnemyStats> enemies;
+    private bool _isEnemyTurnRunning = false;
 
-    private void Awake()
+    void Awake()
     {
-        if (Instance == null) Instance = this;
-        else if (Instance != this) Destroy(gameObject);
-    }
-
-    public void EndTurn()
-    {
-        if (CurrentTurn == Turn.Player)
-        {
-            CurrentTurn = Turn.Enemy;
-            StartCoroutine(EnemyTurnCycle());
-        }
+        if (Instance == null)
+            Instance = this;
         else
+            Destroy(gameObject);
+    }
+
+    void Start()
+    {
+        if (GameManager.Instance.PlayerTransform != null)
+            Player = GameManager.Instance.PlayerTransform.GetComponent<PlayerStats>();
+        else
+            Debug.LogWarning("GameManager에 플레이어가 등록되지 않았습니다.");
+
+        enemies = GameManager.Instance.Enemies;
+        CurrentTurn = TurnState.PlayerTurn;
+    }
+
+    void Update()
+    {
+        // 플레이어 턴 종료 조건: 행동력이 0 이하일 때
+        if (CurrentTurn == TurnState.PlayerTurn && Player.BuffManager.GetFinalActionPoints() <= 0 && !_isEnemyTurnRunning)
         {
-            CurrentTurn = Turn.Player;
+            // 플레이어의 상태 효과 업데이트 후 적 턴 실행
+            Player.BuffManager.UpdateBuffs();
+            StartCoroutine(EnemyTurn());
         }
     }
 
-    private IEnumerator EnemyTurnCycle()
+    IEnumerator EnemyTurn()
     {
-        Debug.Log("적 턴 사이클 시작");
-        foreach (EnemyController enemy in _enemies)
+        _isEnemyTurnRunning = true;
+        CurrentTurn = TurnState.EnemyTurn;
+
+        // 적 턴 시작 전 각 적의 버프 업데이트
+        foreach (EnemyStats enemy in enemies.ToArray())
         {
-            if (enemy == null || !enemy.gameObject.activeInHierarchy || enemy.Stats.CurrentHp <= 0)
+            if (enemy == null)
                 continue;
-
-            enemy.Act();
-            Debug.Log("적 행동 시작");
-            while (enemy.IsMoving)
-                yield return null;
-
-            yield return new WaitForSeconds(0.1f);
+            enemy.BuffManager.UpdateBuffs();
+            EnemyController enemyController = enemy.GetComponent<EnemyController>();
+            if (enemyController != null)
+                yield return StartCoroutine(enemyController.TakeTurn());
+            else
+            {
+                Debug.Log(enemy.gameObject.name + " takes turn (dummy)");
+                yield return new WaitForSeconds(0.5f);
+            }
         }
-        Debug.Log("모든 적 턴 종료됨");
-        TurnManager.Instance.EndTurn();
-    }
 
-    public void AddEnemy(EnemyController enemy)
-    {
-        if (!_enemies.Contains(enemy))
-            _enemies.Add(enemy);
-    }
-
-    public void RemoveEnemy(EnemyController enemy)
-    {
-        if (_enemies.Contains(enemy))
-            _enemies.Remove(enemy);
-    }
-
-    public void SetEnemies(List<EnemyController> enemies)
-    {
-        _enemies = enemies;
+        // 적 턴 종료 후 플레이어 AP 복구 (버프 업데이트)
+        Player.BuffManager.ApplyBuff(0, 0);  // 효과 적용 없이 재계산
+        CurrentTurn = TurnState.PlayerTurn;
+        _isEnemyTurnRunning = false;
+        Debug.Log("복구된 행동력: " + Player.BuffManager.GetFinalActionPoints());
+        yield break;
     }
 }

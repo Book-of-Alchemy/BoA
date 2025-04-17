@@ -14,7 +14,7 @@ public class Alchemy : MonoBehaviour
     private void Start()
     {
         Init();
-        CreateItem(ResourceManager.Instance.dicItemData[201003], 4, ResourceManager.Instance.dicItemData[201006], 3, ResourceManager.Instance.dicItemData[201008],6);
+        CreateItem(ResourceManager.Instance.dicItemData[201001], 4, ResourceManager.Instance.dicItemData[201002], 3);
     }
 
     private void Init()
@@ -101,15 +101,15 @@ public class Alchemy : MonoBehaviour
         else if (materials.materials.id == recipe.material_1_item_id)
         {
             // 수량 체크
-            CheckAmount(materials, recipe.material_1_count);
+            CheckAmount(materials, recipe.material_1_amount);
         }
         else if (materials.materials.id == recipe.material_2_item_id)
         {
-            CheckAmount(materials, recipe.material_2_count);
+            CheckAmount(materials, recipe.material_2_amount);
         }
         else if (materials.materials.id == recipe.material_3_item_id)
         {
-            CheckAmount(materials, recipe.material_3_count);
+            CheckAmount(materials, recipe.material_3_amount);
         }
     }
 

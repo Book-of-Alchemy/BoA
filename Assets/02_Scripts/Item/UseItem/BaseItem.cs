@@ -4,18 +4,22 @@ using UnityEngine;
 
 public abstract class BaseItem
 {
-    private int? item_id;
-    private string name_en;
-    private Item_Type item_type;
-    private Attribute attribute;
-    private int target_range;
-    private int effect_range;
+    public int item_id;
+    public string name_en;
+    public Item_Type item_type;
+    public Attribute attribute;
+    public int target_range;
+    public int effect_range;
     public Effect_Type effect_type;
-    private Tag[] tags;
-    private int effect_value;
-    private int max_stack;
-    private string iteminfo_kr;
-    private string icon_sprite;
+    //public Tag[] tags;
+    public int effect_value;
+    public int effect_id;
+    public int effect_duration;
+    public int effect_strength;
+    public int mp_cost;
+    public int max_stack;
+    public string iteminfo_kr;
+    public string icon_sprite;
 
 
     public virtual void Init(ItemData data)
@@ -27,62 +31,18 @@ public abstract class BaseItem
         target_range = data.target_range;
         effect_range = data.effect_range;
         effect_type = data.effect_type;
-        tags = data.tags;
+        //tags = data.tags;
+        effect_id = data.effect_id;
+        effect_duration = data.effect_duration;
+        effect_strength = data.effect_strength;
+        mp_cost = data.mp_cost;
         effect_value = data.effect_value;
         max_stack = data.max_stack;
         iteminfo_kr = data.iteminfo_kr;
         icon_sprite = data.icon_sprite;
     }
 
-    // 만약 던지기 말고 사용시라고 생각하면 대상 오브젝트를 넣어서 사용하면 될듯?
-    public abstract void UseItem();
-    /// <summary>
-    /// 사용시 플레이어나 적의스텟에 접근해서 조정하는 방식으로 하면 될듯함
-    /// </summary>
-   // public void UseItem()
-   // {
-   //     switch (effect_type)
-   //     {
-   //         case Effect_Type.Damage:
-   //             Damage();
-   //             break;
-   //         case Effect_Type.Heal:
-   //             Heal();
-   //             break;
-   //         case Effect_Type.Buff:
-   //             Buff();
-   //             break;
-   //         case Effect_Type.Debuff:
-   //             Debuff();
-   //             break;
-   //         case Effect_Type.Move:
-   //             Move();
-   //             break;
-   //         case Effect_Type.None:
-   //             // 사용불가
-   //             break;
-   //     }
-   // }
+    public abstract void UseItem(CharacterStats[] target);
 
-   // private void Damage()
-   // {
-   //     //TODO 공격 로직
-   // }
-   // private void Heal()
-   // {
-   //     //TODO 힐 로직
-   // }
-   // private void Buff()
-   // {
-   //     //TODO 버프 로직
-   // }
-   // private void Debuff()
-   // {
-   //     //TODO 디버스 로직
-   // }
-   // private void Move()
-   // {
-   //     //TODO 강제이동 로직
-   // }
 }
 

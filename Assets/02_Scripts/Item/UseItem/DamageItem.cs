@@ -5,10 +5,16 @@ using UnityEngine;
 [System.Serializable]
 public class DamageItem : BaseItem
 {
-    public override void UseItem()
+    public override void UseItem(CharacterStats[] targets)
     {
         // 공격 로직
-        Debug.Log("공격 뿌직");
+        if (targets.Length < 1)
+        {
+            Debug.Log("타겟이 없습니다.");
+            return;
+        }
+        foreach(var target in targets)
+            target.TakeDamage((float)effect_value);
     }
 
 }
