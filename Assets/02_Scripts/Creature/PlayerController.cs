@@ -119,9 +119,9 @@ public class PlayerController : MonoBehaviour
                     {
                         offset = new Vector3(moveInput.x, moveInput.y, 0);
                     }
-                    // 목표 셀 계산: 현재 셀 + offset 후 셀 중심 좌표 (0.5, 0.5)
+                    // 목표 셀 계산: 현재 셀 + offset 후 셀 중심 좌표 (0.5, 0.5)->(0,0)으로 바꿈
                     Vector3 targetCell = currentCell + offset;
-                    _targetPosition = targetCell + new Vector3(0.5f, 0.5f, 0);
+                    _targetPosition = targetCell + new Vector3(0, 0, 0);
 
                     // 이동 시작 전에 목표 칸에 이미 다른 유닛이 있는지 검사
                     Collider2D hit = Physics2D.OverlapPoint(_targetPosition, UnitLayer);

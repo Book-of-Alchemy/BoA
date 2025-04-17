@@ -51,13 +51,13 @@ public class EnemyController : MonoBehaviour
         Vector3 currentCell = new Vector3(Mathf.Floor(transform.position.x),
                                           Mathf.Floor(transform.position.y),
                                           transform.position.z);
-        Vector3 enemyCenter = currentCell + new Vector3(0.5f, 0.5f, 0);
+        Vector3 enemyCenter = currentCell + new Vector3(0, 0, 0);
 
         // 플레이어 위치 계산 (플레이어가 한 칸 내에 있는지 확인)
         Vector3 playerCell = new Vector3(Mathf.Floor(_playerStats.transform.position.x),
                                          Mathf.Floor(_playerStats.transform.position.y),
                                          _playerStats.transform.position.z);
-        Vector3 playerCenter = playerCell + new Vector3(0.5f, 0.5f, 0);
+        Vector3 playerCenter = playerCell + new Vector3(0, 0, 0);
 
         float distance = Vector2.Distance(new Vector2(enemyCenter.x, enemyCenter.y),
                                           new Vector2(playerCenter.x, playerCenter.y));
@@ -80,7 +80,7 @@ public class EnemyController : MonoBehaviour
             bool isDiagonal = (dirX != 0f && dirY != 0f);
 
             Vector3 targetCell = currentCell + new Vector3(dirX, dirY, 0);
-            Vector3 targetPosition = targetCell + new Vector3(0.5f, 0.5f, 0);
+            Vector3 targetPosition = targetCell + new Vector3(0, 0, 0);
 
             // 점유 검사: 목표 칸에 플레이어가 점유되어 있으면 공격 대신 이동하지 않음
             Collider2D hit = Physics2D.OverlapPoint(targetPosition, UnitLayer);
@@ -104,7 +104,7 @@ public class EnemyController : MonoBehaviour
     private IEnumerator MoveToTarget(Vector3 targetCell, bool isDiagonal = false)
     {
         _isMoving = true;
-        Vector3 destination = targetCell + new Vector3(0.5f, 0.5f, 0);
+        Vector3 destination = targetCell + new Vector3(0, 0, 0);
         float effectiveSpeed = MoveSpeed;
 
         while ((destination - transform.position).sqrMagnitude > 0.001f)
