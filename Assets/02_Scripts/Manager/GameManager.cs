@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
 {
-    public Transform PlayerTransform { get; private set; }
+    public PlayerStats PlayerTransform { get; private set; }
     public List<EnemyStats> Enemies { get; private set; } = new List<EnemyStats>();
 
-    public void RegisterPlayer(Transform player)
+    public void RegisterPlayer(PlayerStats player)
     {
         PlayerTransform = player;
     }

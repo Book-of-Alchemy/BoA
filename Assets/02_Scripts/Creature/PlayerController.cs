@@ -97,7 +97,7 @@ public class PlayerController : MonoBehaviour
             if (moveInput != Vector2.zero && !_isMoving)
             {
                 // 행동력 확인: 충분한 행동력이 있을 때만 이동 실행
-                if (_playerStats != null && _playerStats.ActionPoints >= MoveActionCost)
+                if (_playerStats != null && _playerStats.BuffManager.GetFinalActionPoints() >= MoveActionCost)
                 {
                     // 마지막 이동 방향 갱신
                     _lastMoveDirection = moveInput;

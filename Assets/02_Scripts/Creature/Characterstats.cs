@@ -38,12 +38,6 @@ public abstract class CharacterStats : MonoBehaviour
     public List<Tile> TilesOnVision => (curLevel != null && curTile != null) ?
     TileUtility.GetVisibleTiles(curLevel, curTile, visionRange) : new List<Tile>();
 
-    public float ActionPoints
-    {
-        get { return _actionPoints; }
-        set { _actionPoints = Mathf.Clamp(value, 0f, 1f); }
-    }
-
     [Header("속성")]
     public float Fire = 0f;
     public float Water = 0f;
@@ -53,6 +47,14 @@ public abstract class CharacterStats : MonoBehaviour
     public float Wind = 0f;
     public float Light = 0f;
     public float Dark = 0f;
+
+    public BuffManager BuffManager { get; private set; }
+    protected virtual void Awake()
+    {
+        BuffManager = GetComponent<BuffManager>();
+        if (BuffManager == null)
+            BuffManager = gameObject.AddComponent<BuffManager>();
+    }
 
     public virtual void Attack(CharacterStats target)
     {
