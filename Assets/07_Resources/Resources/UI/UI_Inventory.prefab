@@ -6374,26 +6374,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: InventorySlot (27)
       objectReference: {fileID: 0}
-    - target: {fileID: 3738049831247307785, guid: 60238f3544c178846a5cdac9be2882e9, type: 3}
-      propertyPath: m_Colors.m_SelectedColor.b
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3738049831247307785, guid: 60238f3544c178846a5cdac9be2882e9, type: 3}
-      propertyPath: m_Colors.m_SelectedColor.g
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3738049831247307785, guid: 60238f3544c178846a5cdac9be2882e9, type: 3}
-      propertyPath: m_Colors.m_SelectedColor.r
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3738049831247307785, guid: 60238f3544c178846a5cdac9be2882e9, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7341822651729726094, guid: 60238f3544c178846a5cdac9be2882e9, type: 3}
-      propertyPath: _inventory
-      value: 
-      objectReference: {fileID: 7140299368101217165}
     - target: {fileID: 7418909959037402002, guid: 60238f3544c178846a5cdac9be2882e9, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

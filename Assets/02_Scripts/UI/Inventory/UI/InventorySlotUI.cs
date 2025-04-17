@@ -3,12 +3,14 @@ using UnityEngine.EventSystems;
 using TMPro;
 using UnityEngine.UI;
 using System;
+using Unity.Mathematics;
 
 public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler
 {
     [SerializeField] private Image _itemSprite;
     [SerializeField] private TextMeshProUGUI _countTxt;
     [SerializeField] private Button _btn;
+    [SerializeField] private RectTransform _rectTransform;
 
     private GameObject _imageObject;
     private GameObject _textObject;
@@ -28,7 +30,14 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler
         _imageObject = _itemSprite.gameObject;
         _textObject = _countTxt.gameObject;
 
+        _btn.onClick.AddListener(OnClickItem);
+
         HideIcon();
+    }
+
+    public void OnClickItem() // Call at OnClick Event
+    {
+        UIManager.Show<UI_Action>(eUIActionType.Use,_rectTransform);
     }
 
     public void SetItem(InventoryItem item) // 슬롯에 아이템 등록
@@ -54,7 +63,7 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler
     void IDeselectHandler.OnDeselect(BaseEventData eventData)
     {
         OnDeselected?.Invoke(Index);
+        if(UIManager.Get<UI_Action>() != null)
+            UIManager.Hide<UI_Action>();
     }
-
- 
 }
