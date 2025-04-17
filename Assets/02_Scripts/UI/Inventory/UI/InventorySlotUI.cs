@@ -1,8 +1,10 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using TMPro;
 using UnityEngine.UI;
+using System;
 
-public class InventorySlotUI : MonoBehaviour
+public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler
 {
     [SerializeField] private Image _itemSprite;
     [SerializeField] private TextMeshProUGUI _countTxt;
@@ -10,7 +12,7 @@ public class InventorySlotUI : MonoBehaviour
 
     private GameObject _imageObject;
     private GameObject _textObject;
-    public int Index { get; private set; }
+    public int Index { get; set; }
     public bool HasItem => _itemSprite.sprite != null; //있다면 True
 
     private void ShowIcon() => _imageObject.SetActive(true);
@@ -18,10 +20,14 @@ public class InventorySlotUI : MonoBehaviour
     private void ShowText() => _textObject.SetActive(true);
     private void HideText() => _textObject.SetActive(false);
 
+    public event Action<int> OnSelected;
+    public event Action<int> OnDeselected;
+
     private void Awake()
     {
         _imageObject = _itemSprite.gameObject;
         _textObject = _countTxt.gameObject;
+
         HideIcon();
     }
 
@@ -40,4 +46,15 @@ public class InventorySlotUI : MonoBehaviour
         HideText();
     }
 
+    void ISelectHandler.OnSelect(BaseEventData eventData)
+    {
+        OnSelected?.Invoke(Index);
+    }
+
+    void IDeselectHandler.OnDeselect(BaseEventData eventData)
+    {
+        OnDeselected?.Invoke(Index);
+    }
+
+ 
 }

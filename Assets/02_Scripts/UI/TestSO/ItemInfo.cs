@@ -4,8 +4,6 @@ using UnityEngine.UI;
 
 public class ItemInfo : MonoBehaviour
 {
-    public static ItemInfo Instance;
-
     [Header("UI")]
     [SerializeField] private TextMeshProUGUI _itemNameTxt;
     [SerializeField] private TextMeshProUGUI _itemDescTxt;
@@ -13,7 +11,6 @@ public class ItemInfo : MonoBehaviour
 
     private void Awake()
     {
-        Instance = this;
         ClearInfo();
     }
 
@@ -25,11 +22,11 @@ public class ItemInfo : MonoBehaviour
         _image.gameObject.SetActive(false);
     }
 
-    public void ShowInfo(InventoryItemData data) // 인자 값에 정보를 UI에 보여줌
+    public void ShowInfo(InventoryItem item) // 인자 값에 정보를 UI에 보여줌
     {
-        _itemNameTxt.text = data.name;
-        _itemDescTxt.text = data.description;
+        _itemNameTxt.text = item.InventorItemData.name;
+        _itemDescTxt.text = item.InventorItemData.description;
+        _image.sprite = item.InventorItemData.Icon;
         _image.gameObject.SetActive(true);
-        _image.sprite = data.Icon;
     }
 }

@@ -7,6 +7,18 @@ public class UI_Inventory : UIBase
     [SerializeField] private Inventory _inventory; //데이터를 가지고 있는 인벤토리
     [SerializeField] private List<InventorySlotUI> _slotUIList; //= new(); //인벤토리 UI가 가지고있는 SlotUI를 리스트로 가지고 있음.
 
+    private void Start()
+    {
+        for (int i = 0; i < _slotUIList.Count; i++)
+        {
+            var slot = _slotUIList[i];
+            slot.Index = i;
+
+            slot.OnSelected += OnSlotSelected;
+            slot.OnDeselected += OnSlotDeselected;
+        }
+    }
+
     public override void HideDirect() //Call at OnClick Event 
     {
         UIManager.Hide<UI_Inventory>();
@@ -28,13 +40,14 @@ public class UI_Inventory : UIBase
     }
 
 
-    public void OnSlotSelected(InventorySlotUI slot)
+    public void OnSlotSelected(int index)
     {
-        //ItemInfo.Instance.ShowInfo(slot._item.TestItemData);
+        if (_inventory._items[index] != null)
+            _itemInfo.ShowInfo(_inventory._items[index]);
     }
 
-    public void OnSlotDeselected()
+    public void OnSlotDeselected(int index)
     {
-        ItemInfo.Instance.ClearInfo();
+        _itemInfo.ClearInfo();
     }
 }

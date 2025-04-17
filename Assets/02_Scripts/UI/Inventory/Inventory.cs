@@ -6,7 +6,7 @@ public class Inventory : MonoBehaviour
     private int _capacity = 30; 
 
     [SerializeField] private UI_Inventory _uiInventory; // 아래 배열을 UI 상에 보여주는 UI 인벤토리
-    [SerializeField] private InventoryItem[] _items; // 실제 아이템 정보가 있는 배열 해당 배열로 정보이동이 이뤄진다.
+    public InventoryItem[] _items; // 실제 아이템 정보가 있는 배열 해당 배열로 정보이동이 이뤄진다.
 
     public InventoryItemData[] ItemDataArr; // 테스트용 아이템 데이터 배열
 
