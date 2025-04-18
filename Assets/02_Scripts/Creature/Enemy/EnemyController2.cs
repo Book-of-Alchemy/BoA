@@ -69,7 +69,7 @@ public class EnemyController2 : MonoBehaviour
     public void ChangeState(EnemyState newState)
     {
         _currentState = newState;
-        TakeTurn(); // 상태 바뀌자마자 바로 행동 즉 실질 행동시작 전에 상태체크를우선해야함
+        StartCoroutine(TakeTurn()); // 상태 바뀌자마자 바로 행동 즉 실질 행동시작 전에 상태체크를우선해야함
     }
 
     private void HandleIdle()
