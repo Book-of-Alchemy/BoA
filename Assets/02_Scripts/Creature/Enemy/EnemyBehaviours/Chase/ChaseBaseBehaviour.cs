@@ -31,12 +31,12 @@ public class ChaseBaseBehaviour : BaseBehaviour
         {
             if (tile.characterStats is PlayerStats player)
             {
-                controller.lastCheckedTile = tile;
+                controller.LastCheckedTile = tile;
                 break;
             }
         }
 
-        if (controller.lastCheckedTile == null)//플레이어가 시야에 없다면 마지막으로 보인곳으로 감 마지막으로 보인곳에 도달하면 다시 idle
+        if (controller.LastCheckedTile == null)//플레이어가 시야에 없다면 마지막으로 보인곳으로 감 마지막으로 보인곳에 도달하면 다시 idle
         {
             controller.ChangeState(EnemyState.Idle);
             return false;
@@ -57,7 +57,7 @@ public class ChaseBaseBehaviour : BaseBehaviour
         CurTile = target;
         CurTile.characterStats = enemyStats;
 
-        if (target == controller.lastCheckedTile)
-            controller.lastCheckedTile = null;
+        if (target == controller.LastCheckedTile)
+            controller.LastCheckedTile = null;
     }
 }

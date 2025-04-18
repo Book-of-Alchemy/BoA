@@ -15,7 +15,12 @@ public class EnemyController2 : MonoBehaviour
     public float moveSpeed = 3f;
     public float DetectionRange = 10f;
     public EnemyState _currentState = EnemyState.Idle;
-    public Tile lastCheckedTile = null;
+    private Tile _lastCheckedTile;
+    public Tile LastCheckedTile//serializable 클래스의 인스턴스는 public 또는 serialized 로 생성시 직렬화를 하기위해 유니티에서 new 인스턴스를 생성함 따라서 null로 처리하기위해 프로퍼티로 사용하여야함
+    {
+        get => _lastCheckedTile;
+        set => _lastCheckedTile = value;
+    }
     IdleBaseBehaviour idleBehaviour;
     ChaseBaseBehaviour chaseBehaviour;
     AttackBaseBehaviour attackBehaviour;
@@ -113,24 +118,4 @@ public class EnemyController2 : MonoBehaviour
 
         onComplete?.Invoke();
     }
-    /*private void HandleAttack()
-    {
-        float dist = GetDistanceToPlayer();
-        if (dist > 1.0f)
-        {
-            _currentState = dist <= DetectionRange ? EnemyState.Chase : EnemyState.Idle;
-            TakeTurn();
-            return;
-        }
-
-        Debug.Log($"{gameObject.name}이(가) 플레이어를 공격합니다.");
-        GetComponent<EnemyStats>().Attack(_playerStats);
-
-        _currentTween = DOVirtual.DelayedCall(0.5f, () =>
-        {
-            _currentState = EnemyState.Idle;
-            TakeTurn();
-        });
-    }*/
-
 }

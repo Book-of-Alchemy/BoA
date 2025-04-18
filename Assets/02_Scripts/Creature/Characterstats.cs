@@ -35,8 +35,7 @@ public abstract class CharacterStats : MonoBehaviour
     [Header("Level&Tile")]
     public Level curLevel;
     public Tile curTile;
-    public List<Tile> TilesOnVision => (curLevel != null && curTile != null) ?
-    TileUtility.GetVisibleTiles(curLevel, curTile, visionRange) : new List<Tile>();
+    public List<Tile> TilesOnVision => TileUtility.GetVisibleTiles(curLevel, curTile, visionRange);
 
     [Header("속성")]
     public float Fire = 0f;

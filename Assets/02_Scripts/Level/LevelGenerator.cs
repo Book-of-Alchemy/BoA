@@ -478,6 +478,7 @@ public class LevelGenerator : MonoBehaviour
                 foreach (var tile in path)
                 {
                     level.tiles[tile.gridPosition].tileType = TileType.ground;
+                    level.tiles[tile.gridPosition].canSeeThrough = true;
                 }
 
                 level.tiles[doorA.gridPosition].isDoorPoint = false;
@@ -534,6 +535,7 @@ public class LevelGenerator : MonoBehaviour
             if (check.tileType == TileType.empty)
             {
                 check.tileType = TileType.wall;
+                check.canSeeThrough = false;
             }
         }
     }
