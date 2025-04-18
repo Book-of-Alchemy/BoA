@@ -2,14 +2,10 @@ using UnityEngine;
 
 public class EnemyStats : CharacterStats
 {
-    public BuffManager BuffManager { get; private set; }
 
-    void Awake()
+    protected override void Awake()
     {
-        BuffManager = GetComponent<BuffManager>();
-        if (BuffManager == null)
-            BuffManager = gameObject.AddComponent<BuffManager>();
-
+        base.Awake();
         // GameManager에 적 등록
         GameManager.Instance.RegisterEnemy(this);
     }

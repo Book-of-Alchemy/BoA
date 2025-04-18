@@ -47,7 +47,7 @@ public abstract class CharacterStats : MonoBehaviour
     public float Light = 0f;
     public float Dark = 0f;
 
-    public BuffManager BuffManager { get; private set; }
+    public BuffManager BuffManager { get; protected set; }
     protected virtual void Awake()
     {
         BuffManager = GetComponent<BuffManager>();
