@@ -26,6 +26,10 @@ public class PlayerController : MonoBehaviour
     private Vector2 _attackDirection = Vector2.zero;
 
     private PlayerStats _playerStats;
+    // 입력 버퍼링 중인지 표시
+    private bool _isBuffering = false;
+    // 버퍼링 지속 시간 (초)
+    public float InputBufferDuration = 0.1f;
 
     void Awake()
     {
@@ -91,48 +95,14 @@ public class PlayerController : MonoBehaviour
             AttackInDirection(attackDir);
         }
 
-        // 컨트롤 키가 눌려 있지 않은 경우에만 이동 로직 실행
-        if (!Keyboard.current.leftCtrlKey.isPressed)
+        if (!Keyboard.current.leftCtrlKey.isPressed && !_isMoving)
         {
             Vector2 moveInput = _moveAction.ReadValue<Vector2>();
-            if (moveInput != Vector2.zero && !_isMoving)
+            if (moveInput != Vector2.zero && !_isBuffering)
             {
-                // 행동력 확인: 충분한 행동력이 있을 때만 이동 실행
                 if (_playerStats != null && _playerStats.BuffManager.GetFinalActionPoints() >= MoveActionCost)
                 {
-                    // 마지막 이동 방향 갱신
-                    _lastMoveDirection = moveInput;
-
-                    // 현재 그리드 셀 계산 (바닥 좌표)
-                    Vector3 currentCell = new Vector3(Mathf.Floor(transform.position.x),
-                                                      Mathf.Floor(transform.position.y),
-                                                      transform.position.z);
-                    Vector3 offset;
-                    bool isDiagonal = false;
-
-                    // 대각 이동 여부 판정
-                    if (Mathf.Abs(moveInput.x) > 0.01f && Mathf.Abs(moveInput.y) > 0.01f)
-                    {
-                        isDiagonal = true;
-                        offset = new Vector3(Mathf.Sign(moveInput.x), Mathf.Sign(moveInput.y), 0);
-                    }
-                    else
-                    {
-                        offset = new Vector3(moveInput.x, moveInput.y, 0);
-                    }
-                    // 목표 셀 계산: 현재 셀 + offset 후 셀 중심 좌표 (0.5, 0.5)->(0,0)으로 바꿈
-                    Vector3 targetCell = currentCell + offset;
-                    _targetPosition = targetCell;
-
-                    // 이동 시작 전에 목표 칸에 이미 다른 유닛이 있는지 검사
-                    Collider2D hit = Physics2D.OverlapPoint(_targetPosition, UnitLayer);
-                    if (hit != null && hit.gameObject != gameObject)
-                    {
-                        Debug.Log("타일이 다른 유닛에 의해 점유되어 이동할 수 없습니다.");
-                        return;
-                    }
-
-                    MoveToTargetTween(_targetPosition);
+                    StartCoroutine(BufferAndMove(moveInput));
                 }
                 else
                 {
@@ -220,5 +190,56 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("공격할 적이 없음.");
         }
+    }
+    //이동 버퍼링 코루틴
+    private IEnumerator BufferAndMove(Vector2 initialInput)
+    {
+        _isBuffering = true;
+        float elapsed = 0f;
+
+        Vector2 bufferedInput = initialInput;
+
+        while (elapsed < InputBufferDuration)
+        {
+            Vector2 input = _moveAction.ReadValue<Vector2>();
+            if (input != Vector2.zero)
+                bufferedInput = input; //새 입력이 있으면 그전 입력을 덮어씀
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        _isBuffering = false;
+
+        _lastMoveDirection = bufferedInput;
+        ExecuteMove(bufferedInput);
+    }
+
+    private void ExecuteMove(Vector2 moveInput)
+    {
+        //캐릭터 위치 계산
+        Vector3 currentCell = new Vector3(
+            Mathf.Floor(transform.position.x),
+            Mathf.Floor(transform.position.y),
+            transform.position.z);
+
+        //대각방향 구분
+        Vector3 drcell;
+        if (Mathf.Abs(moveInput.x) > 0.01f && Mathf.Abs(moveInput.y) > 0.01f)
+            drcell = new Vector3(Mathf.Sign(moveInput.x), Mathf.Sign(moveInput.y), 0);
+        else
+            drcell = new Vector3(moveInput.x, moveInput.y, 0);
+
+        Vector3 targetCell = currentCell + drcell;
+        _targetPosition = targetCell;
+
+        Collider2D hit = Physics2D.OverlapPoint(_targetPosition, UnitLayer);
+        if (hit != null && hit.gameObject != gameObject)
+        {
+            Debug.Log("타일이 다른 유닛에 의해 점유되어 이동할 수 없습니다.");
+            return;
+        }
+        // 실제이동 실행
+        MoveToTargetTween(_targetPosition);
     }
 }
