@@ -34,9 +34,10 @@ public class UI_Action : UIBase
         int index = (int)param[2];
         
         //eUIActionType 타입과 생성위치 RectTransform으로 초기화
-        if (param.Length > 0 && param[0] is EUIActionType && param[1] is RectTransform)
+        if (param.Length > 0 && param[1] is RectTransform)
         {
             EUIActionType type = (EUIActionType)param[0]; //인자 Enum에 따른 다른 텍스트 출력과 역할
+            Debug.Log(type);
             switch (type)
             {
                 case EUIActionType.Use:
@@ -49,6 +50,7 @@ public class UI_Action : UIBase
                     break;
                 case EUIActionType.Equip:
                     SetButtonText("Equip", "UnEquip");
+                    AddButton(Inventory.EquipAction, Inventory.UnEquipAction);
                     break;
             }
             SetPosition((RectTransform)param[1]);

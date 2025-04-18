@@ -3,7 +3,6 @@ using UnityEngine.EventSystems;
 using TMPro;
 using UnityEngine.UI;
 using System;
-using Unity.Mathematics;
 
 public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler
 {
@@ -11,9 +10,11 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler
     [SerializeField] private TextMeshProUGUI _countTxt;
     [SerializeField] private Button _btn;
     [SerializeField] private RectTransform _rectTransform;
+    [SerializeField] private UI_Inventory _uiInventory;
 
     private GameObject _imageObject;
     private GameObject _textObject;
+
     public int Index { get; set; }
     public bool HasItem => _itemSprite.sprite != null; //있다면 True
 
@@ -36,12 +37,13 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler
     public void OnClickItem() // Call at OnClick Event
     {
         if(HasItem) // 아이템 있을때만
-            UIManager.Show<UI_Action>(EUIActionType.Use,_rectTransform,Index);
+            UIManager.Show<UI_Action>((int)_uiInventory.curType, _rectTransform,Index);
     }
 
     public void SetItem(InventoryItem item) // 슬롯에 아이템 등록
     {
-        _btn.onClick.AddListener(OnClickItem);
+        if (!HasItem)
+            _btn.onClick.AddListener(OnClickItem);
         _itemSprite.sprite = item.GetSprite();
         _countTxt.text = item.Amount.ToString();
         ShowIcon();
@@ -54,7 +56,6 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler
         _countTxt.text = null;
         HideIcon();
         HideText();
-        
     }
 
     void ISelectHandler.OnSelect(BaseEventData eventData)

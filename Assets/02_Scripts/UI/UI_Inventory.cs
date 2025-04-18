@@ -63,7 +63,7 @@ public class UI_Inventory : UIBase
 
         if (param.Length > 0 && param[0] is EInventoryType)
         {
-            curType = (EInventoryType)param[0]; 
+            SetCurType((EInventoryType)param[0]); 
             ShowRightTool(curType);
         }
         else
@@ -99,8 +99,10 @@ public class UI_Inventory : UIBase
         {
             if(i == (int)type)
             {
+                SetCurType((EInventoryType)i);
                 _toolList[i].gameObject.SetActive(true);
                 _imageList[i].color = _activeColor;
+                UIManager.Hide<UI_Action>();
             }
             else
             {
@@ -108,6 +110,11 @@ public class UI_Inventory : UIBase
                 _imageList[i].color = _unActiveColor;
             }
         }
+    }
+
+    private void SetCurType(EInventoryType type)
+    {
+        curType = type;
     }
 
     public void OnClickInventoryBtn()

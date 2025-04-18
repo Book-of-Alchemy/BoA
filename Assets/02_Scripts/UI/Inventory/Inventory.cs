@@ -101,4 +101,16 @@ public class Inventory : Singleton<MonoBehaviour>
         Debug.Log("CancelAction");
         UIManager.Hide<UI_Action>();
     }
+
+    public static void EquipAction()
+    {
+        Debug.Log("CraftAction");
+        UIManager.Hide<UI_Action>();
+    }
+
+    public static void UnEquipAction()
+    {
+        Debug.Log("CancelAction");
+        UIManager.Hide<UI_Action>();
+    }
 }
