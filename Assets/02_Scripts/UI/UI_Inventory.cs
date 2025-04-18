@@ -1,11 +1,31 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
+public enum EInventoryType
+{
+    Inventory,
+    Craft,
+    Equipment
+}
 
 public class UI_Inventory : UIBase
 {
+    [Header("Inventory")]
     [SerializeField] private ItemInfo _itemInfo;
     [SerializeField] private Inventory _inventory; //데이터를 가지고 있는 인벤토리
     [SerializeField] private List<InventorySlotUI> _slotUIList; //= new(); //인벤토리 UI가 가지고있는 SlotUI를 리스트로 가지고 있음.
+
+    [Header("Tools")]
+    [Tooltip("Connect with Enum")]
+    [SerializeField] private List<GameObject> _toolList; //UI_Inventory에 오른쪽에 바뀔 화면
+    [SerializeField] private List<Image> _imageList; //화면전환을 위한 탭버튼의 이미지 
+
+    public EInventoryType curType { get; private set; }  // 현재 띄워진 인벤토리 타입
+    public bool IsOpened { get; private set; }
+
+    private Color _unActiveColor = Color.gray;
+    private Color _activeColor;
 
     private void Start()
     {
@@ -17,6 +37,17 @@ public class UI_Inventory : UIBase
             slot.OnSelected += OnSlotSelected;
             slot.OnDeselected += OnSlotDeselected;
         }
+        
+    }
+
+    private void InitInventoryType() //시작시 버튼 컬러 초기화
+    {
+        _activeColor = _imageList[0].color; //기존 컬러 저장
+
+        for (int i = 0; i < _imageList.Count; i++)
+        {
+            _imageList[i].color = _unActiveColor; 
+        }
     }
 
     public override void HideDirect() //Call at OnClick Event 
@@ -27,7 +58,18 @@ public class UI_Inventory : UIBase
 
     public override void Opened(params object[] param)
     {
-        
+        IsOpened = true;
+        InitInventoryType();
+
+        if (param.Length > 0 && param[0] is EInventoryType)
+        {
+            curType = (EInventoryType)param[0]; 
+            ShowRightTool(curType);
+        }
+        else
+        {
+            Debug.Log("Add Param EInventoryType");
+        }
     }
 
     public void SetSlotItem(int index, InventoryItem item) //슬롯에 아이템 UI 갱신
@@ -40,7 +82,6 @@ public class UI_Inventory : UIBase
         _slotUIList[index].RemoveItem();
     }
 
-
     public void OnSlotSelected(int index)
     {
         if (_inventory.items[index] != null)
@@ -50,5 +91,35 @@ public class UI_Inventory : UIBase
     public void OnSlotDeselected(int index)
     {
         _itemInfo.ClearInfo();
+    }
+
+    public void ShowRightTool(EInventoryType type) //어떤 InventoryTool을 사용할지 입력을 받아서 보여주는 역할
+    {
+        for (int i = 0; i < _toolList.Count; i++)
+        {
+            if(i == (int)type)
+            {
+                _toolList[i].gameObject.SetActive(true);
+                _imageList[i].color = _activeColor;
+            }
+            else
+            {
+                _toolList[i].gameObject.SetActive(false);
+                _imageList[i].color = _unActiveColor;
+            }
+        }
+    }
+
+    public void OnClickInventoryBtn()
+    {
+        ShowRightTool(EInventoryType.Inventory);
+    }
+    public void OnClickCraftBtn()
+    {
+        ShowRightTool(EInventoryType.Craft);
+    }
+    public void OnClickEquipmentBtn()
+    {
+        ShowRightTool(EInventoryType.Equipment);
     }
 }

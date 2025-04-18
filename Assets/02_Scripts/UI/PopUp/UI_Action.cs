@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-enum eUIActionType
+enum EUIActionType
 {
     Use,
     Craft,
@@ -34,20 +34,20 @@ public class UI_Action : UIBase
         int index = (int)param[2];
         
         //eUIActionType 타입과 생성위치 RectTransform으로 초기화
-        if (param.Length > 0 && param[0] is eUIActionType && param[1] is RectTransform)
+        if (param.Length > 0 && param[0] is EUIActionType && param[1] is RectTransform)
         {
-            eUIActionType type = (eUIActionType)param[0]; //인자 Enum에 따른 다른 텍스트 출력과 역할
+            EUIActionType type = (EUIActionType)param[0]; //인자 Enum에 따른 다른 텍스트 출력과 역할
             switch (type)
             {
-                case eUIActionType.Use:
+                case EUIActionType.Use:
                     SetButtonText("Use","Drop");
                     AddButton(Inventory.UseAction,Inventory.DropAction);
                     break;
-                case eUIActionType.Craft:
+                case EUIActionType.Craft:
                     SetButtonText("Craft", "Cancel");
                     AddButton(Inventory.CraftAction, Inventory.CancelAction);
                     break;
-                case eUIActionType.Equip:
+                case EUIActionType.Equip:
                     SetButtonText("Equip", "UnEquip");
                     break;
             }
