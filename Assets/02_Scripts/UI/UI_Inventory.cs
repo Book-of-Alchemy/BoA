@@ -22,6 +22,7 @@ public class UI_Inventory : UIBase
     public override void HideDirect() //Call at OnClick Event 
     {
         UIManager.Hide<UI_Inventory>();
+        UIManager.Hide<UI_Action>();
     }
 
     public override void Opened(params object[] param)
@@ -42,8 +43,8 @@ public class UI_Inventory : UIBase
 
     public void OnSlotSelected(int index)
     {
-        if (_inventory._items[index] != null)
-            _itemInfo.ShowInfo(_inventory._items[index]);
+        if (_inventory.items[index] != null)
+            _itemInfo.ShowInfo(_inventory.items[index]);
     }
 
     public void OnSlotDeselected(int index)

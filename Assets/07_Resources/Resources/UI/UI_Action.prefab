@@ -215,7 +215,7 @@ MonoBehaviour:
   _rectTransform: {fileID: 8608055060386154436}
   _actionBtn: {fileID: 875084198395180493}
   _actionTxt: {fileID: 4149041049839571663}
-  _backBtn: {fileID: 0}
+  _backBtn: {fileID: 318704344977120760}
   _backTxt: {fileID: 1942038021057143598}
 --- !u!1 &7074895658923338431
 GameObject:
@@ -606,6 +606,30 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: 

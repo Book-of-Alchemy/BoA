@@ -30,18 +30,18 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler
         _imageObject = _itemSprite.gameObject;
         _textObject = _countTxt.gameObject;
 
-        _btn.onClick.AddListener(OnClickItem);
-
         HideIcon();
     }
 
     public void OnClickItem() // Call at OnClick Event
     {
-        UIManager.Show<UI_Action>(eUIActionType.Use,_rectTransform);
+        if(HasItem) // 아이템 있을때만
+            UIManager.Show<UI_Action>(eUIActionType.Use,_rectTransform,Index);
     }
 
     public void SetItem(InventoryItem item) // 슬롯에 아이템 등록
     {
+        _btn.onClick.AddListener(OnClickItem);
         _itemSprite.sprite = item.GetSprite();
         _countTxt.text = item.Amount.ToString();
         ShowIcon();
@@ -49,10 +49,12 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler
 
     public void RemoveItem() // 슬롯에서 아이템제거
     {
+        _btn.onClick.RemoveListener(OnClickItem);
         _itemSprite.sprite = null;
         _countTxt.text = null;
         HideIcon();
         HideText();
+        
     }
 
     void ISelectHandler.OnSelect(BaseEventData eventData)
@@ -63,7 +65,5 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler
     void IDeselectHandler.OnDeselect(BaseEventData eventData)
     {
         OnDeselected?.Invoke(Index);
-        if(UIManager.Get<UI_Action>() != null)
-            UIManager.Hide<UI_Action>();
     }
 }

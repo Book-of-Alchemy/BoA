@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 enum eUIActionType
@@ -27,6 +28,11 @@ public class UI_Action : UIBase
 
     public override void Opened(params object[] param) 
     {
+        _actionBtn.onClick.RemoveAllListeners();
+        _backBtn.onClick.RemoveAllListeners();
+
+        int index = (int)param[2];
+        
         //eUIActionType 타입과 생성위치 RectTransform으로 초기화
         if (param.Length > 0 && param[0] is eUIActionType && param[1] is RectTransform)
         {
@@ -35,9 +41,11 @@ public class UI_Action : UIBase
             {
                 case eUIActionType.Use:
                     SetButtonText("Use","Drop");
+                    AddButton(Inventory.UseAction,Inventory.DropAction);
                     break;
                 case eUIActionType.Craft:
                     SetButtonText("Craft", "Cancel");
+                    AddButton(Inventory.CraftAction, Inventory.CancelAction);
                     break;
                 case eUIActionType.Equip:
                     SetButtonText("Equip", "UnEquip");
@@ -59,7 +67,7 @@ public class UI_Action : UIBase
         _backTxt.text = back;
     }
 
-    public void SetPosition(RectTransform rectTransform)
+    private void SetPosition(RectTransform rectTransform)
     {
         //타겟 rectTrasnform 절반
         float Width = rectTransform.rect.width / 2;
@@ -68,4 +76,12 @@ public class UI_Action : UIBase
         //Vector3로 rectTransform기준 우측하단에 배치
         _rectTransform.position = rectTransform.position + new Vector3(Width, -Height);
     }
+
+    private void AddButton(UnityAction action, UnityAction back)
+    {
+        //버튼에 이벤트 등록
+        _actionBtn.onClick.AddListener(action);
+        _backBtn.onClick.AddListener(back);
+    }
+
 }
