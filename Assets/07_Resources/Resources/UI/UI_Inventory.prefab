@@ -1785,55 +1785,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 0.2
---- !u!1 &1994406116731082248
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4499880470390263309}
-  - component: {fileID: 1919151886727544891}
-  m_Layer: 0
-  m_Name: InventoryController
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4499880470390263309
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1994406116731082248}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2219699379176399969}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1919151886727544891
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1994406116731082248}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3ecbe770fb4f9e43902a8be0e794ad1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _uiInventory: {fileID: 7140299368101217165}
-  itemDataArr:
-  - {fileID: 11400000, guid: 843eda9ded963f8478e5fa134c8338df, type: 2}
-  - {fileID: 11400000, guid: be9e7522a75b9034e8ead890f6ba090b, type: 2}
-  - {fileID: 11400000, guid: 17e5eb2ce453e1941ac20d44c5629e10, type: 2}
 --- !u!1 &2025077200302094927
 GameObject:
   m_ObjectHideFlags: 0
@@ -2120,7 +2071,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1919151886727544891}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Inventory, Assembly-CSharp
         m_MethodName: OnClickAddItem
         m_Mode: 1
@@ -3652,7 +3603,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 4499880470390263309}
   - {fileID: 7533966031824822956}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3675,7 +3625,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiPosition: 1
   _itemInfo: {fileID: 4663697383664616204}
-  _inventory: {fileID: 1919151886727544891}
+  _inventory: {fileID: 0}
   _slotUIList:
   - {fileID: 66250802668852748}
   - {fileID: 7461450957429050497}
@@ -3713,6 +3663,7 @@ MonoBehaviour:
   - {fileID: 909346401450657047}
   - {fileID: 7442940987784005226}
   - {fileID: 6593873870147357523}
+  _addBtn: {fileID: 1553545869291689796}
 --- !u!1 &5198897360042428042
 GameObject:
   m_ObjectHideFlags: 0

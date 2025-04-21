@@ -42,15 +42,15 @@ public class UI_Action : UIBase
             {
                 case EUIActionType.Use:
                     SetButtonText("Use","Drop");
-                    AddButton(Inventory.UseAction,Inventory.DropAction);
+                    AddButton(()=>Inventory.Instance.Use(index), ()=>Inventory.Instance.Drop(index));
                     break;
                 case EUIActionType.Craft:
                     SetButtonText("Craft", "Cancel");
-                    AddButton(Inventory.CraftAction, Inventory.CancelAction);
+                    AddButton(() => Inventory.Instance.Craft(index), () => Inventory.Instance.Cancel(index));
                     break;
                 case EUIActionType.Equip:
                     SetButtonText("Equip", "UnEquip");
-                    AddButton(Inventory.EquipAction, Inventory.UnEquipAction);
+                    AddButton(()=>Inventory.Instance.Equip(index), () => Inventory.Instance.UnEquip(index));
                     break;
             }
             SetPosition((RectTransform)param[1]);

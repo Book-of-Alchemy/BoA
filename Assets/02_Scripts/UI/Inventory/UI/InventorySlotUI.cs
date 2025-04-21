@@ -37,7 +37,10 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler
     public void OnClickItem() // Call at OnClick Event
     {
         if(HasItem) // 아이템 있을때만
+        {
             UIManager.Show<UI_Action>((int)_uiInventory.curType, _rectTransform,Index);
+            _uiInventory.SetSelectIndex(Index);
+        }
     }
 
     public void SetItem(InventoryItem item) // 슬롯에 아이템 등록

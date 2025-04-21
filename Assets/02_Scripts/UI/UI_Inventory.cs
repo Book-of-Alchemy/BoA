@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,18 +15,22 @@ public class UI_Inventory : UIBase
     [Header("Inventory")]
     [SerializeField] private ItemInfo _itemInfo;
     [SerializeField] private Inventory _inventory; //데이터를 가지고 있는 인벤토리
-    [SerializeField] private List<InventorySlotUI> _slotUIList; //= new(); //인벤토리 UI가 가지고있는 SlotUI를 리스트로 가지고 있음.
+    [SerializeField] private List<InventorySlotUI> _slotUIList;  //인벤토리 UI가 가지고있는 SlotUI를 리스트로 가지고 있음.
 
     [Header("Tools")]
     [Tooltip("Connect with Enum")]
     [SerializeField] private List<GameObject> _toolList; //UI_Inventory에 오른쪽에 바뀔 화면
     [SerializeField] private List<Image> _imageList; //화면전환을 위한 탭버튼의 이미지 
 
+    [SerializeField] private Button _addBtn;
+
     public EInventoryType curType { get; private set; }  // 현재 띄워진 인벤토리 타입
     public bool IsOpened { get; private set; }
 
     private Color _unActiveColor = Color.gray;
     private Color _activeColor;
+
+    public int SelectIndex { get; private set; }
 
     private void Start()
     {
@@ -37,7 +42,13 @@ public class UI_Inventory : UIBase
             slot.OnSelected += OnSlotSelected;
             slot.OnDeselected += OnSlotDeselected;
         }
-        
+
+        if(Inventory.Instance != null)
+        {
+            _inventory = Inventory.Instance;
+            _inventory.Initialize(this);
+            _addBtn.onClick.AddListener(_inventory.OnClickAddItem);
+        }
     }
 
     private void InitInventoryType() //시작시 버튼 컬러 초기화
@@ -128,5 +139,10 @@ public class UI_Inventory : UIBase
     public void OnClickEquipmentBtn()
     {
         ShowRightTool(EInventoryType.Equipment);
+    }
+
+    public void SetSelectIndex(int index)
+    {
+        SelectIndex = index;
     }
 }

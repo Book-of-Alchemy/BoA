@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Inventory : Singleton<MonoBehaviour>
+public class Inventory : Singleton<Inventory>
 {
     //인스펙터창에서 초기화 시키도록 변경예정
     private int _capacity = 30; 
@@ -8,17 +8,34 @@ public class Inventory : Singleton<MonoBehaviour>
     [SerializeField] private UI_Inventory _uiInventory; // 아래 배열을 UI 상에 보여주는 UI 인벤토리
     public InventoryItem[] items; // 실제 아이템 정보가 있는 배열 해당 배열로 정보이동이 이뤄진다.
 
-    public InventoryItemData[] itemDataArr; // 테스트용 아이템 데이터 배열
+    public InventoryItemData[] itemDataArr; // 테스트용 아이템 데이터 배열]
+
 
     private void Start()
     {
         items = new InventoryItem[_capacity]; // 인벤토리 용량만큼 Data상 용량을 맞춰줌.
     }
 
+    public void Initialize(UI_Inventory inventory) //UI 인벤토리 재생성시 초기화
+    {
+        _uiInventory = inventory;
+
+        for (int i = 0; i < items.Length; i++)
+        {
+            if (items[i] != null)
+                Add(items[i].InventorItemData);
+        }
+    }
+
     public void OnClickAddItem() //Call at OnClick Event 
     {
         int rand = Random.Range(0, itemDataArr.Length);
         Add(itemDataArr[rand]);
+    }
+
+    public void OnClickRemoveItem() //Call at OnClick Event 
+    {
+        RemoveItem();
     }
 
     public void Add(InventoryItemData itemData, int amount = 1)
@@ -79,36 +96,42 @@ public class Inventory : Singleton<MonoBehaviour>
         }
         return -1;
     }
-    public static void UseAction()
+
+    private void RemoveItem()
+    {
+
+    }
+
+    public void Use(int index)
     {
         Debug.Log("UseAction");
         UIManager.Hide<UI_Action>();
     }
 
-    public static void DropAction()
+    public void Drop(int index)
     {
         Debug.Log("DropAction");
         UIManager.Hide<UI_Action>();
     }
-    public static void CraftAction()
+    public void Craft(int index)
     {
         Debug.Log("CraftAction");
         UIManager.Hide<UI_Action>();
     }
 
-    public static void CancelAction()
+    public void Cancel(int index)
     {
         Debug.Log("CancelAction");
         UIManager.Hide<UI_Action>();
     }
 
-    public static void EquipAction()
+    public void Equip(int index)
     {
         Debug.Log("EquipAction");
         UIManager.Hide<UI_Action>();
     }
 
-    public static void UnEquipAction()
+    public void UnEquip(int index)
     {
         Debug.Log("UnEquipAction");
         UIManager.Hide<UI_Action>();
