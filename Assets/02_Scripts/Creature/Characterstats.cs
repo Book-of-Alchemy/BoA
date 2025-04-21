@@ -106,11 +106,11 @@ public abstract class CharacterStats : MonoBehaviour
         if (curLevel == null) return;
 
         if (curLevel.tiles.TryGetValue(start, out Tile startTile))
-            startTile.characterStats = null;
+            startTile.CharacterStatsOnTile = null;
 
         if (curLevel.tiles.TryGetValue(target, out Tile targerTile))
         {
-            targerTile.characterStats = this as CharacterStats;
+            targerTile.CharacterStatsOnTile = this as CharacterStats;
             curTile = targerTile;
         }
     }

@@ -16,7 +16,7 @@ public class ChaseBaseBehaviour : BaseBehaviour
     {
         foreach (Tile tile in attackRangeTile)//공격 사거리 안에 있으며 시야에 있는지 체크
         {
-            if (tile.characterStats is PlayerStats player)
+            if (tile.CharacterStatsOnTile is PlayerStats player)
             {
                 if (TileUtility.IsTileVisible(level, CurTile, tile))
                 {
@@ -29,7 +29,7 @@ public class ChaseBaseBehaviour : BaseBehaviour
 
         foreach (Tile tile in vision)//플레이어가 시야에 있다면 lastchecked에 넣기
         {
-            if (tile.characterStats is PlayerStats player)
+            if (tile.CharacterStatsOnTile is PlayerStats player)
             {
                 controller.LastCheckedTile = tile;
                 break;
@@ -52,10 +52,10 @@ public class ChaseBaseBehaviour : BaseBehaviour
 
     protected void MoveTo(Tile target)
     {
-        CurTile.characterStats = null;
+        CurTile.CharacterStatsOnTile = null;
         controller.MoveTo(target.gridPosition);
         CurTile = target;
-        CurTile.characterStats = enemyStats;
+        CurTile.CharacterStatsOnTile = enemyStats;
 
         if (target == controller.LastCheckedTile)
             controller.LastCheckedTile = null;

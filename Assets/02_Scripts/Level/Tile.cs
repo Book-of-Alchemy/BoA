@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
+using UnityEngine.Events;
 
 public enum TileType
 {
@@ -26,6 +28,7 @@ public enum EnvironmentType
 [System.Serializable]
 public class Tile
 {
+    public Level curLevel;
     public Vector2Int gridPosition;
     public TileType tileType;
     public EnvironmentType environmentType;
@@ -39,9 +42,21 @@ public class Tile
 
     public bool isExplored;//향후 옵저버패턴 적용 이는 화면 표시방식에 적용 될예정이며 실제 entity의 시야와는 별개로 이용
     public bool isOnSight;
-    public CharacterStats characterStats;
-    //위에 올라간 mapObject 인스턴스
+    public event Action onCharacterChanged;
+    private CharacterStats characterStatsOnTile;
+    public CharacterStats CharacterStatsOnTile
+    {
+        get => characterStatsOnTile;
+        set
+        {
+            characterStatsOnTile = value;
+            onCharacterChanged?.Invoke(); 
+        }
+    }
+    public TrapBase trpaOnTile;
 
+    //위에 올라간 mapObject 인스턴스
+    
     private int CalculateMoveCost()
     {
         int cost = environmentType switch
@@ -68,6 +83,17 @@ public class Tile
         };
 
         return cost;
+    }
+
+    public int CaculateAstarCostByTrap(bool isConsideringDetected = true)
+    {
+        int cost = AstarCost;
+        if(isConsideringDetected)
+        {
+
+        }
+
+        return
     }
 
     private bool CalculateIsWalkable()
