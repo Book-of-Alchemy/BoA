@@ -27,9 +27,10 @@ public class Level : MonoBehaviour
 {
     public TileDataBase tileDataBase;
     public BiomeSet biomeSet;
+    public Dictionary<Vector2Int, Tile> tiles = new Dictionary<Vector2Int, Tile>();
     public Tile startTile;
     public Tile endTile;
-    public Dictionary<Vector2Int, Tile> tiles = new Dictionary<Vector2Int, Tile>();
+    public List<Tile> trapPoint = new List<Tile>();
     public bool isPainted = false;
 
 }
