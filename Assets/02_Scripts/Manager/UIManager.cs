@@ -8,6 +8,7 @@ public class UIManager : Singleton<UIManager>
     private void Start()
     {
         Show<UI_Main>();
+        
     }
 
 
