@@ -75,3 +75,6 @@ crashlytics-build.properties
 
 # ThirdParty Ignore
 /[Aa]ssets/[Tt]hird[Pp]arty/
+
+# PixelFantasy Ignore
+/[Aa]ssets/[Pp]ixel[Ff]antasy

@@ -24,7 +24,7 @@ public class TestTileManger : Singleton<TestTileManger>
 
             if (curLevel.tiles.TryGetValue(new Vector2Int(Mathf.RoundToInt(enemy.transform.position.x), Mathf.RoundToInt(enemy.transform.position.y)), out Tile targerTile))
             {
-                targerTile.characterStats = enemy;
+                targerTile.CharacterStatsOnTile = enemy;
                 enemy.curTile = targerTile;
             }
         }
