@@ -24,7 +24,7 @@ public abstract class BaseBehaviour : MonoBehaviour, IBehaviour
             TileUtility.GetAdjacentTileList(level, CurTile, true) :
             TileUtility.GetRangedTile(level, CurTile, attackRange));
 
-    protected List<Tile> vision => enemyStats.TilesOnVision;
+    protected List<Tile> vision => enemyStats.tilesOnVision;
 
 
     protected virtual void Awake()

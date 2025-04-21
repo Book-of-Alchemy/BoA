@@ -1,110 +1,99 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class CharacterStats : MonoBehaviour
 {
     [Header("기본 스탯")]
-    public int Level = 1;
-    public int Experience = 0;
+    public int level = 1;
+    public int experience = 0;
 
     [Header("체력 및 마나")]
-    public float MaxHealth = 100f;
-    public float CurrentHealth = 100f;
-    public float MaxMana = 50f;
-    public float CurrentMana = 50f;
+    [SerializeField] protected float maxHealth = 100f;
+    [SerializeField] protected float currentHealth = 100f;
+
+    [Header("마나")]
+    [SerializeField] protected float maxMana = 50f;
+    [SerializeField] protected float currentMana = 50f;
 
     [Header("공격력")]
-    public float AttackMin = 5f;
-    public float AttackMax = 10f;
+    public float attackMin = 5f;
+    public float attackMax = 10f;
 
     [Header("방어 및 전투 스탯")]
-    public float Defense = 5f;
-    public float CritChance = 0.1f;   // 치명타 확률 10%
-    public float CritDamage = 1.5f;   // 치명타 시 1.5배 데미지
-    public float Evasion = 0.05f;     // 회피율 5%
-    public float Accuracy = 1.0f;     // 명중률 기본값 1
+    public float defense = 5f;
+    public float critChance = 0.1f;
+    public float critDamage = 1.5f;
+    public float evasion = 0.05f;
+    public float accuracy = 1.0f;
 
     [Header("행동력")]
-    [SerializeField]
-    private float _actionPoints = 1.0f;
+    [SerializeField] private float actionPoints = 1.0f;
+    public float ActionPoints
+    {
+        get => actionPoints;
+        set => actionPoints = Mathf.Clamp(value, 0f, 1f);
+    }
 
     [Header("시야")]
     public int visionRange = 6;
     public int attackRange = 1;
 
-    [Header("Level&Tile")]
+    [Header("Level & Tile")]
     public Level curLevel;
     public Tile curTile;
-    public List<Tile> TilesOnVision => TileUtility.GetVisibleTiles(curLevel, curTile, visionRange);
+    public List<Tile> tilesOnVision => TileUtility.GetVisibleTiles(curLevel, curTile, visionRange);
 
     [Header("속성")]
-    public float Fire = 0f;
-    public float Water = 0f;
-    public float Ice = 0f;
-    public float Electric = 0f;
-    public float Earth = 0f;
-    public float Wind = 0f;
-    public float Light = 0f;
-    public float Dark = 0f;
+    public float fire;
+    public float water;
+    public float ice;
+    public float electric;
+    public float earth;
+    public float wind;
+    public float light;
+    public float dark;
 
     public BuffManager BuffManager { get; protected set; }
+
     protected virtual void Awake()
     {
-        BuffManager = GetComponent<BuffManager>();
-        if (BuffManager == null)
-            BuffManager = gameObject.AddComponent<BuffManager>();
+        BuffManager = GetComponent<BuffManager>() ?? gameObject.AddComponent<BuffManager>();
     }
 
     public virtual void Attack(CharacterStats target)
     {
-        // 최소/최대 공격력 사이에서 랜덤 데미지 계산
-        float damage = Random.Range(AttackMin, AttackMax);
-
-        // 치명타 발생 체크
-        if (Random.value < CritChance)
+        float dmg = UnityEngine.Random.Range(attackMin, attackMax);
+        if (UnityEngine.Random.value < critChance)
         {
-            damage *= CritDamage;
-            Debug.Log(gameObject.name + "이(가) 치명적인 공격을 했습니다!");
+            dmg *= critDamage;
+            Debug.Log($"{gameObject.name}이(가) 치명타! 데미지: {dmg}");
         }
-
-        Debug.Log(gameObject.name + "이(가) " + target.gameObject.name + "을 공격합니다. (데미지: " + damage + ")");
-        target.TakeDamage(damage);
+        Debug.Log($"{gameObject.name}이(가) {target.gameObject.name}을 공격합니다. 데미지: {dmg}");
+        target.TakeDamage(dmg);
     }
 
     public virtual void TakeDamage(float amount)
     {
-        float damage = Mathf.Max(amount - Defense, 1f);
-        CurrentHealth -= damage;
-        if (CurrentHealth < 0f)
-        {
-            CurrentHealth = 0f;
-            Die();
-        }
-        Debug.Log(gameObject.name + " 는 " + damage + " 의 데미지를 받음");
+        float dmg = Mathf.Max(amount - defense, 1f);
+        currentHealth -= dmg;
+        Debug.Log($"{gameObject.name}는 {dmg}의 피해를 받았습니다.");
     }
 
     public virtual void Heal(float amount)
     {
-        CurrentHealth += amount;
-        if (CurrentHealth > MaxHealth)
-        {
-            CurrentHealth = MaxHealth;
-        }
-        Debug.Log(gameObject.name + " 는 " + amount + " 만큼 회복됨");
+        currentHealth += amount;
+        Debug.Log($"{gameObject.name}는 {amount}만큼 회복되었습니다.");
     }
 
     public virtual void Die()
     {
-        if (CurrentHealth == 0f)
-        {
-            Debug.Log(gameObject.name + "(이)가 사망함");
-        }
+        Debug.Log($"{gameObject.name}이(가) 사망했습니다.");
     }
 
     public void OnMoveTile(Vector2Int start, Vector2Int target)
     {
         if (curLevel == null) return;
-
         if (curLevel.tiles.TryGetValue(start, out Tile startTile))
             startTile.CharacterStatsOnTile = null;
 
