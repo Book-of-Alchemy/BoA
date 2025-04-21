@@ -8,5 +8,6 @@ public class TileDataBase : ScriptableObject
 {
     public List<BiomeSet> biomeSet;
     public List<AutoEnvironmentalSet> environmentalTileSet;
+    public List<TrapData> trapData;
 
 }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class CharacterStats : MonoBehaviour
@@ -27,11 +28,14 @@ public abstract class CharacterStats : MonoBehaviour
     [SerializeField]
     private float _actionPoints = 1.0f;
 
-    public float ActionPoints
-    {
-        get { return _actionPoints; }
-        set { _actionPoints = Mathf.Clamp(value, 0f, 1f); }
-    }
+    [Header("시야")]
+    public int visionRange = 6;
+    public int attackRange = 1;
+
+    [Header("Level&Tile")]
+    public Level curLevel;
+    public Tile curTile;
+    public List<Tile> TilesOnVision => TileUtility.GetVisibleTiles(curLevel, curTile, visionRange);
 
     [Header("속성")]
     public float Fire = 0f;
@@ -42,6 +46,14 @@ public abstract class CharacterStats : MonoBehaviour
     public float Wind = 0f;
     public float Light = 0f;
     public float Dark = 0f;
+
+    public BuffManager BuffManager { get; protected set; }
+    protected virtual void Awake()
+    {
+        BuffManager = GetComponent<BuffManager>();
+        if (BuffManager == null)
+            BuffManager = gameObject.AddComponent<BuffManager>();
+    }
 
     public virtual void Attack(CharacterStats target)
     {
@@ -86,6 +98,20 @@ public abstract class CharacterStats : MonoBehaviour
         if (CurrentHealth == 0f)
         {
             Debug.Log(gameObject.name + "(이)가 사망함");
+        }
+    }
+
+    public void OnMoveTile(Vector2Int start, Vector2Int target)
+    {
+        if (curLevel == null) return;
+
+        if (curLevel.tiles.TryGetValue(start, out Tile startTile))
+            startTile.CharacterStatsOnTile = null;
+
+        if (curLevel.tiles.TryGetValue(target, out Tile targerTile))
+        {
+            targerTile.CharacterStatsOnTile = this as CharacterStats;
+            curTile = targerTile;
         }
     }
 }

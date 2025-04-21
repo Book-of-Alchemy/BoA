@@ -1,0 +1,12 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class NormalAttackBehaviour : AttackBaseBehaviour
+{
+    public override void Action()
+    {
+        controller.Attack();
+        enemyStats.Attack(playetStats);
+    }
+}
