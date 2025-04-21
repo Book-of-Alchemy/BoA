@@ -14,21 +14,30 @@ public class PlayerStats : CharacterStats
 
     public void GainExperience(int exp)
     {
-        Experience += exp;
+        experience += exp;
         Debug.Log(exp + "의 경험치 획득");
         // 레벨업 조건 확인 후 LevelUp 호출 가능
     }
 
     public void LevelUp()
     {
-        Level++;
+        level++;
         MaxHealth += 10f;
         CurrentHealth = MaxHealth;
         MaxMana += 5f;
         CurrentMana = MaxMana;
-        AttackMin += 1f;
-        AttackMax += 1f;
-        Defense += 1f;
-        Debug.Log("레벨업 " + Level);
+        attackMin += 1f;
+        attackMax += 1f;
+        defense += 1f;
+        Debug.Log("레벨업 " + level);
+    }
+    public override void TakeDamage(float amount)
+    {
+        base.TakeDamage(amount);
+    }
+        
+    public override void Heal(float amount)
+    {
+        base.Heal(amount);
     }
 }
