@@ -88,12 +88,19 @@ public class Tile
     public int CaculateAstarCostByTrap(bool isConsideringDetected = true)
     {
         int cost = AstarCost;
+        
+        if(trpaOnTile == null) 
+            return cost;
+
         if(isConsideringDetected)
         {
-
+            if (trpaOnTile.IsDetected)
+                cost += 6;
         }
+        else
+            cost += 6;
 
-        return
+        return cost;
     }
 
     private bool CalculateIsWalkable()
