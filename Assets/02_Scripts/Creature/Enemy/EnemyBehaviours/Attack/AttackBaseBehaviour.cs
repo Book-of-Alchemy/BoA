@@ -15,7 +15,7 @@ public class AttackBaseBehaviour : BaseBehaviour
     {
         foreach (Tile tile in attackRangeTile)//공격 사거리 안에 있으며 시야에 있는지 체크
         {
-            if (tile.characterStats is PlayerStats player)
+            if (tile.CharacterStatsOnTile is PlayerStats player)
             {
                 if (TileUtility.IsTileVisible(level, CurTile, tile))
                 {

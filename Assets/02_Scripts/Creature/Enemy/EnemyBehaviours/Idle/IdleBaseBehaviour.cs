@@ -14,7 +14,7 @@ public class IdleBaseBehaviour : BaseBehaviour
     {
         foreach (Tile tile in vision)
         {
-            if (tile.characterStats is PlayerStats player)
+            if (tile.CharacterStatsOnTile is PlayerStats player)
             {
                 controller.ChangeState(EnemyState.Chase);
                 controller.LastCheckedTile = tile;
