@@ -5,14 +5,22 @@ using UnityEngine;
 public class TESTESTSETS : MonoBehaviour
 {
     public GameObject prefab;
-    public ItemController controller;
+    public ProjectileItem controller;
+    public DropItem drop;
+    public GameObject dropPrefab;
     bool isbool = false;
     // Start is called before the first frame update
     void Start()
     {
         GameObject Prefa = Instantiate(prefab);
-        controller = Prefa.GetComponent<ItemController>();
+        controller = Prefa.GetComponent<ProjectileItem>();
         controller.Init(ResourceManager.Instance.dicItemData[200001]);
+
+        GameObject DropPre = Instantiate(dropPrefab);
+        drop = DropPre.GetComponent<DropItem>();
+        drop.Init(ResourceManager.Instance.dicItemData[200001]);
+
+
 
     }
 

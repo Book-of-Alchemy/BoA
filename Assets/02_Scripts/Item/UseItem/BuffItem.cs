@@ -4,9 +4,15 @@ using UnityEngine;
 
 public class BuffItem : BaseItem
 {
-    public override void UseItem(List<CharacterStats> target)
+    public override void AddItem()
     {
-        //TODO 버프로직
     }
 
+    public override void DropItem()
+    {
+    }
+
+    public override void UseItem()
+    {
+    }
 }
