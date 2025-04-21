@@ -1,9 +1,41 @@
+using System;
 using UnityEngine;
 
 public class PlayerStats : CharacterStats
 {
+    //체력 변경 이벤트
+    public event Action<float> OnHealthRatioChanged;
     // BuffManager를 통해 상태 효과를 관리할 수 있도록 프로퍼티 추가
-
+    public float MaxHealth
+    {
+        get => maxHealth;
+        set
+        {
+            maxHealth = Mathf.Max(1f, value);
+            CurrentHealth = Mathf.Min(currentHealth, maxHealth);
+            OnHealthRatioChanged?.Invoke(currentHealth / maxHealth);
+        }
+    }
+    public float CurrentHealth
+    {
+        get => currentHealth;
+        set
+        {
+            currentHealth = Mathf.Clamp(value, 0f, maxHealth);
+            OnHealthRatioChanged?.Invoke(currentHealth / maxHealth);
+            if (currentHealth <= 0f) Die();
+        }
+    }
+    public float MaxMana
+    {
+        get => maxMana;
+        set => maxMana = Mathf.Max(0f, value);
+    }
+    public float CurrentMana
+    {
+        get => currentMana;
+        set => currentMana = Mathf.Clamp(value, 0f, maxMana);
+    }
     protected override void Awake()
     {
         base.Awake();
