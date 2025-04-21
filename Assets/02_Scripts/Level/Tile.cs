@@ -54,6 +54,7 @@ public class Tile
         }
     }
     public TrapBase trpaOnTile;
+    public List<BaseItem> itemsOnTile = new List<BaseItem>();
 
     //위에 올라간 mapObject 인스턴스
     
