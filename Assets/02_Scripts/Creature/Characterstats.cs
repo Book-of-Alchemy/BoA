@@ -9,45 +9,12 @@ public abstract class CharacterStats : MonoBehaviour
     public int experience = 0;
 
     [Header("체력 및 마나")]
-    [SerializeField] private float maxHealth = 100f;
-    [SerializeField] private float currentHealth = 100f;
-    public float MaxHealth
-    {
-        get => maxHealth;
-        set
-        {
-            maxHealth = Mathf.Max(1f, value);
-            CurrentHealth = Mathf.Min(currentHealth, maxHealth);
-            OnHealthRatioChanged?.Invoke(currentHealth / maxHealth);
-        }
-    }
-    public float CurrentHealth
-    {
-        get => currentHealth;
-        set
-        {
-            currentHealth = Mathf.Clamp(value, 0f, maxHealth);
-            OnHealthRatioChanged?.Invoke(currentHealth / maxHealth);
-            if (currentHealth <= 0f) Die();
-        }
-    }
-
-    //체력 변경 이벤트
-    public event Action<float> OnHealthRatioChanged;
+    [SerializeField] protected float maxHealth = 100f;
+    [SerializeField] protected float currentHealth = 100f;
 
     [Header("마나")]
-    [SerializeField] private float maxMana = 50f;
-    [SerializeField] private float currentMana = 50f;
-    public float MaxMana
-    {
-        get => maxMana;
-        set => maxMana = Mathf.Max(0f, value);
-    }
-    public float CurrentMana
-    {
-        get => currentMana;
-        set => currentMana = Mathf.Clamp(value, 0f, maxMana);
-    }
+    [SerializeField] protected float maxMana = 50f;
+    [SerializeField] protected float currentMana = 50f;
 
     [Header("공격력")]
     public float attackMin = 5f;
@@ -109,13 +76,13 @@ public abstract class CharacterStats : MonoBehaviour
     public virtual void TakeDamage(float amount)
     {
         float dmg = Mathf.Max(amount - defense, 1f);
-        CurrentHealth -= dmg;
+        currentHealth -= dmg;
         Debug.Log($"{gameObject.name}는 {dmg}의 피해를 받았습니다.");
     }
 
     public virtual void Heal(float amount)
     {
-        CurrentHealth += amount;
+        currentHealth += amount;
         Debug.Log($"{gameObject.name}는 {amount}만큼 회복되었습니다.");
     }
 
