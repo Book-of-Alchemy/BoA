@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14d30ef8f47568a4eaed944e3bbed135, type: 3}
+  m_Name: MakeshiftTrap
+  m_EditorClassIdentifier: 
+  id: 180001
+  name_kr: "\uAC04\uC774\uD568\uC815"
+  name_en: Makeshift Trap
+  damage: 40
+  effect_range: 0
+  effect_id: -1
+  effect_value: -1
+  effect_duration: -1
+  detected_by_default: 1
+  min_spawn_floor: 0
+  max_spawn_floor: 0
+  spawn_weight_easy: 0
+  spawn_weight_hard: 0
+  special_only: 1
+  trapPrefab: {fileID: 428213885509794577, guid: e248d7e30e3eeda4b938b7421708a579, type: 3}

@@ -36,7 +36,8 @@ public static class DamageCalculator
 
         result = multiplier * baseDamage;//속성 대미지 계산
         //버프 디버프에 의한 대미지 계산 추가
-        result = result * (target.Defense / 50 + target.Defense);//방어력 계산
+        result = result * (1-target.Defense / (50 + target.Defense));//방어력 계산
+        Debug.Log($"최종 대미지 : {result}");
 
         return result;
     }

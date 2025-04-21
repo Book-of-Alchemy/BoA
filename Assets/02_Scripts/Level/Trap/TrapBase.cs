@@ -27,6 +27,15 @@ public abstract class TrapBase : MonoBehaviour
         if (animator == null)
             animator = GetComponent<Animator>();
         UpdateVisibility();
+        StartCoroutine(DelayedInit());//임시코드
+    }
+
+    private IEnumerator DelayedInit()
+    {
+        yield return null; // 한 프레임 대기
+        tile = GameManager.Instance.PlayerTransform.curLevel.tiles[new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y))];
+        tile.trpaOnTile = this;
+        tile.onCharacterChanged += Execute;//3줄 임시코드
     }
 
     protected virtual void OnEnable()
@@ -51,7 +60,7 @@ public abstract class TrapBase : MonoBehaviour
             return;
         //함정에 유효한 타입인지 확인과정
 
-        if (!IsDetected) 
+        if (!IsDetected)
             IsDetected = true;
         TriggerActivate();
         Action();
