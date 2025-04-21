@@ -42,7 +42,7 @@ public abstract class BaseItem
         icon_sprite = data.icon_sprite;
     }
 
-    public abstract void UseItem(CharacterStats[] target);
+    public abstract void UseItem(List<CharacterStats> target);
 
 }
 

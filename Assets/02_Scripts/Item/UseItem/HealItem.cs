@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class HealItem : BaseItem
 {
-    public override void UseItem(CharacterStats[] targets)
+    public override void UseItem(List<CharacterStats> targets)
     {
             // 공격 로직
-            if (targets.Length < 1)
+            if (targets.Count < 1)
             {
                 Debug.Log("타겟이 없습니다.");
                 return;
