@@ -5,9 +5,8 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ItemController : MonoBehaviour
+public class  ProjectileItem : MonoBehaviour
 {
-    public ItemData data;
     public BaseItem Item;
     public SpriteRenderer spriteRenderer; // 투사체를 아이템이미지로 바꿀이미지
     public ProjectileMove projectileMove;
@@ -17,15 +16,14 @@ public class ItemController : MonoBehaviour
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         projectileMove = GetComponent<ProjectileMove>();
-        this.data = data;
-        if (this.data != null) SetType();
+        SetType(data);
     }
 
-    private void SetType()
+    private void SetType(ItemData data)
     {
         Item = ResourceManager.Instance.effectTypeData[data.effect_type];
-        Item.Init(data);
-        spriteRenderer.sprite = Resources.Load<Sprite>(Item.icon_sprite);
+        Item.data = data;
+        spriteRenderer.sprite = Resources.Load<Sprite>(Item.data.icon_sprite);
     }
 
     // TragetRange가 0인것은 플레이어로부터 시작되는 공격

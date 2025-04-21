@@ -4,8 +4,15 @@ using UnityEngine;
 
 public class DeBuffItem : BaseItem
 {
-    public override void UseItem(CharacterStats[] target)
+    public override void AddItem()
     {
-        //TODO 디버프 로직
+    }
+
+    public override void DropItem()
+    {
+    }
+
+    public override void UseItem()
+    {
     }
 }

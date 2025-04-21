@@ -28,4 +28,4 @@ MonoBehaviour:
   max_stack: 99
   iteminfo_kr: "\uD654\uC5FC\uAD6C\uB97C \uB0A0\uB824 \uB300\uC0C1\uC5D0\uAC8C \uD53C\uD574\uB97C
     \uC90D\uB2C8\uB2E4."
-  icon_sprite: 
+  icon_sprite: Image/Item/Fireball Scroll
