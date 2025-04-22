@@ -29,3 +29,4 @@ MonoBehaviour:
   iteminfo_kr: "\uB2E8\uAC80\uC744 \uD22C\uCC99\uD558\uC5EC \uB300\uC0C1\uC5D0\uAC8C
     \uD53C\uD574\uB97C \uC90D\uB2C8\uB2E4."
   icon_sprite: Image/Item/Throwing Dagger
+  Sprite: {fileID: 21300000, guid: 2c60ad707ac3dbd409c83cbcab00928b, type: 3}

@@ -28,3 +28,4 @@ MonoBehaviour:
   max_stack: 9999
   iteminfo_kr: "\uACF5\uACA9\uB825 \uAC10\uC18C \uC544\uC774\uD15C \uAE30\uBCF8 \uC7AC\uB8CC"
   icon_sprite: Image/Item/Weakening Spore
+  Sprite: {fileID: 0}

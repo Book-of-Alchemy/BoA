@@ -28,3 +28,4 @@ MonoBehaviour:
   max_stack: 9999
   iteminfo_kr: "\uBC14\uB78C \uBC0F \uC2E0\uC18D \uAE30\uBCF8 \uC7AC\uB8CC"
   icon_sprite: Image/Item/Griffin's Feather
+  Sprite: {fileID: 0}

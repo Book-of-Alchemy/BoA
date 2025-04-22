@@ -93,5 +93,6 @@ public class ItemData : ScriptableObject
     public int max_stack;
     public string iteminfo_kr;
     public string icon_sprite;
+    public Sprite Sprite;
 }
 
