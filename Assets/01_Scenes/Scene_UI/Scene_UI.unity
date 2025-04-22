@@ -409,9 +409,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _uiInventory: {fileID: 0}
   itemDataArr:
-  - {fileID: 11400000, guid: 843eda9ded963f8478e5fa134c8338df, type: 2}
-  - {fileID: 11400000, guid: be9e7522a75b9034e8ead890f6ba090b, type: 2}
-  - {fileID: 11400000, guid: 17e5eb2ce453e1941ac20d44c5629e10, type: 2}
+  - {fileID: 11400000, guid: f38ce0eb02e8c224e832c8697ea54ae5, type: 2}
 --- !u!1 &988688590
 GameObject:
   m_ObjectHideFlags: 0
@@ -629,7 +627,6 @@ MonoBehaviour:
   - {fileID: 271232315}
   - {fileID: 988688591}
   uiList: []
-  _inventory: {fileID: 0}
 --- !u!4 &2023912632
 Transform:
   m_ObjectHideFlags: 0

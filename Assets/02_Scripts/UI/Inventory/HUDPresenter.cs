@@ -5,8 +5,6 @@ public class HUDPresenter
     private UI_HUD _hud;
     private PlayerStats _playerStats;
 
-    //[SerializeField] private
-
     public HUDPresenter(UI_HUD hud)
     {
         _hud = hud;

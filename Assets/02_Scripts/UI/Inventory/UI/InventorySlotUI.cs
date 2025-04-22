@@ -47,7 +47,7 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler
     {
         if (!HasItem)
             _btn.onClick.AddListener(OnClickItem);
-        _itemSprite.sprite = item.GetSprite();
+        //_itemSprite.sprite = item.GetSprite();
         _countTxt.text = item.Amount.ToString();
         ShowIcon();
     }
