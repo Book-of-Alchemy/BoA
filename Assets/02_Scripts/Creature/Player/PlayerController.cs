@@ -138,7 +138,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // 목표 위치까지 부드럽게 이동하는 코루틴
+    // 목표 위치까지 부드럽게 이동하는 Dotween
     private void MoveToTargetTween(Vector3 destination)
     {
         _isMoving = true;
