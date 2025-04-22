@@ -22,7 +22,7 @@ public class Inventory : Singleton<Inventory>
         for (int i = 0; i < items.Length; i++)
         {
             if (items[i] != null)
-                Add(items[i].BaseItem.data);
+                Add(items[i].itemData);
         }
     }
 
@@ -34,7 +34,9 @@ public class Inventory : Singleton<Inventory>
 
     public void OnClickRemoveItem() //Call at OnClick Event 
     {
-        RemoveItem();
+        int index = FindEmptySlotIndex(0, false);
+        if(index >=0)
+            RemoveItem(index);
     }
 
     public void Add(ItemData itemData, int amount = 1)
@@ -45,7 +47,7 @@ public class Inventory : Singleton<Inventory>
         {
             //items[index].AddItem(itemData,amount); //겹치기때문에 수량증가
             items[index].AddBaseItem(itemData,amount);
-            UpdateUISlot(index, items[index]);
+            UpdateUISlot(index);
             return;
         }
 
@@ -57,7 +59,7 @@ public class Inventory : Singleton<Inventory>
                 items[index] = new InventoryItem();
 
             items[index].AddBaseItem(itemData); //빈 공간에 itemData Add
-            UpdateUISlot(index, items[index]);
+            UpdateUISlot(index);
         }
         else
         {
@@ -65,22 +67,23 @@ public class Inventory : Singleton<Inventory>
         }
     }
 
-    private void UpdateUISlot(int index,InventoryItem item) // 해당하는 인덱스 슬롯 상태 및 UI 갱신
+    private void UpdateUISlot(int index/*,InventoryItem item*/) // 해당하는 인덱스 슬롯 상태 및 UI 갱신
     {
         //아이템 배열 Null체크
         if(items[index] != null)
         {
             //index와 일치하는 ui에 item정보 Set
-            _uiInventory.SetSlotItem(index, item);
+            _uiInventory.SetSlotItem(index, items[index]);
             
         }
     }
 
-    private int FindEmptySlotIndex(int startIndex = 0) //아이템을 넣을 슬롯을 검색하는 함수
+    private int FindEmptySlotIndex(int startIndex = 0 , bool isEmpty = true) //아이템을 넣을 슬롯을 검색하는 함수
     {
         for (int i = startIndex; i < _capacity; i++)
-            if (items[i] == null)
+            if (items[i] == null && isEmpty)
                 return i; //[i]가 비어있다면 해당 인덱스 리턴
+            else if (items[i] != null && !isEmpty) return i; // isEmpty false라면 비어있지 않은 index 리턴
         return -1; //빈 자리가 없다면 -1리턴
     }
 
@@ -97,20 +100,30 @@ public class Inventory : Singleton<Inventory>
         return -1;
     }
 
-    private void RemoveItem()
+    private void RemoveItem(int index)
     {
-
+        if(items[index].Amount >= 1)
+        {
+            if (items[index].GetReuceAmount() == 0)
+            {
+                items[index] = null;
+                _uiInventory.RemoveItem(index);
+            }
+            else
+                _uiInventory.ReduceItem(index);
+        }
     }
-
     public void Use(int index)
     {
         Debug.Log("UseAction");
+        RemoveItem(index);
         UIManager.Hide<UI_Action>();
     }
 
     public void Drop(int index)
     {
         Debug.Log("DropAction");
+        RemoveItem(index);
         UIManager.Hide<UI_Action>();
     }
     public void Craft(int index)

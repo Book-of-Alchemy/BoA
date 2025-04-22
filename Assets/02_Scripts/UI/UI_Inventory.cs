@@ -22,7 +22,9 @@ public class UI_Inventory : UIBase
     [SerializeField] private List<GameObject> _toolList; //UI_Inventory에 오른쪽에 바뀔 화면
     [SerializeField] private List<Image> _imageList; //화면전환을 위한 탭버튼의 이미지 
 
+    [Header("Test Comp")]
     [SerializeField] private Button _addBtn;
+    [SerializeField] private Button _removeBtn;
 
     public EInventoryType curType { get; private set; }  // 현재 띄워진 인벤토리 타입
     public bool IsOpened { get; private set; }
@@ -48,6 +50,7 @@ public class UI_Inventory : UIBase
             _inventory = Inventory.Instance;
             _inventory.Initialize(this);
             _addBtn.onClick.AddListener(_inventory.OnClickAddItem);
+            _removeBtn.onClick.AddListener(_inventory.OnClickRemoveItem);
         }
     }
 
@@ -63,6 +66,7 @@ public class UI_Inventory : UIBase
 
     public override void HideDirect() //Call at OnClick Event 
     {
+        _addBtn.onClick.RemoveAllListeners();
         UIManager.Hide<UI_Inventory>();
         UIManager.Hide<UI_Action>();
     }
@@ -91,6 +95,10 @@ public class UI_Inventory : UIBase
     public void RemoveItem(int index) // 슬롯에 아이템 아이콘, 갯수 제거
     {
         _slotUIList[index].RemoveItem();
+    }
+    public void ReduceItem(int index) // 슬롯에 아이템 아이콘, 갯수 제거
+    {
+        _slotUIList[index].ReduceItem();
     }
 
     public void OnSlotSelected(int index)
