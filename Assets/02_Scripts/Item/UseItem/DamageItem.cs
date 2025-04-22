@@ -30,18 +30,20 @@ public class DamageItem : BaseItem
     /// </summary>
     public override void UseItem()
     {
-        //List<Tile> tiles;
-        //if (data.target_range == 0 && data.effect_type == Effect_Type.Damage)
-        //    tiles = TileUtility.GetRangedTile(GameManager.Instance.PlayerTransform.curLevel, 목적지, data.effect_range, false);
-        //else
-        //    tiles = TileUtility.GetRangedTile(GameManager.Instance.PlayerTransform.curLevel, 목적지, data.effect_range, true);
-        //foreach (Tile tile in tiles)
-        //{
-        //    if (tile.characterStats != null)
-        //    {
-        //        GameManager.Instance.PlayerTransform.Attack(tile.characterStats);
-        //    }
-        //}
+        Vector2Int curPos = Vector2Int.RoundToInt(transform.position);
+        List<Tile> tiles;
+        if (data.target_range == 0 && data.effect_type == Effect_Type.Damage)
+            tiles = TileUtility.GetRangedTile(GameManager.Instance.PlayerTransform.curLevel, GameManager.Instance.PlayerTransform.curLevel.tiles[curPos], data.effect_range, false);
+        else
+            tiles = TileUtility.GetRangedTile(GameManager.Instance.PlayerTransform.curLevel, GameManager.Instance.PlayerTransform.curLevel.tiles[curPos], data.effect_range, true);
+        foreach (Tile tile in tiles)
+        {
+            if (tile.CharacterStatsOnTile != null)
+            {
+                GameManager.Instance.PlayerTransform.Attack(tile.CharacterStatsOnTile);
+            }
+        }
+        Debug.Log(data.name_en);
 
     }
 

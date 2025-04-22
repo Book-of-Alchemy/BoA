@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using DG.Tweening;
 
 public class ProjectileMove : MonoBehaviour
 {
@@ -25,7 +26,7 @@ public class ProjectileMove : MonoBehaviour
     {
         itemPos = Vector2Int.RoundToInt(transform.position);
         if (_isObject == true)
-            transform.position = Vector2.MoveTowards(transform.position, choiceTile.gridPosition, 0.1f * Time.deltaTime);
+            transform.position = Vector2.MoveTowards(transform.position, choiceTile.gridPosition, 1f * Time.deltaTime);
         if (CheckDistance(itemPos, choiceTile.gridPosition) < 0.01f)
         {
             controller.Item.UseItem();

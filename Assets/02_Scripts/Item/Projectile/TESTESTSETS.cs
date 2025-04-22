@@ -6,6 +6,7 @@ public class TESTESTSETS : MonoBehaviour
 {
     public GameObject prefab;
     public ProjectileItem controller;
+    public DropItem controller2;
     public DropItem drop;
     public GameObject dropPrefab;
     bool isbool = false;
@@ -14,12 +15,15 @@ public class TESTESTSETS : MonoBehaviour
     {
         GameObject Prefa = Instantiate(prefab);
         controller = Prefa.GetComponent<ProjectileItem>();
-        controller.Init(ResourceManager.Instance.dicItemData[200001]);
+        controller.Init(ResourceManager.Instance.dicItemData[200002]);
 
         GameObject DropPre = Instantiate(dropPrefab);
         drop = DropPre.GetComponent<DropItem>();
         drop.Init(ResourceManager.Instance.dicItemData[200001]);
 
+        GameObject DropPreb = Instantiate(prefab);
+        controller2 = DropPreb.GetComponent<DropItem>();
+        controller2.Init(ResourceManager.Instance.dicItemData[200002]);
 
 
     }
@@ -31,6 +35,7 @@ public class TESTESTSETS : MonoBehaviour
         {
             controller.projectileMove.SetDestination(tile);
             controller.projectileMove.Init();
+
         }
         isbool = true;
     }

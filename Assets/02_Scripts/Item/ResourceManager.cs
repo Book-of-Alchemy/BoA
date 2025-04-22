@@ -8,13 +8,16 @@ public class ResourceManager : Singleton<ResourceManager>
 {
     private ItemData[] itemDatas;
     public RecipeData[] recipeDatas;
+    public GameObject typeObjectPrefab;
+    //public GameObject typeObject;
     public Dictionary<int, ItemData> dicItemData = new Dictionary<int, ItemData>();
-    public Dictionary<Effect_Type,BaseItem> effectTypeData = new Dictionary<Effect_Type, BaseItem>();
+    //public Dictionary<Effect_Type,BaseItem> effectTypeData = new Dictionary<Effect_Type, BaseItem>();
     private int intNullvalue = -1;
 
 
     private const string itemPath = "Items";
     private const string recipePath = "Recipes";
+    private const string TypePath = "TypeObject";
     protected override void Awake()
     {
         base.Awake();
@@ -40,21 +43,32 @@ public class ResourceManager : Singleton<ResourceManager>
             Debug.Log("레시피 리소스를 찾지 못했습니다.");
             return;
         }
-        EffectTypeAdd();
+        typeObjectPrefab = Resources.Load<GameObject>($"{TypePath}/TypeObject");
+        //typeObject = Instantiate(_typeObjectPrefab);
+        //typeObject.transform.SetParent(this.transform);
+
+        //EffectTypeAdd();
         //for (int i = 0; i < recipeDatas.Length; i++)
         //{
         //    dicRecipeData.Add(recipeDatas[i].recipe_id, recipeDatas[i]);
         //}
     }
 
-    void EffectTypeAdd()
-    {
-        effectTypeData.Add(Effect_Type.Damage, new DamageItem());
-        effectTypeData.Add(Effect_Type.Buff, new BuffItem());
-        effectTypeData.Add(Effect_Type.Debuff, new DeBuffItem());
-        effectTypeData.Add(Effect_Type.Heal, new HealItem());
-        effectTypeData.Add(Effect_Type.Move, new MoveItem());
-    }
+    //void EffectTypeAdd()
+    //{
+    //    DamageItem damage = typeObject.GetComponent<DamageItem>();
+    //    BuffItem buff = typeObject.GetComponent<BuffItem>();
+    //    DeBuffItem debuff = typeObject.GetComponent<DeBuffItem>();
+    //    HealItem heal = typeObject.GetComponent <HealItem>();
+    //    MoveItem move = typeObject.GetComponent<MoveItem>();
+    //
+    //
+    //    effectTypeData.Add(Effect_Type.Damage, damage);
+    //    effectTypeData.Add(Effect_Type.Buff, buff);
+    //    effectTypeData.Add(Effect_Type.Debuff, debuff);
+    //    effectTypeData.Add(Effect_Type.Heal, heal);
+    //    effectTypeData.Add(Effect_Type.Move, move);
+    //}
 
 
 }
