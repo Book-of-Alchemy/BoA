@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "MapObject", menuName = "Trap")]
+[CreateAssetMenu(menuName = "Trap/New Trap")]
 public class TrapData : ScriptableObject
 {
     public int id;
     public string name_kr;
+    public string name_en;
     public int damage;
     public int effect_range;
     public int effect_id;

@@ -57,6 +57,11 @@ public class TestLevelGenerator : MonoBehaviour
             level.tiles[tile.gridPosition] = tile;
         }
 
+        foreach(var tile in level.tiles)
+        {
+            tile.Value.curLevel = level;
+        }
+
         return level;
     }
 }

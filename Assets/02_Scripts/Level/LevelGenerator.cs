@@ -77,6 +77,17 @@ public class LevelGenerator : MonoBehaviour
 
         level.startTile = startLeaf.centerTile != null ? startLeaf.centerTile : null;
         level.endTile = endLeaf.centerTile != null ? endLeaf.centerTile : null;
+
+        foreach (var leaf in seletedLeaves)
+        {
+            foreach(var tile in leaf.trapPoint)
+            {
+                level.trapPoint.Add(tile);
+            }
+        }
+
+        SetLevelOnTiles(tiles, level);
+
         return level;
     }
 
@@ -394,7 +405,7 @@ public class LevelGenerator : MonoBehaviour
                     environmentType = info.environmentType,
                     isDoorPoint = info.isDoorPoint,
                     canSeeThrough = (info.tileType == TileType.wall ? false : true),
-                    isOccupied = false,
+                    isOccupied = (info.tileType == TileType.wall ? true : false),
                     isExplored = false,
                     isOnSight = false
                 };
@@ -407,6 +418,8 @@ public class LevelGenerator : MonoBehaviour
                 if (pos == centerPos)
                     leaf.centerTile = tile;
             }
+
+            PlaceTrapsInRoom(leaf, tiles);
         }
         else
         {
@@ -431,9 +444,49 @@ public class LevelGenerator : MonoBehaviour
             }
         }
 
+
         return tiles;
     }
 
+    void PlaceTrapsInRoom(Leaf leaf, Dictionary<Vector2Int, Tile> tiles)
+    {
+        if (leaf.room == null || leaf.centerTile == null ) return;
+
+        if(leaf.roomType == RoomType.secret || leaf.roomType == RoomType.treasure || leaf.roomType == RoomType.trap) return;
+
+        int spawnQuantity = (leaf.leafSizeType) switch
+        {
+            LeafSizeType.small => UnityEngine.Random.Range(0, 1),
+            LeafSizeType.medium => UnityEngine.Random.Range(1,2),
+            LeafSizeType.large => UnityEngine.Random.Range(2,3),
+            _ => 0
+        };
+
+        List<Tile> candidates = new List<Tile>();
+
+        foreach(var kvp in tiles)
+        {
+            if (!kvp.Value.isOccupied)
+                candidates.Add(kvp.Value);
+        }
+
+        candidates.Remove(leaf.centerTile);
+        float spawnRate = 0.7f;
+
+        for (int i = 0; i < spawnQuantity; i++)
+        {
+            if (UnityEngine.Random.value > spawnRate) 
+                continue;
+
+            if (candidates.Count == 0) 
+                break;
+
+            Tile targetTile = candidates[UnityEngine.Random.Range(0, candidates.Count)];
+            candidates.Remove(targetTile);
+
+            leaf.trapPoint.Add(targetTile);
+        }
+    }
 
     Dictionary<Vector2Int, Tile> GatherTiles(List<Leaf> leaves)
     {
@@ -569,6 +622,14 @@ public class LevelGenerator : MonoBehaviour
             isExplored = false,
             isOnSight = false
         };
+    }
+
+    void SetLevelOnTiles(Dictionary<Vector2Int, Tile> tiles, Level level)
+    { 
+        foreach(var kvp in tiles)
+        {
+            kvp.Value.curLevel = level;
+        }
     }
 
 }
