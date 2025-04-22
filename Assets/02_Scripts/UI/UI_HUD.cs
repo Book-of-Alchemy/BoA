@@ -1,7 +1,21 @@
+using DG.Tweening;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class UI_HUD : UIBase
+public class UI_HUD : UIBase 
 {
+    [SerializeField] private Slider _hpSlider;
+    [SerializeField] private Image _hpImage;
+
+    [SerializeField] private Slider _mpSlider;
+    [SerializeField] private Slider _expSlider;
+
+    [SerializeField] private TextMeshProUGUI _floorTxt;
+    [SerializeField] private TextMeshProUGUI _questTxt;
+
+    private HUDPresenter _presenter;
+
     public override void HideDirect()
     {
         UIManager.Hide<UI_HUD>();
@@ -9,15 +23,30 @@ public class UI_HUD : UIBase
 
     public override void Opened(params object[] param)
     {
-
+        _presenter = new HUDPresenter(this);
     }
 
-    public void OnClickCraft() // Call At OnClick Event
+    public void UpdateHp(float per)
     {
-        UIManager.Show<UI_Craft>();
+        _hpSlider.DOValue(per, 0.3f);
+        _hpImage.DOFillAmount(per, 1.5f);
     }
 
-    public void OnClickMenu() // Call At OnClick Event
+    public void UpdateMp(float per)
+    {
+        _mpSlider.DOValue(per, 0.3f);
+    }
+    public void UpdateExp(float per)
+    {
+        _expSlider.DOValue(per, 0.3f);
+    }
+
+    private void OnClickCraft() // Call At OnClick Event
+    {
+        UIManager.Show<UI_Inventory>(EInventoryType.Craft);
+    }
+
+    private void OnClickMenu() // Call At OnClick Event
     {
         UIManager.Show<UI_Menu>();
     }
