@@ -19,7 +19,7 @@ MonoBehaviour:
   attribute: 9
   target_range: -1
   effect_range: -1
-  effect_type: 5
+  effect_type: 6
   effect_value: -1
   effect_id: -1
   effect_duration: -1
@@ -27,4 +27,4 @@ MonoBehaviour:
   mp_cost: -1
   max_stack: 9999
   iteminfo_kr: "\uAE30\uBCF8 \uC7AC\uB8CC"
-  icon_sprite: 
+  icon_sprite: Image/Item/Empty Bottle

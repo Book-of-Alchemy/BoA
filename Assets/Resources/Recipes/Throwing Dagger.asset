@@ -26,4 +26,4 @@ MonoBehaviour:
   mp_cost: 0
   unlock_condition: default
   efficiency_rating: 0
-  icon_sprite_id: 
+  icon_sprite_id: Image/Recipe/Throwing Dagger

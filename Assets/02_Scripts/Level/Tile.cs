@@ -50,14 +50,25 @@ public class Tile
         set
         {
             characterStatsOnTile = value;
-            onCharacterChanged?.Invoke(); 
+            onCharacterChanged?.Invoke();
         }
     }
-    public TrapBase trpaOnTile;
+    [SerializeField]
+    private TrapBase trpaOnTile;
+    public TrapBase TrpaOnTile
+    {
+        get => trpaOnTile;
+        set
+        {
+            trpaOnTile = value;
+            if (value != null)
+                trpaOnTile.Initialize(this);
+        }
+    }
     public List<BaseItem> itemsOnTile = new List<BaseItem>();
 
     //위에 올라간 mapObject 인스턴스
-    
+
     private int CalculateMoveCost()
     {
         int cost = environmentType switch
@@ -89,13 +100,13 @@ public class Tile
     public int CaculateAstarCostByTrap(bool isConsideringDetected = true)
     {
         int cost = AstarCost;
-        
-        if(trpaOnTile == null) 
+
+        if (TrpaOnTile == null)
             return cost;
 
-        if(isConsideringDetected)
+        if (isConsideringDetected)
         {
-            if (trpaOnTile.IsDetected)
+            if (TrpaOnTile.IsDetected)
                 cost += 6;
         }
         else

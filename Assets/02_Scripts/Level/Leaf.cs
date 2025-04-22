@@ -15,6 +15,7 @@ public class Leaf
     public RoomPreset room;
     public Tile centerTile;
     public List<Tile> doorPoint = new List<Tile>();
+    public List<Tile> trapPoint = new List<Tile>();
     public RoomType roomType = RoomType.normal;
     public LeafSizeType leafSizeType => GetLeafSizeType();
     public int minSmallSize = 7;

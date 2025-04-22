@@ -12,7 +12,7 @@ using Newtonsoft.Json;
 
 public class DownLoader : EditorWindow
 {
-    string itemDBUrl = "https://opensheet.elk.sh/1kt6Cg9_sC3G4imRU9_b0_o0j-XP5KUCrDXyvX__BdH4/Item_DBTest";
+    string itemDBUrl = "https://opensheet.elk.sh/1kt6Cg9_sC3G4imRU9_b0_o0j-XP5KUCrDXyvX__BdH4/Item_DB";
     string itemJsonSavePath = "Assets/Resources/Json/ItemData.json";
     string recipeDBUrl = "https://opensheet.elk.sh/1CPbtP4IkSU3za-8Y-BjNnG6_fGdG-z7c2eRJC1ZmOFk/Recipe_DB";
     string recipeJsonSavePath = "Assets/Resources/Json/RecipeData.json";

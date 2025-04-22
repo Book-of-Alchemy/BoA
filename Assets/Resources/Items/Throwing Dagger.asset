@@ -28,4 +28,4 @@ MonoBehaviour:
   max_stack: 99
   iteminfo_kr: "\uB2E8\uAC80\uC744 \uD22C\uCC99\uD558\uC5EC \uB300\uC0C1\uC5D0\uAC8C
     \uD53C\uD574\uB97C \uC90D\uB2C8\uB2E4."
-  icon_sprite: 
+  icon_sprite: Image/Item/Throwing Dagger

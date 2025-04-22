@@ -14,6 +14,7 @@ public static class TilePainter
         GameObject groundPrefab = TileManger.Instance.groundPrefab;
         GameObject wallPrefab = TileManger.Instance.wallPrefab;
         GameObject environmentalPrefab = TileManger.Instance.environmentalPrefab;
+        List<TrapData> trapData = tileDataBase.trapData;
 
 
         foreach (var tile in tiles)
@@ -38,6 +39,8 @@ public static class TilePainter
 
             SetEnvironmentTile(tile.Value, level, environmentalSets, environmentalPrefab);
         }
+
+        PlaceTrap(level,trapData);
     }
 
     private static void SetGroundTile(Tile tile, Level level, List<GroundTileSet> groundTileSets, GameObject groundPrefab)
@@ -54,7 +57,12 @@ public static class TilePainter
 
     private static void SetWallTile(Tile tile, Level level, List<AutoWallTileSet> wallTileSets, GameObject wallPrefab)
     {
-        GameObject TileGO = UnityEngine.Object.Instantiate(wallPrefab, new Vector3Int(tile.gridPosition.x, tile.gridPosition.y, 0), Quaternion.identity);
+        GameObject TileGO = UnityEngine.Object.Instantiate
+            (
+            wallPrefab,
+            new Vector3Int(tile.gridPosition.x, tile.gridPosition.y, 0),
+            Quaternion.identity
+            );
         TilePrefab tilePrefab = TileGO.GetComponent<TilePrefab>();
         tilePrefab.tile = tile;
         if (tilePrefab.baseRenderer == null || tilePrefab.upperRenderer == null) return;
@@ -101,7 +109,12 @@ public static class TilePainter
 
     private static void SetEnvironmentTile(Tile tile, Level level, List<AutoEnvironmentalSet> environmentalSets, GameObject environmentalPrefab)
     {
-        GameObject TileGO = UnityEngine.Object.Instantiate(environmentalPrefab, new Vector3Int(tile.gridPosition.x, tile.gridPosition.y, 0), Quaternion.identity);
+        GameObject TileGO = UnityEngine.Object.Instantiate
+            (
+            environmentalPrefab, 
+            new Vector3Int(tile.gridPosition.x, tile.gridPosition.y, 0), 
+            Quaternion.identity
+            );
         EnvironmentPrefab tilePrefab = TileGO.GetComponent<EnvironmentPrefab>();
         if (tilePrefab.baseRenderer == null) return;
 
@@ -132,5 +145,22 @@ public static class TilePainter
 
         EnvironmentType tileType = tile.environmentType;
         return tileType == type;
+    }
+
+    private static void PlaceTrap(Level level, List<TrapData> trapData)
+    {
+        List<Tile> tiles = level.trapPoint;
+
+        foreach (var tile in tiles)
+        {
+            int randomTrap = UnityEngine.Random.Range(0, trapData.Count - 1);
+            TrapBase TrapGO = UnityEngine.Object.Instantiate
+                (
+                trapData[randomTrap].trapPrefab, 
+                new Vector3Int(tile.gridPosition.x, tile.gridPosition.y, 0), 
+                Quaternion.identity
+                ).GetComponent<TrapBase>();
+            tile.TrpaOnTile = TrapGO;
+        }
     }
 }

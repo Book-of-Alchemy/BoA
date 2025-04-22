@@ -11,8 +11,10 @@ public class NormalTrap : TrapBase
 
         foreach (var effect in effectTiles)
         {
-            if (effect.CharacterStatsOnTile == null || effect == null)
-                return;
+            if (effect == null) 
+                continue;
+            if (effect.CharacterStatsOnTile == null)
+                continue;
             //버프 디버프 적용 추가
             effect.CharacterStatsOnTile.TakeDamage(DamageCalculator.CalculateDamage(effect.CharacterStatsOnTile, trapData.damage, damageType));
         }
