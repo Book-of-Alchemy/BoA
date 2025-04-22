@@ -98,7 +98,7 @@ public class Tile
         return cost;
     }
 
-    public int CaculateAstarCostByTrap(bool isConsideringDetected = true)
+    public int CalculateAstarCostByTrap(bool isConsideringDetected = true)
     {
         int cost = AstarCost;
 
