@@ -6,9 +6,9 @@ using DG.Tweening;
 
 public class ProjectileMove : MonoBehaviour
 {
-    private ProjectileItem controller;
-    private Tile destinationObject; // 오브젝트가 있는 타일
-    private Tile choiceTile; // 선택한 타일
+    private ProjectileItem _projectilItem;
+    private Tile _destinationObject; // 오브젝트가 있는 타일
+    private Tile _choiceTile; // 선택한 타일
     private Vector2Int _playerPos;
     private Vector2Int itemPos;
     private bool _isObject;
@@ -16,7 +16,7 @@ public class ProjectileMove : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        controller = GetComponent<ProjectileItem>();
+        _projectilItem = GetComponent<ProjectileItem>();
         _playerPos = GameManager.Instance.PlayerTransform.curTile.gridPosition;
 
     }
@@ -26,10 +26,10 @@ public class ProjectileMove : MonoBehaviour
     {
         itemPos = Vector2Int.RoundToInt(transform.position);
         if (_isObject == true)
-            transform.position = Vector2.MoveTowards(transform.position, choiceTile.gridPosition, 1f * Time.deltaTime);
-        if (CheckDistance(itemPos, choiceTile.gridPosition) < 0.01f)
+            transform.position = Vector2.MoveTowards(transform.position, _choiceTile.gridPosition, 1f * Time.deltaTime);
+        if (CheckDistance(itemPos, _choiceTile.gridPosition) < 0.01f)
         {
-            controller.Item.UseItem();
+            _projectilItem.item.UseItem(_projectilItem.itemData);
             Destroy(this.gameObject);
         }
     }
@@ -40,14 +40,14 @@ public class ProjectileMove : MonoBehaviour
     /// </summary>
     public void Init()
     {
-        if (CheckDistance(_playerPos, choiceTile.gridPosition) > controller.Item.data.target_range)
+        if (CheckDistance(_playerPos, _choiceTile.gridPosition) > _projectilItem.itemData.target_range)
         {
             return;
         }
-        else if (CheckDistance(_playerPos, choiceTile.gridPosition) <= controller.Item.data.target_range)
+        else if (CheckDistance(_playerPos, _choiceTile.gridPosition) <= _projectilItem.itemData.target_range)
         {
             CheckObject();
-            if (destinationObject == null)
+            if (_destinationObject == null)
             {
                 Debug.Log("선택한 라인에 적이 없습니다.");
                 return;
@@ -60,7 +60,7 @@ public class ProjectileMove : MonoBehaviour
     // 생성시에 플레이어가 선택한 목적지를 받음
     public void SetDestination(Tile des)
     {
-        choiceTile = des;
+        _choiceTile = des;
     }
 
     private float CheckDistance(Vector2Int curPos, Vector2Int desPos)
@@ -69,12 +69,12 @@ public class ProjectileMove : MonoBehaviour
     }
     public void CheckObject()
     {
-        List<Tile> checkList = TileUtility.GetLineTile(GameManager.Instance.PlayerTransform.curLevel, GameManager.Instance.PlayerTransform.curTile, choiceTile, true);
+        List<Tile> checkList = TileUtility.GetLineTile(GameManager.Instance.PlayerTransform.curLevel, GameManager.Instance.PlayerTransform.curTile, _choiceTile, true);
         foreach (Tile tile in checkList)
         {
             if (tile.CharacterStatsOnTile != null)
             {
-                destinationObject = tile;
+                _destinationObject = tile;
                 _isObject = true;
                 break;
             }

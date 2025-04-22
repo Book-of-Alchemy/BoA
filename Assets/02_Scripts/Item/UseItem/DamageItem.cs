@@ -6,29 +6,31 @@ using UnityEngine.InputSystem.XR;
 [System.Serializable]
 public class DamageItem : BaseItem
 {
-    Tile curTile;
-    public override void AddItem()
+    private Tile _curTile;
+    private ItemData _data;
+
+    public override void AddItem(ItemData data)
     {
-        if(curTile.CharacterStatsOnTile is PlayerStats)
+        if(_curTile.CharacterStatsOnTile is PlayerStats)
         {
-            curTile.itemsOnTile.Remove(this);
-            curTile.onCharacterChanged -= AddItem;
+            _curTile.itemsOnTile.Remove(this.gameObject.GetComponent<DropItem>());
+            _curTile.onCharacterChanged -= () => AddItem(data);
             Destroy(this.gameObject);
         }
     }
 
-    public override void DropItem()
+    public override void DropItem(ItemData data)
     {
-        curTile = GameManager.Instance.PlayerTransform.curTile;
-        curTile.itemsOnTile.Add(this);
+        _curTile = GameManager.Instance.PlayerTransform.curTile;
+        _curTile.itemsOnTile.Add(this.gameObject.GetComponent<DropItem>());
         Debug.Log("아이템 버려짐");
-        curTile.onCharacterChanged += AddItem;
+        _curTile.onCharacterChanged += () => AddItem(data);
     }
 
     /// <summary>
     /// 타일 범위 확인 후 공격 
     /// </summary>
-    public override void UseItem()
+    public override void UseItem(ItemData data)
     {
         Vector2Int curPos = Vector2Int.RoundToInt(transform.position);
         List<Tile> tiles;
