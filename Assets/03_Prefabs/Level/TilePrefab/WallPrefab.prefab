@@ -220,6 +220,7 @@ MonoBehaviour:
     environmentType: 0
     isDoorPoint: 0
     isOccupied: 0
+    canSeeThrough: 1
     isExplored: 0
     isOnSight: 0
     characterStats: {fileID: 0}
