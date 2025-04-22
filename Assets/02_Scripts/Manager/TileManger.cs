@@ -32,8 +32,6 @@ public class TileManger : Singleton<TileManger>
                 enemy.curTile = targerTile;
             }
         }
-        
-
     }
 
     public void SetLevelGenerator(BiomeSet biomeSet, int roomCnt, int rootWidth, int rootHeight)

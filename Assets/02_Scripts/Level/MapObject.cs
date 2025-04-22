@@ -5,12 +5,18 @@ using UnityEngine;
 public abstract class MapObject : MonoBehaviour
 {
     public MapObjectData data;
-    public Tile tile;
-
-    protected virtual void Start()
+    protected Tile curTile;
+    public Tile CurTile
     {
-     Init();   
+        get => curTile; 
+        set 
+        { 
+            curTile = value;
+            Init();
+        }
     }
+
+
 
     public abstract void Init();
     public abstract void Interact();
