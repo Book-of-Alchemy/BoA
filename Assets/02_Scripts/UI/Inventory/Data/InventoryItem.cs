@@ -51,4 +51,8 @@ public class InventoryItem // Inventory에 배열로 존재하는 Item
     {
         return itemData.iteminfo_kr;
     }
+    public Item_Type GetItemType()
+    {
+        return itemData.item_type;
+    }
 }

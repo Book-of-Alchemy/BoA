@@ -2364,6 +2364,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _dragUI: {fileID: 4896833442045738732}
+  _dropArea: {fileID: 0}
 --- !u!222 &1916247116906988273
 CanvasRenderer:
   m_ObjectHideFlags: 0
