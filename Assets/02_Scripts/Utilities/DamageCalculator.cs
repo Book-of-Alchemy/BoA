@@ -22,21 +22,21 @@ public static class DamageCalculator
         float result;
         float multiplier = damageType switch
         {
-            DamageType.Fire => target.Fire,
-            DamageType.Water => target.Water,
-            DamageType.Ice => target.Ice,
-            DamageType.Electric => target.Electric,
-            DamageType.Earth => target.Earth,
-            DamageType.Wind => target.Wind,
-            DamageType.Light => target.Light,
-            DamageType.Dark => target.Dark,
+            DamageType.Fire => target.fire,
+            DamageType.Water => target.water,
+            DamageType.Ice => target.ice,
+            DamageType.Electric => target.electric,
+            DamageType.Earth => target.earth,
+            DamageType.Wind => target.wind,
+            DamageType.Light => target.light,
+            DamageType.Dark => target.dark,
             _ => 0f
         };
         multiplier = Mathf.Max(0f , 1f- multiplier);
 
         result = multiplier * baseDamage;//속성 대미지 계산
         //버프 디버프에 의한 대미지 계산 추가
-        result = result * (1-target.Defense / (50 + target.Defense));//방어력 계산
+        result = result * (1-target.defense / (50 + target.defense));//방어력 계산
         Debug.Log($"최종 대미지 : {result}");
 
         return result;
