@@ -138,35 +138,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // 목표 위치까지 부드럽게 이동하는 Dotween
-    private void MoveToTargetTween(Vector3 destination)
-    {
-        _isMoving = true;
-
-        // 타일 정보갱신
-        _playerStats.OnMoveTile(
-            new Vector2Int(
-                Mathf.RoundToInt(transform.position.x),
-                Mathf.RoundToInt(transform.position.y)),
-            new Vector2Int(
-                Mathf.RoundToInt(destination.x),
-                Mathf.RoundToInt(destination.y))
-            );
-        float distance = Vector3.Distance(transform.position, destination);
-        float duration = distance / MoveSpeed;
-
-        transform
-            .DOMove(destination, duration)
-            .SetEase(Ease.Linear)
-            .OnComplete(() =>
-            {
-                _isMoving = false;
-                _playerStats.BuffManager.ApplyBuff(-MoveActionCost, 0);
-                Debug.Log(
-                  $"ActionPoints 소모됨: {MoveActionCost}, 남은 AP: {_playerStats.BuffManager.GetFinalActionPoints()}");
-            });
-    }
-
     // 공격 방향에 따라 공격 실행 (Raycast를 사용)
     void AttackInDirection(Vector2 direction)
     {
@@ -207,16 +178,16 @@ public class PlayerController : MonoBehaviour
         }
     }
     //이동 버퍼링 코루틴
-    private IEnumerator BufferAndMove(Vector2 initialInput)
+    private IEnumerator BufferAndMove(Vector2Int initialInput)
     {
         _isBuffering = true;
         float elapsed = 0f;
 
-        Vector2 bufferedInput = initialInput;
+        Vector2Int bufferedInput = initialInput;
 
         while (elapsed < InputBufferDuration)
         {
-            Vector2 input = _moveAction.ReadValue<Vector2>();
+            Vector2Int input = _moveAction.ReadValue<Vector2Int>();
             if (input != Vector2.zero)
                 bufferedInput = input; //새 입력이 있으면 그전 입력을 덮어씀
 
@@ -233,10 +204,7 @@ public class PlayerController : MonoBehaviour
     private void ExecuteMove(Vector2 moveInput)
     {
         //캐릭터 위치 계산
-        Vector3 currentCell = new Vector3(
-            Mathf.Floor(transform.position.x),
-            Mathf.Floor(transform.position.y),
-            transform.position.z);
+        Vector2Int currentCell = _playerStats.curTile.gridPosition;
 
         //대각방향 구분
         Vector3 drcell;
@@ -245,16 +213,31 @@ public class PlayerController : MonoBehaviour
         else
             drcell = new Vector3(moveInput.x, moveInput.y, 0);
 
-        Vector3 targetCell = currentCell + drcell;
-        _targetPosition = targetCell;
+        Vector2Int targetCell = Vector2Int.RoundToInt(currentCell + drcell);
 
         Collider2D hit = Physics2D.OverlapPoint(_targetPosition, UnitLayer);
-        if (hit != null && hit.gameObject != gameObject)
+        if (!_playerStats.curLevel.tiles.TryGetValue(targetCell, out Tile targetTile))
         {
-            Debug.Log("타일이 다른 유닛에 의해 점유되어 이동할 수 없습니다.");
+            Debug.LogError($"해당 위치에 Tile이 없습니다: {targetCell}");
             return;
         }
+        //타일 점유 정보 갱신
+        _playerStats.MoveToTile(targetTile);
+
         // 실제이동 실행
-        MoveToTargetTween(_targetPosition);
+        Vector3 dest = new Vector3(targetCell.x, targetCell.y, 0f);
+        float distance = Vector3.Distance(transform.position, dest);
+        float duration = distance / MoveSpeed;
+        _isMoving = true;
+
+        transform
+            .DOMove(dest, duration)
+            .SetEase(Ease.Linear)
+            .OnComplete(() =>
+            {
+                _isMoving = false;
+                _playerStats.BuffManager.ApplyBuff(-MoveActionCost, 0);
+                Debug.Log($"ActionPoints 소모됨: {MoveActionCost}, 남은 AP: {_playerStats.BuffManager.GetFinalActionPoints()}");
+            });
     }
 }

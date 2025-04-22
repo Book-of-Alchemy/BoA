@@ -68,6 +68,10 @@ public class EnemyController : MonoBehaviour
     public void ChangeState(EnemyState newState)
     {
         _currentState = newState;
+        // 플레이어를 감지했을 때 추격 혹은 공격마다 뒤집기
+        if (newState == EnemyState.Chase || newState == EnemyState.Attack)
+            FlipTowardsPlayer();
+
         StartCoroutine(TakeTurn()); // 상태 바뀌자마자 바로 행동 즉 실질 행동시작 전에 상태체크를우선해야함
     }
 
@@ -116,5 +120,18 @@ public class EnemyController : MonoBehaviour
         characterAnimator?.PlayAttack();
 
         onComplete?.Invoke();
+    }
+    // 플레이어 바라보기 메서드(감지되면 호출하기)
+    private void FlipTowardsPlayer()
+    {
+        if (_playerStats == null) return;  // 안전장치
+
+        float dirX = _playerStats.transform.position.x - transform.position.x;//플레이어 방향 구하기
+        if (Mathf.Abs(dirX) > 0.01f)
+        {
+            Vector3 scale = transform.localScale;
+            scale.x = Mathf.Abs(scale.x) * Mathf.Sign(dirX);
+            transform.localScale = scale;
+        }
     }
 }

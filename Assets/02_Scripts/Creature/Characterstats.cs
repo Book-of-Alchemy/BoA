@@ -110,7 +110,7 @@ public abstract class CharacterStats : MonoBehaviour
         }
 
         float finalDamage = DamageCalculator.CalculateDamage(target, baseDamage, damageType);
-
+        target.TakeDamage(finalDamage);
         Debug.Log($"{gameObject.name}가 {target.gameObject.name}을 공격함니다." + $"속성:{damageType}, 최종 대미지:{finalDamage}");
         _anim.PlayAttack();
     }
@@ -134,16 +134,19 @@ public abstract class CharacterStats : MonoBehaviour
         _anim.PlayDeath();
     }
 
-    public void OnMoveTile(Vector2Int start, Vector2Int target)
+    public void MoveToTile(Tile targetTile)
     {
-        if (curLevel == null) return;
-        if (curLevel.tiles.TryGetValue(start, out Tile startTile))
-            startTile.CharacterStatsOnTile = null;
+        if (curLevel == null || targetTile == null)
+            return;
 
-        if (curLevel.tiles.TryGetValue(target, out Tile targerTile))
-        {
-            targerTile.CharacterStatsOnTile = this as CharacterStats;
-            curTile = targerTile;
-        }
+        // 이전 타일 점유 해제
+        if (curTile != null)
+            curTile.CharacterStatsOnTile = null;
+
+        // 새 타일 점유 설정
+        targetTile.CharacterStatsOnTile = this;
+
+        //curTile 갱신
+        curTile = targetTile;
     }
 }
