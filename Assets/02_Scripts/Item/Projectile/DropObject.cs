@@ -14,7 +14,7 @@ public class DropObject : MonoBehaviour
         _playerPos = GameManager.Instance.PlayerTransform.curTile.gridPosition;
         transform.position = new Vector3(_playerPos.x, _playerPos.y, 0);
 
-        _dropItem.Item.DropItem();
+        _dropItem.item.DropItem(_dropItem.itemData);
     }
 
 }
