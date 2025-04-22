@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public abstract class CharacterStats : MonoBehaviour
@@ -55,10 +56,47 @@ public abstract class CharacterStats : MonoBehaviour
     public float dark;
 
     public BuffManager BuffManager { get; protected set; }
+    private CharacterAnimator _anim;
 
+    //체력 변경 이벤트
+    public event Action<float> OnHealthRatioChanged;
+    // BuffManager를 통해 상태 효과를 관리할 수 있도록 프로퍼티 추가
+    public float MaxHealth
+    {
+        get => maxHealth;
+        set
+        {
+            maxHealth = Mathf.Max(1f, value);
+            CurrentHealth = Mathf.Min(currentHealth, maxHealth);
+            OnHealthRatioChanged?.Invoke(currentHealth / maxHealth);
+        }
+    }
+    public float CurrentHealth
+    {
+        get => currentHealth;
+        set
+        {
+            currentHealth = Mathf.Clamp(value, 0f, maxHealth);
+            OnHealthRatioChanged?.Invoke(currentHealth / maxHealth);
+            if (currentHealth <= 0f) Die();
+        }
+    }
+    public float MaxMana
+    {
+        get => maxMana;
+        set => maxMana = Mathf.Max(0f, value);
+    }
+    public float CurrentMana
+    {
+        get => currentMana;
+        set => currentMana = Mathf.Clamp(value, 0f, maxMana);
+    }
     protected virtual void Awake()
     {
+        _anim = GetComponent<CharacterAnimator>();
         BuffManager = GetComponent<BuffManager>() ?? gameObject.AddComponent<BuffManager>();
+        // 초기값 전달
+        OnHealthRatioChanged?.Invoke(CurrentHealth / MaxHealth);
     }
 
     public virtual void Attack(CharacterStats target)
@@ -71,24 +109,27 @@ public abstract class CharacterStats : MonoBehaviour
         }
         Debug.Log($"{gameObject.name}이(가) {target.gameObject.name}을 공격합니다. 데미지: {dmg}");
         target.TakeDamage(dmg);
+        _anim.PlayAttack();
     }
 
     public virtual void TakeDamage(float amount)
     {
         float dmg = Mathf.Max(amount - defense, 1f);
-        currentHealth -= dmg;
+        CurrentHealth -= dmg;
         Debug.Log($"{gameObject.name}는 {dmg}의 피해를 받았습니다.");
+        _anim.PlayKnockBack();
     }
 
     public virtual void Heal(float amount)
     {
-        currentHealth += amount;
+        CurrentHealth += amount;
         Debug.Log($"{gameObject.name}는 {amount}만큼 회복되었습니다.");
     }
 
     public virtual void Die()
     {
         Debug.Log($"{gameObject.name}이(가) 사망했습니다.");
+        _anim.PlayDeath();
     }
 
     public void OnMoveTile(Vector2Int start, Vector2Int target)

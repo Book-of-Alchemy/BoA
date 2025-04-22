@@ -30,9 +30,17 @@ public class PlayerController : MonoBehaviour
     private bool _isBuffering = false;
     // 버퍼링 지속 시간 (초)
     public float InputBufferDuration = 0.1f;
-
+    //애니메이션 관련 필드
+    private CharacterAnimator _anim;
+    private Vector2 _moveInput;
+    private SpriteRenderer _spriteRenderer;
+    /*죽음과 넉백 애니메이션 호출은 캐릭터 스탯에 있음*/
     void Awake()
     {
+        //애니메이션 관련 캐싱
+        _anim = GetComponent<CharacterAnimator>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+
         // 이동 액션 (WASD, 2D 벡터 조합 - 대각 입력도 가능)
         _moveAction = new InputAction("Move", InputActionType.Value, binding: "2DVector");
         _moveAction.AddCompositeBinding("2DVector")
@@ -76,6 +84,11 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        _moveInput = _moveAction.ReadValue<Vector2>();
+        //좌우 플립
+        if (Mathf.Abs(_moveInput.x) > 0.01f)
+            _spriteRenderer.flipX = _moveInput.x < 0f;
+
         // 왼쪽 컨트롤 키가 눌렸다면 방향 입력만 받아서 공격 방향 업데이트
         if (Keyboard.current.leftCtrlKey.isPressed)
         {
@@ -110,7 +123,9 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
-
+        //이동 여부에 따라 애니메이터에 값 전달
+        _isMoving = _moveInput.sqrMagnitude > 0.01f;
+        _anim.SetMoving(_isMoving);
         // 취소, 메뉴, 대시 입력 처리
         if (_cancelAction.triggered)
             Debug.Log("취소 눌림");
