@@ -34,11 +34,9 @@ public abstract class TrapBase : MonoBehaviour
     private IEnumerator DelayedInit()
     {
         yield return null; // 한 프레임 대기
-        if (tile != null)
-            yield break;
+        
         tile = GameManager.Instance.PlayerTransform.curLevel.tiles[new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y))];
         tile.TrpaOnTile = this;
-        tile.onCharacterChanged += Execute;//3줄 임시코드
     }
 
     public virtual void Initialize(Tile tile)
@@ -67,7 +65,7 @@ public abstract class TrapBase : MonoBehaviour
             IsDetected = true;
         TriggerActivate();
         Action();
-        StartCoroutine(DestroyAfterDelay(0.5f)); 
+        StartCoroutine(DestroyAfterDelay(2f)); 
     }
 
     private IEnumerator DestroyAfterDelay(float delay)

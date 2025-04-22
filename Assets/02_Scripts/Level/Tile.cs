@@ -53,6 +53,7 @@ public class Tile
             onCharacterChanged?.Invoke();
         }
     }
+    [SerializeField]
     private TrapBase trpaOnTile;
     public TrapBase TrpaOnTile
     {

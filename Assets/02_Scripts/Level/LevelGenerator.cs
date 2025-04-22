@@ -86,9 +86,6 @@ public class LevelGenerator : MonoBehaviour
             }
         }
 
-        level.trapPoint.Remove(level.startTile);//스타트 엔드엔 함정깔리면 안됨
-        level.trapPoint.Remove(level.endTile);
-
         SetLevelOnTiles(tiles, level);
 
         return level;
@@ -465,22 +462,24 @@ public class LevelGenerator : MonoBehaviour
             _ => 0
         };
 
-        float spawnRate = 0.5f;
-
-        if (UnityEngine.Random.value > spawnRate) return;
-
-
         List<Tile> candidates = new List<Tile>();
+
         foreach(var kvp in tiles)
         {
             if (!kvp.Value.isOccupied)
                 candidates.Add(kvp.Value);
         }
 
+        candidates.Remove(leaf.centerTile);
+        float spawnRate = 0.7f;
 
         for (int i = 0; i < spawnQuantity; i++)
         {
-            if (candidates.Count == 0) break;
+            if (UnityEngine.Random.value > spawnRate) 
+                continue;
+
+            if (candidates.Count == 0) 
+                break;
 
             Tile targetTile = candidates[UnityEngine.Random.Range(0, candidates.Count)];
             candidates.Remove(targetTile);
