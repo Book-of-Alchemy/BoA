@@ -65,6 +65,7 @@ public class Tile
                 trpaOnTile.Initialize(this);
         }
     }
+    public MapObject mapObject;
     public List<BaseItem> itemsOnTile = new List<BaseItem>();
 
     //위에 올라간 mapObject 인스턴스

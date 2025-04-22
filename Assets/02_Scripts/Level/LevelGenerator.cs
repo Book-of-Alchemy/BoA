@@ -8,6 +8,7 @@ public class LevelGenerator : MonoBehaviour
     public Leaf root;
     public int roomCnt;
     public BiomeSet curBiomeSet;
+    //향후 퀘스트 db를 받아서 퀘스트 관련하여 레벨 세팅
 
     private void Start()
     {
