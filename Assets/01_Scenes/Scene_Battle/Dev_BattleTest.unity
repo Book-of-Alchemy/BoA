@@ -217,6 +217,44 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1 &1352561875 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9149620363629575224, guid: 650350f93e84aa34f82cd17ec3cd41cf, type: 3}
+  m_PrefabInstance: {fileID: 3822896983788579200}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &1352561876
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1352561875}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 22100000, guid: a947beb4638e983488032ebb85e03059, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1352561886
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1352561875}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f63dfdceb1bbe554593df4cb46cdc892, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1394425325
 GameObject:
   m_ObjectHideFlags: 0
@@ -2497,6 +2535,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5363539511215052877, guid: 650350f93e84aa34f82cd17ec3cd41cf, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 4723107735738678597, guid: b331a13df9ca4484a8756e98b1f9e700, type: 3}
+    - target: {fileID: 5363539511215052877, guid: 650350f93e84aa34f82cd17ec3cd41cf, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5363539511215052877, guid: 650350f93e84aa34f82cd17ec3cd41cf, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5363539511215052877, guid: 650350f93e84aa34f82cd17ec3cd41cf, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9149620363629575224, guid: 650350f93e84aa34f82cd17ec3cd41cf, type: 3}
       propertyPath: m_Name
       value: Enemy2
@@ -2504,7 +2558,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 9149620363629575224, guid: 650350f93e84aa34f82cd17ec3cd41cf, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1352561886}
+    - targetCorrespondingSourceObject: {fileID: 9149620363629575224, guid: 650350f93e84aa34f82cd17ec3cd41cf, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1352561876}
   m_SourcePrefab: {fileID: 100100000, guid: 650350f93e84aa34f82cd17ec3cd41cf, type: 3}
 --- !u!1001 &6421628161814666963
 PrefabInstance:

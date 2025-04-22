@@ -11,7 +11,7 @@ public interface IBehaviour
 
 public abstract class BaseBehaviour : MonoBehaviour, IBehaviour
 {
-    protected EnemyController2 controller;
+    protected EnemyController controller;
     protected EnemyStats enemyStats;
     protected Level level => enemyStats.curLevel;
     protected Tile CurTile
@@ -29,7 +29,7 @@ public abstract class BaseBehaviour : MonoBehaviour, IBehaviour
 
     protected virtual void Awake()
     {
-        controller = GetComponent<EnemyController2>();
+        controller = GetComponent<EnemyController>();
         enemyStats = GetComponent<EnemyStats>();
     }
 

@@ -59,7 +59,7 @@ public class TurnManager : MonoBehaviour
             if (enemy == null)
                 continue;
             enemy.BuffManager.UpdateBuffs();
-            EnemyController2 enemyController = enemy.GetComponent<EnemyController2>();
+            EnemyController enemyController = enemy.GetComponent<EnemyController>();
             if (enemyController != null)
                 yield return StartCoroutine(enemyController.TakeTurn());
             else
