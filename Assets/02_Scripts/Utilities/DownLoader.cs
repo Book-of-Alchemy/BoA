@@ -115,6 +115,7 @@ public class DownLoader : EditorWindow
             so.max_stack = data.max_stack;
             so.icon_sprite = data.icon_sprite;
             so.iteminfo_kr = data.iteminfo_kr;
+            so.Sprite = Resources.Load<Sprite>(data.icon_sprite);
 
             string assetPath = $"{saveItemSOPath}/{data.name_en}.asset";
             AssetDatabase.CreateAsset(so, assetPath);

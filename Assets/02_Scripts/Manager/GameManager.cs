@@ -22,4 +22,5 @@ public class GameManager : Singleton<GameManager>
         if (Enemies.Contains(enemy))
             Enemies.Remove(enemy);
     }
+
 }

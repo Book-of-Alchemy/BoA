@@ -29,3 +29,4 @@ MonoBehaviour:
   iteminfo_kr: "\uD130\uC9C0\uBA74 \uAC70\uBBF8\uC904\uC744 \uC8FC\uBCC0\uC5D0 \uD769\uBFCC\uB9AC\uB294
     \uD3ED\uD0C4\uC744 \uB358\uC9D1\uB2C8\uB2E4."
   icon_sprite: Image/Item/Web Bomb
+  Sprite: {fileID: 0}
