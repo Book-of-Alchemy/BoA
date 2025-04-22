@@ -80,6 +80,15 @@ public class PlayerController : MonoBehaviour
     {
         // 같은 오브젝트의 PlayerStats 컴포넌트를 캐싱
         _playerStats = GetComponent<PlayerStats>();
+
+        Vector2Int startCell = Vector2Int.RoundToInt(transform.position);
+
+        if (_playerStats.curLevel != null
+            && _playerStats.curLevel.tiles.TryGetValue(startCell, out Tile startTile))
+        {
+            _playerStats.curTile = startTile;
+            startTile.CharacterStatsOnTile = _playerStats;
+        }
     }
 
     void Update()
@@ -110,12 +119,11 @@ public class PlayerController : MonoBehaviour
 
         if (!Keyboard.current.leftCtrlKey.isPressed && !_isMoving)
         {
-            Vector2 moveInput = _moveAction.ReadValue<Vector2>();
-            if (moveInput != Vector2.zero && !_isBuffering)
+            if (_moveInput != Vector2.zero && !_isBuffering)
             {
                 if (_playerStats != null && _playerStats.BuffManager.GetFinalActionPoints() >= MoveActionCost)
                 {
-                    StartCoroutine(BufferAndMove(moveInput));
+                    StartCoroutine(BufferAndMove(_moveInput));
                 }
                 else
                 {
@@ -178,16 +186,16 @@ public class PlayerController : MonoBehaviour
         }
     }
     //이동 버퍼링 코루틴
-    private IEnumerator BufferAndMove(Vector2Int initialInput)
+    private IEnumerator BufferAndMove(Vector2 initialInput)
     {
         _isBuffering = true;
         float elapsed = 0f;
 
-        Vector2Int bufferedInput = initialInput;
+        Vector2 bufferedInput = initialInput;
 
         while (elapsed < InputBufferDuration)
         {
-            Vector2Int input = _moveAction.ReadValue<Vector2Int>();
+            Vector2 input = _moveAction.ReadValue<Vector2>();
             if (input != Vector2.zero)
                 bufferedInput = input; //새 입력이 있으면 그전 입력을 덮어씀
 
@@ -207,25 +215,24 @@ public class PlayerController : MonoBehaviour
         Vector2Int currentCell = _playerStats.curTile.gridPosition;
 
         //대각방향 구분
-        Vector3 drcell;
-        if (Mathf.Abs(moveInput.x) > 0.01f && Mathf.Abs(moveInput.y) > 0.01f)
-            drcell = new Vector3(Mathf.Sign(moveInput.x), Mathf.Sign(moveInput.y), 0);
-        else
-            drcell = new Vector3(moveInput.x, moveInput.y, 0);
+        Vector2Int drcell=Vector2Int.RoundToInt(moveInput);
 
-        Vector2Int targetCell = Vector2Int.RoundToInt(currentCell + drcell);
+        Vector2Int targetCell = currentCell + drcell;
 
-        Collider2D hit = Physics2D.OverlapPoint(_targetPosition, UnitLayer);
         if (!_playerStats.curLevel.tiles.TryGetValue(targetCell, out Tile targetTile))
         {
             Debug.LogError($"해당 위치에 Tile이 없습니다: {targetCell}");
             return;
         }
-        //타일 점유 정보 갱신
-        _playerStats.MoveToTile(targetTile);
 
-        // 실제이동 실행
-        Vector3 dest = new Vector3(targetCell.x, targetCell.y, 0f);
+        if (targetTile.CharacterStatsOnTile != null|| !targetTile.IsWalkable)
+        {
+            Debug.Log("지나갈수없습니다.");
+            return;
+        }
+
+            // 실제이동 실행
+            Vector3 dest = new Vector3(targetCell.x, targetCell.y, 0f);
         float distance = Vector3.Distance(transform.position, dest);
         float duration = distance / MoveSpeed;
         _isMoving = true;
@@ -237,6 +244,7 @@ public class PlayerController : MonoBehaviour
             {
                 _isMoving = false;
                 _playerStats.BuffManager.ApplyBuff(-MoveActionCost, 0);
+                _playerStats.MoveToTile(targetTile);
                 Debug.Log($"ActionPoints 소모됨: {MoveActionCost}, 남은 AP: {_playerStats.BuffManager.GetFinalActionPoints()}");
             });
     }
