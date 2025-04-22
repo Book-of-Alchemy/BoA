@@ -6,6 +6,13 @@ using static UnityEngine.UI.Image;
 
 public static class TileUtility 
 {
+    /// <summary>
+    /// 인접한 타일에 특정 방향의 타일을 반환함 enum fourdir 사용시 4방향에서 받아오기 가능하며 eightdir 사용시 8방향에서 받아오기가능함
+    /// </summary>
+    /// <param name="level"></param>
+    /// <param name="tile"></param>
+    /// <param name="dir"></param>
+    /// <returns></returns>
     public static Tile GetAdjacentTile(Level level,Tile tile, FourDir dir)
     {
         if (level == null || tile == null) return null;
@@ -27,7 +34,13 @@ public static class TileUtility
 
         return null;
     }
-
+    /// <summary>
+    /// 위 메서드의 오버로드 버전
+    /// </summary>
+    /// <param name="level"></param>
+    /// <param name="tile"></param>
+    /// <param name="dir"></param>
+    /// <returns></returns>
     public static Tile GetAdjacentTile(Level level,Tile tile, EightDir dir)
     {
         if (level == null || tile == null) return null;
@@ -53,7 +66,13 @@ public static class TileUtility
 
         return null;
     }
-
+    /// <summary>
+    /// 인접한 타일리스트를 반환한다 isEightDir true시 8방향 false시 4방향만 받아옴
+    /// </summary>
+    /// <param name="level"></param>
+    /// <param name="tile"></param>
+    /// <param name="isEightDir"></param>
+    /// <returns></returns>
     public static List<Tile> GetAdjacentTileList(Level level,Tile tile, bool isEightDir = false)
     {
         if (level == null || tile == null) return null;
@@ -76,7 +95,14 @@ public static class TileUtility
             return checkList;
         }
     }
-
+    /// <summary>
+    /// range반경의 타일리스트를 반환한다 indludeself true 시 자기자신까지 반환 ex_ 아이템 사용 범위 리스트 받을시 제외
+    /// </summary>
+    /// <param name="level"></param>
+    /// <param name="tile"></param>
+    /// <param name="range"></param>
+    /// <param name="isIncludeSelf"></param>
+    /// <returns></returns>
     public static List<Tile> GetRangedTile(Level level, Tile tile, int range, bool isIncludeSelf = false)
     {
         if (level == null || tile == null) return null;
@@ -100,6 +126,14 @@ public static class TileUtility
         return rangedTiles;
     }
 
+    /// <summary>
+    /// veiwRange 만큼의 범위에서 눈에 보이는 타일리스트를 가져온다
+    /// 해당 위치까지의 1자로 된 tile 리스트를 생성후 tile seeThrough false인 tile까지만 추가함
+    /// </summary>
+    /// <param name="level"></param>
+    /// <param name="tile"></param>
+    /// <param name="viewRange"></param>
+    /// <returns></returns>
     public static List<Tile> GetVisibleTiles(Level level, Tile tile, int viewRange)
     {
         if (level == null || tile == null) return null;
@@ -120,6 +154,13 @@ public static class TileUtility
         return visibleTiles;
     }
 
+    /// <summary>
+    /// 1자로 선을 그은뒤 해당 타일까지 도달하는데 seethrough false인 타일이 있는지 검사함
+    /// </summary>
+    /// <param name="level"></param>
+    /// <param name="origin"></param>
+    /// <param name="target"></param>
+    /// <returns></returns>
     public static bool IsTileVisible(Level level, Tile origin, Tile target)
     {
         List<Vector2Int> line = GetLine(origin.gridPosition, target.gridPosition);
@@ -140,6 +181,14 @@ public static class TileUtility
         return true;
     }
 
+    /// <summary>
+    /// 타일상에 레스터로된 1자선을 그어줌
+    /// </summary>
+    /// <param name="level"></param>
+    /// <param name="origin"></param>
+    /// <param name="target"></param>
+    /// <param name="isIncludeSelf"></param>
+    /// <returns></returns>
     public static List<Tile> GetLineTile(Level level, Tile origin, Tile target, bool isIncludeSelf = false)
     {
         if (level == null || origin == null) return null;
