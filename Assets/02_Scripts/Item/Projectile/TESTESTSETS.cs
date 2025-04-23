@@ -15,15 +15,15 @@ public class TESTESTSETS : MonoBehaviour
     {
         GameObject Prefa = Instantiate(prefab);
         controller = Prefa.GetComponent<ProjectileItem>();
-        controller.Init(ResourceManager.Instance.dicItemData[200002]);
+        controller.Init(ResourceManager.Instance.dicItemData[200002], Instantiate(ResourceManager.Instance.typeObjectPrefab, this.transform).GetComponent<DamageItem>());
 
         GameObject DropPre = Instantiate(dropPrefab);
         drop = DropPre.GetComponent<DropItem>();
-        drop.Init(ResourceManager.Instance.dicItemData[200001]);
+        drop.Init(ResourceManager.Instance.dicItemData[200001], Instantiate(ResourceManager.Instance.typeObjectPrefab, this.transform).GetComponent<DamageItem>());
 
         GameObject DropPreb = Instantiate(prefab);
         controller2 = DropPreb.GetComponent<DropItem>();
-        controller2.Init(ResourceManager.Instance.dicItemData[200002]);
+        controller2.Init(ResourceManager.Instance.dicItemData[200002], Instantiate(ResourceManager.Instance.typeObjectPrefab, this.transform).GetComponent<DamageItem>());
 
 
     }

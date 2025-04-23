@@ -6,7 +6,9 @@ using static UnityEngine.GraphicsBuffer;
 public class TileManger : Singleton<TileManger>
 {
     public TileDataBase tileData;
+    public List<Level> levels = new List<Level>();
     public Level curLevel;
+    public int curLevelIndex;
     public LevelGenerator levelGenerator;
     public GameObject groundPrefab;
     public GameObject wallPrefab;
@@ -30,8 +32,6 @@ public class TileManger : Singleton<TileManger>
                 enemy.curTile = targerTile;
             }
         }
-        
-
     }
 
     public void SetLevelGenerator(BiomeSet biomeSet, int roomCnt, int rootWidth, int rootHeight)
@@ -49,5 +49,26 @@ public class TileManger : Singleton<TileManger>
         if (level.isPainted == true) return;
 
         TilePainter.GenerateTileObject(level, tileData);
+    }
+
+    public void GetDownToNextLevel()
+    {
+        curLevel.gameObject.SetActive(false);
+        if (curLevelIndex < levels.Count - 1)
+        {
+            curLevelIndex++;
+            curLevel = levels[curLevelIndex];
+            curLevel.gameObject.SetActive(true);
+        }
+    }
+
+    public void CompleteQuest()
+    {
+
+    }
+
+    public void FailQuest()
+    {
+
     }
 }

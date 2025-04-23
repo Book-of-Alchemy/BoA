@@ -95,28 +95,30 @@ public abstract class CharacterStats : MonoBehaviour
     {
         _anim = GetComponent<CharacterAnimator>();
         BuffManager = GetComponent<BuffManager>() ?? gameObject.AddComponent<BuffManager>();
-        // 초기값 전달
-        OnHealthRatioChanged?.Invoke(CurrentHealth / MaxHealth);
     }
 
-    public virtual void Attack(CharacterStats target)
+    public virtual void Attack(CharacterStats target, DamageType damageType = DamageType.None)
     {
-        float dmg = UnityEngine.Random.Range(attackMin, attackMax);
-        if (UnityEngine.Random.value < critChance)
+        //기본 데미지 계산
+        float baseDamage = UnityEngine.Random.Range(attackMin, attackMax);
+        //치명타 게산
+        bool isCrit = UnityEngine.Random.value < critChance;
+        if (isCrit)
         {
-            dmg *= critDamage;
-            Debug.Log($"{gameObject.name}이(가) 치명타! 데미지: {dmg}");
+            baseDamage *= critDamage;
+            Debug.Log($"{gameObject.name}가 명존쎄!");
         }
-        Debug.Log($"{gameObject.name}이(가) {target.gameObject.name}을 공격합니다. 데미지: {dmg}");
-        target.TakeDamage(dmg);
+
+        float finalDamage = DamageCalculator.CalculateDamage(target, baseDamage, damageType);
+        target.TakeDamage(finalDamage);
+        Debug.Log($"{gameObject.name}가 {target.gameObject.name}을 공격함니다." + $"속성:{damageType}, 최종 대미지:{finalDamage}");
         _anim.PlayAttack();
     }
 
     public virtual void TakeDamage(float amount)
     {
-        float dmg = Mathf.Max(amount - defense, 1f);
-        CurrentHealth -= dmg;
-        Debug.Log($"{gameObject.name}는 {dmg}의 피해를 받았습니다.");
+        CurrentHealth -= amount;
+        Debug.Log($"{gameObject.name}는 {amount}의 피해를 받았습니다.");
         _anim.PlayKnockBack();
     }
 
@@ -132,16 +134,19 @@ public abstract class CharacterStats : MonoBehaviour
         _anim.PlayDeath();
     }
 
-    public void OnMoveTile(Vector2Int start, Vector2Int target)
+    public void MoveToTile(Tile targetTile)
     {
-        if (curLevel == null) return;
-        if (curLevel.tiles.TryGetValue(start, out Tile startTile))
-            startTile.CharacterStatsOnTile = null;
+        if (curLevel == null || targetTile == null)
+            return;
 
-        if (curLevel.tiles.TryGetValue(target, out Tile targerTile))
-        {
-            targerTile.CharacterStatsOnTile = this as CharacterStats;
-            curTile = targerTile;
-        }
+        // 이전 타일 점유 해제
+        if (curTile != null)
+            curTile.CharacterStatsOnTile = null;
+
+        // 새 타일 점유 설정
+        targetTile.CharacterStatsOnTile = this;
+
+        //curTile 갱신
+        curTile = targetTile;
     }
 }

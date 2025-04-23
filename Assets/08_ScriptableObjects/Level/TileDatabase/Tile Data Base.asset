@@ -18,3 +18,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9d2177e74d9bebe4aa48b2730a9cfe62, type: 2}
   trapData:
   - {fileID: 11400000, guid: 0526ce63601d424498dd72cd81bd23eb, type: 2}
+  mapObjectData: []
+  ladder: {fileID: 2256828646813537490, guid: 1ab8707dcd50a474a81b8bdb66a51112, type: 3}

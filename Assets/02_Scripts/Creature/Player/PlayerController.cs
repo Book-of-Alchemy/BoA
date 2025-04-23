@@ -80,6 +80,15 @@ public class PlayerController : MonoBehaviour
     {
         // 같은 오브젝트의 PlayerStats 컴포넌트를 캐싱
         _playerStats = GetComponent<PlayerStats>();
+
+        Vector2Int startCell = Vector2Int.RoundToInt(transform.position);
+
+        if (_playerStats.curLevel != null
+            && _playerStats.curLevel.tiles.TryGetValue(startCell, out Tile startTile))
+        {
+            _playerStats.curTile = startTile;
+            startTile.CharacterStatsOnTile = _playerStats;
+        }
     }
 
     void Update()
@@ -110,12 +119,11 @@ public class PlayerController : MonoBehaviour
 
         if (!Keyboard.current.leftCtrlKey.isPressed && !_isMoving)
         {
-            Vector2 moveInput = _moveAction.ReadValue<Vector2>();
-            if (moveInput != Vector2.zero && !_isBuffering)
+            if (_moveInput != Vector2.zero && !_isBuffering)
             {
                 if (_playerStats != null && _playerStats.BuffManager.GetFinalActionPoints() >= MoveActionCost)
                 {
-                    StartCoroutine(BufferAndMove(moveInput));
+                    StartCoroutine(BufferAndMove(_moveInput));
                 }
                 else
                 {
@@ -136,35 +144,6 @@ public class PlayerController : MonoBehaviour
             Debug.Log("대쉬 활성화");
             // 대시 메서드 실행할 장소
         }
-    }
-
-    // 목표 위치까지 부드럽게 이동하는 코루틴
-    private void MoveToTargetTween(Vector3 destination)
-    {
-        _isMoving = true;
-
-        // 타일 정보갱신
-        _playerStats.OnMoveTile(
-            new Vector2Int(
-                Mathf.RoundToInt(transform.position.x),
-                Mathf.RoundToInt(transform.position.y)),
-            new Vector2Int(
-                Mathf.RoundToInt(destination.x),
-                Mathf.RoundToInt(destination.y))
-            );
-        float distance = Vector3.Distance(transform.position, destination);
-        float duration = distance / MoveSpeed;
-
-        transform
-            .DOMove(destination, duration)
-            .SetEase(Ease.Linear)
-            .OnComplete(() =>
-            {
-                _isMoving = false;
-                _playerStats.BuffManager.ApplyBuff(-MoveActionCost, 0);
-                Debug.Log(
-                  $"ActionPoints 소모됨: {MoveActionCost}, 남은 AP: {_playerStats.BuffManager.GetFinalActionPoints()}");
-            });
     }
 
     // 공격 방향에 따라 공격 실행 (Raycast를 사용)
@@ -233,28 +212,40 @@ public class PlayerController : MonoBehaviour
     private void ExecuteMove(Vector2 moveInput)
     {
         //캐릭터 위치 계산
-        Vector3 currentCell = new Vector3(
-            Mathf.Floor(transform.position.x),
-            Mathf.Floor(transform.position.y),
-            transform.position.z);
+        Vector2Int currentCell = _playerStats.curTile.gridPosition;
 
         //대각방향 구분
-        Vector3 drcell;
-        if (Mathf.Abs(moveInput.x) > 0.01f && Mathf.Abs(moveInput.y) > 0.01f)
-            drcell = new Vector3(Mathf.Sign(moveInput.x), Mathf.Sign(moveInput.y), 0);
-        else
-            drcell = new Vector3(moveInput.x, moveInput.y, 0);
+        Vector2Int drcell=Vector2Int.RoundToInt(moveInput);
 
-        Vector3 targetCell = currentCell + drcell;
-        _targetPosition = targetCell;
+        Vector2Int targetCell = currentCell + drcell;
 
-        Collider2D hit = Physics2D.OverlapPoint(_targetPosition, UnitLayer);
-        if (hit != null && hit.gameObject != gameObject)
+        if (!_playerStats.curLevel.tiles.TryGetValue(targetCell, out Tile targetTile))
         {
-            Debug.Log("타일이 다른 유닛에 의해 점유되어 이동할 수 없습니다.");
+            Debug.LogError($"해당 위치에 Tile이 없습니다: {targetCell}");
             return;
         }
-        // 실제이동 실행
-        MoveToTargetTween(_targetPosition);
+
+        if (targetTile.CharacterStatsOnTile != null|| !targetTile.IsWalkable)
+        {
+            Debug.Log("지나갈수없습니다.");
+            return;
+        }
+
+            // 실제이동 실행
+            Vector3 dest = new Vector3(targetCell.x, targetCell.y, 0f);
+        float distance = Vector3.Distance(transform.position, dest);
+        float duration = distance / MoveSpeed;
+        _isMoving = true;
+
+        transform
+            .DOMove(dest, duration)
+            .SetEase(Ease.Linear)
+            .OnComplete(() =>
+            {
+                _isMoving = false;
+                _playerStats.BuffManager.ApplyBuff(-MoveActionCost, 0);
+                _playerStats.MoveToTile(targetTile);
+                Debug.Log($"ActionPoints 소모됨: {MoveActionCost}, 남은 AP: {_playerStats.BuffManager.GetFinalActionPoints()}");
+            });
     }
 }

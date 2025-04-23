@@ -9,5 +9,6 @@ public class TileDataBase : ScriptableObject
     public List<BiomeSet> biomeSet;
     public List<AutoEnvironmentalSet> environmentalTileSet;
     public List<TrapData> trapData;
-
+    public List<MapObjectData> mapObjectData;
+    public GameObject ladder;
 }

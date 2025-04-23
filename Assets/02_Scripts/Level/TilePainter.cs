@@ -40,7 +40,8 @@ public static class TilePainter
             SetEnvironmentTile(tile.Value, level, environmentalSets, environmentalPrefab);
         }
 
-        PlaceTrap(level,trapData);
+        PlaceTrap(level, trapData);
+        PlaceTrap(level, tileDataBase);
     }
 
     private static void SetGroundTile(Tile tile, Level level, List<GroundTileSet> groundTileSets, GameObject groundPrefab)
@@ -78,7 +79,7 @@ public static class TilePainter
 
     private static bool IsFrontWall(Tile tile, Level level)
     {
-        return TileUtility.GetAdjacentTile(level,tile, FourDir.down).tileType == TileType.ground;
+        return TileUtility.GetAdjacentTile(level, tile, FourDir.down).tileType == TileType.ground;
     }
 
     public static int CalculateWallBitmask(Tile tile, Level level)
@@ -111,8 +112,8 @@ public static class TilePainter
     {
         GameObject TileGO = UnityEngine.Object.Instantiate
             (
-            environmentalPrefab, 
-            new Vector3Int(tile.gridPosition.x, tile.gridPosition.y, 0), 
+            environmentalPrefab,
+            new Vector3Int(tile.gridPosition.x, tile.gridPosition.y, 0),
             Quaternion.identity
             );
         EnvironmentPrefab tilePrefab = TileGO.GetComponent<EnvironmentPrefab>();
@@ -133,7 +134,7 @@ public static class TilePainter
 
         for (int i = 0; i < 4; i++)
         {
-            Tile neighbor = TileUtility.GetAdjacentTile(level,tile, (FourDir)i);
+            Tile neighbor = TileUtility.GetAdjacentTile(level, tile, (FourDir)i);
             if (IsEnvironmentByType(neighbor, type))
                 bitmask |= 1 << i;
         }
@@ -156,11 +157,22 @@ public static class TilePainter
             int randomTrap = UnityEngine.Random.Range(0, trapData.Count - 1);
             TrapBase TrapGO = UnityEngine.Object.Instantiate
                 (
-                trapData[randomTrap].trapPrefab, 
-                new Vector3Int(tile.gridPosition.x, tile.gridPosition.y, 0), 
+                trapData[randomTrap].trapPrefab,
+                new Vector3Int(tile.gridPosition.x, tile.gridPosition.y, 0),
                 Quaternion.identity
                 ).GetComponent<TrapBase>();
             tile.TrpaOnTile = TrapGO;
         }
+    }
+
+    private static void PlaceTrap(Level level, TileDataBase tileDataBase)
+    {
+        level.endTile.mapObject = UnityEngine.Object.Instantiate
+                (
+                tileDataBase.ladder,
+                new Vector3Int(level.endTile.gridPosition.x, level.endTile.gridPosition.y, 0),
+                Quaternion.identity
+                ).GetComponent<MapObject>();
+        level.endTile.mapObject.CurTile = level.endTile;
     }
 }
