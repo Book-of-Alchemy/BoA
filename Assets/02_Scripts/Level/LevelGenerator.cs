@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
+
 
 public class LevelGenerator : MonoBehaviour
 {
@@ -81,7 +83,7 @@ public class LevelGenerator : MonoBehaviour
 
         foreach (var leaf in seletedLeaves)
         {
-            foreach(var tile in leaf.trapPoint)
+            foreach (var tile in leaf.trapPoint)
             {
                 level.trapPoint.Add(tile);
             }
@@ -451,21 +453,21 @@ public class LevelGenerator : MonoBehaviour
 
     void PlaceTrapsInRoom(Leaf leaf, Dictionary<Vector2Int, Tile> tiles)
     {
-        if (leaf.room == null || leaf.centerTile == null ) return;
+        if (leaf.room == null || leaf.centerTile == null) return;
 
-        if(leaf.roomType == RoomType.secret || leaf.roomType == RoomType.treasure || leaf.roomType == RoomType.trap) return;
+        if (leaf.roomType == RoomType.secret || leaf.roomType == RoomType.treasure || leaf.roomType == RoomType.trap) return;
 
         int spawnQuantity = (leaf.leafSizeType) switch
         {
             LeafSizeType.small => UnityEngine.Random.Range(0, 1),
-            LeafSizeType.medium => UnityEngine.Random.Range(1,2),
-            LeafSizeType.large => UnityEngine.Random.Range(2,3),
+            LeafSizeType.medium => UnityEngine.Random.Range(1, 2),
+            LeafSizeType.large => UnityEngine.Random.Range(2, 3),
             _ => 0
         };
 
         List<Tile> candidates = new List<Tile>();
 
-        foreach(var kvp in tiles)
+        foreach (var kvp in tiles)
         {
             if (!kvp.Value.isOccupied)
                 candidates.Add(kvp.Value);
@@ -476,10 +478,10 @@ public class LevelGenerator : MonoBehaviour
 
         for (int i = 0; i < spawnQuantity; i++)
         {
-            if (UnityEngine.Random.value > spawnRate) 
+            if (UnityEngine.Random.value > spawnRate)
                 continue;
 
-            if (candidates.Count == 0) 
+            if (candidates.Count == 0)
                 break;
 
             Tile targetTile = candidates[UnityEngine.Random.Range(0, candidates.Count)];
@@ -569,8 +571,8 @@ public class LevelGenerator : MonoBehaviour
         if (tile.tileType != TileType.ground) return;
 
         Dictionary<Vector2Int, Tile> tiles = level.tiles;
-        List<Tile> checkList = TileUtility.GetAdjacentTileList(level,tile, true);
-        List<Vector2Int> directions = GetEightDirectionOffsets(); // 방향 목록
+        List<Tile> checkList = TileUtility.GetAdjacentTileList(level, tile, true);
+        List<Vector2Int> directions = GetEightDirection(); // 방향 목록
 
         for (int i = 0; i < checkList.Count; i++)
         {
@@ -594,18 +596,28 @@ public class LevelGenerator : MonoBehaviour
         }
     }
 
-    List<Vector2Int> GetEightDirectionOffsets()
+    List<Vector2Int> GetFourDirections()
+    {
+        return new List<Vector2Int>
+        {
+            new Vector2Int(1, 0),
+            new Vector2Int(-1, 0),
+            new Vector2Int(0, 1),
+            new Vector2Int(0, -1)
+        };
+    }
+    List<Vector2Int> GetEightDirection()
     {
         return new List<Vector2Int>
     {
-        new Vector2Int(0, 1),    // 위
-        new Vector2Int(1, 1),    // 우상
-        new Vector2Int(1, 0),    // 오른쪽
-        new Vector2Int(1, -1),   // 우하
-        new Vector2Int(0, -1),   // 아래
-        new Vector2Int(-1, -1),  // 좌하
-        new Vector2Int(-1, 0),   // 왼쪽
-        new Vector2Int(-1, 1)    // 좌상
+        new Vector2Int(0, 1),
+        new Vector2Int(1, 1),
+        new Vector2Int(1, 0),
+        new Vector2Int(1, -1),
+        new Vector2Int(0, -1),
+        new Vector2Int(-1, -1),
+        new Vector2Int(-1, 0),
+        new Vector2Int(-1, 1)
     };
     }
 
@@ -626,11 +638,118 @@ public class LevelGenerator : MonoBehaviour
     }
 
     void SetLevelOnTiles(Dictionary<Vector2Int, Tile> tiles, Level level)
-    { 
-        foreach(var kvp in tiles)
+    {
+        foreach (var kvp in tiles)
         {
             kvp.Value.curLevel = level;
         }
     }
 
+    //임시코드
+    /*public void GenerateMap()
+    {
+        BiomeSet biomeSet;
+        int roomCount = 10;
+        Vector2Int startPos = new Vector2Int(50, 50);
+
+        Dictionary<Vector2Int, Tile> tiles = new();
+        List<Leaf> rooms = new();
+        Leaf startLeaf;
+        Leaf endLeaf;
+
+        tiles.Clear();
+        rooms.Clear();
+
+        // 1. Start Room 생성
+        startLeaf = new Leaf(new RectInt(startPos.x, startPos.y, 0, 0));
+        startLeaf.room = GetRandomRoomPreset();
+        startLeaf.rect.size = startLeaf.room.roomSize;
+        rooms.Add(startLeaf);
+
+        // 타일 배치
+        GenerateTilesFromLeaf(startLeaf);
+
+        Queue<Leaf> queue = new();
+        queue.Enqueue(startLeaf);
+
+        // 2. 주변으로 뻗어나가기
+        while (rooms.Count < roomCount && queue.Count > 0)
+        {
+            Leaf current = queue.Dequeue();
+            foreach (Vector2Int dir in GetFourDirections())
+            {
+                if (rooms.Count >= roomCount) break;
+
+                Leaf newLeaf = TryPlaceNewRoom(current, dir);
+                if (newLeaf != null)
+                {
+                    rooms.Add(newLeaf);
+                    queue.Enqueue(newLeaf);
+                }
+            }
+        }
+
+        // 3. 가장 멀리 있는 방을 endLeaf로 설정
+        float maxDist = 0f;
+        foreach (var leaf in rooms)
+        {
+            float dist = Vector2Int.Distance(startLeaf.rect.center, leaf.rect.center);
+            if (dist > maxDist)
+            {
+                maxDist = dist;
+                endLeaf = leaf;
+            }
+        }
+
+        Debug.Log($"Map Created. Start: {startLeaf.rect.center}, End: {endLeaf.rect.center}");
+    }
+
+    Leaf TryPlaceNewRoom(Leaf baseLeaf, Vector2Int direction)
+    {
+        RoomPreset newPreset = GetRandomRoomPreset();
+        if (newPreset == null) return null;
+
+        Vector2Int offset = baseLeaf.rect.position + GetRoomOffset(baseLeaf, newPreset.roomSize, direction);
+        RectInt newRect = new RectInt(offset, newPreset.roomSize);
+
+        // 겹침 검사
+        foreach (var room in rooms)
+        {
+            if (newRect.Overlaps(room.rect)) return null;
+        }
+
+        Leaf newLeaf = new Leaf(newRect);
+        newLeaf.room = newPreset;
+        ApplyRoomToTiles(newLeaf);
+        return newLeaf;
+    }
+
+    Vector2Int GetRoomOffset(Leaf baseLeaf, Vector2Int newSize, Vector2Int dir)
+    {
+        // 방향 따라 방 붙이기
+        if (dir == Vector2Int.right)
+            return new Vector2Int(baseLeaf.rect.xMax + 1, baseLeaf.rect.y);
+        if (dir == Vector2Int.left)
+            return new Vector2Int(baseLeaf.rect.xMin - newSize.x - 1, baseLeaf.rect.y);
+        if (dir == Vector2Int.up)
+            return new Vector2Int(baseLeaf.rect.x, baseLeaf.rect.yMax + 1);
+        return new Vector2Int(baseLeaf.rect.x, baseLeaf.rect.yMin - newSize.y - 1); // down
+    }
+    RoomPreset GetRandomRoomPreset()
+    {
+        RoomSizeType type = GetRandomRoomSizeType();
+        List<RoomPreset> presets = curBiomeSet.GetPresets(type);
+        if (presets.Count == 0) return null;
+        return presets[UnityEngine.Random.Range(0, presets.Count)];
+    }
+
+    RoomSizeType GetRandomRoomSizeType()
+    {
+        float smallSizeChance = 0.4f;
+        float middleSizeChance = 0.45f;
+        float rand = UnityEngine.Random.value;
+        if (rand < smallSizeChance) return RoomSizeType.small;
+        if (rand < smallSizeChance + middleSizeChance) return RoomSizeType.medium;
+        return RoomSizeType.large;
+    }*/
 }
