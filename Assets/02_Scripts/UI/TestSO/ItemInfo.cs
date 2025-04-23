@@ -24,9 +24,9 @@ public class ItemInfo : MonoBehaviour
 
     public void ShowInfo(InventoryItem item) // 인자 값에 정보를 UI에 보여줌
     {
-        _itemNameTxt.text = item.InventorItemData.name;
-        _itemDescTxt.text = item.InventorItemData.description;
-        _image.sprite = item.InventorItemData.Icon;
+        _itemNameTxt.text = item.GetItemName();
+        _itemDescTxt.text = item.GetItemDesc();
+        _image.sprite = item.GetSprite();
         _image.gameObject.SetActive(true);
     }
 }

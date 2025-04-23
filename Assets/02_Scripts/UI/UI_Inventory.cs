@@ -1,6 +1,6 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
 public enum EInventoryType
@@ -22,15 +22,28 @@ public class UI_Inventory : UIBase
     [SerializeField] private List<GameObject> _toolList; //UI_Inventory에 오른쪽에 바뀔 화면
     [SerializeField] private List<Image> _imageList; //화면전환을 위한 탭버튼의 이미지 
 
+    [Header("Test Comp")]
     [SerializeField] private Button _addBtn;
+    [SerializeField] private Button _removeBtn;
+    [SerializeField] private Button _sortBtn;
+    [SerializeField] private Button _sortResetBtn;
+    public int SlotCount => _slotUIList.Count;
+    
+    private EInventoryType _curType; // 현재 띄워진 인벤토리 타입
+    public EInventoryType curType => _curType;
 
-    public EInventoryType curType { get; private set; }  // 현재 띄워진 인벤토리 타입
+    private Dictionary<EInventoryType, Item_Type[]> _typeFilter= new() //인벤토리 타입에 따른 Item필터타입
+    {
+        { EInventoryType.Craft, new[] { /*Item_Type.Material,*/ Item_Type.Consumable} },
+        { EInventoryType.Equipment, new[] { Item_Type.Material } }
+    };
+
+    public int SelectIndex { get; private set; }
     public bool IsOpened { get; private set; }
 
     private Color _unActiveColor = Color.gray;
-    private Color _activeColor;
+    private Color _activeColor; 
 
-    public int SelectIndex { get; private set; }
 
     private void Start()
     {
@@ -43,12 +56,6 @@ public class UI_Inventory : UIBase
             slot.OnDeselected += OnSlotDeselected;
         }
 
-        if(Inventory.Instance != null)
-        {
-            _inventory = Inventory.Instance;
-            _inventory.Initialize(this);
-            _addBtn.onClick.AddListener(_inventory.OnClickAddItem);
-        }
     }
 
     private void InitInventoryType() //시작시 버튼 컬러 초기화
@@ -61,8 +68,22 @@ public class UI_Inventory : UIBase
         }
     }
 
+    private void InitInventory()
+    {
+        if (Inventory.Instance != null)
+        {
+            _inventory = Inventory.Instance;
+            _inventory.Initialize(this);
+            _addBtn.onClick.AddListener(_inventory.OnClickAddItem);
+            _removeBtn.onClick.AddListener(_inventory.OnClickRemoveItem);
+            _sortBtn.onClick.AddListener(() => _inventory.FilterAndDisplay(Item_Type.Consumable));
+            _sortResetBtn.onClick.AddListener(() => _inventory.RestoreBeforeFilter());
+        }
+    }
+
     public override void HideDirect() //Call at OnClick Event 
     {
+        _addBtn.onClick.RemoveAllListeners();
         UIManager.Hide<UI_Inventory>();
         UIManager.Hide<UI_Action>();
     }
@@ -71,6 +92,7 @@ public class UI_Inventory : UIBase
     {
         IsOpened = true;
         InitInventoryType();
+        InitInventory();
 
         if (param.Length > 0 && param[0] is EInventoryType)
         {
@@ -91,6 +113,10 @@ public class UI_Inventory : UIBase
     public void RemoveItem(int index) // 슬롯에 아이템 아이콘, 갯수 제거
     {
         _slotUIList[index].RemoveItem();
+    }
+    public void ReduceItem(int index) // 슬롯에 아이템 아이콘, 갯수 제거
+    {
+        _slotUIList[index].ReduceItem();
     }
 
     public void OnSlotSelected(int index)
@@ -123,9 +149,17 @@ public class UI_Inventory : UIBase
         }
     }
 
-    private void SetCurType(EInventoryType type)
+    private void SetCurType(EInventoryType type) // 현재 타입 설정 및 인벤토리 필터링
     {
-        curType = type;
+        if (_curType == type) return;
+
+        _curType = type;
+
+        //키에 맞는 Type찾아서 인벤토리 필터링
+        if (_typeFilter.TryGetValue(type, out Item_Type[] types))
+            _inventory.FilterAndDisplay(types);
+        else //기본 인벤토리는 필터링 없기때문에 
+            _inventory.RestoreBeforeFilter();
     }
 
     public void OnClickInventoryBtn()
