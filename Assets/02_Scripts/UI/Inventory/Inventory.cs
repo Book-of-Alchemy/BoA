@@ -11,6 +11,8 @@ public class Inventory : Singleton<Inventory>
 
     public ItemData[] itemDataArr; // 테스트용 아이템 데이터 배열]
 
+    private Factory factory = new Factory();
+
     private void Start()
     {
         items = new InventoryItem[_capacity]; // 인벤토리 용량만큼 Data상 용량을 맞춰줌.
@@ -142,10 +144,19 @@ public class Inventory : Singleton<Inventory>
                 _uiInventory.SetSlotItem(i, items[i]);
         }
     }
+    public BaseItem Check(int index)
+    {
+        var effectType = items[index].itemData.effect_type;
+        return factory.CreateItem(effectType, this.transform);
+    }
 
     public void Use(int index)
     {
         Debug.Log("UseAction");
+        //var item = Check(index);
+        ////item.UseItem();
+        ItemManager.Instance.CreateProjectileItem(items[index].itemData);
+
         RemoveItem(index);
         UIManager.Hide<UI_Action>();
     }
@@ -156,6 +167,7 @@ public class Inventory : Singleton<Inventory>
         RemoveItem(index);
         UIManager.Hide<UI_Action>();
     }
+
     public void Craft(int index)
     {
         Debug.Log("CraftAction");

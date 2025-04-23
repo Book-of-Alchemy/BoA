@@ -1,14 +1,10 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CraftTool : MonoBehaviour
 {
-    void Start()
-    {
-        
-    }
+    [Header("CraftSlot")]
+    [SerializeField] private List<InventorySlotUI> _slotCraft;
 
-    void Update()
-    {
-        
-    }
+
 }
