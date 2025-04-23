@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TilePrefab : MonoBehaviour
+public class ShadowPrefab : MonoBehaviour
 {
+
     [SerializeField]
     private Tile curTile;
     public Tile CurTile
@@ -28,7 +29,6 @@ public class TilePrefab : MonoBehaviour
         }
     }
     public SpriteRenderer baseRenderer;
-    public SpriteRenderer upperRenderer;
     private void OnDestroy()
     {
         if (curTile != null)
@@ -45,20 +45,14 @@ public class TilePrefab : MonoBehaviour
         if (CurTile.isOnSight)
         {
             baseRenderer.color = Color.white;
-            if (upperRenderer != null)
-                upperRenderer.color = Color.white;
         }
         else if (CurTile.isExplored)
         {
             baseRenderer.color = new Color(0.4f, 0.4f, 0.4f);
-            if (upperRenderer != null)
-                upperRenderer.color = new Color(0.4f, 0.4f, 0.4f);
         }
         else
         {
-            baseRenderer.enabled = false;
-            if (upperRenderer != null)
-                upperRenderer.enabled = false;
+            baseRenderer.color = Color.black;
         }
     }
 }
