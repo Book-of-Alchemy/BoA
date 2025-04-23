@@ -112,6 +112,7 @@ public class EnemyController : MonoBehaviour
                 onComplete?.Invoke();
                 });
     }
+    //애니메이션 이벤트에 추가해야함
     public void OnAttackHit()
     {
         if (_playerStats != null)
