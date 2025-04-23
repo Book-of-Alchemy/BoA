@@ -131,9 +131,6 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
-        //이동 여부에 따라 애니메이터에 값 전달
-        _isMoving = _moveInput.sqrMagnitude > 0.01f;
-        _anim.SetMoving(_isMoving);
         // 취소, 메뉴, 대시 입력 처리
         if (_cancelAction.triggered)
             Debug.Log("취소 눌림");
@@ -236,7 +233,7 @@ public class PlayerController : MonoBehaviour
         float distance = Vector3.Distance(transform.position, dest);
         float duration = distance / MoveSpeed;
         _isMoving = true;
-
+        _anim.PlayMove();
         transform
             .DOMove(dest, duration)
             .SetEase(Ease.Linear)

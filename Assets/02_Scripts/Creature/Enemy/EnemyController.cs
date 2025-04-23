@@ -64,7 +64,6 @@ public class EnemyController : MonoBehaviour
 
         yield break;
     }
-
     public void ChangeState(EnemyState newState)
     {
         _currentState = newState;
@@ -103,22 +102,22 @@ public class EnemyController : MonoBehaviour
 
     void BasicMove(Vector3 targetPosition,  Action onComplete = null)
     {
-        characterAnimator?.SetMoving(true);
+        characterAnimator?.PlayMove();
 
         _currentTween?.Kill(); // 기존 움직임 취소
         _currentTween = transform.DOMove(targetPosition, 1f / moveSpeed)
             .SetEase(Ease.Linear)
             .OnComplete(() =>
             {
-                characterAnimator?.SetMoving(false);
                 onComplete?.Invoke();
                 });
     }
-
+    public void EventAttackMethod()//애니메이션 이벤트 호출용
+    {
+        Attack();
+    }
     public void Attack( Action onComplete = null)
     {
-        characterAnimator?.PlayAttack();
-
         onComplete?.Invoke();
     }
     // 플레이어 바라보기 메서드(감지되면 호출하기)
