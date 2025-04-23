@@ -9,34 +9,12 @@ public class TESTESTSETS : MonoBehaviour
     public DropItem controller2;
     public DropItem drop;
     public GameObject dropPrefab;
-    bool isbool = false;
     // Start is called before the first frame update
     void Start()
     {
-        GameObject Prefa = Instantiate(prefab);
-        controller = Prefa.GetComponent<ProjectileItem>();
-        controller.Init(ResourceManager.Instance.dicItemData[200002], Instantiate(ResourceManager.Instance.typeObjectPrefab, this.transform).GetComponent<DamageItem>());
-
-        GameObject DropPre = Instantiate(dropPrefab);
-        drop = DropPre.GetComponent<DropItem>();
-        drop.Init(ResourceManager.Instance.dicItemData[200001], Instantiate(ResourceManager.Instance.typeObjectPrefab, this.transform).GetComponent<DamageItem>());
-
-        GameObject DropPreb = Instantiate(prefab);
-        controller2 = DropPreb.GetComponent<DropItem>();
-        controller2.Init(ResourceManager.Instance.dicItemData[200002], Instantiate(ResourceManager.Instance.typeObjectPrefab, this.transform).GetComponent<DamageItem>());
+        ItemManager.Instance.CreateDropItem(Instantiate(ResourceManager.Instance.typeObjectPrefab, this.transform).GetComponent<DamageItem>());
 
 
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (TestTileManger.Instance.curLevel.tiles.TryGetValue(new Vector2Int(2, 0), out Tile tile) && isbool == false)
-        {
-            controller.projectileMove.SetDestination(tile);
-            controller.projectileMove.Init();
-
-        }
-        isbool = true;
-    }
 }

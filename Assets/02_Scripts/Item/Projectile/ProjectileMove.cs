@@ -29,7 +29,20 @@ public class ProjectileMove : MonoBehaviour
             transform.position = Vector2.MoveTowards(transform.position, _choiceTile.gridPosition, 1f * Time.deltaTime);
         if (CheckDistance(itemPos, _choiceTile.gridPosition) < 0.01f)
         {
-            _projectilItem.item.UseItem(_projectilItem.itemData);
+            List<Tile> tiles;
+            if (_projectilItem.itemData.target_range == 0 && _projectilItem.itemData.effect_type == Effect_Type.Damage)
+                tiles = TileUtility.GetRangedTile(GameManager.Instance.PlayerTransform.curLevel, _choiceTile, _projectilItem.itemData.effect_range, false);
+            else
+                tiles = TileUtility.GetRangedTile(GameManager.Instance.PlayerTransform.curLevel, _choiceTile, _projectilItem.itemData.effect_range, true);
+            foreach (Tile tile in tiles)
+            {
+                if (tile.CharacterStatsOnTile != null)
+                {
+                    GameManager.Instance.PlayerTransform.Attack(tile.CharacterStatsOnTile);
+                }
+            }
+            Debug.Log(_projectilItem.itemData.name_en);
+            //_projectilItem.item.UseItem(_projectilItem.itemData);
             Destroy(this.gameObject);
         }
     }
