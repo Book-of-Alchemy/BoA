@@ -112,13 +112,15 @@ public class EnemyController : MonoBehaviour
                 onComplete?.Invoke();
                 });
     }
-    public void EventAttackMethod()//애니메이션 이벤트 호출용
+    public void OnAttackHit()
     {
-        Attack();
+        if (_playerStats != null)
+            _enemyStats.Attack(_playerStats);
     }
     public void Attack( Action onComplete = null)
     {
         onComplete?.Invoke();
+        characterAnimator?.PlayAttack();
     }
     // 플레이어 바라보기 메서드(감지되면 호출하기)
     private void FlipTowardsPlayer()
