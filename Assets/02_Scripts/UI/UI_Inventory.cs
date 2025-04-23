@@ -34,8 +34,7 @@ public class UI_Inventory : UIBase
 
     private Dictionary<EInventoryType, Item_Type[]> _typeFilter= new() //인벤토리 타입에 따른 Item필터타입
     {
-        { EInventoryType.Craft, new[] { /*Item_Type.Material,*/ Item_Type.Consumable} },
-        { EInventoryType.Equipment, new[] { Item_Type.Material } }
+        { EInventoryType.Craft, new[] { Item_Type.Material, /*Item_Type.Consumable*/} },
     };
 
     public int SelectIndex { get; private set; }
@@ -76,7 +75,7 @@ public class UI_Inventory : UIBase
             _inventory.Initialize(this);
             _addBtn.onClick.AddListener(_inventory.OnClickAddItem);
             _removeBtn.onClick.AddListener(_inventory.OnClickRemoveItem);
-            _sortBtn.onClick.AddListener(() => _inventory.FilterAndDisplay(Item_Type.Consumable));
+            _sortBtn.onClick.AddListener(() => _inventory.FilterAndDisplay(Item_Type.Material));
             _sortResetBtn.onClick.AddListener(() => _inventory.RestoreBeforeFilter());
         }
     }
@@ -84,6 +83,9 @@ public class UI_Inventory : UIBase
     public override void HideDirect() //Call at OnClick Event 
     {
         _addBtn.onClick.RemoveAllListeners();
+        _removeBtn.onClick.RemoveAllListeners();
+        _sortBtn.onClick.RemoveAllListeners();
+        _sortResetBtn.onClick.RemoveAllListeners();
         UIManager.Hide<UI_Inventory>();
         UIManager.Hide<UI_Action>();
     }
