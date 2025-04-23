@@ -51,7 +51,7 @@ public class PlayerController : MonoBehaviour
     }
     // 중복 이벤트 방지를 위해 PC맵을 껐다 키는 메서드
     private void OnEnable() => _inputActions.PC.Enable();
-    private void OnDisable() => _inputActions.PC.Disable();
+    public void OnDisable() => _inputActions.PC.Disable();
 
     //이동 버퍼 코루틴
     private IEnumerator BufferAndMove()

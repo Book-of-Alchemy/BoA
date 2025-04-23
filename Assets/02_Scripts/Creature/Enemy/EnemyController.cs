@@ -59,6 +59,7 @@ public class EnemyController : MonoBehaviour
                 break;
             case EnemyState.Attack:
                 HandleAttack();
+                FlipTowardsPlayer();
                 break;
         }
 
