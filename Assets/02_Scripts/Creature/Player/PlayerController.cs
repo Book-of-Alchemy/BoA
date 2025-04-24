@@ -1,242 +1,148 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using System.Collections;
 using DG.Tweening;
 
+[RequireComponent(typeof(PlayerStats))]
 public class PlayerController : MonoBehaviour
 {
-    private InputAction _moveAction;
-    private InputAction _confirmAction;
-    private InputAction _cancelAction;
-    private InputAction _menuAction;
-    private InputAction _dashAction;
-
-    public float MoveSpeed = 5f;         // 기본 이동 속도
-    public float DashSpeed = 10f;        // 대시 속도
-    private bool _isMoving = false;
-    public float MoveActionCost = 1.0f;    // 이동 시 소모하는 행동력
-    private Vector3 _targetPosition;
-
-    public LayerMask ObstacleLayer;      // 대시 중 장애물 체크용
-    public LayerMask UnitLayer;          // 플레이어 및 적들이 속한 레이어
-
-    // 마지막 이동 방향 (대시 시 사용)
-    private Vector2 _lastMoveDirection = Vector2.down;
-    // 공격 모드에서 공격 방향 결정용 변수
-    private Vector2 _attackDirection = Vector2.zero;
+    public float MoveSpeed = 5f;
+    public float MoveActionCost = 1f;
+    public LayerMask UnitLayer;
+    public LayerMask ObstacleLayer;
+    public float InputBufferDuration = 0.1f;
 
     private PlayerStats _playerStats;
-    // 입력 버퍼링 중인지 표시
-    private bool _isBuffering = false;
-    // 버퍼링 지속 시간 (초)
-    public float InputBufferDuration = 0.1f;
-    //애니메이션 관련 필드
-    private CharacterAnimator _anim;
-    private Vector2 _moveInput;
+    private PlayerInputActions _inputActions;
+    private CharacterAnimator _animator;
+    private bool _isMoving;
+    //start코루틴이 반환하는 참조들(중복실행방지, 코루틴 관리(버퍼확인)
+    private Coroutine _moveBufferCoroutine;
+    private Coroutine _attackBufferCoroutine;
+
+    private Vector2 _lastMoveDirection = Vector2.right;// 캐릭터 방향에 따라 미리 초기화
     private SpriteRenderer _spriteRenderer;
-    /*죽음과 넉백 애니메이션 호출은 캐릭터 스탯에 있음*/
-    void Awake()
+
+    private void Awake()
     {
-        //애니메이션 관련 캐싱
-        _anim = GetComponent<CharacterAnimator>();
-        _spriteRenderer = GetComponent<SpriteRenderer>();
-
-        // 이동 액션 (WASD, 2D 벡터 조합 - 대각 입력도 가능)
-        _moveAction = new InputAction("Move", InputActionType.Value, binding: "2DVector");
-        _moveAction.AddCompositeBinding("2DVector")
-            .With("Up", "<Keyboard>/w")
-            .With("Down", "<Keyboard>/s")
-            .With("Left", "<Keyboard>/a")
-            .With("Right", "<Keyboard>/d");
-
-        // 확인, 취소, 메뉴, 대시 액션 설정
-        _confirmAction = new InputAction("Confirm", binding: "<Keyboard>/z");
-        _confirmAction.AddBinding("<Keyboard>/enter");
-        _cancelAction = new InputAction("Cancel", binding: "<Keyboard>/x");
-        _cancelAction.AddBinding("<Keyboard>/escape");
-        _menuAction = new InputAction("Menu", binding: "<Keyboard>/tab");
-        _dashAction = new InputAction("Dash", binding: "<Keyboard>/leftShift");
-    }
-
-    void OnEnable()
-    {
-        _moveAction.Enable();
-        _confirmAction.Enable();
-        _cancelAction.Enable();
-        _menuAction.Enable();
-        _dashAction.Enable();
-    }
-
-    void OnDisable()
-    {
-        _moveAction.Disable();
-        _confirmAction.Disable();
-        _cancelAction.Disable();
-        _menuAction.Disable();
-        _dashAction.Disable();
-    }
-
-    void Start()
-    {
-        // 같은 오브젝트의 PlayerStats 컴포넌트를 캐싱
         _playerStats = GetComponent<PlayerStats>();
+        _animator = GetComponent<CharacterAnimator>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _inputActions = new PlayerInputActions();
 
-        Vector2Int startCell = Vector2Int.RoundToInt(transform.position);
-
-        if (_playerStats.curLevel != null
-            && _playerStats.curLevel.tiles.TryGetValue(startCell, out Tile startTile))
+        // 콜백 등록
+        _inputActions.PC.Move.started += ctx =>
         {
-            _playerStats.curTile = startTile;
-            startTile.CharacterStatsOnTile = _playerStats;
-        }
+            if (!_isMoving
+                && _playerStats.BuffManager.GetFinalActionPoints() >= MoveActionCost
+                && _moveBufferCoroutine == null)
+            {
+                _moveBufferCoroutine = StartCoroutine(BufferAndMove());
+            }
+        };
+
+        _inputActions.PC.Attack.started += ctx =>
+        {
+            if (_attackBufferCoroutine == null)
+            {
+                _attackBufferCoroutine = StartCoroutine(BufferAndAttack());
+            }
+        };
     }
+    // 중복 이벤트 방지를 위해 PC맵을 껐다 키는 메서드
+    private void OnEnable() => _inputActions.PC.Enable();
+    public void OnDisable() => _inputActions.PC.Disable();
 
-    void Update()
+    //이동 버퍼 코루틴
+    private IEnumerator BufferAndMove()
     {
-        _moveInput = _moveAction.ReadValue<Vector2>();
-        //좌우 플립
-        if (Mathf.Abs(_moveInput.x) > 0.01f)
-            _spriteRenderer.flipX = _moveInput.x < 0f;
+        float elapsed = 0f;//경과시간
+        Vector2 bufferedInput = Vector2.zero;// 0으로 초기화
 
-        // 왼쪽 컨트롤 키가 눌렸다면 방향 입력만 받아서 공격 방향 업데이트
-        if (Keyboard.current.leftCtrlKey.isPressed)
+        //Move 액션의 값을 읽고 (0,0)이 아닌 입력이 들어올때마다 버퍼 인풋 갱신
+        while (elapsed < InputBufferDuration)//elapsed가 0.1초가 될때까지 반복
         {
-            Vector2 input = _moveAction.ReadValue<Vector2>();
-            if (input != Vector2.zero)
-            {
-                _attackDirection = input;
-                _lastMoveDirection = input;  // 마지막 이동 방향 업데이트
-            }
-        }
-
-        // 공격 실행은 컨트롤 키와 무관하게 확인 액션(Z 또는 Enter)로 처리
-        if (_confirmAction.triggered)
-        {
-            // 설정된 공격 방향이 없으면 마지막 이동 방향을 사용
-            Vector2 attackDir = _attackDirection != Vector2.zero ? _attackDirection : _lastMoveDirection;
-            AttackInDirection(attackDir);
-        }
-
-        if (!Keyboard.current.leftCtrlKey.isPressed && !_isMoving)
-        {
-            if (_moveInput != Vector2.zero && !_isBuffering)
-            {
-                if (_playerStats != null && _playerStats.BuffManager.GetFinalActionPoints() >= MoveActionCost)
-                {
-                    StartCoroutine(BufferAndMove(_moveInput));
-                }
-                else
-                {
-                    Debug.Log("행동력이 부족하여 이동할 수 없습니다.");
-                }
-            }
-        }
-        //이동 여부에 따라 애니메이터에 값 전달
-        _isMoving = _moveInput.sqrMagnitude > 0.01f;
-        _anim.SetMoving(_isMoving);
-        // 취소, 메뉴, 대시 입력 처리
-        if (_cancelAction.triggered)
-            Debug.Log("취소 눌림");
-        if (_menuAction.triggered)
-            Debug.Log("메뉴 눌림");
-        if (_dashAction.triggered)
-        {
-            Debug.Log("대쉬 활성화");
-            // 대시 메서드 실행할 장소
-        }
-    }
-
-    // 공격 방향에 따라 공격 실행 (Raycast를 사용)
-    void AttackInDirection(Vector2 direction)
-    {
-        // 공격 방향을 단위 벡터로 만듦
-        Vector2 attackDir = direction.normalized;
-
-        Collider2D myCollider = GetComponent<Collider2D>();
-        float offsetDistance = myCollider != null ? myCollider.bounds.extents.magnitude + 0.1f : 0.1f;
-
-        // 오프셋을 적용하여 레이 시작점 결정
-        Vector2 origin = (Vector2)transform.position + attackDir * offsetDistance;
-
-        // 레이 길이 설정
-        float rayDistance = 0.5f;
-
-        // Raycast 실행
-        RaycastHit2D hit = Physics2D.Raycast(origin, attackDir, rayDistance, UnitLayer);
-        Debug.DrawRay(origin, attackDir * rayDistance, Color.red, 1f);
-
-        if (hit.collider != null && hit.collider.CompareTag("Enemy"))
-        {
-            EnemyStats enemyStats = hit.collider.GetComponent<EnemyStats>();
-            if (enemyStats != null)
-            {
-                _playerStats.Attack(enemyStats);
-                // 공격 후 행동력 소비 (이동과 같은 코스트)
-                _playerStats.BuffManager.ApplyBuff(-MoveActionCost, 0);
-                Debug.Log("공격 후 행동력 소비됨: " + MoveActionCost + ", 남은 AP: " + _playerStats.BuffManager.GetFinalActionPoints());
-            }
-            else
-            {
-                Debug.Log("공격 대상이 아님");
-            }
-        }
-        else
-        {
-            Debug.Log("공격할 적이 없음.");
-        }
-    }
-    //이동 버퍼링 코루틴
-    private IEnumerator BufferAndMove(Vector2 initialInput)
-    {
-        _isBuffering = true;
-        float elapsed = 0f;
-
-        Vector2 bufferedInput = initialInput;
-
-        while (elapsed < InputBufferDuration)
-        {
-            Vector2 input = _moveAction.ReadValue<Vector2>();
-            if (input != Vector2.zero)
-                bufferedInput = input; //새 입력이 있으면 그전 입력을 덮어씀
-
+            Vector2 current = _inputActions.PC.Move.ReadValue<Vector2>();
+            if (current != Vector2.zero) bufferedInput = current;
             elapsed += Time.deltaTime;
             yield return null;
         }
 
-        _isBuffering = false;
-
-        _lastMoveDirection = bufferedInput;
-        ExecuteMove(bufferedInput);
+        //최종 입력처리
+        if (bufferedInput != Vector2.zero)
+        {
+            ExecuteMove(bufferedInput);
+        }
+        
+        //코루틴을 마치고 참조를 null로 되돌림
+        _moveBufferCoroutine = null;
     }
 
-    private void ExecuteMove(Vector2 moveInput)
+    private IEnumerator BufferAndAttack()
     {
-        //캐릭터 위치 계산
-        Vector2Int currentCell = _playerStats.curTile.gridPosition;
+        float elapsed = 0f;
+        Vector2 bufferedInput = Vector2.zero;
 
-        //대각방향 구분
-        Vector2Int drcell=Vector2Int.RoundToInt(moveInput);
-
-        Vector2Int targetCell = currentCell + drcell;
-
-        if (!_playerStats.curLevel.tiles.TryGetValue(targetCell, out Tile targetTile))
+        while (elapsed < InputBufferDuration)
         {
-            Debug.LogError($"해당 위치에 Tile이 없습니다: {targetCell}");
-            return;
+            Vector2 current = _inputActions.PC.Move.ReadValue<Vector2>();
+            if (current != Vector2.zero) bufferedInput = current;
+            elapsed += Time.deltaTime;
+            yield return null;
         }
 
-        if (targetTile.CharacterStatsOnTile != null|| !targetTile.IsWalkable)
-        {
-            Debug.Log("지나갈수없습니다.");
-            return;
-        }
+        // 버퍼 시간에 방향키를 눌렀다면 그 방향으로 버퍼인풋, 안눌렀다면 마지막 이동방향으로
+        Vector2 rawInput = bufferedInput != Vector2.zero ? bufferedInput : _lastMoveDirection;
+        Vector2Int offset = new Vector2Int(
+            rawInput.x > 0 ? 1 : rawInput.x < 0 ? -1 : 0,
+            rawInput.y > 0 ? 1 : rawInput.y < 0 ? -1 : 0
+        );
+        //공격방향 업데이트 및 실제 공격 호출
+        _lastMoveDirection = offset;
+        _animator.PlayAttack();
 
-            // 실제이동 실행
-            Vector3 dest = new Vector3(targetCell.x, targetCell.y, 0f);
-        float distance = Vector3.Distance(transform.position, dest);
-        float duration = distance / MoveSpeed;
+        _attackBufferCoroutine = null;
+    }
+
+    private void ExecuteMove(Vector2 rawInput)
+    {
+        //현재 플레이어가 서있는 타일의 격자 좌표 가져오기
+        Vector2Int curCell = _playerStats.curTile.gridPosition;
+
+        //rawInput(–1~1 사이 실수 값)을 –1, 0, 1 중 하나로 변환해 격자 한칸 단위 이동 방향(offset)을 결정
+        Vector2Int offset = new Vector2Int(
+            rawInput.x > 0 ? 1 : rawInput.x < 0 ? -1 : 0,
+            rawInput.y > 0 ? 1 : rawInput.y < 0 ? -1 : 0
+        );
+        
+        //스프라이트 flipx
+        if (offset.x != 0)
+            _spriteRenderer.flipX = offset.x < 0;
+
+        //마지막 이동방향 저장
+        _lastMoveDirection = offset;
+        //목표 좌표 계산
+        Vector2Int tgtCell = curCell + offset;
+
+        //이동 가능한지 판별
+        if (!_playerStats.curLevel.tiles.TryGetValue(tgtCell, out var tile)
+            || tile.CharacterStatsOnTile != null
+            || !tile.IsWalkable)
+            return;
+
         _isMoving = true;
+        _playerStats.curTile.CharacterStatsOnTile = null;// 전 타일 null로 비우기
+        
+        // 새 타일에 등록
+        _playerStats.curTile = tile;
+        tile.CharacterStatsOnTile = _playerStats;
 
+        //월드 좌표로 목적지(dest) 계산후 지정된 이속으로 걸리는 시간 구하기
+        Vector3 dest = new Vector3(tgtCell.x, tgtCell.y, 0f);
+        float duration = Vector3.Distance(transform.position, dest) / MoveSpeed;
+
+        //이동 애니메이션 재생및 움직임(행동력 소모)
+        _animator.PlayMove();
         transform
             .DOMove(dest, duration)
             .SetEase(Ease.Linear)
@@ -244,8 +150,40 @@ public class PlayerController : MonoBehaviour
             {
                 _isMoving = false;
                 _playerStats.BuffManager.ApplyBuff(-MoveActionCost, 0);
-                _playerStats.MoveToTile(targetTile);
-                Debug.Log($"ActionPoints 소모됨: {MoveActionCost}, 남은 AP: {_playerStats.BuffManager.GetFinalActionPoints()}");
             });
+    }
+    public void OnAttackHit()
+    {
+        DoAttack(_lastMoveDirection);
+    }
+    private void DoAttack(Vector2 dir)
+    {
+        if (dir.x != 0)
+            _spriteRenderer.flipX = dir.x < 0;
+        PerformAttackRaycast(dir);//지정된 방향으로 레이발사
+        _playerStats.BuffManager.ApplyBuff(-MoveActionCost, 0);
+    }
+
+    private void PerformAttackRaycast(Vector2 dir)
+    {
+        //시작점을 콜라이더 바깥으로 살싹 떨어뜨리기 extents는 반지름
+        var col = GetComponent<Collider2D>();
+        float originOffset = col.bounds.extents.magnitude + 0.1f;
+
+        // nomalized를 통한 정규화된 공격방향을 캐릭터 중심 위치와 곱하여 레이 출발지점 계산
+        Vector2 origin = (Vector2)transform.position + dir.normalized * originOffset;
+        Vector2 direction = dir.normalized;// 중복방지를 위해 방향을 한번더 저장
+
+        Debug.DrawRay(origin, direction * 0.5f, Color.red, 0.5f);
+        RaycastHit2D hit = Physics2D.Raycast(origin, direction, 0.5f, UnitLayer);
+
+        if (hit.collider != null && hit.collider.CompareTag("Enemy"))
+        {
+            EnemyStats enemyStats = hit.collider.GetComponent<EnemyStats>();
+            if (enemyStats != null)
+            {
+                _playerStats.Attack(enemyStats);
+            }
+        }
     }
 }

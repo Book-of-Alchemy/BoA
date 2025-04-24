@@ -17,6 +17,8 @@ GameObject:
   - component: {fileID: 6608603808275970276}
   - component: {fileID: 2476897687064898592}
   - component: {fileID: 6229136355966584497}
+  - component: {fileID: 159755631496191361}
+  - component: {fileID: 435035886019060284}
   m_Layer: 3
   m_Name: Enemy2
   m_TagString: Enemy
@@ -80,8 +82,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 100
-  m_Sprite: {fileID: -2413806693520163455, guid: 4adeaf2d2b1c7417e89f026626d8264f, type: 3}
-  m_Color: {r: 1, g: 0.6320754, b: 0.6320754, a: 1}
+  m_Sprite: {fileID: 4723107735738678597, guid: b331a13df9ca4484a8756e98b1f9e700, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -103,24 +105,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05ef582f0bde9584ebd677d78b35d52a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Level: 1
-  Experience: 0
-  MaxHealth: 100
-  CurrentHealth: 100
-  MaxMana: 50
-  CurrentMana: 50
-  AttackMin: 5
-  AttackMax: 10
-  Defense: 5
-  CritChance: 0.1
-  CritDamage: 1.5
-  Evasion: 0.05
-  Accuracy: 1
-  _actionPoints: 1
+  level: 1
+  experience: 0
+  maxHealth: 100
+  currentHealth: 100
+  maxMana: 50
+  currentMana: 50
+  attackMin: 5
+  attackMax: 10
+  defense: 5
+  critChance: 0.1
+  critDamage: 1.5
+  evasion: 0.05
+  accuracy: 1
+  actionPoints: 1
   visionRange: 6
   attackRange: 1
   curLevel: {fileID: 0}
   curTile:
+    curLevel: {fileID: 0}
     gridPosition: {x: 0, y: 0}
     tileType: 0
     environmentType: 0
@@ -129,15 +132,17 @@ MonoBehaviour:
     canSeeThrough: 1
     isExplored: 0
     isOnSight: 0
-    characterStats: {fileID: 0}
-  Fire: 0
-  Water: 0
-  Ice: 0
-  Electric: 0
-  Earth: 0
-  Wind: 0
-  Light: 0
-  Dark: 0
+    trpaOnTile: {fileID: 0}
+    mapObject: {fileID: 0}
+    itemsOnTile: []
+  fire: 0
+  water: 0
+  ice: 0
+  electric: 0
+  earth: 0
+  wind: 0
+  light: 0
+  dark: 0
 --- !u!58 &2745158912242748226
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -201,16 +206,6 @@ MonoBehaviour:
   moveSpeed: 3
   DetectionRange: 10
   _currentState: 0
-  lastCheckedTile:
-    gridPosition: {x: 0, y: 0}
-    tileType: 0
-    environmentType: 0
-    isDoorPoint: 0
-    isOccupied: 0
-    canSeeThrough: 1
-    isExplored: 0
-    isOnSight: 0
-    characterStats: {fileID: 0}
 --- !u!114 &6608603808275970276
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -247,3 +242,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03a187f892854784baed8e8eedc12aae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &159755631496191361
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9149620363629575224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f63dfdceb1bbe554593df4cb46cdc892, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!95 &435035886019060284
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9149620363629575224}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 22100000, guid: a947beb4638e983488032ebb85e03059, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

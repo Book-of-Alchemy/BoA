@@ -106,13 +106,12 @@ public abstract class CharacterStats : MonoBehaviour
         if (isCrit)
         {
             baseDamage *= critDamage;
-            Debug.Log($"{gameObject.name}가 명존쎄!");
+            Debug.Log($"{gameObject.name}가 치명타!");
         }
 
         float finalDamage = DamageCalculator.CalculateDamage(target, baseDamage, damageType);
         target.TakeDamage(finalDamage);
         Debug.Log($"{gameObject.name}가 {target.gameObject.name}을 공격함니다." + $"속성:{damageType}, 최종 대미지:{finalDamage}");
-        _anim.PlayAttack();
     }
 
     public virtual void TakeDamage(float amount)

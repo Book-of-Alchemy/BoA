@@ -59,12 +59,12 @@ public class EnemyController : MonoBehaviour
                 break;
             case EnemyState.Attack:
                 HandleAttack();
+                FlipTowardsPlayer();
                 break;
         }
 
         yield break;
     }
-
     public void ChangeState(EnemyState newState)
     {
         _currentState = newState;
@@ -103,23 +103,26 @@ public class EnemyController : MonoBehaviour
 
     void BasicMove(Vector3 targetPosition,  Action onComplete = null)
     {
-        characterAnimator?.SetMoving(true);
+        characterAnimator?.PlayMove();
 
         _currentTween?.Kill(); // 기존 움직임 취소
         _currentTween = transform.DOMove(targetPosition, 1f / moveSpeed)
             .SetEase(Ease.Linear)
             .OnComplete(() =>
             {
-                characterAnimator?.SetMoving(false);
                 onComplete?.Invoke();
                 });
     }
-
+    //애니메이션 이벤트에 추가해야함
+    public void OnAttackHit()
+    {
+        if (_playerStats != null)
+            _enemyStats.Attack(_playerStats);
+    }
     public void Attack( Action onComplete = null)
     {
-        characterAnimator?.PlayAttack();
-
         onComplete?.Invoke();
+        characterAnimator?.PlayAttack();
     }
     // 플레이어 바라보기 메서드(감지되면 호출하기)
     private void FlipTowardsPlayer()
