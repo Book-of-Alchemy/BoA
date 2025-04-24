@@ -42,7 +42,7 @@ public class ProjectileItem : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _playerPos = GameManager.Instance.PlayerTransform.curTile.gridPosition;
+        _playerPos = GameManager.Instance.PlayerTransform.CurTile.gridPosition;
 
     }
 
@@ -103,7 +103,7 @@ public class ProjectileItem : MonoBehaviour
     }
     public void CheckObject()
     {
-        List<Tile> checkList = TileUtility.GetLineTile(GameManager.Instance.PlayerTransform.curLevel, GameManager.Instance.PlayerTransform.curTile, _choiceTile, true);
+        List<Tile> checkList = TileUtility.GetLineTile(GameManager.Instance.PlayerTransform.curLevel, GameManager.Instance.PlayerTransform.CurTile, _choiceTile, true);
         foreach (Tile tile in checkList)
         {
             if (tile.CharacterStatsOnTile != null)

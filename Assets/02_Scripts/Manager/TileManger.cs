@@ -31,10 +31,13 @@ public class TileManger : Singleton<TileManger>
             if (curLevel.tiles.TryGetValue(new Vector2Int(Mathf.RoundToInt(enemy.transform.position.x), Mathf.RoundToInt(enemy.transform.position.y)), out Tile targerTile))
             {
                 targerTile.CharacterStatsOnTile = enemy;
-                enemy.curTile = targerTile;
+                enemy.CurTile = targerTile;
             }
         }
-        SpawnPlayer();
+        GameManager.Instance.PlayerTransform.curLevel = curLevel;
+        GameManager.Instance.PlayerTransform.CurTile = curLevel.startTile;
+        GameManager.Instance.PlayerTransform.transform.position = new Vector3(curLevel.startTile.gridPosition.x, curLevel.startTile.gridPosition.y,0);
+        //SpawnPlayer();
     }
 
     public void SetLevelGenerator(BiomeSet biomeSet, int roomCnt, int rootWidth, int rootHeight)
@@ -76,7 +79,7 @@ public class TileManger : Singleton<TileManger>
             player.transform.position = spawnPosition;
 
         player.curLevel = curLevel;
-        player.curTile = curLevel.startTile;
+        player.CurTile = curLevel.startTile;
     }
 
     public void CompleteQuest()

@@ -39,26 +39,32 @@ public class TilePrefab : MonoBehaviour
     }
     public void UpdateTileVisual()
     {
-        if (!baseRenderer)
-            return;
+        if (!baseRenderer) return;
 
-        if (CurTile.isOnSight)
+        Color color;
+        bool shouldEnable = true;
+
+        if (CurTile.IsOnSight)
         {
-            baseRenderer.color = Color.white;
-            if (upperRenderer != null)
-                upperRenderer.color = Color.white;
+            color = Color.white;
         }
-        else if (CurTile.isExplored)
+        else if (CurTile.IsExplored)
         {
-            baseRenderer.color = new Color(0.4f, 0.4f, 0.4f);
-            if (upperRenderer != null)
-                upperRenderer.color = new Color(0.4f, 0.4f, 0.4f);
+            color = new Color(0.4f, 0.4f, 0.4f);
         }
         else
         {
-            baseRenderer.enabled = false;
-            if (upperRenderer != null)
-                upperRenderer.enabled = false;
+            shouldEnable = false;
+            color = Color.clear;
+        }
+
+        baseRenderer.enabled = shouldEnable;
+        baseRenderer.color = color;
+
+        if (upperRenderer != null)
+        {
+            upperRenderer.enabled = shouldEnable;
+            upperRenderer.color = color;
         }
     }
 }

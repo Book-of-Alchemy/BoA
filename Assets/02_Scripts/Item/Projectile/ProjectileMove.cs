@@ -17,7 +17,7 @@ public class ProjectileMove : MonoBehaviour
     void Start()
     {
         _projectilItem = GetComponent<ProjectileItem>();
-        _playerPos = GameManager.Instance.PlayerTransform.curTile.gridPosition;
+        _playerPos = GameManager.Instance.PlayerTransform.CurTile.gridPosition;
 
     }
 
@@ -82,7 +82,7 @@ public class ProjectileMove : MonoBehaviour
     }
     public void CheckObject()
     {
-        List<Tile> checkList = TileUtility.GetLineTile(GameManager.Instance.PlayerTransform.curLevel, GameManager.Instance.PlayerTransform.curTile, _choiceTile, true);
+        List<Tile> checkList = TileUtility.GetLineTile(GameManager.Instance.PlayerTransform.curLevel, GameManager.Instance.PlayerTransform.CurTile, _choiceTile, true);
         foreach (Tile tile in checkList)
         {
             if (tile.CharacterStatsOnTile != null)

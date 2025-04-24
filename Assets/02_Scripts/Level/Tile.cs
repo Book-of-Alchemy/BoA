@@ -80,7 +80,7 @@ public class Tile
         set
         {
             trpaOnTile = value;
-            if (value != null)
+            if (trpaOnTile != null)
                 trpaOnTile.Initialize(this);
         }
     }

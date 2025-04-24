@@ -107,7 +107,7 @@ public class PlayerController : MonoBehaviour
     private void ExecuteMove(Vector2 rawInput)
     {
         //현재 플레이어가 서있는 타일의 격자 좌표 가져오기
-        Vector2Int curCell = _playerStats.curTile.gridPosition;
+        Vector2Int curCell = _playerStats.CurTile.gridPosition;
 
         //rawInput(–1~1 사이 실수 값)을 –1, 0, 1 중 하나로 변환해 격자 한칸 단위 이동 방향(offset)을 결정
         Vector2Int offset = new Vector2Int(
@@ -123,7 +123,7 @@ public class PlayerController : MonoBehaviour
         _lastMoveDirection = offset;
         //목표 좌표 계산
         Vector2Int tgtCell = curCell + offset;
-
+        _spriteRenderer.sortingOrder = -tgtCell.y * 10 + 1;
         //이동 가능한지 판별
         if (!_playerStats.curLevel.tiles.TryGetValue(tgtCell, out var tile)
             || tile.CharacterStatsOnTile != null
@@ -131,10 +131,10 @@ public class PlayerController : MonoBehaviour
             return;
 
         _isMoving = true;
-        _playerStats.curTile.CharacterStatsOnTile = null;// 전 타일 null로 비우기
+        _playerStats.CurTile.CharacterStatsOnTile = null;// 전 타일 null로 비우기
         
         // 새 타일에 등록
-        _playerStats.curTile = tile;
+        _playerStats.CurTile = tile;
         tile.CharacterStatsOnTile = _playerStats;
 
         //월드 좌표로 목적지(dest) 계산후 지정된 이속으로 걸리는 시간 구하기

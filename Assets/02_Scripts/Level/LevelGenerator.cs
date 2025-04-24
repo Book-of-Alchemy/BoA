@@ -529,18 +529,29 @@ public class LevelGenerator : MonoBehaviour
 
             List<Tile> path = AStarPathfinder.FindPath(doorA, doorB, level, false);
 
-            if (path != null || path.Count >= 2)
+            if (path == null)
+                continue;
+
+            if (path.Count >= 2)
             {
                 foreach (var tile in path)
                 {
-                    level.tiles[tile.gridPosition].tileType = TileType.ground;
-                    level.tiles[tile.gridPosition].canSeeThrough = true;
+                    TurnToGroundTile(tile);
                 }
 
                 level.tiles[doorA.gridPosition].isDoorPoint = false;
                 level.tiles[doorB.gridPosition].isDoorPoint = false;
             }
         }
+    }
+
+    void TurnToGroundTile(Tile tile)
+    {
+        if (tile == null) return;
+
+        tile.tileType = TileType.ground;
+        tile.canSeeThrough = true;
+        tile.isOccupied = false;
     }
 
     Tile FindClosestDoorPoint(Leaf leaf, Vector2Int target)
@@ -719,7 +730,7 @@ public class LevelGenerator : MonoBehaviour
             return RoomSizeType.small;
         else if (chance < mediumRoomChance + smallRoomChance)
             return RoomSizeType.medium;
-        else 
+        else
             return RoomSizeType.large;
     }
 

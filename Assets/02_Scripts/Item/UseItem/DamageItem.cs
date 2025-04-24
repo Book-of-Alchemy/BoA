@@ -13,7 +13,7 @@ public class DamageItem : BaseItem
     {
         if(_curTile.CharacterStatsOnTile is PlayerStats)
         {
-            _curTile.itemsOnTile.Remove(this.gameObject.GetComponent<DropItem>());
+            _curTile.itemsOnTile.Remove(this.gameObject.GetComponent<BaseItem>());
             _curTile.onCharacterChanged -= this.gameObject.GetComponent<DropItem>()._handler;
             Destroy(this.gameObject);
         }

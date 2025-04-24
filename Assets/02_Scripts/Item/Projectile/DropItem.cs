@@ -16,11 +16,11 @@ public class DropItem : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _playerPos = GameManager.Instance.PlayerTransform.curTile.gridPosition;
+        _playerPos = GameManager.Instance.PlayerTransform.CurTile.gridPosition;
         transform.position = new Vector3(_playerPos.x, _playerPos.y, 0);
 
-        _curTile = GameManager.Instance.PlayerTransform.curTile;
-        _curTile.itemsOnTile.Add(this.gameObject.GetComponent<DropItem>());
+        _curTile = GameManager.Instance.PlayerTransform.CurTile;
+        _curTile.itemsOnTile.Add(this.gameObject.GetComponent<BaseItem>());
         Debug.Log("아이템 버려짐");
         _handler = () => item.AddItem(itemData);
         _curTile.onCharacterChanged += _handler;
