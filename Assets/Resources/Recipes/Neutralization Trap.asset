@@ -16,7 +16,7 @@ MonoBehaviour:
   recipe_name_kr: "\uBB34\uB825\uD654 \uD568\uC815"
   recipe_name_en: Neutralization Trap
   output_item_id: 200203
-  output_amount: 1
+  output_amount: 5
   material_1_item_id: 201004
   material_1_amount: 1
   material_2_item_id: 201016

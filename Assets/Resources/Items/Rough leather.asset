@@ -28,4 +28,4 @@ MonoBehaviour:
   max_stack: 9999
   iteminfo_kr: "\uC2A4\uD06C\uB864 \uAE30\uBCF8 \uC7AC\uB8CC"
   icon_sprite: Image/Item/Rough leather
-  Sprite: {fileID: 0}
+  Sprite: {fileID: 21300000, guid: 07ffe8628134627459d0552c923da56a, type: 3}

@@ -28,4 +28,4 @@ MonoBehaviour:
   max_stack: 9999
   iteminfo_kr: "\uC0DD\uBA85\uB825 \uD68C\uBCF5 \uAE30\uBCF8 \uC7AC\uB8CC"
   icon_sprite: Image/Item/Red Herb
-  Sprite: {fileID: 0}
+  Sprite: {fileID: 21300000, guid: ab5b6571e24e2de46ba09bb7be0d31ee, type: 3}
