@@ -99,7 +99,7 @@ public class PlayerController : MonoBehaviour
         );
         //공격방향 업데이트 및 실제 공격 호출
         _lastMoveDirection = offset;
-        DoAttack(offset);
+        _animator.PlayAttack();
 
         _attackBufferCoroutine = null;
     }
@@ -152,12 +152,14 @@ public class PlayerController : MonoBehaviour
                 _playerStats.BuffManager.ApplyBuff(-MoveActionCost, 0);
             });
     }
-
+    public void OnAttackHit()
+    {
+        DoAttack(_lastMoveDirection);
+    }
     private void DoAttack(Vector2 dir)
     {
         if (dir.x != 0)
             _spriteRenderer.flipX = dir.x < 0;
-        _animator.PlayAttack();
         PerformAttackRaycast(dir);//지정된 방향으로 레이발사
         _playerStats.BuffManager.ApplyBuff(-MoveActionCost, 0);
     }
