@@ -16,7 +16,7 @@ MonoBehaviour:
   recipe_name_kr: "\uAC04\uC774 \uD3ED\uD0C4"
   recipe_name_en: Makeshift Bomb
   output_item_id: 200002
-  output_amount: 5
+  output_amount: 1
   material_1_item_id: 201003
   material_1_amount: 2
   material_2_item_id: 201004

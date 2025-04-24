@@ -28,4 +28,4 @@ MonoBehaviour:
   max_stack: 99
   iteminfo_kr: "\uC0AC\uC6A9\uC790\uC758 HP\uB97C \uD68C\uBCF5\uD569\uB2C8\uB2E4."
   icon_sprite: Image/Item/Lesser Healing Potion
-  Sprite: {fileID: 21300000, guid: 6e28db45c9e534f4c9f581a631b5d237, type: 3}
+  Sprite: {fileID: 0}

@@ -16,7 +16,7 @@ MonoBehaviour:
   recipe_name_kr: "\uAC04\uC774 \uD568\uC815"
   recipe_name_en: Makeshift Trap
   output_item_id: 200201
-  output_amount: 5
+  output_amount: 1
   material_1_item_id: 201002
   material_1_amount: 3
   material_2_item_id: 201015

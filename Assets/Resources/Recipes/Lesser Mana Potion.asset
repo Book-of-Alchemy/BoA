@@ -16,7 +16,7 @@ MonoBehaviour:
   recipe_name_kr: "\uD558\uAE09 \uB9C8\uB825 \uBB3C\uC57D"
   recipe_name_en: Lesser Mana Potion
   output_item_id: 200302
-  output_amount: 5
+  output_amount: 1
   material_1_item_id: 201004
   material_1_amount: 1
   material_2_item_id: 201010

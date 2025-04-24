@@ -16,7 +16,7 @@ MonoBehaviour:
   recipe_name_kr: "\uAC04\uC774 \uD074\uB808\uC774\uBAA8\uC5B4"
   recipe_name_en: Makeshift Claymore
   output_item_id: 200202
-  output_amount: 5
+  output_amount: 1
   material_1_item_id: 201002
   material_1_amount: 3
   material_2_item_id: 201003

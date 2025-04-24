@@ -86,12 +86,6 @@ public class DownLoader : EditorWindow
         string jsonText = File.ReadAllText(itemJsonSavePath);
         List<ItemData> itemList = JsonConvert.DeserializeObject<List<ItemData>>(jsonText);
 
-        if (AssetDatabase.IsValidFolder(saveItemSOPath)) // 기존 데이터 삭제
-        {
-            FileUtil.DeleteFileOrDirectory(saveItemSOPath);
-            AssetDatabase.Refresh();
-        }
-
         if (!Directory.Exists(saveItemSOPath))
         {
             Directory.CreateDirectory(saveItemSOPath);
@@ -135,12 +129,6 @@ public class DownLoader : EditorWindow
     {
         string jsonText = File.ReadAllText(recipeJsonSavePath);
         List<RecipeData> recipeList = JsonConvert.DeserializeObject<List<RecipeData>>(jsonText);
-
-        if(AssetDatabase.IsValidFolder(saveRecipeSOPath))
-        {
-            FileUtil.DeleteFileOrDirectory(saveRecipeSOPath);
-            AssetDatabase.Refresh();
-        }
 
         if (!Directory.Exists(saveRecipeSOPath))
         {

@@ -16,7 +16,7 @@ MonoBehaviour:
   recipe_name_kr: "\uD22C\uCC99\uC6A9 \uB2E8\uAC80"
   recipe_name_en: Throwing Dagger
   output_item_id: 200001
-  output_amount: 5
+  output_amount: 1
   material_1_item_id: 201001
   material_1_amount: 2
   material_2_item_id: 201002

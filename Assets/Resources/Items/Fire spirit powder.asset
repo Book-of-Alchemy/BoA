@@ -28,4 +28,4 @@ MonoBehaviour:
   max_stack: 9999
   iteminfo_kr: "\uD654\uC5FC \uAE30\uBCF8 \uC7AC\uB8CC"
   icon_sprite: Image/Item/Fire spirit powder
-  Sprite: {fileID: 21300000, guid: d6c48102818d672448fc1d056b0f8628, type: 3}
+  Sprite: {fileID: 0}

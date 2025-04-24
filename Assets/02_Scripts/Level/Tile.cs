@@ -66,7 +66,7 @@ public class Tile
         }
     }
     public MapObject mapObject;
-    public List<BaseItem> itemsOnTile = new List<BaseItem>();
+    public List<DropItem> itemsOnTile = new List<DropItem>();
 
     //위에 올라간 mapObject 인스턴스
 

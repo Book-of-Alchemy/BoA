@@ -28,4 +28,4 @@ MonoBehaviour:
   max_stack: 9999
   iteminfo_kr: "\uAE30\uBCF8 \uC7AC\uB8CC"
   icon_sprite: Image/Item/Wooden Plank
-  Sprite: {fileID: 21300000, guid: 53fe504ecd066af46b22ffc7ca106b01, type: 3}
+  Sprite: {fileID: 0}

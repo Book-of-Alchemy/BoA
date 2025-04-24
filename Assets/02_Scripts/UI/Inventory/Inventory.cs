@@ -155,7 +155,7 @@ public class Inventory : Singleton<Inventory>
         Debug.Log("UseAction");
         //var item = Check(index);
         ////item.UseItem();
-        //ItemManager.Instance.CreateProjectileItem(items[index].itemData);
+        ItemManager.Instance.CreateProjectileItem(items[index].itemData);
 
         RemoveItem(index);
         UIManager.Hide<UI_Action>();

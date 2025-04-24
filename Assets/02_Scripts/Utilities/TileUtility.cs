@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.UI.Image;
 
-public static class TileUtility
+public static class TileUtility 
 {
     /// <summary>
     /// 인접한 타일에 특정 방향의 타일을 반환함 enum fourdir 사용시 4방향에서 받아오기 가능하며 eightdir 사용시 8방향에서 받아오기가능함
@@ -13,7 +13,7 @@ public static class TileUtility
     /// <param name="tile"></param>
     /// <param name="dir"></param>
     /// <returns></returns>
-    public static Tile GetAdjacentTile(Level level, Tile tile, FourDir dir)
+    public static Tile GetAdjacentTile(Level level,Tile tile, FourDir dir)
     {
         if (level == null || tile == null) return null;
         Vector2Int offset = dir switch
@@ -41,7 +41,7 @@ public static class TileUtility
     /// <param name="tile"></param>
     /// <param name="dir"></param>
     /// <returns></returns>
-    public static Tile GetAdjacentTile(Level level, Tile tile, EightDir dir)
+    public static Tile GetAdjacentTile(Level level,Tile tile, EightDir dir)
     {
         if (level == null || tile == null) return null;
         Vector2Int offset = dir switch
@@ -73,7 +73,7 @@ public static class TileUtility
     /// <param name="tile"></param>
     /// <param name="isEightDir"></param>
     /// <returns></returns>
-    public static List<Tile> GetAdjacentTileList(Level level, Tile tile, bool isEightDir = false)
+    public static List<Tile> GetAdjacentTileList(Level level,Tile tile, bool isEightDir = false)
     {
         if (level == null || tile == null) return null;
         if (!isEightDir)
@@ -81,7 +81,7 @@ public static class TileUtility
             List<Tile> checkList = new List<Tile>();
             for (int i = 0; i < Enum.GetValues(typeof(FourDir)).Length; i++)
             {
-                checkList.Add(GetAdjacentTile(level, tile, (FourDir)i));
+                checkList.Add(GetAdjacentTile(level,tile, (FourDir)i));
             }
             return checkList;
         }
@@ -90,25 +90,11 @@ public static class TileUtility
             List<Tile> checkList = new List<Tile>();
             for (int i = 0; i < Enum.GetValues(typeof(EightDir)).Length; i++)
             {
-                checkList.Add(GetAdjacentTile(level, tile, (EightDir)i));
+                checkList.Add(GetAdjacentTile(level,tile, (EightDir)i));
             }
             return checkList;
         }
     }
-
-    public static List<Tile> GetNineTileList(Level level, Tile tile)
-    {
-        if (level == null || tile == null) return null;
-
-        List<Tile> checkList = new List<Tile>();
-        for (int i = 0; i < Enum.GetValues(typeof(EightDir)).Length; i++)
-        {
-            checkList.Add(GetAdjacentTile(level, tile, (EightDir)i));
-        }
-        checkList.Add(tile);
-        return checkList;
-    }
-
     /// <summary>
     /// range반경의 타일리스트를 반환한다 indludeself true 시 자기자신까지 반환 ex_ 아이템 사용 범위 리스트 받을시 제외
     /// </summary>
@@ -211,7 +197,7 @@ public static class TileUtility
 
         foreach (Vector2Int pos in line)
         {
-            if (level.tiles.TryGetValue(pos, out Tile tile))
+            if(level.tiles.TryGetValue(pos, out Tile tile))
                 tiles.Add(tile);
         }
 

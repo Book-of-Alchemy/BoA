@@ -16,7 +16,7 @@ MonoBehaviour:
   recipe_name_kr: "\uD558\uAE09 \uC57D\uD654 \uC2A4\uD06C\uB864"
   recipe_name_en: Lesser Weakening Scroll
   output_item_id: 200103
-  output_amount: 5
+  output_amount: 1
   material_1_item_id: 201006
   material_1_amount: 1
   material_2_item_id: 201008
