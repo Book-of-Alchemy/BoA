@@ -646,110 +646,108 @@ public class LevelGenerator : MonoBehaviour
     }
 
     //임시코드
-    /*public void GenerateMap()
+    public GameObject roomPrefab;
+    public int maxBranches = 5;
+    public int maxDepth = 5;
+    public float roomSpacing = 5f;
+
+    private HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
+
+
+    void GenerateMap(int maxRoomCount)
     {
-        BiomeSet biomeSet;
-        int roomCount = 10;
-        Vector2Int startPos = new Vector2Int(50, 50);
+        Queue<Leaf> roomQueue = new Queue<Leaf>();
+        List<Leaf> generatedRooms = new List<Leaf>();
+        int roomCount = 0;
 
-        Dictionary<Vector2Int, Tile> tiles = new();
-        List<Leaf> rooms = new();
-        Leaf startLeaf;
-        Leaf endLeaf;
+        Leaf firstLeaf = new Leaf();
+        firstLeaf.room = GetRandomRoom();
+        firstLeaf.rect = new RectInt(0, 0, firstLeaf.room.roomSize.x, firstLeaf.room.roomSize.y);
 
-        tiles.Clear();
-        rooms.Clear();
+        roomQueue.Enqueue(firstLeaf);
+        generatedRooms.Add(firstLeaf);
+        roomCount++;
 
-        // 1. Start Room 생성
-        startLeaf = new Leaf(new RectInt(startPos.x, startPos.y, 0, 0));
-        startLeaf.room = GetRandomRoomPreset();
-        startLeaf.rect.size = startLeaf.room.roomSize;
-        rooms.Add(startLeaf);
-
-        // 타일 배치
-        GenerateTilesFromLeaf(startLeaf);
-
-        Queue<Leaf> queue = new();
-        queue.Enqueue(startLeaf);
-
-        // 2. 주변으로 뻗어나가기
-        while (rooms.Count < roomCount && queue.Count > 0)
+        while (roomQueue.Count > 0 && roomCount < maxRoomCount)
         {
-            Leaf current = queue.Dequeue();
-            foreach (Vector2Int dir in GetFourDirections())
-            {
-                if (rooms.Count >= roomCount) break;
+            Leaf current = roomQueue.Dequeue();
+            List<Vector2Int> directions = GetFourDirections();
+            Shuffle(directions);
 
-                Leaf newLeaf = TryPlaceNewRoom(current, dir);
-                if (newLeaf != null)
-                {
-                    rooms.Add(newLeaf);
-                    queue.Enqueue(newLeaf);
-                }
+            foreach (var dir in directions)
+            {
+                if (roomCount >= maxRoomCount)
+                    break;
+
+                RoomPreset nextRoom = GetRandomRoom();
+                Vector2Int offset = GetOffset(current.room.roomSize, nextRoom.roomSize, dir);
+
+                Vector2Int nextPos = new Vector2Int(
+                    current.rect.position.x + offset.x,
+                    current.rect.position.y + offset.y
+                );
+
+                RectInt newRect = new RectInt(nextPos.x, nextPos.y, nextRoom.roomSize.x, nextRoom.roomSize.y);
+
+                // 방이 겹치지 않도록 검사
+                bool overlaps = generatedRooms.Exists(r => r.rect.Overlaps(newRect));
+                if (overlaps)
+                    continue;
+
+                Leaf newLeaf = new Leaf { room = nextRoom, rect = newRect };
+                roomQueue.Enqueue(newLeaf);
+                generatedRooms.Add(newLeaf);
+                roomCount++;
             }
         }
 
-        // 3. 가장 멀리 있는 방을 endLeaf로 설정
-        float maxDist = 0f;
-        foreach (var leaf in rooms)
+        // 생성된 방 리스트 = generatedRooms
+    }
+
+
+    RoomPreset GetRandomRoom()
+    {
+        List<RoomPreset> roomList = curBiomeSet.roomsBySize[GetRandomSizeRoom(0.4f, 0.45f)];
+        return roomList[UnityEngine.Random.Range(0, roomList.Count - 1)];
+    }
+
+    RoomSizeType GetRandomSizeRoom(float smallRoomChance, float mediumRoomChance)
+    {
+        float chance = UnityEngine.Random.value;
+
+        if (chance < smallRoomChance)
+            return RoomSizeType.small;
+        else if (chance < mediumRoomChance + smallRoomChance)
+            return RoomSizeType.medium;
+        else 
+            return RoomSizeType.large;
+    }
+
+    void Shuffle(List<Vector2Int> list)
+    {
+        for (int i = list.Count - 1; i > 0; i--)
         {
-            float dist = Vector2Int.Distance(startLeaf.rect.center, leaf.rect.center);
-            if (dist > maxDist)
-            {
-                maxDist = dist;
-                endLeaf = leaf;
-            }
+            int j = UnityEngine.Random.Range(0, i + 1);
+            Vector2Int temp = list[i];
+            list[i] = list[j];
+            list[j] = temp;
         }
-
-        Debug.Log($"Map Created. Start: {startLeaf.rect.center}, End: {endLeaf.rect.center}");
     }
 
-    Leaf TryPlaceNewRoom(Leaf baseLeaf, Vector2Int direction)
+    Vector2Int GetOffset(Vector2Int fromSize, Vector2Int toSize, Vector2Int direction)
     {
-        RoomPreset newPreset = GetRandomRoomPreset();
-        if (newPreset == null) return null;
+        // 방 사이에 2칸 간격 유지
+        int gap = 2;
 
-        Vector2Int offset = baseLeaf.rect.position + GetRoomOffset(baseLeaf, newPreset.roomSize, direction);
-        RectInt newRect = new RectInt(offset, newPreset.roomSize);
+        if (direction == Vector2Int.up)
+            return new Vector2Int(0, fromSize.y + gap);
+        if (direction == Vector2Int.down)
+            return new Vector2Int(0, -(toSize.y + gap));
+        if (direction == Vector2Int.right)
+            return new Vector2Int(fromSize.x + gap, 0);
+        if (direction == Vector2Int.left)
+            return new Vector2Int(-(toSize.x + gap), 0);
 
-        // 겹침 검사
-        foreach (var room in rooms)
-        {
-            if (newRect.Overlaps(room.rect)) return null;
-        }
-
-        Leaf newLeaf = new Leaf(newRect);
-        newLeaf.room = newPreset;
-        ApplyRoomToTiles(newLeaf);
-        return newLeaf;
+        return Vector2Int.zero;
     }
-
-    Vector2Int GetRoomOffset(Leaf baseLeaf, Vector2Int newSize, Vector2Int dir)
-    {
-        // 방향 따라 방 붙이기
-        if (dir == Vector2Int.right)
-            return new Vector2Int(baseLeaf.rect.xMax + 1, baseLeaf.rect.y);
-        if (dir == Vector2Int.left)
-            return new Vector2Int(baseLeaf.rect.xMin - newSize.x - 1, baseLeaf.rect.y);
-        if (dir == Vector2Int.up)
-            return new Vector2Int(baseLeaf.rect.x, baseLeaf.rect.yMax + 1);
-        return new Vector2Int(baseLeaf.rect.x, baseLeaf.rect.yMin - newSize.y - 1); // down
-    }
-    RoomPreset GetRandomRoomPreset()
-    {
-        RoomSizeType type = GetRandomRoomSizeType();
-        List<RoomPreset> presets = curBiomeSet.GetPresets(type);
-        if (presets.Count == 0) return null;
-        return presets[UnityEngine.Random.Range(0, presets.Count)];
-    }
-
-    RoomSizeType GetRandomRoomSizeType()
-    {
-        float smallSizeChance = 0.4f;
-        float middleSizeChance = 0.45f;
-        float rand = UnityEngine.Random.value;
-        if (rand < smallSizeChance) return RoomSizeType.small;
-        if (rand < smallSizeChance + middleSizeChance) return RoomSizeType.medium;
-        return RoomSizeType.large;
-    }*/
 }
