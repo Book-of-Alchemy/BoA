@@ -13,7 +13,7 @@ public class TurnManager : Singleton<TurnManager>
 {
     public List<UnitBase> allUnits = new List<UnitBase>();
     public int globalTime = 0;
-    public float turnSpeed = 5;//나눈 값을 기준으로 정함 5 = 0.2초 10 = 0.1초 향후 이걸 기준으로 가속 + 도트윈에도 적용
+    public float turnSpeed = 5;//나눈 값을 기준으로 정함 5 = 0.2초 10 = 0.1초 향후 이걸 기준으로 가속 + 도트윈 + 애니메이션에도 적용
     public void StartTurnCycle()
     {
         StartCoroutine(TickLoop());
@@ -21,12 +21,12 @@ public class TurnManager : Singleton<TurnManager>
 
     private IEnumerator TickLoop()
     {
-        WaitForSeconds wait = new WaitForSeconds(1/ turnSpeed);//애니메이션 처리를 위해 적용 향후 이걸 기준으로 가속 + 도트윈에도 적용
+        WaitForSeconds wait = new WaitForSeconds(1/ turnSpeed);//애니메이션 처리를 위해 적용 향후 이걸 기준으로 가속 + 도트윈 + 애니메이션에도 적용
         while (allUnits.Count > 0)
         {
             allUnits.Sort((a, b) => ComparePlayer(a, b));//플레이어를 맨앞으로 같은 턴일시 플레이어를 우선
             // 모든 유닛 버프 디버프
-            foreach (var unit in allUnits)
+            foreach (var unit in allUnits.ToArray())
             {
                 unit.Stats?.TickEffects(globalTime);
             }
@@ -35,16 +35,15 @@ public class TurnManager : Singleton<TurnManager>
             {
                 if (unit.nextActionTime <= globalTime)
                 {
+                    unit.StartTurn();
                     if (unit is PlayerUnit)
                     {
                         PlayerUnit playerUnit = unit as PlayerUnit;
                         yield return new WaitUntil(() => !playerUnit.IsWaitingForInput);
                     }
+
                     int cost = unit.GetModifiedActionCost();
-
                     Debug.Log($"[Tick {globalTime}] {unit.name} 턴 시작 (cost: {cost})");
-
-                    unit.ApplyTurn(cost);
                     unit.nextActionTime += cost;
                         yield return wait;
                 }
@@ -64,7 +63,10 @@ public class TurnManager : Singleton<TurnManager>
         if (!a.IsPlayer && b.IsPlayer) return 1;
         return 0;
     }
-
+    public void AddUnit(UnitBase unit)
+    {
+        unit.Init();
+    }
     public void RemoveUnit(UnitBase unit) => allUnits.Remove(unit);
 
     /*public static TurnManager Instance { get; private set; }

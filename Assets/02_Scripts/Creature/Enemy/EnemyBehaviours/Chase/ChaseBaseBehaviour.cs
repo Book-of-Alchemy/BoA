@@ -6,6 +6,7 @@ using UnityEngine.InputSystem.XR;
 
 public class ChaseBaseBehaviour : BaseBehaviour
 {
+    public override int ActionCost => 10;
     public override void Excute()
     {
         if (StateCheck())

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class IdleBaseBehaviour : BaseBehaviour
 {
+    public override int ActionCost => 10;
     public override void Excute()
     {
         if (StateCheck())

@@ -9,20 +9,29 @@ public abstract class UnitBase : MonoBehaviour
     public int actionCost = 10;
     public float actionCostMultiplier = 1f;
 
-    public CharacterStats Stats => GetComponent<CharacterStats>();
+    public CharacterStats Stats ;
 
+    protected virtual void Awake()
+    {
+        Stats = GetComponent<CharacterStats>();
+    }
+
+    public virtual void Init()
+    {
+        TurnManager.Instance.allUnits.Add(this);
+        currentTime = TurnManager.Instance.globalTime;
+        nextActionTime = currentTime + actionCost;
+    }
     public abstract void PerformAction();
 
-    public int GetModifiedActionCost()
+    public virtual int GetModifiedActionCost()
     {
         return Mathf.Max(1, Mathf.RoundToInt(actionCost * actionCostMultiplier));
     }
 
-    public void ApplyTurn(int cost)
+    public void StartTurn()
     {
-        Stats?.TickEffects(TurnManager.Instance.globalTime); // 틱 중복 보호
         PerformAction();
-        AdvanceTime(cost);
     }
 
     public void AdvanceTime(int cost)

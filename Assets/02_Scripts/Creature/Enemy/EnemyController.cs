@@ -72,6 +72,20 @@ public class EnemyController : MonoBehaviour
 
         TakeTurn(); // 상태 바뀌자마자 바로 행동 즉 실질 행동시작 전에 상태체크를우선해야함
     }
+    /// <summary>
+    /// 각 behaviour 마다 actioncost 반환
+    /// </summary>
+    /// <returns></returns>
+    public int GetCurrentActionCost()
+    {
+        return _currentState switch
+        {
+            EnemyState.Idle => idleBehaviour?.ActionCost ?? 10,
+            EnemyState.Chase => chaseBehaviour?.ActionCost ?? 10,
+            EnemyState.Attack => attackBehaviour?.ActionCost ?? 10,
+            _ => 10
+        };
+    }
 
     private void HandleIdle()
     {
@@ -135,4 +149,6 @@ public class EnemyController : MonoBehaviour
             transform.localScale = scale;
         }
     }
+
+
 }

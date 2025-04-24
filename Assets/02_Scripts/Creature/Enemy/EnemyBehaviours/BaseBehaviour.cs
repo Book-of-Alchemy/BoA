@@ -11,6 +11,7 @@ public interface IBehaviour
 
 public abstract class BaseBehaviour : MonoBehaviour, IBehaviour
 {
+    public abstract int ActionCost { get; }
     protected EnemyController controller;
     protected EnemyStats enemyStats;
     protected Level level => enemyStats.curLevel;

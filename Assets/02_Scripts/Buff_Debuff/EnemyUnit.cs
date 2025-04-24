@@ -14,4 +14,9 @@ public class EnemyUnit : UnitBase
     {
         _controller.TakeTurn();
     }
+
+    public override int GetModifiedActionCost()
+    {
+        return _controller.GetCurrentActionCost();
+    }
 }
