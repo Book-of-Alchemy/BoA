@@ -1,9 +1,40 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BuffManager : MonoBehaviour
+public abstract class UnitBase : MonoBehaviour
 {
-    public float BaseActionPoints = 1.0f; // 기본 액션 포인트
+
+    public int currentTime = 0;
+    public int nextActionTime = 0;
+    public int actionCost = 10;
+    public float actionCostMultiplier = 1f;
+
+    public CharacterStats Stats => GetComponent<CharacterStats>();
+
+    public abstract void PerformAction();
+
+    public int GetModifiedActionCost()
+    {
+        return Mathf.Max(1, Mathf.RoundToInt(actionCost * actionCostMultiplier));
+    }
+
+    public void ApplyTurn(int cost)
+    {
+        Stats?.TickEffects(TurnManager.Instance.globalTime); // 틱 중복 보호
+        PerformAction();
+        AdvanceTime(cost);
+    }
+
+    public void AdvanceTime(int cost)
+    {
+        currentTime = nextActionTime;
+        nextActionTime += cost;
+    }
+
+    public bool IsPlayer => this is PlayerUnit;
+    
+
+    /*public float BaseActionPoints = 1.0f; // 기본 액션 포인트
     public float ActionPoints { get; private set; } // 최종 액션 포인트
 
     private List<BuffEffectInstance> _activeEffects = new List<BuffEffectInstance>();
@@ -78,5 +109,5 @@ public class BuffManager : MonoBehaviour
             _buffPoint = BaseActionPoints + sum;
         }
         ActionPoints = _buffPoint.HasValue ? _buffPoint.Value : BaseActionPoints;
-    }
+    }*/
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public enum TurnState
@@ -8,9 +9,65 @@ public enum TurnState
     EnemyTurn
 }
 
-public class TurnManager : MonoBehaviour
+public class TurnManager : Singleton<TurnManager>
 {
-    public static TurnManager Instance { get; private set; }
+    public List<UnitBase> allUnits = new List<UnitBase>();
+    public int globalTime = 0;
+    public float turnSpeed = 5;//나눈 값을 기준으로 정함 5 = 0.2초 10 = 0.1초 향후 이걸 기준으로 가속 + 도트윈에도 적용
+    public void StartTurnCycle()
+    {
+        StartCoroutine(TickLoop());
+    }
+
+    private IEnumerator TickLoop()
+    {
+        WaitForSeconds wait = new WaitForSeconds(1/ turnSpeed);//애니메이션 처리를 위해 적용 향후 이걸 기준으로 가속 + 도트윈에도 적용
+        while (allUnits.Count > 0)
+        {
+            allUnits.Sort((a, b) => ComparePlayer(a, b));//플레이어를 맨앞으로 같은 턴일시 플레이어를 우선
+            // 모든 유닛 버프 디버프
+            foreach (var unit in allUnits)
+            {
+                unit.Stats?.TickEffects(globalTime);
+            }
+
+            foreach (var unit in allUnits.ToArray()) // 시행중에 add remove발생시 에러 발생 복사한 배열사용
+            {
+                if (unit.nextActionTime <= globalTime)
+                {
+                    if (unit is PlayerUnit)
+                    {
+                        PlayerUnit playerUnit = unit as PlayerUnit;
+                        yield return new WaitUntil(() => !playerUnit.IsWaitingForInput);
+                    }
+                    int cost = unit.GetModifiedActionCost();
+
+                    Debug.Log($"[Tick {globalTime}] {unit.name} 턴 시작 (cost: {cost})");
+
+                    unit.ApplyTurn(cost);
+                    unit.nextActionTime += cost;
+                        yield return wait;
+                }
+            }
+
+
+
+            globalTime++;
+            yield return null;
+        }
+    }
+    private int ComparePlayer(UnitBase a, UnitBase b)
+    {
+        //int result = a.nextActionTime.CompareTo(b.nextActionTime);
+        //if (result != 0) return result;
+        if (a.IsPlayer && !b.IsPlayer) return -1;
+        if (!a.IsPlayer && b.IsPlayer) return 1;
+        return 0;
+    }
+
+    public void RemoveUnit(UnitBase unit) => allUnits.Remove(unit);
+
+    /*public static TurnManager Instance { get; private set; }
 
     public TurnState CurrentTurn;
     public PlayerStats Player;
@@ -75,5 +132,5 @@ public class TurnManager : MonoBehaviour
         _isEnemyTurnRunning = false;
         Debug.Log("복구된 행동력: " + Player.BuffManager.GetFinalActionPoints());
         yield break;
-    }
+    }*/
 }

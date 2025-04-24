@@ -24,7 +24,7 @@ public class DamageItem : BaseItem
 
         _player = GameManager.Instance.PlayerTransform;
         spriteRenderer = GetComponent<SpriteRenderer>();
-        transform.position = new Vector3(_player.curTile.gridPosition.x, _player.curTile.gridPosition.y, 0);
+        transform.position = new Vector3(_player.CurTile.gridPosition.x, _player.CurTile.gridPosition.y, 0);
         SetType(data);
     }
     private void SetType(ItemData data)
@@ -47,7 +47,7 @@ public class DamageItem : BaseItem
         Init(data);
         dropId = data.id;
         dropAmount = amount;
-        _curTile = _player.curTile;
+        _curTile = _player.CurTile;
         _curTile.itemsOnTile.Add(this);
         Debug.Log("아이템 버려짐");
         _handler = () => AddItem(data);
@@ -60,7 +60,7 @@ public class DamageItem : BaseItem
         List<Tile> rangeTiles = CheckRange(data);
 
         if (tile == null)
-            _choiceTile = _player.curTile;
+            _choiceTile = _player.CurTile;
         else
             _choiceTile = tile;
 
@@ -113,11 +113,11 @@ public class DamageItem : BaseItem
     {
         List<Tile> checkRangeTiles = new List<Tile>();
         if (data.target_range == 0)
-            checkRangeTiles = TileUtility.GetVisibleTiles(_player.curLevel, _player.curTile, data.target_range);
+            checkRangeTiles = TileUtility.GetVisibleTiles(_player.curLevel, _player.CurTile, data.target_range);
         else if (data.target_range == 1)
-            checkRangeTiles = TileUtility.GetNineTileList(_player.curLevel, _player.curTile);
+            checkRangeTiles = TileUtility.GetNineTileList(_player.curLevel, _player.CurTile);
         else if (data.target_range >= 2)
-            checkRangeTiles = TileUtility.GetVisibleTiles(_player.curLevel, _player.curTile, data.target_range);
+            checkRangeTiles = TileUtility.GetVisibleTiles(_player.curLevel, _player.CurTile, data.target_range);
 
         ItemManager.Instance.CreateRange(checkRangeTiles);
 

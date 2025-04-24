@@ -45,7 +45,7 @@ public class EnemyController : MonoBehaviour
         _playerStats = GameManager.Instance.PlayerTransform.GetComponent<PlayerStats>();
     }
 
-    public IEnumerator TakeTurn()
+    public void TakeTurn()
     {
         if (_currentTween != null && _currentTween.IsActive()) _currentTween.Kill();
 
@@ -62,8 +62,6 @@ public class EnemyController : MonoBehaviour
                 FlipTowardsPlayer();
                 break;
         }
-
-        yield break;
     }
     public void ChangeState(EnemyState newState)
     {
@@ -72,7 +70,7 @@ public class EnemyController : MonoBehaviour
         if (newState == EnemyState.Chase || newState == EnemyState.Attack)
             FlipTowardsPlayer();
 
-        StartCoroutine(TakeTurn()); // 상태 바뀌자마자 바로 행동 즉 실질 행동시작 전에 상태체크를우선해야함
+        TakeTurn(); // 상태 바뀌자마자 바로 행동 즉 실질 행동시작 전에 상태체크를우선해야함
     }
 
     private void HandleIdle()
