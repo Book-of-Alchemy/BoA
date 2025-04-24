@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
@@ -13,6 +14,7 @@ public class TileManger : Singleton<TileManger>
     public GameObject groundPrefab;
     public GameObject wallPrefab;
     public GameObject environmentalPrefab;
+    PlayerStats player;
 
     private void Start()
     {
@@ -20,7 +22,7 @@ public class TileManger : Singleton<TileManger>
         curLevel = GenerateLevel();
         PaintLevel(curLevel);
         GameManager.Instance.PlayerTransform.GetComponent<CharacterStats>().curLevel = curLevel;
-        foreach( var enemy in GameManager.Instance.Enemies)
+        foreach (var enemy in GameManager.Instance.Enemies)
         {
             if (enemy == null) continue;
 
@@ -29,9 +31,13 @@ public class TileManger : Singleton<TileManger>
             if (curLevel.tiles.TryGetValue(new Vector2Int(Mathf.RoundToInt(enemy.transform.position.x), Mathf.RoundToInt(enemy.transform.position.y)), out Tile targerTile))
             {
                 targerTile.CharacterStatsOnTile = enemy;
-                enemy.curTile = targerTile;
+                enemy.CurTile = targerTile;
             }
         }
+        GameManager.Instance.PlayerTransform.curLevel = curLevel;
+        GameManager.Instance.PlayerTransform.CurTile = curLevel.startTile;
+        GameManager.Instance.PlayerTransform.transform.position = new Vector3(curLevel.startTile.gridPosition.x, curLevel.startTile.gridPosition.y,0);
+        //SpawnPlayer();
     }
 
     public void SetLevelGenerator(BiomeSet biomeSet, int roomCnt, int rootWidth, int rootHeight)
@@ -59,7 +65,21 @@ public class TileManger : Singleton<TileManger>
             curLevelIndex++;
             curLevel = levels[curLevelIndex];
             curLevel.gameObject.SetActive(true);
+            SpawnPlayer();
         }
+    }
+
+    public void SpawnPlayer()
+    {
+        Vector3 spawnPosition = new Vector3(curLevel.startTile.gridPosition.x, curLevel.startTile.gridPosition.y, 0);
+
+        if (player == null)
+            player = Instantiate(SODataManager.Instance.playerPrefab, spawnPosition, Quaternion.identity).GetComponent<PlayerStats>();
+        else
+            player.transform.position = spawnPosition;
+
+        player.curLevel = curLevel;
+        player.CurTile = curLevel.startTile;
     }
 
     public void CompleteQuest()

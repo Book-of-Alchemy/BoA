@@ -3,12 +3,13 @@ using UnityEngine;
 
 public class PlayerStats : CharacterStats
 {
-
+    private PlayerController _player;
     protected override void Awake()
     {
         base.Awake();
         // GameManager에 플레이어 등록
         GameManager.Instance.RegisterPlayer(this);
+        _player = GetComponent<PlayerController>();
     }
 
     public void GainExperience(int exp)
@@ -39,5 +40,11 @@ public class PlayerStats : CharacterStats
     public override void Heal(float amount)
     {
         base.Heal(amount);
+    }
+
+    public override void Die()
+    {
+        base.Die();
+        _player.OnDisable();
     }
 }

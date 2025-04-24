@@ -47,12 +47,12 @@ public static class TilePainter
     private static void SetGroundTile(Tile tile, Level level, List<GroundTileSet> groundTileSets, GameObject groundPrefab)
     {
         GameObject TileGO = UnityEngine.Object.Instantiate(groundPrefab, new Vector3Int(tile.gridPosition.x, tile.gridPosition.y, 0), Quaternion.identity);
-        TilePrefab tilePrefab = TileGO.GetComponent<TilePrefab>();
-        tilePrefab.tile = tile;
+        GroundPrefab tilePrefab = TileGO.GetComponent<GroundPrefab>();
+        tilePrefab.CurTile = tile;
         if (tilePrefab.baseRenderer == null) return;
 
         tilePrefab.baseRenderer.sprite = groundTileSets[0].groundSprite;
-        tilePrefab.baseRenderer.sortingOrder = -1000;
+        tilePrefab.baseRenderer.sortingOrder = -10000;
         TileGO.transform.SetParent(level.transform);
     }
 
@@ -64,16 +64,16 @@ public static class TilePainter
             new Vector3Int(tile.gridPosition.x, tile.gridPosition.y, 0),
             Quaternion.identity
             );
-        TilePrefab tilePrefab = TileGO.GetComponent<TilePrefab>();
-        tilePrefab.tile = tile;
+        GroundPrefab tilePrefab = TileGO.GetComponent<GroundPrefab>();
+        tilePrefab.CurTile = tile;
         if (tilePrefab.baseRenderer == null || tilePrefab.upperRenderer == null) return;
 
         bool isFront = IsFrontWall(tile, level);
         int bitask = CalculateWallBitmask(tile, level);
         tilePrefab.baseRenderer.sprite = wallTileSets[0].GetBaseSprite(bitask, isFront);
         tilePrefab.upperRenderer.sprite = wallTileSets[0].GetUpperSprite(bitask, isFront);
-        tilePrefab.baseRenderer.sortingOrder = -tile.gridPosition.y;
-        tilePrefab.upperRenderer.sortingOrder = -tile.gridPosition.y;
+        tilePrefab.baseRenderer.sortingOrder = -tile.gridPosition.y*10;
+        tilePrefab.upperRenderer.sortingOrder = -tile.gridPosition.y*10;
         TileGO.transform.SetParent(level.transform);
     }
 
@@ -121,7 +121,7 @@ public static class TilePainter
 
         int bitask = CalculateEnvironmentBitmask(tile, level, tile.environmentType);
         tilePrefab.baseRenderer.sprite = environmentalSets[0].GetSprite(bitask);
-        tilePrefab.baseRenderer.sortingOrder = -900;
+        tilePrefab.baseRenderer.sortingOrder = -9000;
         TileGO.transform.SetParent(level.transform);
     }
 

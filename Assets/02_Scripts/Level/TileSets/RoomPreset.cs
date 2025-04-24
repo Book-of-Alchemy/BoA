@@ -11,6 +11,13 @@ public enum RoomType
     boss
 }
 
+public enum RoomSizeType
+{
+    small,
+    medium,
+    large,
+}
+
 [System.Serializable]
 public class TileInfoForRoom
 {
@@ -39,6 +46,7 @@ public class RoomPreset : ScriptableObject
     public string roomName;
     public int biome_id;
     public RoomType roomType;
+    public RoomSizeType roomSizeType;
     public Vector2Int roomSize;
 
 
@@ -51,6 +59,7 @@ public class RoomPreset : ScriptableObject
     private void OnValidate()
     {
         RebuildDictionaryFromTileList();
+        roomSizeType = GetRoomSizeType();
     }
 
     public void RebuildTileListFromDictionary()
@@ -70,6 +79,20 @@ public class RoomPreset : ScriptableObject
         {
             tileInfo[tile.position] = tile;
         }
+    }
+
+    RoomSizeType GetRoomSizeType()
+    {
+        int length = roomSize.x > roomSize.y ? roomSize.x : roomSize.y;
+        RoomSizeType size = (length) switch
+        {
+
+            < 10 => RoomSizeType.small,
+            < 16 => RoomSizeType.medium,
+            _ => RoomSizeType.large,
+        };
+
+        return size;
     }
 }
 

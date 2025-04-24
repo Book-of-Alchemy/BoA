@@ -139,6 +139,56 @@ public static class TileUtility
 
         return rangedTiles;
     }
+    /// <summary>
+    /// 콘타일 리스트
+    /// </summary>
+    /// <param name="level"></param>
+    /// <param name="tile"></param>
+    /// <param name="dir"></param>
+    /// <param name="range"></param>
+    /// <param name="isIncludeSelf"></param>
+    /// <returns></returns>
+    public static List<Tile> GetConeTile(Level level, Tile tile, FourDir dir,int range, bool isIncludeSelf = false)
+    {
+        if (level == null || tile == null) return null;
+        List<Tile> coneTiles = new List<Tile>();
+
+        Vector2Int originPos = tile.gridPosition;
+
+        for (int i = 1; i <= range; i++) // range만큼 앞으로
+        {
+            for (int j = -i + 1; j <= i - 1; j++) // 양옆 확장 (원뿔 모양)
+            {
+                Vector2Int checkPos = originPos;
+
+                switch (dir)
+                {
+                    case FourDir.up:
+                        checkPos += new Vector2Int(j, i);
+                        break;
+                    case FourDir.down:
+                        checkPos += new Vector2Int(j, -i);
+                        break;
+                    case FourDir.left:
+                        checkPos += new Vector2Int(-i, j);
+                        break;
+                    case FourDir.right:
+                        checkPos += new Vector2Int(i, j);
+                        break;
+                }
+
+                if (level.tiles.TryGetValue(checkPos, out Tile t))
+                {
+                    coneTiles.Add(t);
+                }
+            }
+        }
+
+        if (isIncludeSelf)
+            coneTiles.Add(tile);
+
+        return coneTiles;
+    }
 
     /// <summary>
     /// veiwRange 만큼의 범위에서 눈에 보이는 타일리스트를 가져온다
