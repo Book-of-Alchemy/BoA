@@ -29,7 +29,8 @@ public class InputManager : Singleton<InputManager>
     {
         base.Awake();
 
-        _input = new PlayerInputActions();
+        if (_input == null)
+            _input = new PlayerInputActions(); // 런타임 생성
         _mainCam = Camera.main;
 
         _input.PC.Move.performed += ctx => MoveInput = ctx.ReadValue<Vector2>();
@@ -52,7 +53,11 @@ public class InputManager : Singleton<InputManager>
             OnMouseClick?.Invoke(MouseWorldPosition);//vector3 매개변수로 받는 메서드로 추가
         };
     }
-
+    public PlayerInputActions GetInputSafe()
+    {
+        if (_input == null) _input = new PlayerInputActions();
+        return _input;
+    }
     private void OnEnable() => _input.PC.Enable();
     private void OnDisable() => _input.PC.Disable();
 }

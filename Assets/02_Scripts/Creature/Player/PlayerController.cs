@@ -34,13 +34,13 @@ public class PlayerController : MonoBehaviour
         _playerStats = GetComponent<PlayerStats>();
         _animator = GetComponent<CharacterAnimator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        _inputActions = InputManager.Instance._input;
+        _inputActions = InputManager.Instance.GetInputSafe();//lazy init을 통해 inputmanager awake 실행 전이라도 안전하게 가져올수있음
     }
 
     private void OnEnable()
     {
         if (_inputActions == null)
-            _inputActions = InputManager.Instance._input;
+            _inputActions = InputManager.Instance.GetInputSafe();
 
         _inputActions.PC.Move.started += OnMoveStarted;
         _inputActions.PC.Attack.started += OnAttackStarted;
