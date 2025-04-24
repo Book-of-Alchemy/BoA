@@ -44,8 +44,8 @@ public static class TestTilePainter
     private static void SetGroundTile(Tile tile, Level level, List<GroundTileSet> groundTileSets, GameObject groundPrefab)
     {
         GameObject TileGO = UnityEngine.Object.Instantiate(groundPrefab, new Vector3Int(tile.gridPosition.x, tile.gridPosition.y, 0), Quaternion.identity);
-        TilePrefab tilePrefab = TileGO.GetComponent<TilePrefab>();
-        tilePrefab.tile = tile;
+        GroundPrefab tilePrefab = TileGO.GetComponent<GroundPrefab>();
+        tilePrefab.CurTile = tile;
         if (tilePrefab.baseRenderer == null) return;
 
         tilePrefab.baseRenderer.sprite = groundTileSets[0].groundSprite;
@@ -56,8 +56,8 @@ public static class TestTilePainter
     private static void SetWallTile(Tile tile, Level level, List<AutoWallTileSet> wallTileSets, GameObject wallPrefab)
     {
         GameObject TileGO = UnityEngine.Object.Instantiate(wallPrefab, new Vector3Int(tile.gridPosition.x, tile.gridPosition.y, 0), Quaternion.identity);
-        TilePrefab tilePrefab = TileGO.GetComponent<TilePrefab>();
-        tilePrefab.tile = tile;
+        GroundPrefab tilePrefab = TileGO.GetComponent<GroundPrefab>();
+        tilePrefab.CurTile = tile;
         if (tilePrefab.baseRenderer == null || tilePrefab.upperRenderer == null) return;
 
         bool isFront = IsFrontWall(tile, level);

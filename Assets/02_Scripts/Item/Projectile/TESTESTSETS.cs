@@ -12,7 +12,7 @@ public class TESTESTSETS : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        ItemManager.Instance.CreateDropItem(Instantiate(ResourceManager.Instance.typeObjectPrefab, this.transform).GetComponent<DamageItem>());
+        //ItemManager.Instance.CreateDropItem(Instantiate(ResourceManager.Instance.typeObjectPrefab, this.transform).GetComponent<DamageItem>());
 
 
     }

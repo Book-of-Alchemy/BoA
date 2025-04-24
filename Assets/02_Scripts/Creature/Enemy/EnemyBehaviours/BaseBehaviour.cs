@@ -16,8 +16,8 @@ public abstract class BaseBehaviour : MonoBehaviour, IBehaviour
     protected Level level => enemyStats.curLevel;
     protected Tile CurTile
     {
-        get => enemyStats.curTile;
-        set => enemyStats.curTile = value;
+        get => enemyStats.CurTile;
+        set => enemyStats.CurTile = value;
     }
     protected int attackRange => enemyStats.attackRange;
     protected List<Tile> attackRangeTile => (attackRange == 1 ?

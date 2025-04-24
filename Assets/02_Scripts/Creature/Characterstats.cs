@@ -42,8 +42,19 @@ public abstract class CharacterStats : MonoBehaviour
 
     [Header("Level & Tile")]
     public Level curLevel;
-    public Tile curTile;
-    public List<Tile> tilesOnVision => TileUtility.GetVisibleTiles(curLevel, curTile, visionRange);
+    [SerializeField]
+    private Tile curTile;
+    public Tile CurTile
+    {
+        get => curTile;
+        set
+        {
+            TurnOffVision();
+            curTile = value;
+            TurnOnVision();
+        }
+    }
+    public List<Tile> tilesOnVision => TileUtility.GetVisibleTiles(curLevel, CurTile, visionRange);
 
     [Header("속성")]
     public float fire;
@@ -106,13 +117,12 @@ public abstract class CharacterStats : MonoBehaviour
         if (isCrit)
         {
             baseDamage *= critDamage;
-            Debug.Log($"{gameObject.name}가 명존쎄!");
+            Debug.Log($"{gameObject.name}가 치명타!");
         }
 
         float finalDamage = DamageCalculator.CalculateDamage(target, baseDamage, damageType);
         target.TakeDamage(finalDamage);
         Debug.Log($"{gameObject.name}가 {target.gameObject.name}을 공격함니다." + $"속성:{damageType}, 최종 대미지:{finalDamage}");
-        _anim.PlayAttack();
     }
 
     public virtual void TakeDamage(float amount)
@@ -140,13 +150,42 @@ public abstract class CharacterStats : MonoBehaviour
             return;
 
         // 이전 타일 점유 해제
-        if (curTile != null)
-            curTile.CharacterStatsOnTile = null;
+        if (CurTile != null)
+            CurTile.CharacterStatsOnTile = null;
 
         // 새 타일 점유 설정
         targetTile.CharacterStatsOnTile = this;
 
         //curTile 갱신
-        curTile = targetTile;
+        CurTile = targetTile;
+    }
+
+    void TurnOffVision()
+    {
+        if (curTile == null || curLevel == null)
+            return;
+
+        foreach(var tile in tilesOnVision)
+        {
+            if (tile == null) continue;
+
+            tile.IsOnSight = false; 
+        }
+
+    }
+
+    void TurnOnVision()
+    {
+        if (curTile == null || curLevel == null)
+            return;
+
+        foreach (var tile in tilesOnVision)
+        {
+            if (tile == null) continue;
+
+            tile.IsOnSight = true;
+            tile.IsExplored = true;
+        }
+
     }
 }
