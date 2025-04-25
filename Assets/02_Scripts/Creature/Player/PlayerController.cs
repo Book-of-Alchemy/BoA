@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviour
     private PlayerInputActions _inputActions;
     private CharacterAnimator _animator;
     private bool _isMoving;
+    private bool _isCtrlHold;
     //start코루틴이 반환하는 참조들(중복실행방지, 코루틴 관리(버퍼확인)
     private Coroutine _moveBufferCoroutine;
     private Coroutine _attackBufferCoroutine;
@@ -48,6 +49,8 @@ public class PlayerController : MonoBehaviour
         _inputActions.PC.Move.started += OnMoveStarted;
         _inputActions.PC.Attack.started += OnAttackStarted;
         _inputActions.PC.Dash.started += OnDashStarted;
+        _inputActions.PC.Ctrl.performed += OnCtrlPressed;
+        _inputActions.PC.Ctrl.canceled += OnCtrlReleased;
     }
 
     public void OnDisable()
@@ -55,8 +58,11 @@ public class PlayerController : MonoBehaviour
         _inputActions.PC.Move.started -= OnMoveStarted;
         _inputActions.PC.Attack.started -= OnAttackStarted;
         _inputActions.PC.Dash.started -= OnDashStarted;
+        _inputActions.PC.Ctrl.performed -= OnCtrlPressed;
+        _inputActions.PC.Ctrl.canceled -= OnCtrlReleased;
     }
-
+    private void OnCtrlPressed(InputAction.CallbackContext ctx) => _isCtrlHold = true;
+    private void OnCtrlReleased(InputAction.CallbackContext ctx) => _isCtrlHold = false;
 
     /// <summary>
     /// 구독 및 해제를 해줘야하므로 람다식으로 처리시 구독해제가 불가함
@@ -174,7 +180,14 @@ public class PlayerController : MonoBehaviour
             rawInput.x > 0 ? 1 : rawInput.x < 0 ? -1 : 0,
             rawInput.y > 0 ? 1 : rawInput.y < 0 ? -1 : 0
         );
-        
+
+        if (_isCtrlHold)
+        {
+            if (offset.x != 0)
+                _spriteRenderer.flipX = offset.x < 0;
+            _lastMoveDirection = offset;
+            return;
+        }
         //스프라이트 flipx
         if (offset.x != 0)
             _spriteRenderer.flipX = offset.x < 0;
