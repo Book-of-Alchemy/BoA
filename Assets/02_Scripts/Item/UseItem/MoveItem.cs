@@ -8,11 +8,11 @@ public class MoveItem : BaseItem
     {
     }
 
-    public override void DropItem(ItemData data, int amount)
+    public override void DropItem(ItemData data, int amount, Tile dropTile)
     {
     }
 
-    public override void UseItem(ItemData data, Tile tile = null)
+    public override void UseItem(ItemData data)
     {
     }
 }

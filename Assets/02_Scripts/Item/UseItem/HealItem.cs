@@ -8,11 +8,11 @@ public class HealItem : BaseItem
     {
     }
 
-    public override void DropItem(ItemData data, int amount)
+    public override void DropItem(ItemData data, int amount, Tile dropTile)
     {
     }
 
-    public override void UseItem(ItemData data, Tile tile = null)
+    public override void UseItem(ItemData data)
     {
             //// 공격 로직
             //if (targets.Count < 1)
