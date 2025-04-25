@@ -6,8 +6,9 @@ public class EnemyUnit : UnitBase
 {
     EnemyController _controller;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         _controller = GetComponent<EnemyController>();
     }
     public override void PerformAction()
