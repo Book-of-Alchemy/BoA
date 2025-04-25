@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
 public static class AStarPathfinder
@@ -43,7 +43,7 @@ public static class AStarPathfinder
                         parent = current
                     };
 
-                    if (neighborNode.IsWalkable(forPathfinding))
+                    if (neighborNode.IsWalkable(forPathfinding) || neighborNode.tile == goalTile)
                     {
                         openList[neighbor.gridPosition] = neighborNode;
                     }

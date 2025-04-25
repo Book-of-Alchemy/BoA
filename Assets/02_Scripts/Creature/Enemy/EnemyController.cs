@@ -12,7 +12,7 @@ public enum EnemyState
 
 public class EnemyController : MonoBehaviour
 {
-    public float moveSpeed = 3f;
+    public float MoveSpeed => TurnManager.Instance.turnSpeed;
     public float DetectionRange = 10f;
     public EnemyState _currentState = EnemyState.Idle;
     private Tile _lastCheckedTile;
@@ -29,6 +29,7 @@ public class EnemyController : MonoBehaviour
     PlayerStats _playerStats;
     EnemyStats _enemyStats;
     Tween _currentTween;
+    SpriteRenderer _spriteRenderer;
 
     void Awake()
     {
@@ -38,11 +39,13 @@ public class EnemyController : MonoBehaviour
         attackBehaviour = GetComponent<AttackBaseBehaviour>();
         moveStrategy = GetComponent<IMovementStrategy>();
         characterAnimator = GetComponent<CharacterAnimator>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     void Start()
     {
         _playerStats = GameManager.Instance.PlayerTransform.GetComponent<PlayerStats>();
+        _spriteRenderer.sortingOrder = -Mathf.RoundToInt(transform.position.y)*10;
     }
 
     public void TakeTurn()
@@ -106,8 +109,8 @@ public class EnemyController : MonoBehaviour
     public void MoveTo(Vector2Int targetPosition,  Action onComplete = null)
     {
         Vector3 position = new Vector3(targetPosition.x, targetPosition.y, 0);
-
-        if(moveStrategy != null)
+        _spriteRenderer.sortingOrder = -targetPosition.y * 10;
+        if (moveStrategy != null)
             moveStrategy.Move(this.transform , position, characterAnimator, onComplete);
         else
             BasicMove(position, onComplete);
@@ -118,7 +121,7 @@ public class EnemyController : MonoBehaviour
         characterAnimator?.PlayMove();
 
         _currentTween?.Kill(); // 기존 움직임 취소
-        _currentTween = transform.DOMove(targetPosition, 1f / moveSpeed)
+        _currentTween = transform.DOMove(targetPosition, 1f / MoveSpeed)
             .SetEase(Ease.Linear)
             .OnComplete(() =>
             {
