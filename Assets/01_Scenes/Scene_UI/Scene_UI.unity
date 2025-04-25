@@ -421,6 +421,7 @@ GameObject:
   m_Component:
   - component: {fileID: 916698579}
   - component: {fileID: 916698580}
+  - component: {fileID: 916698581}
   m_Layer: 0
   m_Name: InventoryController
   m_TagString: Untagged
@@ -456,13 +457,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _uiInventory: {fileID: 0}
+  _alchemy: {fileID: 916698581}
   itemDataArr:
-  - {fileID: 11400000, guid: f38ce0eb02e8c224e832c8697ea54ae5, type: 2}
   - {fileID: 11400000, guid: dc3c9cdb5d4760941b7524c543778174, type: 2}
   - {fileID: 11400000, guid: 039b46257fb53d14581427340a3f1113, type: 2}
   - {fileID: 11400000, guid: 44faecc9518f2224db5a1db6d841e5f0, type: 2}
   - {fileID: 11400000, guid: 949853599f1569c47be52a142aee1394, type: 2}
   - {fileID: 11400000, guid: 0e54621b7548320448958f282f9e1753, type: 2}
+  - {fileID: 11400000, guid: 217d8f8ad67ae924992b7b54a6be1d3c, type: 2}
+--- !u!114 &916698581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 916698578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cf52c865939c694f8825eecbe5e0204, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resultRecipe: {fileID: 0}
 --- !u!1 &988688590
 GameObject:
   m_ObjectHideFlags: 0

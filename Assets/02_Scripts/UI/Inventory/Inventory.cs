@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Inventory : Singleton<Inventory>
@@ -7,20 +8,25 @@ public class Inventory : Singleton<Inventory>
     private int _capacity = 30; 
 
     [SerializeField] private UI_Inventory _uiInventory; // 아래 배열을 UI 상에 보여주는 UI 인벤토리
+    [SerializeField] private Alchemy _alchemy; // Inspector로 넣ㅇ는중
+
+    private CraftTool _craftTool;
     public InventoryItem[] items; // 실제 아이템 정보가 있는 배열 해당 배열로 정보이동이 이뤄진다.
 
     public ItemData[] itemDataArr; // 테스트용 아이템 데이터 배열]
 
-    private Factory factory = new Factory();
+    private List<InventoryItem> _craftList = new(); 
+
 
     private void Start()
     {
         items = new InventoryItem[_capacity]; // 인벤토리 용량만큼 Data상 용량을 맞춰줌.
     }
 
-    public void Initialize(UI_Inventory inventory) //UI 인벤토리 재생성시 초기화
+    public void Initialize(UI_Inventory inventory,CraftTool craftTool) //UI 인벤토리 재생성시 초기화
     {
         _uiInventory = inventory;
+        _craftTool = craftTool;
 
         for (int i = 0; i < items.Length; i++)
         {
@@ -37,21 +43,21 @@ public class Inventory : Singleton<Inventory>
 
     public void OnClickRemoveItem() //Call at OnClick Event 
     {
-        int index = FindEmptySlotIndex(0, false);
+        int index = FindEmptySlotIndex(0, false); // 비어있지 않은 인덱스 검색
         if(index >=0)
             RemoveItem(index);
     }
 
-    public void Add(ItemData itemData, int amount = 1)
+    public InventoryItem Add(ItemData itemData, int amount = 1, bool isUpdate = true)
     {
         //Add하기전 같은 Id의 아이템이 이미 인벤토리에 있는지 검사하고 있다면 int 리턴
         int index = FindItemId(itemData);
-        if(index >= 0)// 0보다 크거나 같다면 찾음.
+        if(index >= 0)// True라면 찾음
         {
-            //items[index].AddItem(itemData,amount); //겹치기때문에 수량증가
-            items[index].AddBaseItem(itemData,amount);
-            UpdateUISlot(index);
-            return;
+            items[index].AddItem(itemData,amount); //수량증가
+            if(isUpdate)
+                UpdateUISlot(index);
+            return items[index];
         }
 
         //인벤토리에 해당 Id의 아이템이 없음.
@@ -61,25 +67,38 @@ public class Inventory : Singleton<Inventory>
             if (items[index] == null)
                 items[index] = new InventoryItem();
 
-            items[index].AddBaseItem(itemData); //빈 공간에 itemData Add
-            UpdateUISlot(index);
+            items[index].AddItem(itemData); //빈 공간에 itemData Add
+            if(isUpdate)
+                UpdateUISlot(index);
+            return items[index];
         }
         else
         {
             //빈 슬롯을 못찾았다.
+            //가방이 다참.
+            return null;
         }
     }
 
-    private void UpdateUISlot(int index/*,InventoryItem item*/) // 해당하는 인덱스 슬롯 상태 및 UI 갱신
+    private void UpdateUISlot(int index) // 해당하는 인덱스 슬롯 상태 및 UI 갱신
     {
         //아이템 배열 Null체크
         if(items[index] != null)
         {
             //index와 일치하는 ui에 item정보 Set
-            _uiInventory.SetSlotItem(index, items[index]);
-            
+            _uiInventory.SetInventorySlot(index, items[index]);
         }
     }
+
+    private void UpdateUICraft(InventoryItem item) 
+    {
+        _craftTool.UpdateSlot(item);
+    }
+    private void RemoveUICraft()
+    {
+        _craftTool.RemoveAllSlot();
+    }
+
 
     private int FindEmptySlotIndex(int startIndex = 0 , bool emptyCheck = true) //아이템을 넣을 슬롯을 검색하는 함수
     {
@@ -131,8 +150,8 @@ public class Inventory : Singleton<Inventory>
         for (int i = 0; i < _uiInventory.SlotCount; i++)
             _uiInventory.RemoveItem(i); // UI 슬롯 초기화
 
-        for (int i = 0; i < filtered.Length && i < _uiInventory.SlotCount; i++)
-            _uiInventory.SetSlotItem(i, filtered[i]); // UI 슬롯에 재배치
+        for (int i = 0; i < filtered.Length/* && i < _uiInventory.SlotCount*/; i++)
+            _uiInventory.SetInventorySlot(i, filtered[i]); // UI 슬롯에 재배치
     }
 
     public void RestoreBeforeFilter()
@@ -141,52 +160,76 @@ public class Inventory : Singleton<Inventory>
         {
             _uiInventory.RemoveItem(i); // 슬롯 초기화 및 재배치
             if (items[i] != null)
-                _uiInventory.SetSlotItem(i, items[i]);
+                _uiInventory.SetInventorySlot(i, items[i]);
         }
     }
-    public BaseItem Check(int index)
+    //public BaseItem Check(int index)
+    //{
+    //    //var effectType = items[index].itemData.effect_type;
+    //    //return factory.UseItem(effectType, this.transform);
+    //}
+
+    public void CraftReady()
     {
-        var effectType = items[index].itemData.effect_type;
-        return factory.CreateItem(effectType, this.transform);
+        var (boolResult, dataResult,amount) = _alchemy.CreateItem(
+            _craftList[0].itemData, _craftList[0].Amount, _craftList[1].itemData, _craftList[1].Amount);
+
+        if(boolResult)
+        {
+            //성공했을 경우 , 기존 Item에서 Amount만큼 감소를 해야하고 Craft창도 비워야함.
+            _craftTool.RemoveAllSlot();
+            Debug.Log($"{amount}개");
+            InventoryItem resultItem = Add(dataResult,amount,false);
+            _craftTool.CraftComplete(resultItem);
+            _craftList.RemoveAll(slot => slot != null);
+
+        }
+        else
+        {
+            Debug.Log(boolResult);
+        }
+
+        Debug.Log(dataResult);
+
+
     }
 
-    public void Use(int index)
+    public void Use(/*int index*/InventoryItem item)
     {
         Debug.Log("UseAction");
-        //var item = Check(index);
-        ////item.UseItem();
-        ItemManager.Instance.CreateProjectileItem(items[index].itemData);
+        //ItemManager.Instance.CreateProjectileItem(items[index].itemData);
 
-        RemoveItem(index);
+        //RemoveItem(index);
         UIManager.Hide<UI_Action>();
     }
 
-    public void Drop(int index)
+    public void Drop(InventoryItem item)
     {
         Debug.Log("DropAction");
-        RemoveItem(index);
+        //RemoveItem(index);
         UIManager.Hide<UI_Action>();
     }
 
-    public void Craft(int index)
+    public void Craft(InventoryItem item)
     {
-        Debug.Log("CraftAction");
+        //Craft테이블에 item을 같이 넣어야함.
+        _craftList.Add(item);
+        UpdateUICraft(item);
         UIManager.Hide<UI_Action>();
     }
 
-    public void Cancel(int index)
+    public void Cancel(InventoryItem item)
     {
-        Debug.Log("CancelAction");
         UIManager.Hide<UI_Action>();
     }
 
-    public void Equip(int index)
+    public void Equip(InventoryItem item)
     {
         Debug.Log("EquipAction");
         UIManager.Hide<UI_Action>();
     }
 
-    public void UnEquip(int index)
+    public void UnEquip(InventoryItem item)
     {
         Debug.Log("UnEquipAction");
         UIManager.Hide<UI_Action>();

@@ -31,7 +31,8 @@ public class UI_Action : UIBase
         _actionBtn.onClick.RemoveAllListeners();
         _backBtn.onClick.RemoveAllListeners();
 
-        int index = (int)param[2];
+        //int index = (int)param[2];
+        InventoryItem item = (InventoryItem)param[2];
         
         //eUIActionType 타입과 생성위치 RectTransform으로 초기화
         if (param.Length > 0 && param[1] is RectTransform)
@@ -42,15 +43,15 @@ public class UI_Action : UIBase
             {
                 case EUIActionType.Use:
                     SetButtonText("Use","Drop");
-                    AddButton(()=>Inventory.Instance.Use(index), ()=>Inventory.Instance.Drop(index));
+                    AddButton(()=>Inventory.Instance.Use(item), ()=>Inventory.Instance.Drop(item));
                     break;
                 case EUIActionType.Craft:
                     SetButtonText("Craft", "Cancel");
-                    AddButton(() => Inventory.Instance.Craft(index), () => Inventory.Instance.Cancel(index));
+                    AddButton(() => Inventory.Instance.Craft(item), () => Inventory.Instance.Cancel(item));
                     break;
                 case EUIActionType.Equip:
                     SetButtonText("Equip", "UnEquip");
-                    AddButton(()=>Inventory.Instance.Equip(index), () => Inventory.Instance.UnEquip(index));
+                    AddButton(()=>Inventory.Instance.Equip(item), () => Inventory.Instance.UnEquip(item));
                     break;
             }
             SetPosition((RectTransform)param[1]);

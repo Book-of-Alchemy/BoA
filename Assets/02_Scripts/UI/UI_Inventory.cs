@@ -43,6 +43,7 @@ public class UI_Inventory : UIBase
     private Color _unActiveColor = Color.gray;
     private Color _activeColor; 
 
+    private CraftTool _craftTool;
 
     private void Start()
     {
@@ -54,7 +55,7 @@ public class UI_Inventory : UIBase
             slot.OnSelected += OnSlotSelected;
             slot.OnDeselected += OnSlotDeselected;
         }
-
+        
     }
 
     private void InitInventoryType() //시작시 버튼 컬러 초기화
@@ -72,7 +73,8 @@ public class UI_Inventory : UIBase
         if (Inventory.Instance != null)
         {
             _inventory = Inventory.Instance;
-            _inventory.Initialize(this);
+            _craftTool = _toolList[1].GetComponent<CraftTool>();
+            _inventory.Initialize(this,_craftTool);
             _addBtn.onClick.AddListener(_inventory.OnClickAddItem);
             _removeBtn.onClick.AddListener(_inventory.OnClickRemoveItem);
             _sortBtn.onClick.AddListener(() => _inventory.FilterAndDisplay(Item_Type.Material));
@@ -107,7 +109,7 @@ public class UI_Inventory : UIBase
         }
     }
 
-    public void SetSlotItem(int index, InventoryItem item) //슬롯에 아이템 UI 갱신
+    public void SetInventorySlot(int index, InventoryItem item) //슬롯에 아이템 UI 갱신
     {
         _slotUIList[index].SetItem(item);
     }

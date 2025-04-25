@@ -52,7 +52,7 @@ public class Alchemy : MonoBehaviour
         curMaterials.Sort();
         return string.Join("", curMaterials);
     }
-    public (bool, RecipeData) CreateItem(ItemData material1, int material1Amount, ItemData material2, int material2Amount, ItemData material3 = null, int material3Amount = 0)
+    public (bool, ItemData, int) CreateItem(ItemData material1, int material1Amount, ItemData material2, int material2Amount, ItemData material3 = null, int material3Amount = 0)
     {
         List<(ItemData materials, int amount)> materials = new List<(ItemData materials, int amount)>();
         materials.Add((material1, material1Amount));
@@ -64,27 +64,29 @@ public class Alchemy : MonoBehaviour
             resultRecipe = recipeKey[curMaterialKey];
             // 레시피 존재한다면 수량 확인 후 제작
             CheckMaterial(materials[0], resultRecipe);
-            if (isReady == false) return (isReady, null);
+            if (isReady == false) return (isReady, null,0);
             CheckMaterial(materials[1], resultRecipe);
-            if (isReady == false) return (isReady, null);
+            if (isReady == false) return (isReady, null, 0);
             CheckMaterial(materials[2], resultRecipe);
-            if (isReady == false) return (isReady, null);
+            if (isReady == false) return (isReady, null, 0);
         }
         else 
         {
             Debug.Log("레시피가 없습니다.");
-            return (isReady, null);
+            return (isReady, null, 0);
         }
 
         if (isReady)
         {
             Debug.Log($"제작 성공 {resultRecipe.recipe_name_kr} : {resultRecipe.output_amount} ");
-            return (isReady, resultRecipe); 
+            ItemData item = ResourceManager.Instance.dicItemData[resultRecipe.output_item_id];
+            int amount = resultRecipe.output_amount;
+            return (isReady, item, amount); 
         }
         else
         {
             Debug.Log("제작 실패");
-            return (isReady, null);
+            return (isReady, null, 0);
         }
         // 레시피 결과물 리턴 추가
 
