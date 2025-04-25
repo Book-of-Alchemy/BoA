@@ -7,8 +7,9 @@ public class PlayerUnit : UnitBase
     PlayerController controller;
     private bool isActionDone = false;
     public bool IsWaitingForInput => !isActionDone;
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         controller = GetComponent<PlayerController>();
         
     }

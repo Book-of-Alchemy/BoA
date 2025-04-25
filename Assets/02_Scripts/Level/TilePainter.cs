@@ -79,7 +79,9 @@ public static class TilePainter
 
     private static bool IsFrontWall(Tile tile, Level level)
     {
-        return TileUtility.GetAdjacentTile(level, tile, FourDir.down).tileType == TileType.ground;
+        Tile down = TileUtility.GetAdjacentTile(level, tile, FourDir.down);
+        if (down == null) return false;
+        return down.tileType == TileType.ground;
     }
 
     public static int CalculateWallBitmask(Tile tile, Level level)

@@ -121,16 +121,20 @@ public static class TileUtility
     {
         if (level == null || tile == null) return null;
         List<Tile> rangedTiles = new List<Tile>();
+        Vector2Int origin = tile.gridPosition;
 
-        foreach (var kvp in level.tiles)
+        for (int dx = -range; dx <= range; dx++)
         {
-            Tile target = kvp.Value;
-            int dist = Mathf.Abs(target.gridPosition.x - tile.gridPosition.x) +
-                       Mathf.Abs(target.gridPosition.y - tile.gridPosition.y);
-
-            if (dist <= range)
+            for (int dy = -range; dy <= range; dy++)
             {
-                rangedTiles.Add(target);
+                int dist = Mathf.Abs(dx) + Mathf.Abs(dy);
+                if (dist > range) continue;
+
+                Vector2Int pos = new Vector2Int(origin.x + dx, origin.y + dy);
+                if (level.tiles.TryGetValue(pos, out Tile target))
+                {
+                    rangedTiles.Add(target);
+                }
             }
         }
 
@@ -148,7 +152,7 @@ public static class TileUtility
     /// <param name="range"></param>
     /// <param name="isIncludeSelf"></param>
     /// <returns></returns>
-    public static List<Tile> GetConeTile(Level level, Tile tile, FourDir dir,int range, bool isIncludeSelf = false)
+    public static List<Tile> GetConeTile(Level level, Tile tile, FourDir dir, int range, bool isIncludeSelf = false)
     {
         if (level == null || tile == null) return null;
         List<Tile> coneTiles = new List<Tile>();
@@ -202,22 +206,43 @@ public static class TileUtility
     {
         if (level == null || tile == null) return null;
         List<Tile> visibleTiles = new List<Tile>();
-
-        foreach (var tilePair in level.tiles)
+        List<Tile> rangedTiles = GetRangedTile(level, tile, viewRange, true);
+        foreach (var t in rangedTiles)
         {
-            Tile target = tilePair.Value;
-            int dist = Mathf.Abs(target.gridPosition.x - tile.gridPosition.x) +
-                       Mathf.Abs(target.gridPosition.y - tile.gridPosition.y);
-
-            if (dist <= viewRange && IsTileVisible(level, tile, target))
+            if (IsTileVisible(level, tile, t))
             {
-                visibleTiles.Add(target);
+                visibleTiles.Add(t);
             }
         }
 
         return visibleTiles;
     }
 
+    /// <summary>
+    /// 아이템 사용시 사거리용 타일리스트
+    /// 자기자신 포함 미포함 가능
+    /// 아이템 범위 = 사거리내 + 블락당하지 않는 타일까지
+    /// 시야 = 사거리내 + 블락당하는 타일까지  
+    /// </summary>
+    /// <param name="level"></param>
+    /// <param name="tile"></param>
+    /// <param name="viewRange"></param>
+    /// <returns></returns>
+    public static List<Tile> GetItemRangedTile(Level level, Tile tile, int viewRange, bool isIncludeSelf = false)
+    {
+        if (level == null || tile == null) return null;
+        List<Tile> visibleTiles = new List<Tile>();
+        List<Tile> rangedTiles = GetRangedTile(level, tile, viewRange, isIncludeSelf);
+        foreach (var t in rangedTiles)
+        {
+            if (IsPathClear(level, tile, t))
+            {
+                visibleTiles.Add(t);
+            }
+        }
+
+        return visibleTiles;
+    }
     /// <summary>
     /// 1자로 선을 그은뒤 해당 타일까지 도달하는데 seethrough false인 타일이 있는지 검사함
     /// </summary>
@@ -245,6 +270,22 @@ public static class TileUtility
         return true;
     }
 
+    public static bool IsPathClear(Level level, Tile origin, Tile target)
+    {
+        List<Vector2Int> line = GetLine(origin.gridPosition, target.gridPosition);
+
+        foreach (Vector2Int pos in line)
+        {
+            if (level.tiles.TryGetValue(pos, out Tile tile))
+            {
+                if (!tile.canSeeThrough)
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
     /// <summary>
     /// 타일상에 레스터로된 1자선을 그어줌
     /// </summary>

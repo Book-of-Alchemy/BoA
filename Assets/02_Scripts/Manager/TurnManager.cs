@@ -14,6 +14,15 @@ public class TurnManager : Singleton<TurnManager>
     public List<UnitBase> allUnits = new List<UnitBase>();
     public int globalTime = 0;
     public float turnSpeed = 5;//나눈 값을 기준으로 정함 5 = 0.2초 10 = 0.1초 향후 이걸 기준으로 가속 + 도트윈 + 애니메이션에도 적용
+
+    private void Start()//테스트용 임시코드
+    {
+        foreach (var unit in FindObjectsOfType<UnitBase>())
+        {
+            TurnManager.Instance.AddUnit(unit); 
+        }
+        TurnManager.Instance.StartTurnCycle();
+    }
     public void StartTurnCycle()
     {
         StartCoroutine(TickLoop());
