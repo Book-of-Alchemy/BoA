@@ -12,6 +12,9 @@ public class PlayerController : MonoBehaviour
     public LayerMask UnitLayer;
     public LayerMask ObstacleLayer;
     public float InputBufferDuration = 0.1f;
+    public float DashSpeed = 10f;      // 대시 속도
+    public int DashDistance = 3;     // 최대 대시 거리
+    private Coroutine _dashBufferCoroutine;
 
     private PlayerStats _playerStats;
     private PlayerInputActions _inputActions;
@@ -20,7 +23,7 @@ public class PlayerController : MonoBehaviour
     //start코루틴이 반환하는 참조들(중복실행방지, 코루틴 관리(버퍼확인)
     private Coroutine _moveBufferCoroutine;
     private Coroutine _attackBufferCoroutine;
-
+    
     private Vector2 _lastMoveDirection = Vector2.right;// 캐릭터 방향에 따라 미리 초기화
     private SpriteRenderer _spriteRenderer;
     public event Action onActionConfirmed;//액션 선택시 실행 즉 현재 perform move perform attack 시작시 실행하면 됨
@@ -44,12 +47,14 @@ public class PlayerController : MonoBehaviour
 
         _inputActions.PC.Move.started += OnMoveStarted;
         _inputActions.PC.Attack.started += OnAttackStarted;
+        _inputActions.PC.Dash.started += OnDashStarted;
     }
 
     public void OnDisable()
     {
         _inputActions.PC.Move.started -= OnMoveStarted;
         _inputActions.PC.Attack.started -= OnAttackStarted;
+        _inputActions.PC.Dash.started -= OnDashStarted;
     }
 
 
@@ -79,6 +84,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnDashStarted(InputAction.CallbackContext ctx)
+    {
+        if (!isPlayerTurn || _dashBufferCoroutine != null) return;
+        _dashBufferCoroutine = StartCoroutine(BufferAndDash());
+    }
 
     //이동 버퍼 코루틴
     private IEnumerator BufferAndMove()
@@ -131,9 +141,31 @@ public class PlayerController : MonoBehaviour
         _attackBufferCoroutine = null;
     }
 
+    private IEnumerator BufferAndDash()
+    {
+        float elapsed = 0f;
+        Vector2 buf = Vector2.zero;
+        while (elapsed < InputBufferDuration)
+        {
+            Vector2 cur = _inputActions.PC.Move.ReadValue<Vector2>();
+            if (cur != Vector2.zero) buf = cur;
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        // 버퍼된 방향이 없으면 마지막 방향 사용
+        Vector2 raw = buf != Vector2.zero ? buf : _lastMoveDirection;
+        Vector2Int offset = new Vector2Int(
+            raw.x > 0 ? 1 : raw.x < 0 ? -1 : 0,
+            raw.y > 0 ? 1 : raw.y < 0 ? -1 : 0
+        );
+
+        DoDash(offset);
+        _dashBufferCoroutine = null;
+    }
+
     private void ExecuteMove(Vector2 rawInput)
     {
-        onActionConfirmed?.Invoke();
         //현재 플레이어가 서있는 타일의 격자 좌표 가져오기
         Vector2Int curCell = _playerStats.CurTile.gridPosition;
 
@@ -168,7 +200,7 @@ public class PlayerController : MonoBehaviour
         //월드 좌표로 목적지(dest) 계산후 지정된 이속으로 걸리는 시간 구하기
         Vector3 dest = new Vector3(tgtCell.x, tgtCell.y, 0f);
         float duration = Vector3.Distance(transform.position, dest) / MoveSpeed;
-
+        onActionConfirmed?.Invoke();
         //이동 애니메이션 재생및 움직임(행동력 소모)
         _animator.PlayMove();
         transform
@@ -214,5 +246,40 @@ public class PlayerController : MonoBehaviour
                 _playerStats.Attack(enemyStats);
             }
         }
+    }
+    // 실제 대시 실행 메서드
+    private void DoDash(Vector2Int offset)
+    {
+        onActionConfirmed?.Invoke();
+        _animator.PlayMove();
+        if (offset.x != 0) _spriteRenderer.flipX = offset.x < 0;
+
+        // 시작 위치
+        var start = _playerStats.CurTile.gridPosition;
+        var end = start;
+
+        // 최대 DashDistance만큼 검사하며 이동 가능 타일까지 end 갱신
+        for (int i = 1; i <= DashDistance; i++)
+        {
+            var next = start + offset * i;
+            if (!_playerStats.curLevel.tiles.TryGetValue(next, out var t)) break;
+            if (!t.IsWalkable || t.CharacterStatsOnTile != null) break;
+            // TODO: 함정·디버프·이벤트 판별 로직 추가
+            end = next;
+        }
+
+        if (end == start) return;
+
+        _isMoving = true;
+        _playerStats.CurTile.CharacterStatsOnTile = null;
+        _playerStats.CurTile = _playerStats.curLevel.tiles[end];
+        _playerStats.CurTile.CharacterStatsOnTile = _playerStats;
+
+        Vector3 dest = new Vector3(end.x, end.y, 0f);
+        float duration = Vector3.Distance(transform.position, dest) / DashSpeed;
+        transform
+            .DOMove(dest, duration)
+            .SetEase(Ease.Linear)
+            .OnComplete(() => { _isMoving = false; });
     }
 }
