@@ -11,13 +11,14 @@ public interface IBehaviour
 
 public abstract class BaseBehaviour : MonoBehaviour, IBehaviour
 {
+    public abstract int ActionCost { get; }
     protected EnemyController controller;
     protected EnemyStats enemyStats;
     protected Level level => enemyStats.curLevel;
     protected Tile CurTile
     {
-        get => enemyStats.curTile;
-        set => enemyStats.curTile = value;
+        get => enemyStats.CurTile;
+        set => enemyStats.CurTile = value;
     }
     protected int attackRange => enemyStats.attackRange;
     protected List<Tile> attackRangeTile => (attackRange == 1 ?

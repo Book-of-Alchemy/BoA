@@ -42,10 +42,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1099770130080303480}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 356bb109c8e7de644a98ef26d01dec55, type: 3}
+  m_Script: {fileID: 11500000, guid: a0e9d91b57b756d478b022765d0f5586, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tile:
+  curTile:
+    curLevel: {fileID: 0}
     gridPosition: {x: 0, y: 0}
     tileType: 0
     environmentType: 0
@@ -54,7 +55,9 @@ MonoBehaviour:
     canSeeThrough: 1
     isExplored: 0
     isOnSight: 0
-    characterStats: {fileID: 0}
+    trpaOnTile: {fileID: 0}
+    mapObject: {fileID: 0}
+    itemsOnTile: []
   baseRenderer: {fileID: 5419223133562246348}
   upperRenderer: {fileID: 0}
 --- !u!1 &2322141492289332308

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class AttackBaseBehaviour : BaseBehaviour
 {
+    public override int ActionCost => 10;
     protected PlayerStats playetStats;
     public override void Excute()
     {

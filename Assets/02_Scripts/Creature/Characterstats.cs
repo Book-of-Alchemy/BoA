@@ -5,6 +5,8 @@ using UnityEngine;
 
 public abstract class CharacterStats : MonoBehaviour
 {
+    [Header("버프 디버프")]//위치 아래로 내릴것
+    public List<StatusEffect> activeEffects = new();
     [Header("기본 스탯")]
     public int level = 1;
     public int experience = 0;
@@ -42,8 +44,19 @@ public abstract class CharacterStats : MonoBehaviour
 
     [Header("Level & Tile")]
     public Level curLevel;
-    public Tile curTile;
-    public List<Tile> tilesOnVision => TileUtility.GetVisibleTiles(curLevel, curTile, visionRange);
+    [SerializeField]
+    private Tile curTile;
+    public Tile CurTile
+    {
+        get => curTile;
+        set
+        {
+            TurnOffVision();
+            curTile = value;
+            TurnOnVision();
+        }
+    }
+    public List<Tile> tilesOnVision => TileUtility.GetVisibleTiles(curLevel, CurTile, visionRange);
 
     [Header("속성")]
     public float fire;
@@ -55,7 +68,7 @@ public abstract class CharacterStats : MonoBehaviour
     public float light;
     public float dark;
 
-    public BuffManager BuffManager { get; protected set; }
+    public UnitBase BuffManager { get; protected set; }
     private CharacterAnimator _anim;
 
     //체력 변경 이벤트
@@ -94,7 +107,7 @@ public abstract class CharacterStats : MonoBehaviour
     protected virtual void Awake()
     {
         _anim = GetComponent<CharacterAnimator>();
-        BuffManager = GetComponent<BuffManager>() ?? gameObject.AddComponent<BuffManager>();
+        BuffManager = GetComponent<UnitBase>() ?? gameObject.AddComponent<UnitBase>();
     }
 
     public virtual void Attack(CharacterStats target, DamageType damageType = DamageType.None)
@@ -139,13 +152,64 @@ public abstract class CharacterStats : MonoBehaviour
             return;
 
         // 이전 타일 점유 해제
-        if (curTile != null)
-            curTile.CharacterStatsOnTile = null;
+        if (CurTile != null)
+            CurTile.CharacterStatsOnTile = null;
 
         // 새 타일 점유 설정
         targetTile.CharacterStatsOnTile = this;
 
         //curTile 갱신
-        curTile = targetTile;
+        CurTile = targetTile;
+    }
+
+    void TurnOffVision()
+    {
+        if (curTile == null || curLevel == null)
+            return;
+
+        foreach(var tile in tilesOnVision)
+        {
+            if (tile == null) continue;
+
+            tile.IsOnSight = false; 
+        }
+
+    }
+
+    void TurnOnVision()
+    {
+        if (curTile == null || curLevel == null)
+            return;
+
+        foreach (var tile in tilesOnVision)
+        {
+            if (tile == null) continue;
+
+            tile.IsOnSight = true;
+            tile.IsExplored = true;
+        }
+
+    }
+
+    public void ApplyEffect(StatusEffect effect)
+    {
+        effect.Initialize(TurnManager.Instance.globalTime);
+        activeEffects.Add(effect);
+        effect.OnApply(this);
+        Debug.Log($"{name}에게 {effect.Name} 적용됨");
+    }
+
+    public void TickEffects(int globalTime)
+    {
+        for (int i = activeEffects.Count - 1; i >= 0; i--)
+        {
+            activeEffects[i].TryTick(globalTime, this);
+            if (activeEffects[i].IsExpired)
+            {
+                activeEffects[i].OnExpire(this);
+                Debug.Log($"{name}의 {activeEffects[i].Name} 해제됨");
+                activeEffects.RemoveAt(i);
+            }
+        }
     }
 }

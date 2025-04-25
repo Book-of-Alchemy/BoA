@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
+
 
 public class LevelGenerator : MonoBehaviour
 {
@@ -81,7 +83,7 @@ public class LevelGenerator : MonoBehaviour
 
         foreach (var leaf in seletedLeaves)
         {
-            foreach(var tile in leaf.trapPoint)
+            foreach (var tile in leaf.trapPoint)
             {
                 level.trapPoint.Add(tile);
             }
@@ -451,21 +453,21 @@ public class LevelGenerator : MonoBehaviour
 
     void PlaceTrapsInRoom(Leaf leaf, Dictionary<Vector2Int, Tile> tiles)
     {
-        if (leaf.room == null || leaf.centerTile == null ) return;
+        if (leaf.room == null || leaf.centerTile == null) return;
 
-        if(leaf.roomType == RoomType.secret || leaf.roomType == RoomType.treasure || leaf.roomType == RoomType.trap) return;
+        if (leaf.roomType == RoomType.secret || leaf.roomType == RoomType.treasure || leaf.roomType == RoomType.trap) return;
 
         int spawnQuantity = (leaf.leafSizeType) switch
         {
             LeafSizeType.small => UnityEngine.Random.Range(0, 1),
-            LeafSizeType.medium => UnityEngine.Random.Range(1,2),
-            LeafSizeType.large => UnityEngine.Random.Range(2,3),
+            LeafSizeType.medium => UnityEngine.Random.Range(1, 2),
+            LeafSizeType.large => UnityEngine.Random.Range(2, 3),
             _ => 0
         };
 
         List<Tile> candidates = new List<Tile>();
 
-        foreach(var kvp in tiles)
+        foreach (var kvp in tiles)
         {
             if (!kvp.Value.isOccupied)
                 candidates.Add(kvp.Value);
@@ -476,10 +478,10 @@ public class LevelGenerator : MonoBehaviour
 
         for (int i = 0; i < spawnQuantity; i++)
         {
-            if (UnityEngine.Random.value > spawnRate) 
+            if (UnityEngine.Random.value > spawnRate)
                 continue;
 
-            if (candidates.Count == 0) 
+            if (candidates.Count == 0)
                 break;
 
             Tile targetTile = candidates[UnityEngine.Random.Range(0, candidates.Count)];
@@ -527,18 +529,29 @@ public class LevelGenerator : MonoBehaviour
 
             List<Tile> path = AStarPathfinder.FindPath(doorA, doorB, level, false);
 
-            if (path != null || path.Count >= 2)
+            if (path == null)
+                continue;
+
+            if (path.Count >= 2)
             {
                 foreach (var tile in path)
                 {
-                    level.tiles[tile.gridPosition].tileType = TileType.ground;
-                    level.tiles[tile.gridPosition].canSeeThrough = true;
+                    TurnToGroundTile(tile);
                 }
 
                 level.tiles[doorA.gridPosition].isDoorPoint = false;
                 level.tiles[doorB.gridPosition].isDoorPoint = false;
             }
         }
+    }
+
+    void TurnToGroundTile(Tile tile)
+    {
+        if (tile == null) return;
+
+        tile.tileType = TileType.ground;
+        tile.canSeeThrough = true;
+        tile.isOccupied = false;
     }
 
     Tile FindClosestDoorPoint(Leaf leaf, Vector2Int target)
@@ -569,8 +582,8 @@ public class LevelGenerator : MonoBehaviour
         if (tile.tileType != TileType.ground) return;
 
         Dictionary<Vector2Int, Tile> tiles = level.tiles;
-        List<Tile> checkList = TileUtility.GetAdjacentTileList(level,tile, true);
-        List<Vector2Int> directions = GetEightDirectionOffsets(); // 방향 목록
+        List<Tile> checkList = TileUtility.GetAdjacentTileList(level, tile, true);
+        List<Vector2Int> directions = GetEightDirection(); // 방향 목록
 
         for (int i = 0; i < checkList.Count; i++)
         {
@@ -594,18 +607,28 @@ public class LevelGenerator : MonoBehaviour
         }
     }
 
-    List<Vector2Int> GetEightDirectionOffsets()
+    List<Vector2Int> GetFourDirections()
+    {
+        return new List<Vector2Int>
+        {
+            new Vector2Int(1, 0),
+            new Vector2Int(-1, 0),
+            new Vector2Int(0, 1),
+            new Vector2Int(0, -1)
+        };
+    }
+    List<Vector2Int> GetEightDirection()
     {
         return new List<Vector2Int>
     {
-        new Vector2Int(0, 1),    // 위
-        new Vector2Int(1, 1),    // 우상
-        new Vector2Int(1, 0),    // 오른쪽
-        new Vector2Int(1, -1),   // 우하
-        new Vector2Int(0, -1),   // 아래
-        new Vector2Int(-1, -1),  // 좌하
-        new Vector2Int(-1, 0),   // 왼쪽
-        new Vector2Int(-1, 1)    // 좌상
+        new Vector2Int(0, 1),
+        new Vector2Int(1, 1),
+        new Vector2Int(1, 0),
+        new Vector2Int(1, -1),
+        new Vector2Int(0, -1),
+        new Vector2Int(-1, -1),
+        new Vector2Int(-1, 0),
+        new Vector2Int(-1, 1)
     };
     }
 
@@ -626,11 +649,116 @@ public class LevelGenerator : MonoBehaviour
     }
 
     void SetLevelOnTiles(Dictionary<Vector2Int, Tile> tiles, Level level)
-    { 
-        foreach(var kvp in tiles)
+    {
+        foreach (var kvp in tiles)
         {
             kvp.Value.curLevel = level;
         }
     }
 
+    //임시코드
+    public GameObject roomPrefab;
+    public int maxBranches = 5;
+    public int maxDepth = 5;
+    public float roomSpacing = 5f;
+
+    private HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
+
+
+    void GenerateMap(int maxRoomCount)
+    {
+        Queue<Leaf> roomQueue = new Queue<Leaf>();
+        List<Leaf> generatedRooms = new List<Leaf>();
+        int roomCount = 0;
+
+        Leaf firstLeaf = new Leaf();
+        firstLeaf.room = GetRandomRoom();
+        firstLeaf.rect = new RectInt(0, 0, firstLeaf.room.roomSize.x, firstLeaf.room.roomSize.y);
+
+        roomQueue.Enqueue(firstLeaf);
+        generatedRooms.Add(firstLeaf);
+        roomCount++;
+
+        while (roomQueue.Count > 0 && roomCount < maxRoomCount)
+        {
+            Leaf current = roomQueue.Dequeue();
+            List<Vector2Int> directions = GetFourDirections();
+            Shuffle(directions);
+
+            foreach (var dir in directions)
+            {
+                if (roomCount >= maxRoomCount)
+                    break;
+
+                RoomPreset nextRoom = GetRandomRoom();
+                Vector2Int offset = GetOffset(current.room.roomSize, nextRoom.roomSize, dir);
+
+                Vector2Int nextPos = new Vector2Int(
+                    current.rect.position.x + offset.x,
+                    current.rect.position.y + offset.y
+                );
+
+                RectInt newRect = new RectInt(nextPos.x, nextPos.y, nextRoom.roomSize.x, nextRoom.roomSize.y);
+
+                // 방이 겹치지 않도록 검사
+                bool overlaps = generatedRooms.Exists(r => r.rect.Overlaps(newRect));
+                if (overlaps)
+                    continue;
+
+                Leaf newLeaf = new Leaf { room = nextRoom, rect = newRect };
+                roomQueue.Enqueue(newLeaf);
+                generatedRooms.Add(newLeaf);
+                roomCount++;
+            }
+        }
+
+        // 생성된 방 리스트 = generatedRooms
+    }
+
+
+    RoomPreset GetRandomRoom()
+    {
+        List<RoomPreset> roomList = curBiomeSet.roomsBySize[GetRandomSizeRoom(0.4f, 0.45f)];
+        return roomList[UnityEngine.Random.Range(0, roomList.Count - 1)];
+    }
+
+    RoomSizeType GetRandomSizeRoom(float smallRoomChance, float mediumRoomChance)
+    {
+        float chance = UnityEngine.Random.value;
+
+        if (chance < smallRoomChance)
+            return RoomSizeType.small;
+        else if (chance < mediumRoomChance + smallRoomChance)
+            return RoomSizeType.medium;
+        else
+            return RoomSizeType.large;
+    }
+
+    void Shuffle(List<Vector2Int> list)
+    {
+        for (int i = list.Count - 1; i > 0; i--)
+        {
+            int j = UnityEngine.Random.Range(0, i + 1);
+            Vector2Int temp = list[i];
+            list[i] = list[j];
+            list[j] = temp;
+        }
+    }
+
+    Vector2Int GetOffset(Vector2Int fromSize, Vector2Int toSize, Vector2Int direction)
+    {
+        // 방 사이에 2칸 간격 유지
+        int gap = 2;
+
+        if (direction == Vector2Int.up)
+            return new Vector2Int(0, fromSize.y + gap);
+        if (direction == Vector2Int.down)
+            return new Vector2Int(0, -(toSize.y + gap));
+        if (direction == Vector2Int.right)
+            return new Vector2Int(fromSize.x + gap, 0);
+        if (direction == Vector2Int.left)
+            return new Vector2Int(-(toSize.x + gap), 0);
+
+        return Vector2Int.zero;
+    }
 }

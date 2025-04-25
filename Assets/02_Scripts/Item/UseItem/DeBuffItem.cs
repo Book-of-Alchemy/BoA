@@ -8,11 +8,11 @@ public class DeBuffItem : BaseItem
     {
     }
 
-    public override void DropItem(ItemData data)
+    public override void DropItem(ItemData data, int amount)
     {
     }
 
-    public override void UseItem(ItemData data)
+    public override void UseItem(ItemData data, Tile tile = null)
     {
     }
 }

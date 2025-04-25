@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using DG.Tweening;
+using System;
 
 [RequireComponent(typeof(PlayerStats))]
 public class PlayerController : MonoBehaviour
@@ -22,36 +23,62 @@ public class PlayerController : MonoBehaviour
 
     private Vector2 _lastMoveDirection = Vector2.right;// 캐릭터 방향에 따라 미리 초기화
     private SpriteRenderer _spriteRenderer;
-
+    public event Action onActionConfirmed;//액션 선택시 실행 즉 현재 perform move perform attack 시작시 실행하면 됨
+    public bool isPlayerTurn;//false일시 입력 차단
+    /// <summary>
+    /// input manager별도로 생성 input action은 inputmanager를 참조하도록 변경함
+    /// 현재 플레이어 턴시작시 isplayerturn만 체크해주는 방식
+    /// </summary>
     private void Awake()
     {
         _playerStats = GetComponent<PlayerStats>();
         _animator = GetComponent<CharacterAnimator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        _inputActions = new PlayerInputActions();
-
-        // 콜백 등록
-        _inputActions.PC.Move.started += ctx =>
-        {
-            if (!_isMoving
-                && _playerStats.BuffManager.GetFinalActionPoints() >= MoveActionCost
-                && _moveBufferCoroutine == null)
-            {
-                _moveBufferCoroutine = StartCoroutine(BufferAndMove());
-            }
-        };
-
-        _inputActions.PC.Attack.started += ctx =>
-        {
-            if (_attackBufferCoroutine == null)
-            {
-                _attackBufferCoroutine = StartCoroutine(BufferAndAttack());
-            }
-        };
+        _inputActions = InputManager.Instance.GetInputSafe();//lazy init을 통해 inputmanager awake 실행 전이라도 안전하게 가져올수있음
     }
-    // 중복 이벤트 방지를 위해 PC맵을 껐다 키는 메서드
-    private void OnEnable() => _inputActions.PC.Enable();
-    public void OnDisable() => _inputActions.PC.Disable();
+
+    private void OnEnable()
+    {
+        if (_inputActions == null)
+            _inputActions = InputManager.Instance.GetInputSafe();
+
+        _inputActions.PC.Move.started += OnMoveStarted;
+        _inputActions.PC.Attack.started += OnAttackStarted;
+    }
+
+    public void OnDisable()
+    {
+        _inputActions.PC.Move.started -= OnMoveStarted;
+        _inputActions.PC.Attack.started -= OnAttackStarted;
+    }
+
+
+    /// <summary>
+    /// 구독 및 해제를 해줘야하므로 람다식으로 처리시 구독해제가 불가함
+    /// 따라서 람다식 부분 메서드로 옮김 
+    /// buffmanager 사라진 관계로 주석처리
+    /// </summary>
+    /// <param name="ctx"></param>
+    private void OnMoveStarted(InputAction.CallbackContext ctx)
+    {
+        if (!isPlayerTurn) 
+            return;
+        if (!_isMoving && _moveBufferCoroutine == null)
+        {
+            _moveBufferCoroutine = StartCoroutine(BufferAndMove());
+        }
+    }
+
+    private void OnAttackStarted(InputAction.CallbackContext ctx)
+    {
+        if (!isPlayerTurn)
+            return;
+        if (_attackBufferCoroutine == null)
+        {
+            _attackBufferCoroutine = StartCoroutine(BufferAndAttack());
+        }
+    }
+
 
     //이동 버퍼 코루틴
     private IEnumerator BufferAndMove()
@@ -106,8 +133,9 @@ public class PlayerController : MonoBehaviour
 
     private void ExecuteMove(Vector2 rawInput)
     {
+        onActionConfirmed?.Invoke();
         //현재 플레이어가 서있는 타일의 격자 좌표 가져오기
-        Vector2Int curCell = _playerStats.curTile.gridPosition;
+        Vector2Int curCell = _playerStats.CurTile.gridPosition;
 
         //rawInput(–1~1 사이 실수 값)을 –1, 0, 1 중 하나로 변환해 격자 한칸 단위 이동 방향(offset)을 결정
         Vector2Int offset = new Vector2Int(
@@ -123,7 +151,7 @@ public class PlayerController : MonoBehaviour
         _lastMoveDirection = offset;
         //목표 좌표 계산
         Vector2Int tgtCell = curCell + offset;
-
+        _spriteRenderer.sortingOrder = -tgtCell.y * 10 + 1;
         //이동 가능한지 판별
         if (!_playerStats.curLevel.tiles.TryGetValue(tgtCell, out var tile)
             || tile.CharacterStatsOnTile != null
@@ -131,10 +159,10 @@ public class PlayerController : MonoBehaviour
             return;
 
         _isMoving = true;
-        _playerStats.curTile.CharacterStatsOnTile = null;// 전 타일 null로 비우기
+        _playerStats.CurTile.CharacterStatsOnTile = null;// 전 타일 null로 비우기
         
         // 새 타일에 등록
-        _playerStats.curTile = tile;
+        _playerStats.CurTile = tile;
         tile.CharacterStatsOnTile = _playerStats;
 
         //월드 좌표로 목적지(dest) 계산후 지정된 이속으로 걸리는 시간 구하기
@@ -149,7 +177,7 @@ public class PlayerController : MonoBehaviour
             .OnComplete(() =>
             {
                 _isMoving = false;
-                _playerStats.BuffManager.ApplyBuff(-MoveActionCost, 0);
+                //_playerStats.BuffManager.ApplyBuff(-MoveActionCost, 0);
             });
     }
     public void OnAttackHit()
@@ -161,11 +189,12 @@ public class PlayerController : MonoBehaviour
         if (dir.x != 0)
             _spriteRenderer.flipX = dir.x < 0;
         PerformAttackRaycast(dir);//지정된 방향으로 레이발사
-        _playerStats.BuffManager.ApplyBuff(-MoveActionCost, 0);
+        //_playerStats.BuffManager.ApplyBuff(-MoveActionCost, 0);
     }
 
     private void PerformAttackRaycast(Vector2 dir)
     {
+        onActionConfirmed?.Invoke();
         //시작점을 콜라이더 바깥으로 살싹 떨어뜨리기 extents는 반지름
         var col = GetComponent<Collider2D>();
         float originOffset = col.bounds.extents.magnitude + 0.1f;

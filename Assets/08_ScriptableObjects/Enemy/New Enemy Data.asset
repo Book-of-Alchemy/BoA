@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6abc21a19d57d034aba438aa49a01fc6, type: 3}
+  m_Name: New Enemy Data
+  m_EditorClassIdentifier: 
+  id: 0
+  name_kr: 
+  biome_id: 0
+  sight: 0
+  attack_range: 0
+  min_level: 0
+  max_level: 0
+  base_hp: 0
+  hp_per_level: 0
+  base_atk: 0
+  atk_per_level: 0
+  base_def: 0
+  def_per_level: 0
+  resist_fire: 0
+  resist_water: 0
+  resist_cold: 0
+  resist_wind: 0
+  resist_lightning: 0
+  resist_earth: 0
+  resist_light: 0
+  resist_dark: 0
+  prefab: {fileID: 0}
