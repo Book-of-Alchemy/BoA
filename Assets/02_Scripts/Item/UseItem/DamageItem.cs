@@ -9,32 +9,63 @@ using static UnityEditor.Experimental.GraphView.GraphView;
 [System.Serializable]
 public class DamageItem : BaseItem
 {
-    private Tile _curTile;
+    [Header("공용 아이템 정보")]
     public SpriteRenderer spriteRenderer; // 투사체를 아이템이미지로 바꿀이미지
-    private Tile _choiceTile; // 선택한 타일
-    private PlayerStats _player;
-    private bool _isObject = false;
-    public ItemData itemData;
-    public int dropAmount;
+    private PlayerStats _player; // 플레이어 정보
+    public ItemData itemData; // 아이템 정보
+
+    [Header("드롭 아이템 정보")]
+    private Tile _curTile; // 드롭된 아이템이 저장될 타일
+    public int dropAmount; //
     public Action _handler;
+
+    [Header("사용 아이템 정보")]
+    private bool _isObject;
     private List<Tile> rangeTiles = new List<Tile>();
     private Tile mouseClickTile;
 
-    // 초기화
+    /// <summary>
+    /// 드롭아이템 정보 및 위치, 스프라이트 초기화
+    /// </summary>
+    /// <param name="data"></param>
+    /// <param name="dropTile"></param>
+    public void Init(ItemData data, Tile dropTile)
+    {
+        _player = GameManager.Instance.PlayerTransform;
+
+        if (dropTile == null) 
+            _curTile = _player.CurTile;
+        else 
+            _curTile = dropTile;
+
+        itemData = data;
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        transform.position = new Vector3(_curTile.gridPosition.x, _curTile.gridPosition.y + 0.5f, 0);
+        SetType(data);
+    }
+
+    /// <summary>
+    /// UseItem 위치, 정보, 스프라이트 초기화
+    /// </summary>
+    /// <param name="data"></param>
     public void Init(ItemData data)
     {
-
         _player = GameManager.Instance.PlayerTransform;
         itemData = data;
         spriteRenderer = GetComponent<SpriteRenderer>();
         transform.position = new Vector3(_player.CurTile.gridPosition.x, _player.CurTile.gridPosition.y + 0.5f, 0);
         SetType(data);
+        _isObject = false;
     }
     private void SetType(ItemData data)
     {
         spriteRenderer.sprite = data.Sprite;
     }
 
+    /// <summary>
+    /// 드롭된 아이템을 추가하는 매서드
+    /// </summary>
+    /// <param name="data"></param>
     public override void AddItem(ItemData data)
     {
         if (_curTile.CharacterStatsOnTile is PlayerStats)
@@ -45,17 +76,26 @@ public class DamageItem : BaseItem
         }
     }
 
-    public override void DropItem(ItemData data, int amount)
+    /// <summary>
+    /// 아이템을 드롭하는 기능
+    /// </summary>
+    /// <param name="data">아이템 데이터</param>
+    /// <param name="amount"> 아이템 수량</param>
+    /// <param name="dropTile">아이템을 드롭하려는 위치, 기본 null로 되어있어저 입력하지 않으면 플레이어 위치로 잡음</param>
+    public override void DropItem(ItemData data, int amount, Tile dropTile = null)
     {
-        Init(data);
+        Init(data, _curTile);
         dropAmount = amount;
-        _curTile = _player.CurTile;
         _curTile.itemsOnTile.Add(this);
         Debug.Log("아이템 버려짐");
         _handler = () => AddItem(data);
         _curTile.onCharacterChanged += _handler;
     }
 
+    /// <summary>
+    /// 아이템 사용 매서드
+    /// </summary>
+    /// <param name="data"></param>
     public override void UseItem(ItemData data)
     {
         Init(data);
@@ -63,24 +103,23 @@ public class DamageItem : BaseItem
         InputManager.Instance.EnableMouseTracking = true;
         InputManager.Instance.OnMouseMove += CheckEffectRange;
         InputManager.Instance.OnMouseClick += OnClick;
-
-        //if (tile == null)
-        //    _choiceTile = _player.CurTile;
-        //else
-        //    _choiceTile = tile;
-        //
-
     }
 
+
+    /// <summary>
+    /// 아이템 사용 후 사용하려는 위치에 마우스를 눌렀을때 동작하는 매서드
+    /// </summary>
+    /// <param name="mouseClickPos"></param>
     public void OnClick(Vector3 mouseClickPos)
     {
-        InputManager.Instance.OnMouseMove -= CheckEffectRange;
-        ItemManager.Instance.DestroyItemRange();
-        ItemManager.Instance.DestroyRange();
+        InputManager.Instance.OnMouseMove -= CheckEffectRange; // 마우스 위치에따라 보여주는 매서드 구독해제
+        ItemManager.Instance.DestroyItemRange(); // 아이템 사거리 삭제
+        ItemManager.Instance.DestroyRange(); // 아이템 효과 범위 삭제
 
         Vector2Int mouseWorldPos = Vector2Int.RoundToInt(mouseClickPos);
         TestTileManger.Instance.curLevel.tiles.TryGetValue(mouseWorldPos, out mouseClickTile);
 
+        // 사거리 내에 타일을 클릭했는지 확인하는 조건, 사거리 내의 타일을 클릭했다면 효과범위내에 대상들이 있는지 확인
         if (rangeTiles.Contains(mouseClickTile))
             CheckObject(itemData, mouseClickTile);
         else
@@ -91,7 +130,7 @@ public class DamageItem : BaseItem
             Destroy(this.gameObject);
         }
 
-        //움직임을 두투윈으로 변경 필요 // oncomplete로 이동이 끝난 후 공격로직을 등록
+        // 범위내에 대상들이 있다면 이동 및 공격동작
         if (_isObject)
         {
             Sequence seq = DOTween.Sequence();
@@ -119,6 +158,10 @@ public class DamageItem : BaseItem
         }
     }
 
+    /// <summary>
+    /// 공격 로직
+    /// </summary>
+    /// <param name="data"></param>
     private void AttackBehavior(ItemData data)
     {
         List<Tile> tiles = new List<Tile>();
@@ -157,6 +200,10 @@ public class DamageItem : BaseItem
         Destroy(this.gameObject);
     }
 
+    /// <summary>
+    /// 아이템 사용시 아이템 효과 범위를 마우스 움직임에 따라 실시간으로 보여주는 매서드
+    /// </summary>
+    /// <param name="mousePos"></param>
     public void CheckEffectRange(Vector3 mousePos)
     {
         ItemManager.Instance.DestroyItemRange();
@@ -179,7 +226,7 @@ public class DamageItem : BaseItem
     }
 
     /// <summary>
-    /// 사거리 확인용
+    /// 아이템 사용시 클릭 가능한 아이템 사거리를 표시해주고 타일리스트를 반환해주는 매서드
     /// </summary>
     public List<Tile> CheckRange(ItemData data)
     {

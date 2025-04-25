@@ -7,7 +7,7 @@ public abstract class BaseItem : MonoBehaviour
 {
     public abstract void UseItem(ItemData data);
     public abstract void AddItem(ItemData data);
-    public abstract void DropItem(ItemData data, int amount);
+    public abstract void DropItem(ItemData data, int amount, Tile dropTile = null);
 
 }
 
