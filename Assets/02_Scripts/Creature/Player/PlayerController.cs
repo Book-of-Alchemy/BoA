@@ -247,29 +247,52 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-    // 실제 대시 실행 메서드
+    //대시 실행 메서드
     private void DoDash(Vector2Int offset)
     {
         onActionConfirmed?.Invoke();
         _animator.PlayMove();
-        if (offset.x != 0) _spriteRenderer.flipX = offset.x < 0;
+        if (offset.x != 0)
+            _spriteRenderer.flipX = offset.x < 0;
 
         // 시작 위치
-        var start = _playerStats.CurTile.gridPosition;
-        var end = start;
+        Vector2Int start = _playerStats.CurTile.gridPosition;
+        Vector2Int end = start;
 
-        // 최대 DashDistance만큼 검사하며 이동 가능 타일까지 end 갱신
+        // 최대 대시 거리만큼 검사, 이동 가능 타일까지 이동(end까지)
         for (int i = 1; i <= DashDistance; i++)
         {
-            var next = start + offset * i;
-            if (!_playerStats.curLevel.tiles.TryGetValue(next, out var t)) break;
-            if (!t.IsWalkable || t.CharacterStatsOnTile != null) break;
-            // TODO: 함정·디버프·이벤트 판별 로직 추가
+            Vector2Int next = start + offset * i;
+            if (!_playerStats.curLevel.tiles.TryGetValue(next, out var t))
+                break;
+            if (!t.IsWalkable || t.CharacterStatsOnTile != null)
+                break;
+
+            // 함정 처리
+            if (t.TrpaOnTile != null)
+            {
+                var trap = t.TrpaOnTile;
+                if (trap.IsDetected)
+                {
+                    // 보이는 함정이라면 함정 앞에서 멈춤
+                    break;
+                }
+                else
+                {
+                    // 안 보이는 항정이라면 함정 타일에 멈추고 트랩 발동
+                    end = next;
+                    break;
+                }
+            }
+
             end = next;
         }
 
-        if (end == start) return;
+        // 이동할 위치가 시작 위치와 동일하면 이동 못함
+        if (end == start)
+            return;
 
+        // 실제 위치 갱신
         _isMoving = true;
         _playerStats.CurTile.CharacterStatsOnTile = null;
         _playerStats.CurTile = _playerStats.curLevel.tiles[end];
@@ -280,6 +303,9 @@ public class PlayerController : MonoBehaviour
         transform
             .DOMove(dest, duration)
             .SetEase(Ease.Linear)
-            .OnComplete(() => { _isMoving = false; });
+            .OnComplete(() =>
+            {
+                _isMoving = false;
+            });
     }
 }
