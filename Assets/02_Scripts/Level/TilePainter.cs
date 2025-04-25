@@ -163,7 +163,9 @@ public static class TilePainter
                 new Vector3Int(tile.gridPosition.x, tile.gridPosition.y, 0),
                 Quaternion.identity
                 ).GetComponent<TrapBase>();
+            
             tile.TrpaOnTile = TrapGO;
+            TrapGO.spriteRenderer.sortingOrder = -tile.gridPosition.y * 10;
         }
     }
 
