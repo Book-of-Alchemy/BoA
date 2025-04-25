@@ -46,7 +46,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 3d11bea9ba3b12043bc37c39060c9389, type: 2}
+  m_Motion: {fileID: 7400000, guid: 6b4614067c6981247b752ea90f5baea3, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -172,7 +172,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 156dc4b91b43b6b4892cf5303e3b1b6b, type: 2}
+  m_Motion: {fileID: 7400000, guid: a0ae120984d5f0b4f94464f7ebf5df2b, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -263,7 +263,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Player
+  m_Name: Goblin
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: Attack
@@ -363,7 +363,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 8767caf2acb07224f97106435613b70b, type: 2}
+  m_Motion: {fileID: 7400000, guid: a4955cd01c9dc5646affb1af340b4a3b, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -532,7 +532,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: ddb51a0003abc9a469e9c1f355ece885, type: 2}
+  m_Motion: {fileID: 7400000, guid: 9a021f25b4f487447b2dc1a2ed3ea5a2, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -584,7 +584,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 8fd66428e35628040a0f39484f94e7e5, type: 2}
+  m_Motion: {fileID: 7400000, guid: 05e0a57c7a614954191e9c96cbc9e96a, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
