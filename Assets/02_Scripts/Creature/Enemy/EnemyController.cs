@@ -12,7 +12,7 @@ public enum EnemyState
 
 public class EnemyController : MonoBehaviour
 {
-    public float moveSpeed = 3f;
+    public float MoveSpeed => TurnManager.Instance.turnSpeed;
     public float DetectionRange = 10f;
     public EnemyState _currentState = EnemyState.Idle;
     private Tile _lastCheckedTile;
@@ -29,6 +29,7 @@ public class EnemyController : MonoBehaviour
     PlayerStats _playerStats;
     EnemyStats _enemyStats;
     Tween _currentTween;
+    SpriteRenderer _spriteRenderer;
 
     void Awake()
     {
@@ -38,14 +39,16 @@ public class EnemyController : MonoBehaviour
         attackBehaviour = GetComponent<AttackBaseBehaviour>();
         moveStrategy = GetComponent<IMovementStrategy>();
         characterAnimator = GetComponent<CharacterAnimator>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     void Start()
     {
         _playerStats = GameManager.Instance.PlayerTransform.GetComponent<PlayerStats>();
+        _spriteRenderer.sortingOrder = -Mathf.RoundToInt(transform.position.y)*10;
     }
 
-    public IEnumerator TakeTurn()
+    public void TakeTurn()
     {
         if (_currentTween != null && _currentTween.IsActive()) _currentTween.Kill();
 
@@ -59,12 +62,10 @@ public class EnemyController : MonoBehaviour
                 break;
             case EnemyState.Attack:
                 HandleAttack();
+                FlipTowardsPlayer();
                 break;
         }
-
-        yield break;
     }
-
     public void ChangeState(EnemyState newState)
     {
         _currentState = newState;
@@ -72,7 +73,21 @@ public class EnemyController : MonoBehaviour
         if (newState == EnemyState.Chase || newState == EnemyState.Attack)
             FlipTowardsPlayer();
 
-        StartCoroutine(TakeTurn()); // 상태 바뀌자마자 바로 행동 즉 실질 행동시작 전에 상태체크를우선해야함
+        TakeTurn(); // 상태 바뀌자마자 바로 행동 즉 실질 행동시작 전에 상태체크를우선해야함
+    }
+    /// <summary>
+    /// 각 behaviour 마다 actioncost 반환
+    /// </summary>
+    /// <returns></returns>
+    public int GetCurrentActionCost()
+    {
+        return _currentState switch
+        {
+            EnemyState.Idle => idleBehaviour?.ActionCost ?? 10,
+            EnemyState.Chase => chaseBehaviour?.ActionCost ?? 10,
+            EnemyState.Attack => attackBehaviour?.ActionCost ?? 10,
+            _ => 10
+        };
     }
 
     private void HandleIdle()
@@ -94,8 +109,8 @@ public class EnemyController : MonoBehaviour
     public void MoveTo(Vector2Int targetPosition,  Action onComplete = null)
     {
         Vector3 position = new Vector3(targetPosition.x, targetPosition.y, 0);
-
-        if(moveStrategy != null)
+        _spriteRenderer.sortingOrder = -targetPosition.y * 10;
+        if (moveStrategy != null)
             moveStrategy.Move(this.transform , position, characterAnimator, onComplete);
         else
             BasicMove(position, onComplete);
@@ -103,23 +118,26 @@ public class EnemyController : MonoBehaviour
 
     void BasicMove(Vector3 targetPosition,  Action onComplete = null)
     {
-        characterAnimator?.SetMoving(true);
+        characterAnimator?.PlayMove();
 
         _currentTween?.Kill(); // 기존 움직임 취소
-        _currentTween = transform.DOMove(targetPosition, 1f / moveSpeed)
+        _currentTween = transform.DOMove(targetPosition, 1f / MoveSpeed)
             .SetEase(Ease.Linear)
             .OnComplete(() =>
             {
-                characterAnimator?.SetMoving(false);
                 onComplete?.Invoke();
                 });
     }
-
+    //애니메이션 이벤트에 추가해야함
+    public void OnAttackHit()
+    {
+        if (_playerStats != null)
+            _enemyStats.Attack(_playerStats);
+    }
     public void Attack( Action onComplete = null)
     {
-        characterAnimator?.PlayAttack();
-
         onComplete?.Invoke();
+        characterAnimator?.PlayAttack();
     }
     // 플레이어 바라보기 메서드(감지되면 호출하기)
     private void FlipTowardsPlayer()
@@ -134,4 +152,6 @@ public class EnemyController : MonoBehaviour
             transform.localScale = scale;
         }
     }
+
+
 }

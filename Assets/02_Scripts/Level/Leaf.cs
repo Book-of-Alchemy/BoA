@@ -27,6 +27,7 @@ public class Leaf
     float smallSizeChance = 0.4f;
     float middleSizeChance = 0.45f;
 
+    public Leaf() { }
     public Leaf(RectInt rect)
     {
         this.rect = rect;

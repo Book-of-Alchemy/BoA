@@ -28,4 +28,4 @@ MonoBehaviour:
   max_stack: 9999
   iteminfo_kr: "\uAE30\uBCF8 \uC7AC\uB8CC"
   icon_sprite: Image/Item/Empty Bottle
-  Sprite: {fileID: 0}
+  Sprite: {fileID: 21300000, guid: b9c185ea211339545939d579379d4c2b, type: 3}

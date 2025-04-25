@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnvironmentPrefab : MonoBehaviour
+public class EnvironmentPrefab : TilePrefab
 {
-    public SpriteRenderer baseRenderer;
+    
 }

@@ -16,7 +16,7 @@ MonoBehaviour:
   recipe_name_kr: "\uD654\uC5FC \uD3ED\uBC1C \uC2A4\uD06C\uB864"
   recipe_name_en: Fireburst Scroll
   output_item_id: 200102
-  output_amount: 1
+  output_amount: 5
   material_1_item_id: 201003
   material_1_amount: 3
   material_2_item_id: 201006

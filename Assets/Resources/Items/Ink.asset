@@ -28,4 +28,4 @@ MonoBehaviour:
   max_stack: 9999
   iteminfo_kr: "\uC2A4\uD06C\uB864 \uC7AC\uB8CC"
   icon_sprite: Image/Item/Ink
-  Sprite: {fileID: 0}
+  Sprite: {fileID: 21300000, guid: 9c11b651785b93c4eb8994c6dc9b0c37, type: 3}
