@@ -64,8 +64,8 @@ public static class TestTilePainter
         int bitask = CalculateWallBitmask(tile, level);
         tilePrefab.baseRenderer.sprite = wallTileSets[0].GetBaseSprite(bitask, isFront);
         tilePrefab.upperRenderer.sprite = wallTileSets[0].GetUpperSprite(bitask, isFront);
-        tilePrefab.baseRenderer.sortingOrder = -tile.gridPosition.y;
-        tilePrefab.upperRenderer.sortingOrder = -tile.gridPosition.y;
+        tilePrefab.baseRenderer.sortingOrder = -tile.gridPosition.y*10;
+        tilePrefab.upperRenderer.sortingOrder = -tile.gridPosition.y*10;
         TileGO.transform.SetParent(level.transform);
     }
 
