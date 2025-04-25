@@ -8,7 +8,7 @@ public class DeBuffItem : BaseItem
     {
     }
 
-    public override void DropItem(ItemData data, int amount)
+    public override void DropItem(ItemData data, int amount, Tile dropTile)
     {
     }
 
