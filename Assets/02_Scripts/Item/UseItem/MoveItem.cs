@@ -12,7 +12,7 @@ public class MoveItem : BaseItem
     {
     }
 
-    public override void UseItem(ItemData data, Tile tile = null)
+    public override void UseItem(ItemData data)
     {
     }
 }
