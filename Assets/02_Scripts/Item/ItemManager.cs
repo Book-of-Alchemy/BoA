@@ -6,15 +6,18 @@ using UnityEngine.InputSystem.XR;
 
 public class ItemManager : Singleton<ItemManager>
 {
-    public GameObject damageItemPrefab;
-    public GameObject dropPrefab;
-    public GameObject rangeTilePrefab;
-    public List<GameObject> rangeTilePrefabs = new List<GameObject> ();
-    public GameObject rangeTiles;
+    public GameObject damageItemPrefab; // 데미지 아이템 프리팹
+    public GameObject rangeTilePrefab; // 사거리 표시 프리팹
+    public GameObject itemRangeTilePrefab; // 아이템 효과범위 프리팹
+    public List<GameObject> rangeTilePrefabs = new List<GameObject> (); // 생성된 사거리 표시 프리팹들리스트
+    public List<GameObject> itemRangeTilePrefabs = new List<GameObject> (); // 생성된 효과범위 프리팹들리스트
+    public GameObject rangeTiles; // 사거리 표시 오브젝트들을 넣기위해 만든 빈오브젝트
+    public GameObject itemRangeTiles; // 효과범위 오브젝트들을 넣기 위해 만든 빈 오브젝트
 
     private void Start()
     {
         rangeTiles = new GameObject("RangeTiles");
+        itemRangeTiles = new GameObject("ItemRangeTiles");
     }
 
     public BaseItem CreateItem(ItemData data)
@@ -51,6 +54,23 @@ public class ItemManager : Singleton<ItemManager>
             Destroy(rangeObject);
         }
         rangeTilePrefabs.Clear();
+    }
+
+    public void CreateItemRange(List<Tile> tiles)
+    {
+        foreach(Tile tile in tiles)
+        {
+            itemRangeTilePrefabs.Add(Instantiate(itemRangeTilePrefab, new Vector3(tile.gridPosition.x, tile.gridPosition.y, 0), Quaternion.identity, itemRangeTiles.transform));
+        }
+    }
+
+    public void DestroyItemRange()
+    {
+        foreach (GameObject itemRangeObject in itemRangeTilePrefabs)
+        {
+            Destroy(itemRangeObject);
+        }
+        itemRangeTilePrefabs.Clear();
     }
 
 

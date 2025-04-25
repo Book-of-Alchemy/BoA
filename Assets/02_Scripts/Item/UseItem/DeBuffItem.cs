@@ -12,7 +12,7 @@ public class DeBuffItem : BaseItem
     {
     }
 
-    public override void UseItem(ItemData data, Tile tile = null)
+    public override void UseItem(ItemData data)
     {
     }
 }
