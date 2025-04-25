@@ -147,6 +147,9 @@ public class Tile
             _ => false
         };
 
+        if (characterStatsOnTile != null)
+            isWalkable = false;
+
         return isWalkable;
     }
 

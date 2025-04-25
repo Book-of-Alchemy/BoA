@@ -53,6 +53,8 @@ public class ChaseBaseBehaviour : BaseBehaviour
 
     protected void MoveTo(Tile target)
     {
+        if (target.CharacterStatsOnTile != null)
+            return;
         CurTile.CharacterStatsOnTile = null;
         controller.MoveTo(target.gridPosition);
         CurTile = target;
