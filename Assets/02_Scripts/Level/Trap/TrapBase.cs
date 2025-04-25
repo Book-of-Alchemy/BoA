@@ -70,6 +70,7 @@ public abstract class TrapBase : MonoBehaviour
 
     private IEnumerator DestroyAfterDelay(float delay)
     {
+        tile.onCharacterChanged -= Execute;
         yield return new WaitForSeconds(delay);
         tile.TrpaOnTile = null;
         Destroy(gameObject);
