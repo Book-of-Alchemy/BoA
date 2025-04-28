@@ -166,6 +166,23 @@ public class UI_Inventory : UIBase
             _inventory.RestoreBeforeFilter();
     }
 
+    public void HighlightSlot(int index)
+    {
+        //index범위체크
+        if (index < 0 || index >= SlotCount)
+            return;
+
+        //bool 변수를 이용해 강조 끄고 키기
+        _slotUIList[index].SetHighlight(true);
+    }
+    public void UnhighlightSlot(int index)
+    {
+        if (index < 0 || index >= SlotCount)
+            return;
+
+        _slotUIList[index].SetHighlight(false);
+    }
+
     public void OnClickInventoryBtn()
     {
         ShowRightTool(EInventoryType.Inventory);

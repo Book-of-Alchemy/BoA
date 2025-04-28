@@ -12,6 +12,7 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler
     [SerializeField] protected Button _btn;
     [SerializeField] protected RectTransform _rectTransform;
     [SerializeField] protected UI_Inventory _uiInventory;
+    [SerializeField] private Image _borderImage; // 테두리용 이미지
 
     protected GameObject _imageObject;
     protected GameObject _textObject;
@@ -19,6 +20,9 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler
 
     public int Index { get; set; }
     public bool HasItem => _itemSprite.sprite != null; //있다면 True
+
+    private Color _normalBorderColor = new Color(1f, 1f, 1f, 0f); // 기본(투명)
+    private Color _highlightBorderColor = new Color(1f, 1f, 0f, 1f); // 강조(노란색)
 
     private void ShowIcon() => _imageObject.SetActive(true);
     private void HideIcon() => _imageObject.SetActive(false);
@@ -32,7 +36,8 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler
     {
         _imageObject = _itemSprite.gameObject;
         _textObject = _countTxt.gameObject;
-
+        if (_borderImage != null)
+            _borderImage.color = _normalBorderColor;
         HideIcon();
     }
 
@@ -40,8 +45,8 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler
     {
         if(HasItem) // 아이템 있을때만
         {
-            UIManager.Show<UI_Action>((int)_uiInventory.curType, _rectTransform,_item);
-            //_uiInventory.SetSelectIndex(Index);
+            _uiInventory.SetSelectIndex(Index);
+            UIManager.Show<UI_Action>((int)_uiInventory.curType, _rectTransform,_item,Index);
         }
     }
 
@@ -50,8 +55,8 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler
         _item = item;
         if (!HasItem)
             _btn.onClick.AddListener(OnClickItem);
-        _itemSprite.sprite = _item.GetSprite();
         _countTxt.text = _item.Amount.ToString();
+        _itemSprite.sprite = _item.GetSprite();
         ShowIcon();
         ShowText();
     }
@@ -81,5 +86,23 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler
     void IDeselectHandler.OnDeselect(BaseEventData eventData)
     {
         OnDeselected?.Invoke(Index);
+    }
+
+    public void SetHighlight(bool isOn)
+    {
+        if (_borderImage == null)
+        {
+            Debug.LogWarning("BorderImage없음.");
+            return;
+        }
+
+        if (isOn)
+        {
+            _borderImage.color = _highlightBorderColor; // 강조 색상 적용
+        }
+        else
+        {
+            _borderImage.color = _normalBorderColor; // 기본 색상 복귀
+        }
     }
 }

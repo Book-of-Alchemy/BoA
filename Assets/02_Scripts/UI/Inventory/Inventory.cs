@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Inventory : Singleton<Inventory>
@@ -15,8 +16,8 @@ public class Inventory : Singleton<Inventory>
 
     public ItemData[] itemDataArr; // 테스트용 아이템 데이터 배열]
 
-    private List<InventoryItem> _craftList = new(); 
-
+    private List<InventoryItem> _craftList = new(); // 제작 테이블에 올라간 아이템list
+    private List<int> _highlightItemIds = new List<int>(); // 강조되는 아이템 list
 
     private void Start()
     {
@@ -31,14 +32,19 @@ public class Inventory : Singleton<Inventory>
         for (int i = 0; i < items.Length; i++)
         {
             if (items[i] != null)
-                Add(items[i].itemData);
+                UpdateUISlot(i);
         }
     }
 
     public void OnClickAddItem() //Call at OnClick Event 
     {
         int rand = UnityEngine.Random.Range(0, itemDataArr.Length);
-        Add(itemDataArr[rand]);
+        //Add(itemDataArr[rand],10);
+        foreach (var item in itemDataArr)
+        {
+            Add(item, 10);
+        }
+
     }
 
     public void OnClickRemoveItem() //Call at OnClick Event 
@@ -94,11 +100,6 @@ public class Inventory : Singleton<Inventory>
     {
         _craftTool.UpdateSlot(item);
     }
-    private void RemoveUICraft()
-    {
-        _craftTool.RemoveAllSlot();
-    }
-
 
     private int FindEmptySlotIndex(int startIndex = 0 , bool emptyCheck = true) //아이템을 넣을 슬롯을 검색하는 함수
     {
@@ -171,42 +172,59 @@ public class Inventory : Singleton<Inventory>
 
     public void CraftReady()
     {
-        var (boolResult, dataResult,amount) = _alchemy.CreateItem(
-            _craftList[0].itemData, _craftList[0].Amount, _craftList[1].itemData, _craftList[1].Amount);
+        (bool boolResult, ItemData dataResult, int amount) result;
 
-        if(boolResult)
+        if (_craftList.Count >= 3)
+        {
+            result = _alchemy.CreateItem(
+            _craftList[0].itemData, _craftList[0].Amount,
+            _craftList[1].itemData, _craftList[1].Amount,
+            _craftList[2].itemData, _craftList[2].Amount);
+        }
+        else
+        {
+            result = _alchemy.CreateItem(
+            _craftList[0].itemData, _craftList[0].Amount,
+            _craftList[1].itemData, _craftList[1].Amount);
+        }
+
+        var (boolResult, dataResult, amount) = result;
+
+        if (boolResult)
         {
             //성공했을 경우 , 기존 Item에서 Amount만큼 감소를 해야하고 Craft창도 비워야함.
             _craftTool.RemoveAllSlot();
-            Debug.Log($"{amount}개");
+            //Debug.Log($"{amount}개");
             InventoryItem resultItem = Add(dataResult,amount,false);
             _craftTool.CraftComplete(resultItem);
             _craftList.RemoveAll(slot => slot != null);
-
         }
         else
         {
             Debug.Log(boolResult);
         }
 
-        Debug.Log(dataResult);
+        //Debug.Log(dataResult);
 
 
     }
 
-    public void Use(/*int index*/InventoryItem item)
+    public void Use(InventoryItem item)
     {
         Debug.Log("UseAction");
-        //ItemManager.Instance.CreateProjectileItem(items[index].itemData);
-
+        BaseItem baseItem = ItemManager.Instance.CreateItem(item.itemData);
+        baseItem.UseItem(item.itemData);
         //RemoveItem(index);
         UIManager.Hide<UI_Action>();
+        UIManager.Hide<UI_Inventory>();
     }
 
-    public void Drop(InventoryItem item)
+    public void Drop(InventoryItem item,int index)
     {
         Debug.Log("DropAction");
-        //RemoveItem(index);
+        BaseItem baseItem = ItemManager.Instance.CreateItem(item.itemData);
+        baseItem.DropItem(item.itemData,item.Amount);
+        RemoveItem(index);
         UIManager.Hide<UI_Action>();
     }
 
@@ -214,6 +232,7 @@ public class Inventory : Singleton<Inventory>
     {
         //Craft테이블에 item을 같이 넣어야함.
         _craftList.Add(item);
+        HighlightCraftableSlots();
         UpdateUICraft(item);
         UIManager.Hide<UI_Action>();
     }
@@ -233,5 +252,53 @@ public class Inventory : Singleton<Inventory>
     {
         Debug.Log("UnEquipAction");
         UIManager.Hide<UI_Action>();
+    }
+
+    public List<int> GetHighlightItemIds()
+    {
+        return _highlightItemIds;
+    }
+
+    //제작테이블에 올라간 아이템과 제작이 가능한 아이템 강조
+    //craftList에 먼저 아이템이 올라간 후에 동작되어야함.
+    public void HighlightCraftableSlots()
+    {
+        ClearAllHighlights(); // 모든 강조 초기화
+
+        //현재 _craftList에 올라간 모든 아이템 ID를 저장
+        HashSet<int> craftItemIds = new HashSet<int>();
+        foreach (var item in _craftList)
+        {
+            if (item != null)
+                craftItemIds.Add(item.GetItemId());
+        }
+
+        //현재 _craftList에 올라간 craftItemIds 기준으로 제작 가능한 ID 리턴
+        List<int> requiredItemIds = _alchemy.GetCraftableIds(craftItemIds);
+        _highlightItemIds = requiredItemIds;
+
+        for (int i = 0; i < items.Length; i++)
+        {
+            if (items[i] == null)
+                continue;
+
+            //인벤토리에서 강조할 아이템 대조 검사
+            if (requiredItemIds.Contains(items[i].GetItemId()))
+            {
+                _uiInventory.HighlightSlot(i);
+            }
+        }
+    }
+
+    public void ClearAllHighlights()
+    {
+        for (int i = 0; i < items.Length; i++)
+        {
+            if (items[i] == null)
+                continue;
+
+            _uiInventory.UnhighlightSlot(i);
+        }
+        _highlightItemIds.Clear();
     }
 }

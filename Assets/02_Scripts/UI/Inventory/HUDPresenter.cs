@@ -20,8 +20,6 @@ public class HUDPresenter
     {
         //UI 바 업데이트
         _hud.UpdateHp(val);
-        _hud.UpdateMp(val);
-        _hud.UpdateExp(val);
     }
 
 }

@@ -9,7 +9,7 @@ public class CraftTool : MonoBehaviour
 
     public void UpdateSlot(InventoryItem item)
     {
-        if (_slotCraft[1].HasItem)//가득찼다면 더 이상 업데이트 X
+        if (_slotCraft[2].HasItem)//가득찼다면 더 이상 업데이트 X
         {
             return;
         }
@@ -33,7 +33,7 @@ public class CraftTool : MonoBehaviour
         return _slotCraft.FindIndex(0,slot => !slot.HasItem);
     }
 
-    public void CraftItem()
+    public void CraftItem() // 인스펙터에서 등록됨.
     {
         Inventory.Instance.CraftReady();
     }
