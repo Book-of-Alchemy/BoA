@@ -45,15 +45,13 @@ public abstract class CharacterStats : MonoBehaviour
     [Header("Level & Tile")]
     public Level curLevel;
     [SerializeField]
-    private Tile curTile;
-    public Tile CurTile
+    protected Tile curTile;
+    public virtual Tile CurTile
     {
         get => curTile;
         set
         {
-            TurnOffVision();
             curTile = value;
-            TurnOnVision();
         }
     }
     public List<Tile> tilesOnVision => TileUtility.GetVisibleTiles(curLevel, CurTile, visionRange);
@@ -162,34 +160,6 @@ public abstract class CharacterStats : MonoBehaviour
         CurTile = targetTile;
     }
 
-    void TurnOffVision()
-    {
-        if (curTile == null || curLevel == null)
-            return;
-
-        foreach(var tile in tilesOnVision)
-        {
-            if (tile == null) continue;
-
-            tile.IsOnSight = false; 
-        }
-
-    }
-
-    void TurnOnVision()
-    {
-        if (curTile == null || curLevel == null)
-            return;
-
-        foreach (var tile in tilesOnVision)
-        {
-            if (tile == null) continue;
-
-            tile.IsOnSight = true;
-            tile.IsExplored = true;
-        }
-
-    }
 
     public void ApplyEffect(StatusEffect effect)
     {
