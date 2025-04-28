@@ -4,15 +4,7 @@ using UnityEngine;
 
 public class BuffItem : BaseItem
 {
-    public override void AddItem(ItemData data)
-    {
-    }
-
-    public override void DropItem(ItemData data, int amount)
-    {
-    }
-
-    public override void UseItem(ItemData data, Tile tile = null)
+    public override void UseItem(ItemData data)
     {
     }
 }
