@@ -51,9 +51,16 @@ public abstract class CharacterStats : MonoBehaviour
         get => curTile;
         set
         {
-            TurnOffVision();
-            curTile = value;
-            TurnOnVision();
+            if (this is PlayerStats)
+            {
+                TurnOffVision();
+                curTile = value;
+                TurnOnVision();
+            }
+            else
+            {
+                curTile = value;
+            }
         }
     }
     public List<Tile> tilesOnVision => TileUtility.GetVisibleTiles(curLevel, CurTile, visionRange);
