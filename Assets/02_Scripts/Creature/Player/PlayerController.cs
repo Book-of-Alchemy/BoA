@@ -323,9 +323,21 @@ public class PlayerController : MonoBehaviour
 
             if (!_playerStats.curLevel.tiles.TryGetValue(next, out var tile)
                 || !tile.IsWalkable
-                || tile.CharacterStatsOnTile != null|| _playerStats.CurrentHealth < _dashStartHealth)
+                || tile.CharacterStatsOnTile != null
+                || _playerStats.CurrentHealth < _dashStartHealth
+                || cancelled
+                || (tile.TrpaOnTile != null && tile.TrpaOnTile.IsDetected))
                 break;
-
+            // 새로 보이는 적
+            foreach (var vis in _playerStats.tilesOnVision)
+            {
+                if (vis.CharacterStatsOnTile is EnemyStats e
+                    && !_initialVisibleEnemies.Contains(e))
+                {
+                    cancelled = true;
+                    break;
+                }
+            }
             // 방향 및 애니메이션
             if (step.x != 0) _spriteRenderer.flipX = step.x < 0;
             _animator.PlayMove();
@@ -348,16 +360,6 @@ public class PlayerController : MonoBehaviour
             //int stepCost = /* 스텝당 코스트 계산 */;
             //GetComponent<PlayerUnit>().SetNextActionCost(stepCost);
             onActionConfirmed?.Invoke();
-            // 새로 보이는 적
-            foreach (var vis in _playerStats.tilesOnVision)
-            {
-                if (vis.CharacterStatsOnTile is EnemyStats e
-                    && !_initialVisibleEnemies.Contains(e))
-                {
-                    cancelled = true;
-                    break;
-                }
-            }
         }
 
         // 마지막 스텝 후에도 적에게 한 번 기회를 주기 위해 대기

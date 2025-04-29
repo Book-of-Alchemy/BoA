@@ -8,6 +8,7 @@ public abstract class TrapBase : MonoBehaviour
     public Tile tile;
     public TrapData trapData;
     public List<Tile> effectTiles;
+    [SerializeField]
     protected bool isDetected;
     public bool IsDetected
     {
