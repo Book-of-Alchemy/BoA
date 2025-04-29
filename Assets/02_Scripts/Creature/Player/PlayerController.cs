@@ -355,7 +355,15 @@ public class PlayerController : MonoBehaviour
                 .SetEase(Ease.Linear)
                 .WaitForCompletion();
             //
-
+            foreach (var vis in _playerStats.tilesOnVision)
+            {
+                if (vis.CharacterStatsOnTile is EnemyStats e
+                    && !_initialVisibleEnemies.Contains(e))
+                {
+                    cancelled = true;
+                    break;
+                }
+            }
             //// 행동력 차감 + 턴 종료 알림
             //int stepCost = /* 스텝당 코스트 계산 */;
             //GetComponent<PlayerUnit>().SetNextActionCost(stepCost);
