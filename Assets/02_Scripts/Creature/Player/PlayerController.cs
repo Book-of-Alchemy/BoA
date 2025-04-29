@@ -316,6 +316,15 @@ public class PlayerController : MonoBehaviour
             _lastMoveDirection.x > 0 ? 1 : _lastMoveDirection.x < 0 ? -1 : 0,
             _lastMoveDirection.y > 0 ? 1 : _lastMoveDirection.y < 0 ? -1 : 0);
         Vector2Int target = cur + dir;
+
+        if (!_playerStats.curLevel.tiles.TryGetValue(target, out var tile))
+        {
+            if (_highlightInstance != null)
+                _highlightInstance.SetActive(false);
+            return;
+        }
+
+        _highlightInstance.SetActive(true);
         Vector3 worldPos = new Vector3(target.x, target.y, 0f);
         _highlightInstance.transform.position = worldPos;
         var sr = _highlightInstance.GetComponent<SpriteRenderer>();

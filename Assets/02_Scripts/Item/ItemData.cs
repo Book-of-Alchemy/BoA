@@ -94,5 +94,8 @@ public class ItemData : ScriptableObject
     public string iteminfo_kr;
     public string icon_sprite;
     public Sprite Sprite;
+
+    [Header("드랍생성용 프리팹")]
+    public GameObject itemPrefab;    // 새로 추가됨(04.29 이성재)
 }
 
