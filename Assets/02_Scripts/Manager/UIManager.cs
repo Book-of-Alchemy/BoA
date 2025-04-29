@@ -10,7 +10,6 @@ public class UIManager : Singleton<UIManager>
         Show<UI_Main>();
     }
 
-
     public static void SetParents(List<Transform> parents)
     {
         Instance.parents = parents;

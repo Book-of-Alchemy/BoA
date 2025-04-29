@@ -12,20 +12,22 @@ public interface IBehaviour
 public abstract class BaseBehaviour : MonoBehaviour, IBehaviour
 {
     public abstract int ActionCost { get; }
-    protected EnemyController controller;
-    protected EnemyStats enemyStats;
-    protected Level level => enemyStats.curLevel;
-    protected Tile CurTile
+    [HideInInspector]
+    public EnemyController controller;
+    [HideInInspector]
+    public EnemyStats enemyStats;
+    public Level level => enemyStats.curLevel;
+    public Tile CurTile
     {
         get => enemyStats.CurTile;
         set => enemyStats.CurTile = value;
     }
-    protected int attackRange => enemyStats.attackRange;
-    protected List<Tile> attackRangeTile => (attackRange == 1 ?
+    public int attackRange => enemyStats.attackRange;
+    public List<Tile> attackRangeTile => (attackRange == 1 ?
             TileUtility.GetAdjacentTileList(level, CurTile, true) :
             TileUtility.GetRangedTile(level, CurTile, attackRange));
-
-    protected List<Tile> vision => enemyStats.tilesOnVision;
+    public List<Tile> adjacentiveTile => TileUtility.GetAdjacentTileList(level, CurTile, true);
+    public List<Tile> vision => enemyStats.tilesOnVision;
 
 
     protected virtual void Awake()

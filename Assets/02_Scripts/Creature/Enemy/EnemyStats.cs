@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class EnemyStats : CharacterStats
+public class EnemyStats : CharacterStats,IPoolableId
 {
     [Header("드랍 아이템 설정")]
     [Tooltip("죽었을 때 드랍할 아이템 데이터")]
@@ -8,6 +8,10 @@ public class EnemyStats : CharacterStats
 
     [Tooltip("드랍할 아이템 수량")]
     public int dropAmount = 1;
+
+    [SerializeField]
+    private int id;
+    public int Id { get => id; set => id = value; }
 
     protected override void Awake()
     {

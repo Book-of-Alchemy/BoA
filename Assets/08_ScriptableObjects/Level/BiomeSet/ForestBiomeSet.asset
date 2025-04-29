@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2f6dc05d640a2941a06dae761ebaa24, type: 3}
   m_Name: ForestBiomeSet
   m_EditorClassIdentifier: 
-  id: 0
-  name_kr: 
+  id: 120001
+  name_kr: "\uC232"
   biomeType: 0
   roomPresets:
   - {fileID: 11400000, guid: b09d0c516d8009842bdc4772e19f0153, type: 2}

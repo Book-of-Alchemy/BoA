@@ -15,6 +15,7 @@ public class EnemyController : MonoBehaviour
     public float MoveSpeed => TurnManager.Instance.turnSpeed;
     public float DetectionRange = 10f;
     public EnemyState _currentState = EnemyState.Idle;
+    public EnemySkill curSkill;
     private Tile _lastCheckedTile;
     public Tile LastCheckedTile//serializable 클래스의 인스턴스는 public 또는 serialized 로 생성시 직렬화를 하기위해 유니티에서 new 인스턴스를 생성함 따라서 null로 처리하기위해 프로퍼티로 사용하여야함
     {
@@ -139,6 +140,31 @@ public class EnemyController : MonoBehaviour
         onComplete?.Invoke();
         characterAnimator?.PlayAttack();
     }
+
+    public void SetCurrentSkill(EnemySkill skill)
+    {
+        curSkill = skill;
+    }
+
+    public void Skill_0(Action onComplete = null)
+    {
+        onComplete?.Invoke();
+        characterAnimator?.PlaySkill_0();
+    }
+
+    public void Skill_1(Action onComplete = null)
+    {
+        onComplete?.Invoke();
+        characterAnimator?.PlaySkill_1();
+    }
+    public void OnSkillHit()
+    {
+        if (curSkill != null)
+            curSkill.Use();
+    }
+
+
+
     // 플레이어 바라보기 메서드(감지되면 호출하기)
     private void FlipTowardsPlayer()
     {

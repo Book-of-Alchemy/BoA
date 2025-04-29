@@ -5,7 +5,10 @@ using UnityEngine;
 public class AttackBaseBehaviour : BaseBehaviour
 {
     public override int ActionCost => 10;
-    protected PlayerStats playetStats;
+    public EnemySkill skill_0;
+    public EnemySkill skill_1;
+    [HideInInspector]
+    public PlayerStats playetStats;
     public override void Excute()
     {
         if (StateCheck())

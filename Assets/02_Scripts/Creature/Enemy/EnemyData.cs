@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Enemy/New EnemyData")]
-public class EnemyData : ScriptableObject
+public class EnemyData : PrefabWithId
 {
-    public int id;
     public string name_kr;
     public int biome_id;
     public int sight;
@@ -26,5 +25,4 @@ public class EnemyData : ScriptableObject
     public float resist_earth;
     public float resist_light;
     public float resist_dark;
-    public GameObject prefab;
 }
