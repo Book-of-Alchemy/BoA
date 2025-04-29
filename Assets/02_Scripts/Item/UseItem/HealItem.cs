@@ -4,14 +4,6 @@ using UnityEngine;
 
 public class HealItem : BaseItem
 {
-    public override void AddItem(ItemData data)
-    {
-    }
-
-    public override void DropItem(ItemData data, int amount, Tile dropTile)
-    {
-    }
-
     public override void UseItem(ItemData data)
     {
             //// 공격 로직

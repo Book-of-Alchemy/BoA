@@ -3,23 +3,25 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using DG.Tweening;
 using System;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(PlayerStats))]
 public class PlayerController : MonoBehaviour
 {
-    public float MoveSpeed = 5f;
-    public float MoveActionCost = 1f;
-    public LayerMask UnitLayer;
-    public LayerMask ObstacleLayer;
-    public float InputBufferDuration = 0.1f;
-    public float DashSpeed = 10f;      // 대시 속도
-    public int DashDistance = 3;     // 최대 대시 거리
+    public float moveSpeed = 5f;
+    public float moveActionCost = 1f;
+    public LayerMask unitLayer;
+    public LayerMask obstacleLayer;
+    public float inputBufferDuration = 0.1f;
+    public float dashSpeed = 10f;      // 대시 속도
+    public int dashDistance = 3;     // 최대 대시 거리
     private Coroutine _dashBufferCoroutine;
 
     private PlayerStats _playerStats;
     private PlayerInputActions _inputActions;
     private CharacterAnimator _animator;
     private bool _isMoving;
+    private bool _isCtrlHold;
     //start코루틴이 반환하는 참조들(중복실행방지, 코루틴 관리(버퍼확인)
     private Coroutine _moveBufferCoroutine;
     private Coroutine _attackBufferCoroutine;
@@ -28,6 +30,15 @@ public class PlayerController : MonoBehaviour
     private SpriteRenderer _spriteRenderer;
     public event Action onActionConfirmed;//액션 선택시 실행 즉 현재 perform move perform attack 시작시 실행하면 됨
     public bool isPlayerTurn;//false일시 입력 차단
+    private float _savedTurnSpeed;  // 원래 턴 속도 저장용
+    private float _dashStartHealth; // 대쉬 시작전 체력 저장 필드
+    private HashSet<EnemyStats> _initialVisibleEnemies;
+
+    // BufferAndDash 후 실제 대시 스텝을 처리할 큐
+    private Queue<Vector2Int> _dashQueue;
+    // 대시 코루틴
+    private Coroutine _dashCoroutine;
+
     /// <summary>
     /// input manager별도로 생성 input action은 inputmanager를 참조하도록 변경함
     /// 현재 플레이어 턴시작시 isplayerturn만 체크해주는 방식
@@ -48,6 +59,8 @@ public class PlayerController : MonoBehaviour
         _inputActions.PC.Move.started += OnMoveStarted;
         _inputActions.PC.Attack.started += OnAttackStarted;
         _inputActions.PC.Dash.started += OnDashStarted;
+        _inputActions.PC.Ctrl.performed += OnCtrlPressed;
+        _inputActions.PC.Ctrl.canceled += OnCtrlReleased;
     }
 
     public void OnDisable()
@@ -55,8 +68,11 @@ public class PlayerController : MonoBehaviour
         _inputActions.PC.Move.started -= OnMoveStarted;
         _inputActions.PC.Attack.started -= OnAttackStarted;
         _inputActions.PC.Dash.started -= OnDashStarted;
+        _inputActions.PC.Ctrl.performed -= OnCtrlPressed;
+        _inputActions.PC.Ctrl.canceled -= OnCtrlReleased;
     }
-
+    private void OnCtrlPressed(InputAction.CallbackContext ctx) => _isCtrlHold = true;
+    private void OnCtrlReleased(InputAction.CallbackContext ctx) => _isCtrlHold = false;
 
     /// <summary>
     /// 구독 및 해제를 해줘야하므로 람다식으로 처리시 구독해제가 불가함
@@ -97,7 +113,7 @@ public class PlayerController : MonoBehaviour
         Vector2 bufferedInput = Vector2.zero;// 0으로 초기화
 
         //Move 액션의 값을 읽고 (0,0)이 아닌 입력이 들어올때마다 버퍼 인풋 갱신
-        while (elapsed < InputBufferDuration)//elapsed가 0.1초가 될때까지 반복
+        while (elapsed < inputBufferDuration)//elapsed가 0.1초가 될때까지 반복
         {
             Vector2 current = _inputActions.PC.Move.ReadValue<Vector2>();
             if (current != Vector2.zero) bufferedInput = current;
@@ -120,7 +136,7 @@ public class PlayerController : MonoBehaviour
         float elapsed = 0f;
         Vector2 bufferedInput = Vector2.zero;
 
-        while (elapsed < InputBufferDuration)
+        while (elapsed < inputBufferDuration)
         {
             Vector2 current = _inputActions.PC.Move.ReadValue<Vector2>();
             if (current != Vector2.zero) bufferedInput = current;
@@ -128,41 +144,70 @@ public class PlayerController : MonoBehaviour
             yield return null;
         }
 
-        // 버퍼 시간에 방향키를 눌렀다면 그 방향으로 버퍼인풋, 안눌렀다면 마지막 이동방향으로
-        Vector2 rawInput = bufferedInput != Vector2.zero ? bufferedInput : _lastMoveDirection;
-        Vector2Int offset = new Vector2Int(
-            rawInput.x > 0 ? 1 : rawInput.x < 0 ? -1 : 0,
-            rawInput.y > 0 ? 1 : rawInput.y < 0 ? -1 : 0
-        );
-        //공격방향 업데이트 및 실제 공격 호출
-        _lastMoveDirection = offset;
+        // 애니메이션만 재생 
         _animator.PlayAttack();
+        onActionConfirmed?.Invoke();
 
         _attackBufferCoroutine = null;
     }
+
+
 
     private IEnumerator BufferAndDash()
     {
         float elapsed = 0f;
         Vector2 buf = Vector2.zero;
-        while (elapsed < InputBufferDuration)
+        while (elapsed < 0.1f)
         {
-            Vector2 cur = _inputActions.PC.Move.ReadValue<Vector2>();
+            Vector2 cur = InputManager.Instance.GetInputSafe().PC.Move.ReadValue<Vector2>();
             if (cur != Vector2.zero) buf = cur;
             elapsed += Time.deltaTime;
             yield return null;
         }
 
-        // 버퍼된 방향이 없으면 마지막 방향 사용
+        // 2) 방향 & 최대 칸 수 계산
         Vector2 raw = buf != Vector2.zero ? buf : _lastMoveDirection;
         Vector2Int offset = new Vector2Int(
             raw.x > 0 ? 1 : raw.x < 0 ? -1 : 0,
             raw.y > 0 ? 1 : raw.y < 0 ? -1 : 0
         );
+        _lastMoveDirection = offset;
 
-        DoDash(offset);
+        var startPos = _playerStats.CurTile.gridPosition;
+        int maxSteps = 0;
+        for (int i = 1; i <= dashDistance; i++)
+        {
+            var next = startPos + offset * i;
+            if (!_playerStats.curLevel.tiles.TryGetValue(next, out var t)) break;
+            if (!t.IsWalkable || t.CharacterStatsOnTile != null) break;
+            maxSteps = i;
+        }
+
+        if (maxSteps > 0)
+        {
+            //대시 시작 전 상태 저장
+            _dashStartHealth = _playerStats.CurrentHealth;
+            _initialVisibleEnemies = new HashSet<EnemyStats>();
+            foreach (var tile in _playerStats.tilesOnVision)
+                if (tile.CharacterStatsOnTile is EnemyStats e)
+                    _initialVisibleEnemies.Add(e);
+
+            var tm = TurnManager.Instance;
+            _savedTurnSpeed = tm.turnSpeed;
+            tm.turnSpeed *= 3f;
+            moveSpeed *= 3f;
+            // 큐에 스텝 담기
+            _dashQueue = new Queue<Vector2Int>();
+            for (int i = 0; i < maxSteps; i++)
+                _dashQueue.Enqueue(offset);
+
+            // 대시 코루틴 시작
+            _dashCoroutine = StartCoroutine(DashCoroutine());
+        }
+
         _dashBufferCoroutine = null;
     }
+
 
     private void ExecuteMove(Vector2 rawInput)
     {
@@ -174,7 +219,14 @@ public class PlayerController : MonoBehaviour
             rawInput.x > 0 ? 1 : rawInput.x < 0 ? -1 : 0,
             rawInput.y > 0 ? 1 : rawInput.y < 0 ? -1 : 0
         );
-        
+
+        if (_isCtrlHold)
+        {
+            if (offset.x != 0)
+                _spriteRenderer.flipX = offset.x < 0;
+            _lastMoveDirection = offset;
+            return;
+        }
         //스프라이트 flipx
         if (offset.x != 0)
             _spriteRenderer.flipX = offset.x < 0;
@@ -199,7 +251,7 @@ public class PlayerController : MonoBehaviour
 
         //월드 좌표로 목적지(dest) 계산후 지정된 이속으로 걸리는 시간 구하기
         Vector3 dest = new Vector3(tgtCell.x, tgtCell.y, 0f);
-        float duration = Vector3.Distance(transform.position, dest) / MoveSpeed;
+        float duration = Vector3.Distance(transform.position, dest) / moveSpeed;
         onActionConfirmed?.Invoke();
         //이동 애니메이션 재생및 움직임(행동력 소모)
         _animator.PlayMove();
@@ -236,7 +288,7 @@ public class PlayerController : MonoBehaviour
         Vector2 direction = dir.normalized;// 중복방지를 위해 방향을 한번더 저장
 
         Debug.DrawRay(origin, direction * 0.5f, Color.red, 0.5f);
-        RaycastHit2D hit = Physics2D.Raycast(origin, direction, 0.5f, UnitLayer);
+        RaycastHit2D hit = Physics2D.Raycast(origin, direction, 0.5f, unitLayer);
 
         if (hit.collider != null && hit.collider.CompareTag("Enemy"))
         {
@@ -247,39 +299,69 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-    // 실제 대시 실행 메서드
-    private void DoDash(Vector2Int offset)
+    //대시 실행 메서드
+    private IEnumerator DashCoroutine()
     {
-        onActionConfirmed?.Invoke();
-        _animator.PlayMove();
-        if (offset.x != 0) _spriteRenderer.flipX = offset.x < 0;
+        bool cancelled = false;
+        bool firstStep = true;
+        var tm = TurnManager.Instance;
 
-        // 시작 위치
-        var start = _playerStats.CurTile.gridPosition;
-        var end = start;
-
-        // 최대 DashDistance만큼 검사하며 이동 가능 타일까지 end 갱신
-        for (int i = 1; i <= DashDistance; i++)
+        while (_dashQueue.Count > 0 && !cancelled)
         {
-            var next = start + offset * i;
-            if (!_playerStats.curLevel.tiles.TryGetValue(next, out var t)) break;
-            if (!t.IsWalkable || t.CharacterStatsOnTile != null) break;
-            // TODO: 함정·디버프·이벤트 판별 로직 추가
-            end = next;
+            // 첫 스텝 전에는 대기 없이 바로 이동
+            if (!firstStep)
+                yield return new WaitUntil(() => isPlayerTurn);
+            firstStep = false;
+
+            //  한칸씩 이동 처리
+            Vector2Int step = _dashQueue.Dequeue();
+            Vector2Int cur = _playerStats.CurTile.gridPosition;
+            Vector2Int next = cur + step;
+
+            if (!_playerStats.curLevel.tiles.TryGetValue(next, out var tile)
+                || !tile.IsWalkable
+                || tile.CharacterStatsOnTile != null|| _playerStats.CurrentHealth < _dashStartHealth)
+                break;
+
+            // 방향 및 애니메이션
+            if (step.x != 0) _spriteRenderer.flipX = step.x < 0;
+            _animator.PlayMove();
+
+            // 타일 점유 갱신
+            _playerStats.CurTile.CharacterStatsOnTile = null;
+            _playerStats.CurTile = tile;
+            tile.CharacterStatsOnTile = _playerStats;
+
+            // Tween 이동
+            Vector3 dest = new Vector3(next.x, next.y, 0f);
+            float duration = Vector3.Distance(transform.position, dest) / dashSpeed;
+            yield return transform
+                .DOMove(dest, duration)
+                .SetEase(Ease.Linear)
+                .WaitForCompletion();
+
+            //// 행동력 차감 + 턴 종료 알림
+            //int stepCost = /* 스텝당 코스트 계산 */;
+            //GetComponent<PlayerUnit>().SetNextActionCost(stepCost);
+            onActionConfirmed?.Invoke();
+            // 새로 보이는 적
+            foreach (var vis in _playerStats.tilesOnVision)
+            {
+                if (vis.CharacterStatsOnTile is EnemyStats e
+                    && !_initialVisibleEnemies.Contains(e))
+                {
+                    cancelled = true;
+                    break;
+                }
+            }
         }
 
-        if (end == start) return;
+        // 마지막 스텝 후에도 적에게 한 번 기회를 주기 위해 대기
+        yield return new WaitUntil(() => isPlayerTurn);
 
-        _isMoving = true;
-        _playerStats.CurTile.CharacterStatsOnTile = null;
-        _playerStats.CurTile = _playerStats.curLevel.tiles[end];
-        _playerStats.CurTile.CharacterStatsOnTile = _playerStats;
-
-        Vector3 dest = new Vector3(end.x, end.y, 0f);
-        float duration = Vector3.Distance(transform.position, dest) / DashSpeed;
-        transform
-            .DOMove(dest, duration)
-            .SetEase(Ease.Linear)
-            .OnComplete(() => { _isMoving = false; });
+        // 대시 종료 후 턴 속도 복구
+        tm.turnSpeed = _savedTurnSpeed;
+        _dashCoroutine = null;
+        moveSpeed = moveSpeed / 3;
     }
 }

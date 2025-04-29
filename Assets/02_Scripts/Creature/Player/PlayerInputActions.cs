@@ -107,6 +107,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Ctrl"",
+                    ""type"": ""Button"",
+                    ""id"": ""c558c3c1-6e29-463d-8fbb-0b170eaf943c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -450,6 +459,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""MouseClick"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cd2f6127-d055-4c25-9176-c2fd63b3d32a"",
+                    ""path"": ""<Keyboard>/ctrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Ctrl"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -467,6 +487,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_PC_Attack = m_PC.FindAction("Attack", throwIfNotFound: true);
         m_PC_MousePosition = m_PC.FindAction("MousePosition", throwIfNotFound: true);
         m_PC_MouseClick = m_PC.FindAction("MouseClick", throwIfNotFound: true);
+        m_PC_Ctrl = m_PC.FindAction("Ctrl", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -537,6 +558,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_PC_Attack;
     private readonly InputAction m_PC_MousePosition;
     private readonly InputAction m_PC_MouseClick;
+    private readonly InputAction m_PC_Ctrl;
     public struct PCActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -550,6 +572,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @Attack => m_Wrapper.m_PC_Attack;
         public InputAction @MousePosition => m_Wrapper.m_PC_MousePosition;
         public InputAction @MouseClick => m_Wrapper.m_PC_MouseClick;
+        public InputAction @Ctrl => m_Wrapper.m_PC_Ctrl;
         public InputActionMap Get() { return m_Wrapper.m_PC; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -586,6 +609,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @MouseClick.started += instance.OnMouseClick;
             @MouseClick.performed += instance.OnMouseClick;
             @MouseClick.canceled += instance.OnMouseClick;
+            @Ctrl.started += instance.OnCtrl;
+            @Ctrl.performed += instance.OnCtrl;
+            @Ctrl.canceled += instance.OnCtrl;
         }
 
         private void UnregisterCallbacks(IPCActions instance)
@@ -617,6 +643,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @MouseClick.started -= instance.OnMouseClick;
             @MouseClick.performed -= instance.OnMouseClick;
             @MouseClick.canceled -= instance.OnMouseClick;
+            @Ctrl.started -= instance.OnCtrl;
+            @Ctrl.performed -= instance.OnCtrl;
+            @Ctrl.canceled -= instance.OnCtrl;
         }
 
         public void RemoveCallbacks(IPCActions instance)
@@ -645,5 +674,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnAttack(InputAction.CallbackContext context);
         void OnMousePosition(InputAction.CallbackContext context);
         void OnMouseClick(InputAction.CallbackContext context);
+        void OnCtrl(InputAction.CallbackContext context);
     }
 }
