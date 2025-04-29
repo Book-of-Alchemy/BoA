@@ -42,7 +42,7 @@ public class UI_Action : UIBase
             {
                 case EUIActionType.Use:
                     SetButtonText("Use","Drop");
-                    AddButton(()=>Inventory.Instance.Use(item), ()=>Inventory.Instance.Drop(item,index));
+                    AddButton(()=>Inventory.Instance.Use(item,index), ()=>Inventory.Instance.Drop(item,index));
                     break;
                 case EUIActionType.Craft:
                     SetButtonText("Craft", "Cancel");

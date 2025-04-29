@@ -4,43 +4,85 @@ public class InventoryItem // Inventory에 배열로 존재하는 Item
 {
     public int Amount { get; private set; }
     public ItemData itemData { get; private set; }
+    public bool IsEmpty => itemData == null || Amount <= 0;
+
     public void AddItem(ItemData data, int amount = 1)
     {
-        Amount += amount;
+        //itemData가 비어있다면 아이템 추가
         if (itemData == null)
             itemData = data;
+
+        //아이템 id가 같을때만 수량증가
+        if (itemData.id == data.id)
+            Amount += amount;
+        else
+            Debug.LogWarning("다른 종류의 아이템추가");
     }
 
-    public int GetReuceAmount() //아이템 제거 0이되면 Null
+    public int DecreaseAmount(int amount = 1) //아이템 제거 0이되면 Null
     {
-        Amount--;
-        if(Amount == 0)
+        Amount -= amount;
+
+        if(Amount <= 0)
+        {
+            Amount = 0;
             itemData = null;
-        Debug.Log(Amount);
-        return Amount;  
+        }
+        return Amount;
     }
 
     public Sprite GetSprite()
     {
-        return itemData.Sprite;
+        if(itemData != null)
+            return itemData.Sprite;
+        else
+        {
+            Debug.LogWarning("Null에서 GetSprite호출");
+            return null;
+        }
     }
 
     public int GetItemId()
     {
-        return itemData.id;
+        if (itemData != null)
+            return itemData.id;
+        else
+        {
+            Debug.LogWarning("Null에서 GetItemId호출");
+            return -1;
+        }
     }
 
     public string GetItemName()
     {
-        return itemData.name_kr;
+        if (itemData != null)
+            return itemData.name_kr;
+        else
+        {
+            Debug.LogWarning("Null에서 GetItemName 호출");
+            return string.Empty;
+        }
     }
 
     public string GetItemDesc()
     {
-        return itemData.iteminfo_kr;
+        if (itemData != null)
+            return itemData.iteminfo_kr;
+        else
+        {
+            Debug.LogWarning("Null에서 GetItemDesc 호출");
+            return string.Empty;
+        }
     }
+
     public Item_Type GetItemType()
     {
-        return itemData.item_type;
+        if (itemData != null)
+            return itemData.item_type;
+        else
+        {
+            Debug.LogWarning("Null에서 GetItemType 호출");
+            return default;
+        }
     }
 }

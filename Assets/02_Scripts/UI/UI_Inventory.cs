@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
@@ -28,9 +29,20 @@ public class UI_Inventory : UIBase
     [SerializeField] private Button _sortBtn;
     [SerializeField] private Button _sortResetBtn;
     public int SlotCount => _slotUIList.Count;
-    
+
+    public event Action<EInventoryType> OnInventoryChanged;
     private EInventoryType _curType; // 현재 띄워진 인벤토리 타입
-    public EInventoryType curType => _curType;
+    public EInventoryType CurType
+    {
+        get => _curType;
+        set
+        {
+            if (_curType == value) return;
+
+            _curType = value; 
+            OnInventoryChanged?.Invoke(_curType);
+        }
+    }
 
     private Dictionary<EInventoryType, Item_Type[]> _typeFilter= new() //인벤토리 타입에 따른 Item필터타입
     {
@@ -49,6 +61,7 @@ public class UI_Inventory : UIBase
     {
         for (int i = 0; i < _slotUIList.Count; i++)
         {
+            _slotUIList[i].Initialize(this);
             var slot = _slotUIList[i];
             slot.Index = i;
 
@@ -101,7 +114,7 @@ public class UI_Inventory : UIBase
         if (param.Length > 0 && param[0] is EInventoryType)
         {
             SetCurType((EInventoryType)param[0]); 
-            ShowRightTool(curType);
+            ShowRightTool(CurType);
         }
         else
         {
@@ -158,6 +171,7 @@ public class UI_Inventory : UIBase
         if (_curType == type) return;
 
         _curType = type;
+        Inventory.Instance.ClearAllHighlights();
 
         //키에 맞는 Type찾아서 인벤토리 필터링
         if (_typeFilter.TryGetValue(type, out Item_Type[] types))

@@ -1,7 +1,9 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class Inventory : Singleton<Inventory>
 {
@@ -18,6 +20,8 @@ public class Inventory : Singleton<Inventory>
 
     private List<InventoryItem> _craftList = new(); // 제작 테이블에 올라간 아이템list
     private List<int> _highlightItemIds = new List<int>(); // 강조되는 아이템 list
+
+    //private Dictionary<int, InventoryItem> _craftDic = new();
 
     private void Start()
     {
@@ -61,7 +65,7 @@ public class Inventory : Singleton<Inventory>
         if(index >= 0)// True라면 찾음
         {
             items[index].AddItem(itemData,amount); //수량증가
-            if(isUpdate)
+            if(isUpdate && _uiInventory != null)
                 UpdateUISlot(index);
             return items[index];
         }
@@ -73,8 +77,9 @@ public class Inventory : Singleton<Inventory>
             if (items[index] == null)
                 items[index] = new InventoryItem();
 
-            items[index].AddItem(itemData); //빈 공간에 itemData Add
-            if(isUpdate)
+            items[index].AddItem(itemData,amount); //빈 공간에 itemData Add
+
+            if(isUpdate && _uiInventory != null)
                 UpdateUISlot(index);
             return items[index];
         }
@@ -124,17 +129,19 @@ public class Inventory : Singleton<Inventory>
         return -1;
     }
 
-    private void RemoveItem(int index)
+    private void RemoveItem(int index, int amount = 1)
     {
         if(items[index].Amount >= 1)
         {
-            if (items[index].GetReuceAmount() == 0)
+            int value = items[index].DecreaseAmount(amount);
+            if (value == 0)
             {
                 items[index] = null;
                 _uiInventory.RemoveItem(index);
             }
             else
                 _uiInventory.ReduceItem(index);
+
         }
     }
 
@@ -164,14 +171,10 @@ public class Inventory : Singleton<Inventory>
                 _uiInventory.SetInventorySlot(i, items[i]);
         }
     }
-    //public BaseItem Check(int index)
-    //{
-    //    //var effectType = items[index].itemData.effect_type;
-    //    //return factory.UseItem(effectType, this.transform);
-    //}
 
-    public void CraftReady()
+    public void TryCraft()
     {
+        //제작 결과 담을 변수
         (bool boolResult, ItemData dataResult, int amount) result;
 
         if (_craftList.Count >= 3)
@@ -181,22 +184,26 @@ public class Inventory : Singleton<Inventory>
             _craftList[1].itemData, _craftList[1].Amount,
             _craftList[2].itemData, _craftList[2].Amount);
         }
-        else
+        else // 1개를 넣고 제작을 시도했을때 처리도 추가해야함.
         {
             result = _alchemy.CreateItem(
             _craftList[0].itemData, _craftList[0].Amount,
             _craftList[1].itemData, _craftList[1].Amount);
         }
 
+        //결과를 각각 변수로 저장.
         var (boolResult, dataResult, amount) = result;
 
-        if (boolResult)
+        if (boolResult) // 제작에 성공했을 경우
         {
-            //성공했을 경우 , 기존 Item에서 Amount만큼 감소를 해야하고 Craft창도 비워야함.
-            _craftTool.RemoveAllSlot();
-            //Debug.Log($"{amount}개");
+            //성공했을 경우,기존 Item에서 Amount만큼 감소를 해야하고 Craft창도 비워야함.
+            _craftTool.RemoveCraftSlot(); // UI제작테이블 비우기
             InventoryItem resultItem = Add(dataResult,amount,false);
-            _craftTool.CraftComplete(resultItem);
+            //원본 Inventory의 수량을 직접 깍는 로직잉벗다.
+            //제작 성공시 사용한 재료들의 수량을 감소시키는 로직이 필요함.
+
+            Debug.Log($"제작 생성된 아이템의 갯수 : {amount}개");
+            _craftTool.CraftComplete(resultItem); //결과 슬롯에 제작 성공아이템 전달
             _craftList.RemoveAll(slot => slot != null);
         }
         else
@@ -205,16 +212,44 @@ public class Inventory : Singleton<Inventory>
         }
 
         //Debug.Log(dataResult);
+    }
+    private void UpdateCraftPreview()
+    {
+        //2개 이상부터 검사
+        if (_craftList.Count < 1 ) return;
 
+        List<int> craftItemIds = new List<int>();
+        foreach (var item in _craftList)
+        {
+            if (item != null)
+                craftItemIds.Add(item.GetItemId());
+        }
 
+        InventoryItem resultItem = _alchemy.GetCraftResultPreview(craftItemIds);
+
+        if(resultItem != null)
+        {
+            _craftTool.SetPreviewSlot(resultItem, resultItem.Amount);
+        }
+        else
+        {
+            _craftTool.ClearPreviewSlot();
+        }
+    }
+    public void RemoveCraftTable(InventoryItem item)
+    {
+        _craftList.Remove(item);
+        HighlightCraftableSlots();
+        UpdateCraftPreview();
     }
 
-    public void Use(InventoryItem item)
+    public void Use(InventoryItem item,int index)
     {
         Debug.Log("UseAction");
         BaseItem baseItem = ItemManager.Instance.CreateItem(item.itemData);
         baseItem.UseItem(item.itemData);
-        //RemoveItem(index);
+        RemoveItem(index);
+
         UIManager.Hide<UI_Action>();
         UIManager.Hide<UI_Inventory>();
     }
@@ -222,9 +257,11 @@ public class Inventory : Singleton<Inventory>
     public void Drop(InventoryItem item,int index)
     {
         Debug.Log("DropAction");
+        //현재 DropItem은 아이템 EffectType이 DamageType만 가능
         BaseItem baseItem = ItemManager.Instance.CreateItem(item.itemData);
         baseItem.DropItem(item.itemData,item.Amount);
-        RemoveItem(index);
+
+        RemoveItem(index, item.Amount);
         UIManager.Hide<UI_Action>();
     }
 
@@ -232,8 +269,10 @@ public class Inventory : Singleton<Inventory>
     {
         //Craft테이블에 item을 같이 넣어야함.
         _craftList.Add(item);
+
         HighlightCraftableSlots();
         UpdateUICraft(item);
+        UpdateCraftPreview();
         UIManager.Hide<UI_Action>();
     }
 
@@ -263,6 +302,11 @@ public class Inventory : Singleton<Inventory>
     //craftList에 먼저 아이템이 올라간 후에 동작되어야함.
     public void HighlightCraftableSlots()
     {
+        if (_craftList.Count == 0)
+        {
+            ClearAllHighlights(); 
+            return;
+        }
         ClearAllHighlights(); // 모든 강조 초기화
 
         //현재 _craftList에 올라간 모든 아이템 ID를 저장
@@ -275,6 +319,7 @@ public class Inventory : Singleton<Inventory>
 
         //현재 _craftList에 올라간 craftItemIds 기준으로 제작 가능한 ID 리턴
         List<int> requiredItemIds = _alchemy.GetCraftableIds(craftItemIds);
+
         _highlightItemIds = requiredItemIds;
 
         for (int i = 0; i < items.Length; i++)

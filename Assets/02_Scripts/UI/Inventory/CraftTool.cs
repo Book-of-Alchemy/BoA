@@ -19,7 +19,7 @@ public class CraftTool : MonoBehaviour
         _slotCraft[index].SetItem(item);
     }
 
-    public void RemoveAllSlot() // Craft 슬롯 비우기
+    public void RemoveCraftSlot() // Craft 슬롯 비우기
     {
         foreach (var slot in _slotCraft)
         {
@@ -27,7 +27,26 @@ public class CraftTool : MonoBehaviour
         }
 
     }
+    public void RemoveAllSlot()
+    {
+        foreach (var slot in _slotCraft)
+        {
+            slot.RemoveItem();
+        }
 
+        _slotResult.RemoveItem();
+    }
+
+    public void SetPreviewSlot(InventoryItem item, int amount)
+    {
+        _slotResult.SetItem(item);
+        _slotResult.SetItemBlurColor();
+    }
+
+    public void ClearPreviewSlot()
+    {
+        _slotResult.RemoveItem();
+    }
     private int FindSlot()
     {
         return _slotCraft.FindIndex(0,slot => !slot.HasItem);
@@ -35,11 +54,13 @@ public class CraftTool : MonoBehaviour
 
     public void CraftItem() // 인스펙터에서 등록됨.
     {
-        Inventory.Instance.CraftReady();
+        Inventory.Instance.TryCraft();
     }
 
     public void CraftComplete(InventoryItem item)
     {
-        _slotResult.SetItem(item);
+        //ClearPreviewSlot();
+        //_slotResult.SetItem(item);
+        _slotResult.SetItemNormalColor();
     }
 }
