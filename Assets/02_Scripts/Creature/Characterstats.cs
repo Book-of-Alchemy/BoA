@@ -124,7 +124,22 @@ public abstract class CharacterStats : MonoBehaviour
         target.TakeDamage(finalDamage);
         Debug.Log($"{gameObject.name}가 {target.gameObject.name}을 공격함니다." + $"속성:{damageType}, 최종 대미지:{finalDamage}");
     }
+    public virtual void Attack(CharacterStats target,float multiplier, DamageType damageType = DamageType.None)
+    {
+        //기본 데미지 계산
+        float baseDamage = UnityEngine.Random.Range(attackMin, attackMax)* multiplier;
+        //치명타 게산
+        bool isCrit = UnityEngine.Random.value < critChance;
+        if (isCrit)
+        {
+            baseDamage *= critDamage;
+            Debug.Log($"{gameObject.name}가 치명타!");
+        }
 
+        float finalDamage = DamageCalculator.CalculateDamage(target, baseDamage, damageType);
+        target.TakeDamage(finalDamage);
+        Debug.Log($"{gameObject.name}가 {target.gameObject.name}을 공격함니다." + $"속성:{damageType}, 최종 대미지:{finalDamage}");
+    }
     public virtual void TakeDamage(float amount)
     {
         CurrentHealth -= amount;

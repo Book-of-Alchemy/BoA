@@ -13,6 +13,7 @@ public class SkillAttackBehaviour : AttackBaseBehaviour
             {
                 controller.curSkill = skill_0;
                 controller.Skill_0();
+                return;
             }
         }
 
@@ -22,6 +23,7 @@ public class SkillAttackBehaviour : AttackBaseBehaviour
             {
                 controller.curSkill = skill_1;
                 controller.Skill_1();
+                return;
             }
         }
 

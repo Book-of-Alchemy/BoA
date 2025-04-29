@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a37892beaf5e12744a8e631d7cb86e7a, type: 3}
-  m_Name: Projectile Data Base
+  m_Script: {fileID: 11500000, guid: 9ec0fc0ec6107d540933935b541641e6, type: 3}
+  m_Name: Arrow
   m_EditorClassIdentifier: 
-  projectileDatas:
-  - {fileID: 11400000, guid: 2fdf361054f996941adab64d3beab297, type: 2}
+  id: 310000
+  prefab: {fileID: 2035934265778975287, guid: 9dac1275c7476c84180e627bd810e7fb, type: 3}

@@ -21,6 +21,9 @@ public class Effect : MonoBehaviour, IPoolableId
 
     public void Play()
     {
-        animator.Play(0);
+        if (animator != null && animator.runtimeAnimatorController != null && animator.runtimeAnimatorController.animationClips.Length > 0)
+        {
+            animator.Play(0);
+        }
     }
 }

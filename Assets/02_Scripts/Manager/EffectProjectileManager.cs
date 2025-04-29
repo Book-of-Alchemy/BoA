@@ -24,8 +24,9 @@ public class EffectProjectileManager : Singleton<EffectProjectileManager>
     public void LaunchProjectile(Vector2Int origin, Vector2Int target, int id,Action onComplete = null)
     {
         Projectile projectile = projectilePool.GetFromPool(id, origin, this.offset);
+        Vector3 adjustedPosition = new Vector3(target.x, target.y, 0) + offset;
         projectile.Play();
-        projectile.transform.DOMove(new Vector3(target.x, target.y, 0), 0.1f)
+        projectile.transform.DOMove(adjustedPosition, 0.1f)
             .OnComplete(() =>
             {
                 onComplete?.Invoke();
@@ -36,8 +37,9 @@ public class EffectProjectileManager : Singleton<EffectProjectileManager>
     public void LaunchProjectile(Vector2Int origin, Vector2Int target, int projectileId, int effectId, Action onComplete = null)
     {
         Projectile projectile = projectilePool.GetFromPool(projectileId, origin, this.offset);
+        Vector3 adjustedPosition = new Vector3(target.x, target.y, 0) + offset;
         projectile.Play();
-        projectile.transform.DOMove(new Vector3(target.x, target.y, 0), 0.1f)
+        projectile.transform.DOMove(adjustedPosition, 0.1f)
             .OnComplete(() =>
             {
                 onComplete?.Invoke();

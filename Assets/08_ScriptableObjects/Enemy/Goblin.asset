@@ -10,20 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6abc21a19d57d034aba438aa49a01fc6, type: 3}
-  m_Name: New Enemy Data
+  m_Name: Goblin
   m_EditorClassIdentifier: 
-  id: 0
-  name_kr: 
-  biome_id: 0
-  sight: 0
-  attack_range: 0
-  min_level: 0
-  max_level: 0
-  base_hp: 0
-  hp_per_level: 0
-  base_atk: 0
-  atk_per_level: 0
-  base_def: 0
+  id: 230003
+  prefab: {fileID: 4208732318414834760, guid: a668c1ff2557f334f9f090a4a758df3e, type: 3}
+  name_kr: "\uACE0\uBE14\uB9B0"
+  biome_id: 120001
+  sight: 4
+  attack_range: 1
+  min_level: 4
+  max_level: 30
+  base_hp: 40
+  hp_per_level: 2
+  base_atk: 10
+  atk_per_level: 1
+  base_def: 3
   def_per_level: 0
   resist_fire: 0
   resist_water: 0
@@ -33,4 +34,3 @@ MonoBehaviour:
   resist_earth: 0
   resist_light: 0
   resist_dark: 0
-  prefab: {fileID: 0}
