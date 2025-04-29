@@ -40,7 +40,8 @@ public abstract class BaseItem : MonoBehaviour
     /// <param name="dropTile">아이템을 드롭하려는 위치, 기본 null로 되어있어저 입력하지 않으면 플레이어 위치로 잡음</param>
     public void DropItem(ItemData data, int amount, Tile dropTile = null)
     {
-        Init(data, dropTile);//여기 왜 curTile로 되어있었는진 몰라도 일단 수정했습니다...(04.29 이성재)
+        Init(data, dropTile);//테스트를 위하여 일단 수정했습니다...(04.29 이성재)
+        //Init(data, _curTile);
         dropAmount = amount;
         _curTile.itemsOnTile.Add(this);
         Debug.Log("아이템 버려짐");
