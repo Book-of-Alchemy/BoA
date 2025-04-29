@@ -350,4 +350,19 @@ public static class TileUtility
 
         return line;
     }
+
+    public static List<Vector2Int> GetPositionsInRect(RectInt rect)
+    {
+        List<Vector2Int> positions = new List<Vector2Int>();
+
+        for (int x = rect.xMin; x < rect.xMax; x++)
+        {
+            for (int y = rect.yMin; y < rect.yMax; y++)
+            {
+                positions.Add(new Vector2Int(x, y));
+            }
+        }
+
+        return positions;
+    }
 }

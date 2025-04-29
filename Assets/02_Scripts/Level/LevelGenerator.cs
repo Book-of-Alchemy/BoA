@@ -24,9 +24,10 @@ public class LevelGenerator : MonoBehaviour
         curBiomeSet = biomeSet;
     }
 
-    public Level GenerateLevel(int minSize = 7, bool isBossRoom = false)
+    public Level GenerateLevel(int minSize = 7, QuestData questData =null)
     {
         Level level = new GameObject("Level").AddComponent<Level>();
+        level.questData = SODataManager.Instance.questDataBase.questData[0];//임시코드
         level.biomeSet = curBiomeSet;
         level.tileDataBase = TileManger.Instance.tileData;
 
@@ -64,6 +65,7 @@ public class LevelGenerator : MonoBehaviour
         if (scretLeaf != null)
             seletedLeaves.Add(scretLeaf);
 
+        
         SetRoomOnLeaves(seletedLeaves);
 
         Dictionary<Vector2Int, Tile> tiles = GenerateTilesFromLeaf(root);//우선 empty 깔고 시작
@@ -90,6 +92,9 @@ public class LevelGenerator : MonoBehaviour
         }
 
         SetLevelOnTiles(tiles, level);
+
+        level.seletedLeaves = seletedLeaves;
+        level.startLeaf = startLeaf;
 
         return level;
     }

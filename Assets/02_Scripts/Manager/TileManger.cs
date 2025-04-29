@@ -37,7 +37,7 @@ public class TileManger : Singleton<TileManger>
         GameManager.Instance.PlayerTransform.curLevel = curLevel;
         GameManager.Instance.PlayerTransform.CurTile = curLevel.startTile;
         GameManager.Instance.PlayerTransform.transform.position = new Vector3(curLevel.startTile.gridPosition.x, curLevel.startTile.gridPosition.y,0);
-        //SpawnPlayer();
+        SpawnEnemy(curLevel);
     }
 
     public void SetLevelGenerator(BiomeSet biomeSet, int roomCnt, int rootWidth, int rootHeight)
@@ -80,6 +80,11 @@ public class TileManger : Singleton<TileManger>
 
         player.curLevel = curLevel;
         player.CurTile = curLevel.startTile;
+    }
+
+    public void SpawnEnemy(Level level)
+    {
+        EnemyFactory.Instance.EnemySpawnAtStart(level);
     }
 
     public void CompleteQuest()
