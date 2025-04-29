@@ -33,7 +33,9 @@ public class PlayerController : MonoBehaviour
     private float _savedTurnSpeed;  // 원래 턴 속도 저장용
     private float _dashStartHealth; // 대쉬 시작전 체력 저장 필드
     private HashSet<EnemyStats> _initialVisibleEnemies;
-
+    //>>
+    //public float MoveSpeed => TurnManager.Instance.turnSpeed;
+    //>>
     // BufferAndDash 후 실제 대시 스텝을 처리할 큐
     private Queue<Vector2Int> _dashQueue;
     // 대시 코루틴
@@ -194,8 +196,9 @@ public class PlayerController : MonoBehaviour
 
             var tm = TurnManager.Instance;
             _savedTurnSpeed = tm.turnSpeed;
-            tm.turnSpeed *= 3f;
-            moveSpeed *= 3f;
+            tm.turnSpeed *= 10f;
+            moveSpeed *= 10f;
+            Time.timeScale *= 10f;
             // 큐에 스텝 담기
             _dashQueue = new Queue<Vector2Int>();
             for (int i = 0; i < maxSteps; i++)
@@ -251,7 +254,7 @@ public class PlayerController : MonoBehaviour
 
         //월드 좌표로 목적지(dest) 계산후 지정된 이속으로 걸리는 시간 구하기
         Vector3 dest = new Vector3(tgtCell.x, tgtCell.y, 0f);
-        float duration = Vector3.Distance(transform.position, dest) / moveSpeed;
+        float duration = 0.1f;
         onActionConfirmed?.Invoke();
         //이동 애니메이션 재생및 움직임(행동력 소모)
         _animator.PlayMove();
@@ -334,11 +337,12 @@ public class PlayerController : MonoBehaviour
 
             // Tween 이동
             Vector3 dest = new Vector3(next.x, next.y, 0f);
-            float duration = Vector3.Distance(transform.position, dest) / dashSpeed;
+            float duration = 0.01f;
             yield return transform
                 .DOMove(dest, duration)
                 .SetEase(Ease.Linear)
                 .WaitForCompletion();
+            //
 
             //// 행동력 차감 + 턴 종료 알림
             //int stepCost = /* 스텝당 코스트 계산 */;
@@ -362,6 +366,7 @@ public class PlayerController : MonoBehaviour
         // 대시 종료 후 턴 속도 복구
         tm.turnSpeed = _savedTurnSpeed;
         _dashCoroutine = null;
-        moveSpeed = moveSpeed / 3;
+        moveSpeed = moveSpeed / 10;
+        Time.timeScale /= 10f;
     }
 }
