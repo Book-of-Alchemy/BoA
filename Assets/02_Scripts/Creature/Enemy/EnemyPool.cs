@@ -2,10 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyPool : ObjectPool<EnemyStats>
+public class EnemyPool : ObjectByIdPool<EnemyStats, EnemyData>
 {
-    Dictionary<int, GameObject> enemyById = new Dictionary<int, GameObject>();
-    Dictionary<int, EnemyData> enemyDataById;
+    
     protected override void Awake()
     {
         Init();
@@ -14,39 +13,13 @@ public class EnemyPool : ObjectPool<EnemyStats>
 
     void Init()
     {
-        List<EnemyData> data = SODataManager.Instance.enemyDataBase.enemyData;
-        enemyDataById = SODataManager.Instance.enemyDataBase.enemyDataById;
-        foreach (var enemy in data)
-        {
-            prefabs.Add(enemy.prefab);
-            enemyById[enemy.id] = enemy.prefab;
-        }
-    }
-
-    public EnemyStats GetFromPool(int id, Transform spawnPosition, Transform newParent = null)
-    {
-        GameObject prefab = enemyById[id];
-        EnemyStats obj;
-        if (poolDictionary.ContainsKey(prefab.name) && poolDictionary[prefab.name].Count > 0)
-        {
-            obj = poolDictionary[prefab.name].Dequeue();
-        }
-        else
-        {
-            obj = Instantiate(prefab).GetComponent<EnemyStats>();
-            obj.name = prefab.name;
-        }
-        //향후 setEnemystat 추가
-        if (newParent != null) obj.transform.SetParent(newParent);
-        obj.transform.position = spawnPosition.position;
-        obj.gameObject.SetActive(true);
-
-        return obj;
+        prefabWithIds = SODataManager.Instance.enemyDataBase.enemyData;
+       
     }
 
     void SetEnemyStat(int id, int level, EnemyStats enemy)
     {
-        if (!enemyDataById.TryGetValue(id, out var data))
+        if (!dataById.TryGetValue(id, out var data))
             return;
 
 

@@ -1,7 +1,10 @@
 using UnityEngine;
 
-public class EnemyStats : CharacterStats
+public class EnemyStats : CharacterStats,IPoolableId
 {
+    [SerializeField]
+    private int id;
+    public int Id { get => id; set => id = value; }
 
     protected override void Awake()
     {

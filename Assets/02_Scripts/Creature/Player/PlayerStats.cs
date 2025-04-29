@@ -4,6 +4,16 @@ using UnityEngine;
 public class PlayerStats : CharacterStats
 {
     private PlayerController _player;
+    public override Tile CurTile
+    {
+        get => curTile;
+        set
+        {
+            TurnOffVision();
+            curTile = value;
+            TurnOnVision();
+        }
+    }
     protected override void Awake()
     {
         base.Awake();
@@ -46,5 +56,35 @@ public class PlayerStats : CharacterStats
     {
         base.Die();
         _player.OnDisable();
+    }
+
+
+    void TurnOffVision()
+    {
+        if (curTile == null || curLevel == null)
+            return;
+
+        foreach (var tile in tilesOnVision)
+        {
+            if (tile == null) continue;
+
+            tile.IsOnSight = false;
+        }
+
+    }
+
+    void TurnOnVision()
+    {
+        if (curTile == null || curLevel == null)
+            return;
+
+        foreach (var tile in tilesOnVision)
+        {
+            if (tile == null) continue;
+
+            tile.IsOnSight = true;
+            tile.IsExplored = true;
+        }
+
     }
 }

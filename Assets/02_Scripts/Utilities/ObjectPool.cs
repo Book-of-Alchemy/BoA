@@ -18,7 +18,7 @@ public class ObjectPool<T> : MonoBehaviour where T : MonoBehaviour
 
     }
 
-    protected void InitObjectPool()
+    protected virtual void InitObjectPool()
     {
 
         foreach (GameObject prefab in prefabs)
