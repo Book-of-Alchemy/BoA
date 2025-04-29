@@ -10,6 +10,7 @@ public abstract class UnitBase : MonoBehaviour
     public float actionCostMultiplier = 1f;
 
     public CharacterStats Stats ;
+    private int? _totalCost = null;
 
     protected virtual void Awake()
     {
@@ -23,9 +24,18 @@ public abstract class UnitBase : MonoBehaviour
         nextActionTime = currentTime + actionCost;
     }
     public abstract void PerformAction();
-
+    public void SetNextActionCost(int cost)
+    {
+        _totalCost = cost;
+    }
     public virtual int GetModifiedActionCost()
     {
+        if (_totalCost.HasValue)
+        {
+            int cost = _totalCost.Value;
+            _totalCost = null;            // 한 번 쓰고 자동 초기화
+            return cost;
+        }
         return Mathf.Max(1, Mathf.RoundToInt(actionCost * actionCostMultiplier));
     }
 
