@@ -25,6 +25,12 @@ public class EnemyStats : CharacterStats
     {
         Debug.Log("적이 사망했습니다.");
         TryDropItem();
+
+        var unitBase = GetComponent<UnitBase>();
+        TurnManager.Instance.RemoveUnit(unitBase);
+
+        StopAllCoroutines();
+
         Invoke(nameof(DelayDestroy), 0.1f);
     }
 

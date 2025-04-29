@@ -30,35 +30,44 @@ public class TurnManager : Singleton<TurnManager>
 
     private IEnumerator TickLoop()
     {
-        WaitForSeconds wait = new WaitForSeconds(1/ turnSpeed);//애니메이션 처리를 위해 적용 향후 이걸 기준으로 가속 + 도트윈 + 애니메이션에도 적용
+        WaitForSeconds wait = new WaitForSeconds(1f / turnSpeed);
+
         while (allUnits.Count > 0)
         {
-            allUnits.Sort((a, b) => ComparePlayer(a, b));//플레이어를 맨앞으로 같은 턴일시 플레이어를 우선
-            // 모든 유닛 버프 디버프
+            // 매 틱 시작할 때마다 파괴된유닛 모두 제거
+            allUnits.RemoveAll(u => u == null);
+
+            if (allUnits.Count == 0)
+                yield break;
+
+            allUnits.Sort((a, b) => ComparePlayer(a, b));
+
+            // 버프/디버프 처리
             foreach (var unit in allUnits.ToArray())
             {
+                if (unit == null) continue;// null 체크
                 unit.Stats?.TickEffects(globalTime);
             }
 
-            foreach (var unit in allUnits.ToArray()) // 시행중에 add remove발생시 에러 발생 복사한 배열사용
+            // 실제 턴 처리
+            foreach (var unit in allUnits.ToArray())
             {
+                if (unit == null) continue; // null 체크
+
                 if (unit.nextActionTime <= globalTime)
                 {
                     unit.StartTurn();
-                    if (unit is PlayerUnit)
-                    {
-                        PlayerUnit playerUnit = unit as PlayerUnit;
+
+                    if (unit is PlayerUnit playerUnit)
                         yield return new WaitUntil(() => !playerUnit.IsWaitingForInput);
-                    }
 
                     int cost = unit.GetModifiedActionCost();
                     Debug.Log($"[Tick {globalTime}] {unit.name} 턴 시작 (cost: {cost})");
+
                     unit.nextActionTime += cost;
-                        yield return wait;
+                    yield return wait;
                 }
             }
-
-
 
             globalTime++;
             yield return null;
