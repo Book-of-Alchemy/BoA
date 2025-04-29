@@ -68,7 +68,7 @@ public class UI_Menu : UIBase
 
     private bool CheckInventoryType(EInventoryType inventoryType) 
     {
-        if (_Inventory.curType != inventoryType)
+        if (_Inventory.CurType != inventoryType)
         {
             _Inventory.ShowRightTool(inventoryType);
             HideDirect();

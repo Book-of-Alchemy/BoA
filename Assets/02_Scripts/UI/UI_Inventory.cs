@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
@@ -28,9 +29,20 @@ public class UI_Inventory : UIBase
     [SerializeField] private Button _sortBtn;
     [SerializeField] private Button _sortResetBtn;
     public int SlotCount => _slotUIList.Count;
-    
+
+    public event Action<EInventoryType> OnInventoryChanged;
     private EInventoryType _curType; // 현재 띄워진 인벤토리 타입
-    public EInventoryType curType => _curType;
+    public EInventoryType CurType
+    {
+        get => _curType;
+        set
+        {
+            if (_curType == value) return;
+
+            _curType = value; 
+            OnInventoryChanged?.Invoke(_curType);
+        }
+    }
 
     private Dictionary<EInventoryType, Item_Type[]> _typeFilter= new() //인벤토리 타입에 따른 Item필터타입
     {
@@ -43,18 +55,20 @@ public class UI_Inventory : UIBase
     private Color _unActiveColor = Color.gray;
     private Color _activeColor; 
 
+    private CraftTool _craftTool;
 
     private void Start()
     {
         for (int i = 0; i < _slotUIList.Count; i++)
         {
+            _slotUIList[i].Initialize(this);
             var slot = _slotUIList[i];
             slot.Index = i;
 
             slot.OnSelected += OnSlotSelected;
             slot.OnDeselected += OnSlotDeselected;
         }
-
+        
     }
 
     private void InitInventoryType() //시작시 버튼 컬러 초기화
@@ -72,7 +86,8 @@ public class UI_Inventory : UIBase
         if (Inventory.Instance != null)
         {
             _inventory = Inventory.Instance;
-            _inventory.Initialize(this);
+            _craftTool = _toolList[1].GetComponent<CraftTool>();
+            _inventory.Initialize(this,_craftTool);
             _addBtn.onClick.AddListener(_inventory.OnClickAddItem);
             _removeBtn.onClick.AddListener(_inventory.OnClickRemoveItem);
             _sortBtn.onClick.AddListener(() => _inventory.FilterAndDisplay(Item_Type.Material));
@@ -99,7 +114,7 @@ public class UI_Inventory : UIBase
         if (param.Length > 0 && param[0] is EInventoryType)
         {
             SetCurType((EInventoryType)param[0]); 
-            ShowRightTool(curType);
+            ShowRightTool(CurType);
         }
         else
         {
@@ -107,7 +122,7 @@ public class UI_Inventory : UIBase
         }
     }
 
-    public void SetSlotItem(int index, InventoryItem item) //슬롯에 아이템 UI 갱신
+    public void SetInventorySlot(int index, InventoryItem item) //슬롯에 아이템 UI 갱신
     {
         _slotUIList[index].SetItem(item);
     }
@@ -156,12 +171,30 @@ public class UI_Inventory : UIBase
         if (_curType == type) return;
 
         _curType = type;
+        Inventory.Instance.ClearAllHighlights();
 
         //키에 맞는 Type찾아서 인벤토리 필터링
         if (_typeFilter.TryGetValue(type, out Item_Type[] types))
             _inventory.FilterAndDisplay(types);
         else //기본 인벤토리는 필터링 없기때문에 
             _inventory.RestoreBeforeFilter();
+    }
+
+    public void HighlightSlot(int index)
+    {
+        //index범위체크
+        if (index < 0 || index >= SlotCount)
+            return;
+
+        //bool 변수를 이용해 강조 끄고 키기
+        _slotUIList[index].SetHighlight(true);
+    }
+    public void UnhighlightSlot(int index)
+    {
+        if (index < 0 || index >= SlotCount)
+            return;
+
+        _slotUIList[index].SetHighlight(false);
     }
 
     public void OnClickInventoryBtn()

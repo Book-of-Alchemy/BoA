@@ -14,7 +14,7 @@ public class Alchemy : MonoBehaviour
     private void Start()
     {
         Init();
-        CreateItem(ResourceManager.Instance.dicItemData[201001], 4, ResourceManager.Instance.dicItemData[201002], 3);
+        //CreateItem(ResourceManager.Instance.dicItemData[201001], 4, ResourceManager.Instance.dicItemData[201002], 3);
     }
 
     private void Init()
@@ -52,8 +52,12 @@ public class Alchemy : MonoBehaviour
         curMaterials.Sort();
         return string.Join("", curMaterials);
     }
-    public (bool, RecipeData) CreateItem(ItemData material1, int material1Amount, ItemData material2, int material2Amount, ItemData material3 = null, int material3Amount = 0)
+    public (bool, ItemData, int) CreateItem(ItemData material1, int material1Amount, ItemData material2, int material2Amount, ItemData material3 = null, int material3Amount = 0)
     {
+        Debug.Log($"재료 1 과 수량 :{material1},{material1Amount}");
+        Debug.Log($"재료 2 와 수량 :{material2},{material2Amount}");
+        if(material3!=null)
+            Debug.Log($"재료 3 과 수량 :{material3},{material3Amount}");
         List<(ItemData materials, int amount)> materials = new List<(ItemData materials, int amount)>();
         materials.Add((material1, material1Amount));
         materials.Add((material2, material2Amount));
@@ -64,27 +68,29 @@ public class Alchemy : MonoBehaviour
             resultRecipe = recipeKey[curMaterialKey];
             // 레시피 존재한다면 수량 확인 후 제작
             CheckMaterial(materials[0], resultRecipe);
-            if (isReady == false) return (isReady, null);
+            if (isReady == false) return (isReady, null,0);
             CheckMaterial(materials[1], resultRecipe);
-            if (isReady == false) return (isReady, null);
+            if (isReady == false) return (isReady, null, 0);
             CheckMaterial(materials[2], resultRecipe);
-            if (isReady == false) return (isReady, null);
+            if (isReady == false) return (isReady, null, 0);
         }
         else 
         {
             Debug.Log("레시피가 없습니다.");
-            return (isReady, null);
+            return (!isReady, null, 0);
         }
 
         if (isReady)
         {
             Debug.Log($"제작 성공 {resultRecipe.recipe_name_kr} : {resultRecipe.output_amount} ");
-            return (isReady, resultRecipe); 
+            ItemData item = ResourceManager.Instance.dicItemData[resultRecipe.output_item_id];
+            int amount = resultRecipe.output_amount;
+            return (isReady, item, amount); 
         }
         else
         {
             Debug.Log("제작 실패");
-            return (isReady, null);
+            return (!isReady, null, 0);
         }
         // 레시피 결과물 리턴 추가
 
@@ -126,6 +132,88 @@ public class Alchemy : MonoBehaviour
         {
             isReady = true;
         }
+    }
+
+    public List<int> GetCraftableIds(HashSet<int> craftItemIds)
+    {
+        HashSet<int> requiredItemIds = new HashSet<int>(); // 인자를 recipeItemIds와 대조하여 제외하고 리턴할 변수
+        HashSet<int> recipeItemIds = new HashSet<int>();
+
+        foreach (var recipe in ResourceManager.Instance.recipeDatas)
+        {
+            recipeItemIds.Clear();
+
+            //레시피 재료 아이템 1,2,3번의 비어있는지 검사
+            recipeItemIds.Add(recipe.material_1_item_id);
+            recipeItemIds.Add(recipe.material_2_item_id);
+            if (recipe.material_3_item_id != -1) recipeItemIds.Add(recipe.material_3_item_id);
+
+            //현재 선택한 재료들이 recipeDatas에 배열에서 인덱스 recipe에 부분집합인지 검사
+            if (craftItemIds.IsSubsetOf(recipeItemIds))
+            {
+                //recipeMaterials에서 부분집합인 부분을 제외
+                recipeItemIds.ExceptWith(craftItemIds);
+                // 남은 재료가 있다면 추가
+                requiredItemIds.UnionWith(recipeItemIds);
+            }
+        }
+        return requiredItemIds.ToList();
+    }
+    public InventoryItem GetCraftResultPreview(List<int> curCraftTableIds)
+    {
+        // 재료 개수 검사
+        if (curCraftTableIds == null || (curCraftTableIds.Count != 2 && curCraftTableIds.Count != 3))
+        {
+            Debug.LogWarning("재료가 없거나 일치하지 않음.");
+            return null;
+        }
+
+        curCraftTableIds.Sort();
+
+        var recipeMaterial_Id = new List<int>();
+
+        //레시피 데이터를 반복하며 검사
+        foreach (var recipe in ResourceManager.Instance.recipeDatas)
+        {
+            recipeMaterial_Id.Clear();
+
+            if (recipe.material_1_item_id != intNullValue) recipeMaterial_Id.Add(recipe.material_1_item_id);
+            if (recipe.material_2_item_id != intNullValue) recipeMaterial_Id.Add(recipe.material_2_item_id);
+            if (recipe.material_3_item_id != intNullValue) recipeMaterial_Id.Add(recipe.material_3_item_id);
+
+            //제작필요 갯수를 검사(2개라면 바로 다음 반복)
+            if (recipeMaterial_Id.Count != curCraftTableIds.Count)
+                continue;
+
+            //curCraftTableIds와 인덱스를 맞추기 위한 정렬
+            recipeMaterial_Id.Sort();
+
+            bool isMatch = true;
+            for (int i = 0; i < curCraftTableIds.Count; i++)
+            {
+                //일치하지 않으면 즉시 반복취소
+                if (curCraftTableIds[i] != recipeMaterial_Id[i])
+                {
+                    isMatch = false;
+                    break;
+                }
+            }
+
+            //전부 맞았다면 
+            if (isMatch)
+            {
+                // 일치하는 레시피를 찾았을 경우
+                if (ResourceManager.Instance.dicItemData.TryGetValue(recipe.output_item_id, out var itemData))
+                {
+                    InventoryItem resultItem = new InventoryItem();
+                    resultItem.AddItem(itemData,recipe.output_amount);
+                    return resultItem;
+                }
+            }
+        }
+
+        Debug.Log("일치하는 레시피가 없음");
+        return null;
     }
 
     //private void CreateItem(ItemData material1, int material1Amount, ItemData material2, int material2Amount, ItemData material3 = null, int material3Amount = 0)

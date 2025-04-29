@@ -26,6 +26,7 @@ public abstract class BaseItem : MonoBehaviour
     {
         if (_curTile.CharacterStatsOnTile is PlayerStats)
         {
+            Inventory.Instance.Add(data,dropAmount);
             _curTile.itemsOnTile.Remove(this);
             _curTile.onCharacterChanged -= _handler;
             Destroy(this.gameObject);
