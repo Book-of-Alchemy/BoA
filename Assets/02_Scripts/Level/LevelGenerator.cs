@@ -75,10 +75,7 @@ public class LevelGenerator : MonoBehaviour
         level.tiles = tiles;
 
         ConnectEdgesWithPaths(Edges, level);
-        foreach (var tile in level.tiles)
-        {
-            FillWallByCorridor(tile.Value, level);
-        }
+        FillWallByCorridorOnLevel(level);
 
         level.startTile = startLeaf.centerTile != null ? startLeaf.centerTile : null;
         level.endTile = endLeaf.centerTile != null ? endLeaf.centerTile : null;
@@ -582,6 +579,18 @@ public class LevelGenerator : MonoBehaviour
         return closest;
     }
 
+    void FillWallByCorridorOnLevel(Level level)
+    {
+        // Dictionary의 Value만 리스트로 복사
+        List<Tile> tileList = new List<Tile>(level.tiles.Values);
+
+        foreach (var tile in tileList)
+        {
+            FillWallByCorridor(tile, level); 
+        }
+    }
+
+
     void FillWallByCorridor(Tile tile, Level level)
     {
         if (tile.tileType != TileType.ground) return;
@@ -661,7 +670,9 @@ public class LevelGenerator : MonoBehaviour
         }
     }
 
-    //임시코드
+    /// <summary>
+    /// 임시코드 새로운 로직의 절차적 맵생성
+    /// </summary>
     public GameObject roomPrefab;
     public int maxBranches = 5;
     public int maxDepth = 5;
