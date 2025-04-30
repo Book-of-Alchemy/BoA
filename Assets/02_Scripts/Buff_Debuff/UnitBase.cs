@@ -8,8 +8,11 @@ public abstract class UnitBase : MonoBehaviour
     public int nextActionTime = 0;
     public int actionCost = 10;
     public float actionCostMultiplier = 1f;
+    public bool ActionInProgress { get; private set; }
+    public Tile CurTile => Stats?.CurTile;
+    
 
-    public CharacterStats Stats ;
+    public CharacterStats Stats;
     private int? _totalCost = null;
 
     protected virtual void Awake()
@@ -50,8 +53,14 @@ public abstract class UnitBase : MonoBehaviour
         nextActionTime += cost;
     }
 
+    public void OnTurnEnd()
+    {
+        if (ActionInProgress)
+            ActionInProgress = false;
+    }
+
     public bool IsPlayer => this is PlayerUnit;
-    
+
 
     /*public float BaseActionPoints = 1.0f; // 기본 액션 포인트
     public float ActionPoints { get; private set; } // 최종 액션 포인트

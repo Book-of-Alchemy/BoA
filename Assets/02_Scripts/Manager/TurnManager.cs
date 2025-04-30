@@ -13,7 +13,7 @@ public class TurnManager : Singleton<TurnManager>
 {
     public List<UnitBase> allUnits = new List<UnitBase>();
     public int globalTime = 0;
-    public float turnSpeed = 5;//나눈 값을 기준으로 정함 5 = 0.2초 10 = 0.1초 향후 이걸 기준으로 가속 + 도트윈 + 애니메이션에도 적용
+    public float turnSpeed = 10;//나눈 값을 기준으로 정함 5 = 0.2초 10 = 0.1초 향후 이걸 기준으로 가속 + 도트윈 + 애니메이션에도 적용
 
     private void Start()//테스트용 임시코드
     {
@@ -34,7 +34,7 @@ public class TurnManager : Singleton<TurnManager>
 
         while (allUnits.Count > 0)
         {
-            // 매 틱 시작할 때마다 파괴된유닛 모두 제거
+            // 매 턴 시작할 때마다 파괴된유닛 모두 제거
             allUnits.RemoveAll(u => u == null);
 
             if (allUnits.Count == 0)
@@ -42,11 +42,13 @@ public class TurnManager : Singleton<TurnManager>
 
             allUnits.Sort((a, b) => ComparePlayer(a, b));
 
-            // 버프/디버프 처리
+            // 버프/디버프 처리 + visual 처리
             foreach (var unit in allUnits.ToArray())
             {
                 if (unit == null) continue;// null 체크
                 unit.Stats?.TickEffects(globalTime);
+                if(unit is EnemyUnit enemyUnit)
+                    enemyUnit.UpdateVisual();
             }
 
             // 실제 턴 처리
@@ -56,6 +58,13 @@ public class TurnManager : Singleton<TurnManager>
 
                 if (unit.nextActionTime <= globalTime)
                 {
+                    float originSpeed = turnSpeed;
+                    if(!unit.IsPlayer && unit.CurTile != null)// 시야에 없는적 애니메이션 속도 가속
+                    {
+                        if (unit.CurTile.IsOnSight)//null check 책임 분리
+                            turnSpeed = 100;
+                    }
+
                     unit.StartTurn();
 
                     if (unit is PlayerUnit playerUnit)
@@ -65,7 +74,13 @@ public class TurnManager : Singleton<TurnManager>
                     Debug.Log($"[Tick {globalTime}] {unit.name} 턴 시작 (cost: {cost})");
 
                     unit.nextActionTime += cost;
-                    yield return wait;
+
+                    turnSpeed = originSpeed;
+                    //yield return wait;
+                    if (!unit.IsPlayer)//일단 enemy만 로직적으로 대기처리 향후 player역시 0.1f대기가 아닌 로직적 대기
+                        yield return new WaitUntil(() => !unit.ActionInProgress);
+                    else
+                        yield return wait;
                 }
             }
 

@@ -39,5 +39,13 @@ public abstract class BaseBehaviour : MonoBehaviour, IBehaviour
     public abstract void Excute();
 
     public abstract bool StateCheck();
+    
     public abstract void Action();
+
+    public virtual void EndTurn()
+    {
+        if (controller == null) 
+            return;
+        controller.EndTurn();
+    }
 }
