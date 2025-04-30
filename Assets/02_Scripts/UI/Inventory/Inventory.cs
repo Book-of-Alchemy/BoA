@@ -246,9 +246,7 @@ public class Inventory : Singleton<Inventory>
     public void Use(InventoryItem item, int index)
     {
         Debug.Log("UseAction");
-        var controller = GameManager.Instance.PlayerTransform
-                             .GetComponent<PlayerController>();
-        if (controller == null) return;
+        var controller = GameManager.Instance.PlayerTransform.GetComponent<PlayerController>();
         controller.UseItem(item.itemData);
 
         RemoveItem(index);

@@ -11,7 +11,6 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed = 5f;
     public float moveActionCost = 1f;
     public LayerMask unitLayer;
-    public LayerMask obstacleLayer;
     public float inputBufferDuration = 0.1f;
     public int dashDistance = 3;
 
@@ -349,16 +348,16 @@ public class PlayerController : MonoBehaviour
         _currentItem = Instantiate(data.itemPrefab).GetComponent<BaseItem>();
         if (_currentItem == null) return;
 
-        _currentItem.ItemUseDone += HandleItemUseDone;
-        _currentItem.UseItem(data);
+        _currentItem.ItemUseDone += HandleItemUseDone;//구독하기
+        _currentItem.UseItem(data);//아이템 사용
     }
 
     private void HandleItemUseDone()
     {
-        _currentItem.ItemUseDone -= HandleItemUseDone;
+        _currentItem.ItemUseDone -= HandleItemUseDone;//다시 구독해제
 
-        onActionConfirmed?.Invoke();
+        onActionConfirmed?.Invoke();//턴 종료
 
-        _currentItem = null;
+        _currentItem = null;//널로 초기화
     }
 }
