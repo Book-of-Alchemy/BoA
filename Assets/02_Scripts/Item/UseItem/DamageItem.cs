@@ -133,7 +133,8 @@ public class DamageItem : BaseItem
         Debug.Log(data.name_en);
         InputManager.Instance.EnableMouseTracking = false;
         InputManager.Instance.OnMouseClick -= OnClick;
-        Destroy(this.gameObject);
+        FinishUse();
+        Destroy(this.gameObject,0.1f);
     }
 
     /// <summary>
@@ -203,5 +204,4 @@ public class DamageItem : BaseItem
             }
         }
     }
-
 }

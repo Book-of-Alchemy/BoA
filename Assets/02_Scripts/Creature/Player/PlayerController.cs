@@ -43,6 +43,9 @@ public class PlayerController : MonoBehaviour
     public event Action onActionConfirmed;
     public bool isPlayerTurn;
 
+    //아이템 사용 관련 필드들
+    private BaseItem _currentItem;
+
     private void Awake()
     {
         _playerStats = GetComponent<PlayerStats>();
@@ -338,5 +341,24 @@ public class PlayerController : MonoBehaviour
             else
                 sr.sortingOrder = -y * 9;
         }
+    }
+
+    public void UseItem(ItemData data)
+    {
+        //아이템 데이터에 정의된 프리팹을 바로 생성
+        _currentItem = Instantiate(data.itemPrefab).GetComponent<BaseItem>();
+        if (_currentItem == null) return;
+
+        _currentItem.ItemUseDone += HandleItemUseDone;
+        _currentItem.UseItem(data);
+    }
+
+    private void HandleItemUseDone()
+    {
+        _currentItem.ItemUseDone -= HandleItemUseDone;
+
+        onActionConfirmed?.Invoke();
+
+        _currentItem = null;
     }
 }
