@@ -16,7 +16,7 @@ public class TileManger : Singleton<TileManger>
     public GameObject environmentalPrefab;
     PlayerStats player;
 
-    private void Start()
+    private void Start()//임시코드
     {
         SetLevelGenerator(tileData.biomeSet[0], 8, 40, 40);
         curLevel = GenerateLevel();

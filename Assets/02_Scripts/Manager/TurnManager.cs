@@ -3,15 +3,10 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public enum TurnState
-{
-    PlayerTurn,
-    EnemyTurn
-}
-
 public class TurnManager : Singleton<TurnManager>
 {
     public List<UnitBase> allUnits = new List<UnitBase>();
+    HashSet<int> unitIds = new HashSet<int>();
     public int globalTime = 0;
     public float turnSpeed = 10;//나눈 값을 기준으로 정함 5 = 0.2초 10 = 0.1초 향후 이걸 기준으로 가속 + 도트윈 + 애니메이션에도 적용
 
@@ -19,9 +14,9 @@ public class TurnManager : Singleton<TurnManager>
     {
         foreach (var unit in FindObjectsOfType<UnitBase>())
         {
-            TurnManager.Instance.AddUnit(unit); 
+            AddUnit(unit);
         }
-        TurnManager.Instance.StartTurnCycle();
+        StartTurnCycle();
     }
     public void StartTurnCycle()
     {
@@ -47,7 +42,7 @@ public class TurnManager : Singleton<TurnManager>
             {
                 if (unit == null) continue;// null 체크
                 unit.Stats?.TickEffects(globalTime);
-                if(unit is EnemyUnit enemyUnit)
+                if (unit is EnemyUnit enemyUnit)
                     enemyUnit.UpdateVisual();
             }
 
@@ -59,10 +54,10 @@ public class TurnManager : Singleton<TurnManager>
                 if (unit.nextActionTime <= globalTime)
                 {
                     float originSpeed = turnSpeed;
-                    if(!unit.IsPlayer && unit.CurTile != null)// 시야에 없는적 애니메이션 속도 가속
+                    if (!unit.IsPlayer && unit.CurTile != null)// 시야에 없는적 애니메이션 속도 가속
                     {
                         if (!unit.CurTile.IsOnSight)//null check 책임 분리
-                            turnSpeed = 100;
+                            turnSpeed = 50;
                     }
 
                     unit.StartTurn();
@@ -77,15 +72,30 @@ public class TurnManager : Singleton<TurnManager>
 
                     turnSpeed = originSpeed;
                     //yield return wait;
-                    if (!unit.IsPlayer)//일단 enemy만 로직적으로 대기처리 향후 player역시 0.1f대기가 아닌 로직적 대기
-                        yield return new WaitUntil(() => !unit.ActionInProgress);
+                    if (!unit.IsPlayer)//일단 enemy만 로직적으로 대기처리 향후 player역시 0.1f대기가 아닌 로직적 대기 현재 player 턴처리문제로 enemy가 인접해있을때 못따라오는 현상 종종발생
+                        yield return new WaitUntil(() => !unit.ActionInProgress || unit == null);
                     else
+                    {
+                        UpdateAllUnitVisual();
                         yield return wait;
+                    }
                 }
             }
 
+
+
             globalTime++;
             yield return null;
+        }
+    }
+
+    void UpdateAllUnitVisual()
+    {
+        foreach (var unit in allUnits.ToArray())
+        {
+            if (unit == null) continue;// 비주얼 후처리
+            if (unit is EnemyUnit enemyUnit)
+                enemyUnit.UpdateVisual();
         }
     }
     private int ComparePlayer(UnitBase a, UnitBase b)
@@ -98,74 +108,15 @@ public class TurnManager : Singleton<TurnManager>
     }
     public void AddUnit(UnitBase unit)
     {
+        if (!unitIds.Add(unit.GetInstanceID()))
+            return;
+        allUnits.Add(unit);
         unit.Init();
     }
-    public void RemoveUnit(UnitBase unit) => allUnits.Remove(unit);
-
-    /*public static TurnManager Instance { get; private set; }
-
-    public TurnState CurrentTurn;
-    public PlayerStats Player;
-
-    private List<EnemyStats> enemies;
-    private bool _isEnemyTurnRunning = false;
-
-    void Awake()
+    public void RemoveUnit(UnitBase unit)
     {
-        if (Instance == null)
-            Instance = this;
-        else
-            Destroy(gameObject);
+        unitIds.Remove(unit.GetInstanceID());
+        allUnits.Remove(unit);
     }
 
-    void Start()
-    {
-        if (GameManager.Instance.PlayerTransform != null)
-            Player = GameManager.Instance.PlayerTransform.GetComponent<PlayerStats>();
-        else
-            Debug.LogWarning("GameManager에 플레이어가 등록되지 않았습니다.");
-
-        enemies = GameManager.Instance.Enemies;
-        CurrentTurn = TurnState.PlayerTurn;
-    }
-
-    void Update()
-    {
-        // 플레이어 턴 종료 조건: 행동력이 0 이하일 때
-        if (CurrentTurn == TurnState.PlayerTurn && Player.BuffManager.GetFinalActionPoints() <= 0 && !_isEnemyTurnRunning)
-        {
-            // 플레이어의 상태 효과 업데이트 후 적 턴 실행
-            Player.BuffManager.UpdateBuffs();
-            StartCoroutine(EnemyTurn());
-        }
-    }
-
-    IEnumerator EnemyTurn()
-    {
-        _isEnemyTurnRunning = true;
-        CurrentTurn = TurnState.EnemyTurn;
-
-        // 적 턴 시작 전 각 적의 버프 업데이트
-        foreach (EnemyStats enemy in enemies.ToArray())
-        {
-            if (enemy == null)
-                continue;
-            enemy.BuffManager.UpdateBuffs();
-            EnemyController enemyController = enemy.GetComponent<EnemyController>();
-            if (enemyController != null)
-                yield return StartCoroutine(enemyController.TakeTurn());
-            else
-            {
-                Debug.Log(enemy.gameObject.name + " takes turn (dummy)");
-                yield return new WaitForSeconds(0.5f);
-            }
-        }
-
-        // 적 턴 종료 후 플레이어 AP 복구 (버프 업데이트)
-        Player.BuffManager.ApplyBuff(0, 0);  // 효과 적용 없이 재계산
-        CurrentTurn = TurnState.PlayerTurn;
-        _isEnemyTurnRunning = false;
-        Debug.Log("복구된 행동력: " + Player.BuffManager.GetFinalActionPoints());
-        yield break;
-    }*/
 }

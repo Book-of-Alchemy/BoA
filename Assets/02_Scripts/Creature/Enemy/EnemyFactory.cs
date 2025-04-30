@@ -107,10 +107,12 @@ public class EnemyFactory : Singleton<EnemyFactory>
         enemy.level = curEnemyLevel;
 
         // 체력 설정추가
+        enemy.MaxHealth = enemyData.base_hp + enemyData.hp_per_level * curEnemyLevel;
+        enemy.CurrentHealth = enemyData.base_hp + enemyData.hp_per_level * curEnemyLevel;
         // 공방
-        enemy.attackMin = enemyData.base_atk + enemyData.atk_per_level * (curEnemyLevel - 1);
+        enemy.attackMin = enemyData.base_atk + enemyData.atk_per_level * curEnemyLevel;
         enemy.attackMax = enemy.attackMin + 5f;
-        enemy.defense = enemyData.base_def + enemyData.def_per_level * (curEnemyLevel - 1);
+        enemy.defense = enemyData.base_def + enemyData.def_per_level * curEnemyLevel;
         // 속성 저항
         enemy.fire = enemyData.resist_fire;
         enemy.water = enemyData.resist_water;
@@ -129,7 +131,10 @@ public class EnemyFactory : Singleton<EnemyFactory>
     {
         enemy.CurTile = tile;
         enemy.curLevel = tile.curLevel;
+        tile.CharacterStatsOnTile = enemy;
         //tile.isOccupied = true;
         TurnManager.Instance.AddUnit(enemy.unitBase);
     }
+
+
 }

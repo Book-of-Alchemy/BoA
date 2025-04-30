@@ -204,6 +204,9 @@ public class LevelGenerator : MonoBehaviour
             }
         }
 
+        if (trapLeaf == null || treasureLeaf == null)
+            return;
+
         trapLeaf.roomType = RoomType.trap;
         treasureLeaf.roomType = RoomType.treasure;
         extraLeaves.Remove(trapLeaf);
@@ -539,6 +542,7 @@ public class LevelGenerator : MonoBehaviour
                 foreach (var tile in path)
                 {
                     TurnToGroundTile(tile);
+                    level.corridorTiles.Add(tile);
                 }
 
                 level.tiles[doorA.gridPosition].isDoorPoint = false;

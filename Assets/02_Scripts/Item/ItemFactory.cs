@@ -19,25 +19,13 @@ public class ItemFactory : Singleton<ItemFactory>
     {
         List<Leaf> leavesWithoutStart = new List<Leaf>(level.seletedLeaves);
         leavesWithoutStart.Remove(level.startLeaf);
-
-
+        
         foreach (var leaf in leavesWithoutStart)
         {
             int spawnCount = GetRandomItemQuntity(leaf);
             if (spawnCount == 0) continue;
 
-            List<Tile> availableTiles = new List<Tile>();
-
-            foreach (var pos in TileUtility.GetPositionsInRect(leaf.rect))
-            {
-                if (level.tiles.TryGetValue(pos, out Tile tile))
-                {
-                    if (tile.tileType == TileType.ground && !tile.isOccupied)
-                    {
-                        availableTiles.Add(tile);
-                    }
-                }
-            }
+            List<Tile> availableTiles = TileUtility.GetRoomTileOnLeaf(level, leaf);
 
             for (int i = 0; i < spawnCount && availableTiles.Count > 0; i++)
             {
@@ -46,10 +34,13 @@ public class ItemFactory : Singleton<ItemFactory>
 
                 int id = GetRandomItemId(itemDatas);
                 ItemData itemData = itemdataById[id];
-                BaseItem item = SetComponentOnItem(itemData);
-                item.DropItem(itemData, 5, targetTile);
+                BaseItem item = DropItem(itemData, targetTile);
+                
             }
         }
+
+        List<Tile> startRoomTiles = TileUtility.GetRoomTileOnLeaf(level, level.startLeaf);
+        SpawnItemOnTile(startRoomTiles, 5);
     }
 
     int GetRandomItemQuntity(Leaf leaf)
@@ -92,6 +83,20 @@ public class ItemFactory : Singleton<ItemFactory>
         return 6;
     }
 
+    void SpawnItemOnTile(List<Tile> availableTiles, int spawnCount)
+    {
+        for (int i = 0; i < spawnCount && availableTiles.Count > 0; i++)
+        {
+            Tile targetTile = availableTiles[UnityEngine.Random.Range(0, availableTiles.Count)];
+            availableTiles.Remove(targetTile);
+
+            int id = GetRandomItemId(itemDatas);
+            ItemData itemData = itemdataById[id];
+            BaseItem item = DropItem(itemData, targetTile);
+
+        }
+    }
+
     // getproper item 으로 수정 예정 현재 태그 없음
     /*List<EnemyData> GetProperEnemies(Level level)
     {
@@ -112,7 +117,7 @@ public class ItemFactory : Singleton<ItemFactory>
     {
         return item[UnityEngine.Random.Range(0, item.Count - 1)].id;
     }
-    BaseItem SetComponentOnItem(ItemData data)
+    public BaseItem DropItem(ItemData data,Tile targetTile,int quantity = 5)
     {
         GameObject go = new GameObject(data.name_en);
         go.AddComponent<SpriteRenderer>();
@@ -121,8 +126,9 @@ public class ItemFactory : Singleton<ItemFactory>
             Effect_Type.Damage => go.AddComponent<DamageItem>() as BaseItem,
             _ => go.AddComponent<MaterialItem>()
         };
-        item.spriteRenderer = item.GetComponent<SpriteRenderer>();
-
+        item.DropItem(data, quantity, targetTile);
+        item.spriteRenderer.sortingOrder = -8000;
+        item.transform.SetParent(targetTile.curLevel.transform);
 
         return item;
     }

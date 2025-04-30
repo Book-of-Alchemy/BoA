@@ -38,6 +38,7 @@ public abstract class BaseItem : MonoBehaviour
             Inventory.Instance.Add(data,dropAmount);
             _curTile.itemsOnTile.Remove(this);
             _curTile.onCharacterChanged -= _handler;
+            _curTile.onIsOnSightChanged -= UpdateVisual;
             Destroy(this.gameObject);
         }
     }
@@ -57,10 +58,12 @@ public abstract class BaseItem : MonoBehaviour
         Debug.Log("아이템 버려짐");
         _handler = () => AddItem(data);
         _curTile.onCharacterChanged += _handler;
+        _curTile.onIsOnSightChanged += UpdateVisual;
     }
 
     /// <summary>
     /// 드롭아이템 정보 및 위치, 스프라이트 초기화
+    /// 드랍에서만 사용해야함 use시 사용 x
     /// </summary>
     /// <param name="data"></param>
     /// <param name="dropTile"></param>
@@ -75,7 +78,9 @@ public abstract class BaseItem : MonoBehaviour
 
         itemData = data;
         spriteRenderer = GetComponent<SpriteRenderer>();
-        transform.position = new Vector3(_curTile.gridPosition.x, _curTile.gridPosition.y + 0.5f, 0);
+        UpdateVisual();
+        transform.position = new Vector3(_curTile.gridPosition.x, _curTile.gridPosition.y, 0);
+        transform.localScale = new Vector3(2, 2, 1);
         SetType(data);
     }
 
@@ -83,7 +88,35 @@ public abstract class BaseItem : MonoBehaviour
     {
         spriteRenderer.sprite = data.Sprite;
     }
-   
+    /// <summary>
+    /// 시야에 따른 이미지 처리
+    /// </summary>
+    public void UpdateVisual()
+    {
+        if (!spriteRenderer || _curTile == null)
+            return;
 
+
+        Color color;
+        bool shouldEnable = true;
+
+        if (_curTile.IsOnSight)
+        {
+            color = Color.white;
+        }
+        else if (_curTile.IsExplored)
+        {
+            color = new Color(0.4f, 0.4f, 0.4f);
+        }
+        else
+        {
+            shouldEnable = false;
+            color = Color.clear;
+        }
+
+        spriteRenderer.enabled = shouldEnable;
+        spriteRenderer.color = color;
+
+    }
 }
 
