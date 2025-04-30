@@ -61,7 +61,7 @@ public class TurnManager : Singleton<TurnManager>
                     float originSpeed = turnSpeed;
                     if(!unit.IsPlayer && unit.CurTile != null)// 시야에 없는적 애니메이션 속도 가속
                     {
-                        if (unit.CurTile.IsOnSight)//null check 책임 분리
+                        if (!unit.CurTile.IsOnSight)//null check 책임 분리
                             turnSpeed = 100;
                     }
 

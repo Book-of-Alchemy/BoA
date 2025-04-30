@@ -7,7 +7,7 @@ using static UnityEditor.Progress;
 public abstract class BaseItem : MonoBehaviour
 {
     [Header("공용 아이템 정보")]
-    protected SpriteRenderer spriteRenderer; // 투사체를 아이템이미지로 바꿀이미지
+    public SpriteRenderer spriteRenderer; // 투사체를 아이템이미지로 바꿀이미지
     protected PlayerStats _player; // 플레이어 정보
     protected ItemData itemData; // 아이템 정보
 

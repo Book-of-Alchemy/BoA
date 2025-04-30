@@ -44,6 +44,7 @@ public abstract class UnitBase : MonoBehaviour
 
     public void StartTurn()
     {
+        ActionInProgress= true;
         PerformAction();
     }
 

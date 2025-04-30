@@ -129,7 +129,7 @@ public class EnemyFactory : Singleton<EnemyFactory>
     {
         enemy.CurTile = tile;
         enemy.curLevel = tile.curLevel;
-        tile.isOccupied = true;
+        //tile.isOccupied = true;
         TurnManager.Instance.AddUnit(enemy.unitBase);
     }
 }
