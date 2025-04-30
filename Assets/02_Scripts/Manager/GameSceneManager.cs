@@ -19,16 +19,20 @@ public class GameSceneManager : Singleton<GameSceneManager>
     protected override void Awake()
     {
         base.Awake();
+
+        // new로 모든 씬 베이스 생성
+        //RegisterSceneBase(new MainMenuScene());
+        //RegisterSceneBase(new TownScene());
+        RegisterSceneBase(new DungeonScene());
+        
+
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
-    /// <summary>
-    /// SceneBase.Awake()에서 자신을 등록하기 위해 호출됩니다.
-    /// </summary>
-    public void RegisterSceneBase(SceneBase sb)
+
+    private void RegisterSceneBase(SceneBase sb)
     {
-        if (!_sceneMap.ContainsKey(sb.SceneType))
-            _sceneMap.Add(sb.SceneType, sb);
+        _sceneMap[sb.SceneType] = sb;
     }
 
     /// <summary>씬 전환 요청</summary>
