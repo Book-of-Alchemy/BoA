@@ -243,13 +243,15 @@ public class Inventory : Singleton<Inventory>
         UpdateCraftPreview();
     }
 
-    public void Use(InventoryItem item,int index)
+    public void Use(InventoryItem item, int index)
     {
         Debug.Log("UseAction");
-        BaseItem baseItem = ItemManager.Instance.CreateItem(item.itemData);
-        baseItem.UseItem(item.itemData);
-        RemoveItem(index);
+        var controller = GameManager.Instance.PlayerTransform
+                             .GetComponent<PlayerController>();
+        if (controller == null) return;
+        controller.UseItem(item.itemData);
 
+        RemoveItem(index);
         UIManager.Hide<UI_Action>();
         UIManager.Hide<UI_Inventory>();
     }
