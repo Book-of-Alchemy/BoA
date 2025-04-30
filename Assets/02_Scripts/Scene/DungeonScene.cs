@@ -1,18 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class DungeonScene : SceneBase
 {
+    public override SceneType SceneType => SceneType.Dungeon;
+
+    protected override void Initialize()
+    {
+        // 기존 Awake() 안에 있던 초기화 코드
+    }
+
     public override void OnEnter()
     {
-        base.OnEnter();
-        // 필요한 초기화 로직들
+        // 씬 진입 로직
     }
 
     public override void OnExit()
     {
-        base.OnExit();
-        // 정리 로직들
+        // 씬 종료 로직
     }
 }

@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 4089814967209199884}
   - component: {fileID: 7216594179657440745}
   - component: {fileID: 3490648862638111876}
+  - component: {fileID: 4237088594755220247}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -108,9 +109,9 @@ MonoBehaviour:
   currentHealth: 100
   maxMana: 50
   currentMana: 50
-  attackMin: 5
-  attackMax: 10
-  defense: 5
+  attackMin: 15
+  attackMax: 30
+  defense: 20
   critChance: 0.1
   critDamage: 1.5
   evasion: 0.05
@@ -156,13 +157,13 @@ MonoBehaviour:
   moveActionCost: 1
   unitLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 0
   inputBufferDuration: 0.1
-  dashSpeed: 10
   dashDistance: 3
+  _highlightPrefab: {fileID: 5156306786401311766, guid: 2a1fddc33e84e2b4bb5cfd8f62b7f3f1, type: 3}
   isPlayerTurn: 0
 --- !u!114 &2204240404359461593
 MonoBehaviour:
@@ -262,3 +263,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f63dfdceb1bbe554593df4cb46cdc892, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4237088594755220247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6804339739346013789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b958394a0a1d504780d789eb42afa21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentTime: 0
+  nextActionTime: 0
+  actionCost: 10
+  actionCostMultiplier: 1
+  Stats: {fileID: 0}

@@ -16,8 +16,17 @@ public abstract class BaseItem : MonoBehaviour
     public int dropAmount; //
     protected Action _handler;
 
+    public event Action ItemUseDone;// 아이템 사용이 완전히 끝났을때 발생시킬 이벤트
     public abstract void UseItem(ItemData data);
 
+    protected void RaiseItemUseDone()
+    {
+        ItemUseDone?.Invoke();
+    }
+    protected void FinishUse()
+    {
+        RaiseItemUseDone();
+    }
     /// <summary>
     /// 드롭된 아이템을 추가하는 매서드
     /// </summary>
@@ -74,6 +83,7 @@ public abstract class BaseItem : MonoBehaviour
     {
         spriteRenderer.sprite = data.Sprite;
     }
+   
 
 }
 
