@@ -15,7 +15,7 @@ MonoBehaviour:
   id: 0
   name_kr: test
   biome_id: 120001
-  base_monster_level: 1
+  base_monster_level: 10
   level_per_floor: 0
   map_size_prob_small: 0
   map_size_prob_medium: 0
