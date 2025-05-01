@@ -9,6 +9,7 @@ public enum Item_Type
 {
     Consumable,
     Material,
+    Special,
 }
 
 [JsonConverter(typeof(StringEnumConverter))]
@@ -71,6 +72,7 @@ public enum Tag
     Neckless,
     Glove,
     Shoes,
+    Special,
 }
 
 [CreateAssetMenu(fileName = "New Item", menuName = "Item")]
@@ -84,7 +86,8 @@ public class ItemData : ScriptableObject
     public int target_range;
     public int effect_range;
     public Effect_Type effect_type;
-    ///public Tag[] tags;
+    public string tag;
+    public Tag[] tags;
     public int effect_value;
     public int effect_id;
     public int effect_duration;

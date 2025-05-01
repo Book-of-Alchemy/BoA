@@ -37,10 +37,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 217d8f8ad67ae924992b7b54a6be1d3c, type: 2}
   - {fileID: 11400000, guid: df86e41f71aba3a4b8ddf5144deb2e48, type: 2}
   - {fileID: 11400000, guid: f38ce0eb02e8c224e832c8697ea54ae5, type: 2}
+  - {fileID: 11400000, guid: 676a7d2957284d249bb1a2d42af4b9d2, type: 2}
   - {fileID: 11400000, guid: dc3c9cdb5d4760941b7524c543778174, type: 2}
   - {fileID: 11400000, guid: 039b46257fb53d14581427340a3f1113, type: 2}
-  - {fileID: 11400000, guid: 949853599f1569c47be52a142aee1394, type: 2}
   - {fileID: 11400000, guid: 44faecc9518f2224db5a1db6d841e5f0, type: 2}
+  - {fileID: 11400000, guid: 949853599f1569c47be52a142aee1394, type: 2}
   - {fileID: 11400000, guid: 0e54621b7548320448958f282f9e1753, type: 2}
   recipeDatas:
   - {fileID: 11400000, guid: e043dbacc7fb27d4a82ed52375a7e0ed, type: 2}

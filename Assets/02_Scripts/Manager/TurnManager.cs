@@ -115,6 +115,9 @@ public class TurnManager : Singleton<TurnManager>
     }
     public void RemoveUnit(UnitBase unit)
     {
+        if (unitIds == null) unitIds = new HashSet<int>();
+        if (allUnits == null) allUnits = new List<UnitBase>();
+
         unitIds.Remove(unit.GetInstanceID());
         allUnits.Remove(unit);
     }

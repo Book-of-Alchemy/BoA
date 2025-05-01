@@ -6,6 +6,8 @@ using UnityEngine;
 using UnityEngine.Networking;
 using Unity.EditorCoroutines.Editor;
 using Newtonsoft.Json;
+using System.Linq;
+using System;
 
 
 
@@ -122,6 +124,15 @@ public class DownLoader : EditorWindow
             so.icon_sprite = data.icon_sprite;
             so.iteminfo_kr = data.iteminfo_kr;
             so.Sprite = Resources.Load<Sprite>(data.icon_sprite);
+            if (data.tag != null)
+            {
+                so.tags = data.tag.Split(',')
+                    .Select(s => s.Trim())
+                    .Select(s => Enum.TryParse<Tag>(s, true, out var t) ? t : throw new Exception($"Invalid tag: {s}"))
+                    .ToArray();
+            }
+            else
+                return;
 
             string assetPath = $"{saveItemSOPath}/{data.name_en}.asset";
             AssetDatabase.CreateAsset(so, assetPath);

@@ -18,8 +18,10 @@ MonoBehaviour:
   item_type: 0
   attribute: 9
   target_range: 1
-  effect_range: 1
+  effect_range: 0
   effect_type: 5
+  tag: 
+  tags: 020000000e00000004000000
   effect_value: -1
   effect_id: -1
   effect_duration: -1
@@ -30,3 +32,4 @@ MonoBehaviour:
     \uD568\uC815\uC744 \uC124\uCE58\uD569\uB2C8\uB2E4"
   icon_sprite: Image/Item/Makeshift Trap
   Sprite: {fileID: 0}
+  itemPrefab: {fileID: 0}

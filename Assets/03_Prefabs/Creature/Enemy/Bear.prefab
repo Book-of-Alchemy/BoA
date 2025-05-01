@@ -87,7 +87,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 2}
+  m_Size: {x: 2, y: 2}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -143,6 +143,9 @@ MonoBehaviour:
   wind: 0
   light: 0
   dark: 0
+  dropItemData: {fileID: 0}
+  dropAmount: 1
+  id: 0
 --- !u!58 &6874201158245388566
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -192,6 +195,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DetectionRange: 10
   _currentState: 0
+  curSkill: {fileID: 0}
 --- !u!114 &2703150196935352911
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -204,6 +208,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3d97b56e0dd5e44093534ccfc4bc83f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  controller: {fileID: 0}
+  enemyStats: {fileID: 0}
+  skill_0: {fileID: 0}
+  skill_1: {fileID: 0}
+  playetStats: {fileID: 0}
 --- !u!114 &5939060632054945807
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -216,6 +225,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3c2bf0e3d161ca47a3073dc51237e8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  controller: {fileID: 0}
+  enemyStats: {fileID: 0}
 --- !u!114 &1204761448242245093
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -228,6 +239,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03a187f892854784baed8e8eedc12aae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  controller: {fileID: 0}
+  enemyStats: {fileID: 0}
 --- !u!114 &9058684277400085187
 MonoBehaviour:
   m_ObjectHideFlags: 0
