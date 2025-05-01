@@ -1,9 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 public class Inventory : Singleton<Inventory>
 {
@@ -20,8 +17,6 @@ public class Inventory : Singleton<Inventory>
 
     private List<InventoryItem> _craftList = new(); // 제작 테이블에 올라간 아이템list
     private List<int> _highlightItemIds = new List<int>(); // 강조되는 아이템 list
-
-  
 
     private void Start()
     {
@@ -154,6 +149,13 @@ public class Inventory : Singleton<Inventory>
                 _uiInventory.ReduceItem(index,amount);
 
         }
+    }
+
+    public void DecreaseUseItem(InventoryItem item)// 임시 코드
+    {
+        int i = FindItemId(item.itemData);
+        int index = GetItemIndex(i);
+        RemoveItem(index);
     }
 
     public void FilterAndDisplay(params Item_Type[] types)
@@ -369,5 +371,28 @@ public class Inventory : Singleton<Inventory>
             _uiInventory.UnhighlightSlot(i);
         }
         _highlightItemIds.Clear();
+    }
+
+    public void SetItemAtoB(int indexA,int indexB )
+    {
+        //B인덱스가 비어있다면 A를 B로 옮기기
+        if (items[indexB] == null)
+        {
+            InventoryItem temp = items[indexA];
+            items[indexB] = temp;
+            items[indexA] = null;
+            _uiInventory.SetInventorySlot(indexB, items[indexB]);
+            _uiInventory.RemoveItem(indexA);
+        }
+        else
+        {
+            _uiInventory.SetInventorySlot(indexA, items[indexB]);
+            _uiInventory.SetInventorySlot(indexB, items[indexA]);
+            InventoryItem temp = items[indexA];
+            items[indexA] = items[indexB];
+            items[indexB] = temp;
+
+        }
+
     }
 }

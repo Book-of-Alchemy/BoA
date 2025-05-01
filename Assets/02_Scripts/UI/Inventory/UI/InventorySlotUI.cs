@@ -4,12 +4,8 @@ using TMPro;
 using UnityEngine.UI;
 using System;
 using System.Collections.Generic;
-public interface IUsable
-{
-    void Use();
-}
 
-public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerDownHandler, IPointerUpHandler
+public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler, IDraggableSlot
 {
     [SerializeField] protected Image _itemSprite;
     [SerializeField] protected TextMeshProUGUI _countTxt;
@@ -17,10 +13,6 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler, 
     [SerializeField] protected RectTransform _rectTransform;
     [SerializeField] protected UI_Inventory _uiInventory;
     [SerializeField] private Image _borderImage; // 테두리용 이미지
-
-    private CanvasGroup _canvasGroup;
-    private RectTransform _draggingTransform;
-    private Transform _originalParent;
 
     protected GameObject _imageObject;
     protected GameObject _textObject;
@@ -44,10 +36,6 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler, 
     public event Action<int> OnSelected;
     public event Action<int> OnDeselected;
 
-    private Vector2 _pointerDownPos;
-    private bool _isDragging;
-    private const float DragThreshold = 10f;
-
     private Dictionary<EInventoryType, Action> _OnClickActions = new(); //Type에 따른 Action 바인딩
 
     private void Awake()
@@ -63,7 +51,6 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler, 
     public void Initialize(UI_Inventory uiInventory)
     {
         _uiInventory = uiInventory;
-        _canvasGroup = GetComponent<CanvasGroup>();
         // 인벤토리 타입에 따른 Action 매핑
         _OnClickActions[EInventoryType.Inventory] = OnInventoryClick;
         _OnClickActions[EInventoryType.Craft] = OnCraftClick;
@@ -91,9 +78,6 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler, 
     }
     private void OnInventoryClick()
     {
-        string name = Inventory.Instance.items[Index].GetItemName();
-        int amount= Inventory.Instance.items[Index].Amount;
-        Debug.Log($"현재 클릭 인덱스 이름 : {name} 수량 : {amount}");
         UIManager.Show<UI_Action>((int)_uiInventory.CurType, _rectTransform, _item, Index);
     }
 
@@ -109,16 +93,11 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler, 
     }
     public void SetItem(InventoryItem item) // 슬롯에 아이템 등록
     {
-        Debug.Log($"HasItem : {HasItem}");
         _item = item;
         if (HasItem)
             _btn.onClick.AddListener(OnClickItem);
 
         _countTxt.text = _item.Amount.ToString();
-        //Debug.Log(_item.GetSprite());
-        //_itemSprite = this.gameObject.transform.GetChild(0).GetComponent<Image>();
-        //Debug.Log(_itemSprite);
-
         _itemSprite.sprite = _item.GetSprite();
         ShowIcon();
         ShowText();
@@ -187,56 +166,9 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler, 
             SetNormalColor();
         }
     }
-    public void OnBeginDrag(PointerEventData eventData)
+
+    public InventoryItem GetItem()
     {
-        if (!HasItem) return;
-        //DragManager.Instance.BeginDrag(_item, transform.position);
-        if (Vector2.Distance(eventData.position, _pointerDownPos) < DragThreshold)
-        {
-            _isDragging = false;
-            return;
-        }
-
-        _isDragging = true;
-        _originalParent = transform.parent;
-        _draggingTransform = transform as RectTransform;
-        _canvasGroup.blocksRaycasts = false;
-
-        transform.SetParent(_uiInventory.transform.root); // 캔버스 루트로 이동
-    }
-
-    public void OnDrag(PointerEventData eventData)
-    {
-        //DragManager.Instance.UpdateDrag(eventData.position);
-        if (!HasItem) return;
-        if (_isDragging)
-            _draggingTransform.position = eventData.position;
-    }
-
-    public void OnEndDrag(PointerEventData eventData)
-    {
-        //DragManager.Instance.EndDrag(eventData);
-        if (_isDragging)
-        {
-            transform.SetParent(_originalParent);
-            transform.localPosition = Vector3.zero;
-            _canvasGroup.blocksRaycasts = true;
-            _isDragging = false;
-        }
-    }
-
-    public void OnPointerDown(PointerEventData eventData)
-    {
-        _pointerDownPos = eventData.position;
-        _isDragging = false;
-    }
-
-    public void OnPointerUp(PointerEventData eventData)
-    {
-        if (!_isDragging && HasItem)
-        {
-            // 클릭 처리
-            //OnClickItem(); // 기존의 버튼 클릭 로직 호출
-        }
+        return _item;
     }
 }
