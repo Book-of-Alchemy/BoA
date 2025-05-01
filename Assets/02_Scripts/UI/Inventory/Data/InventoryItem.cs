@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class InventoryItem // Inventory에 배열로 존재하는 Item
 {
+    //아이템의 고유 ID 인덱스와 아이템의id와는 별개로
     public int Amount { get; private set; }
     public ItemData itemData { get; private set; }
     public bool IsEmpty => itemData == null || Amount <= 0;

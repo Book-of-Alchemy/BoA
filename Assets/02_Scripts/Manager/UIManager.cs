@@ -5,6 +5,9 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private List<Transform> parents;
     [SerializeField] private List<UIBase> uiList = new List<UIBase>(); // SerializeField for Debugging
 
+    [Tooltip("한번 출력되는 UI의 생명기간")]
+    [SerializeField] static private float _fadeOutDuration = 1.2f;
+
     private void Start()
     {
         Show<UI_Main>();
@@ -49,6 +52,24 @@ public class UIManager : Singleton<UIManager>
         //UI 초기화
         ui.Opened(param);
         return (T)ui;
+    }
+
+    //한번만 출력되고 사라지는 UI 
+    //현재 UI의 생명시간은 Manager에서 관리
+    public static void ShowOnce<T>(params object[] param) where T : UIBase
+    {
+        var prefab = UIResourceManager.Instance.LoadUIToKey<T>("UI/" + typeof(T).ToString());
+        if (prefab == null)
+        {
+            Debug.LogError($"프리팹 찾을수 없음. {typeof(T).Name}");
+            return;
+        }
+
+        var ui = Instantiate(prefab, Instance.parents[(int)prefab.uiPosition]);
+        ui.name = typeof(T).ToString(); 
+        ui.Opened(param);
+
+        Destroy(ui.gameObject, _fadeOutDuration);
     }
 
     public static void Hide<T>(params object[] param) where T : UIBase

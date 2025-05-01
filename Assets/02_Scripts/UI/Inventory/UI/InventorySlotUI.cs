@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using System;
 using System.Collections.Generic;
 
-public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler
+public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler, IDraggableSlot
 {
     [SerializeField] protected Image _itemSprite;
     [SerializeField] protected TextMeshProUGUI _countTxt;
@@ -17,11 +17,13 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler
     protected GameObject _imageObject;
     protected GameObject _textObject;
     protected InventoryItem _item;
+    public InventoryItem Item => _item;
 
     public int Index { get; set; }
     public bool HasItem => _item != null; //있다면 True
 
     private Color _normalBorderColor = new Color(1f, 1f, 1f, 0f); // 기본(투명)
+    private Color _opaqueColor = new Color(1f, 1f, 1f, 1f); // 기본(투명)
     private Color _highlightBorderColor = Color.yellow; // 강조(노란색)
     private Color _blurColor = new Color(0.7f, 0.7f, 0.7f, 0.5f); // 흐리게
     private Color _selectedBorderColor = Color.blue; // 강조(파란색)
@@ -46,11 +48,9 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler
         if (_borderImage != null)
             _borderImage.color = _normalBorderColor;
     }
-
     public void Initialize(UI_Inventory uiInventory)
     {
         _uiInventory = uiInventory;
-
         // 인벤토리 타입에 따른 Action 매핑
         _OnClickActions[EInventoryType.Inventory] = OnInventoryClick;
         _OnClickActions[EInventoryType.Craft] = OnCraftClick;
@@ -78,9 +78,6 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler
     }
     private void OnInventoryClick()
     {
-        string name = Inventory.Instance.items[Index].GetItemName();
-        int amount= Inventory.Instance.items[Index].Amount;
-        Debug.Log($"현재 클릭 인덱스 이름 : {name} 수량 : {amount}");
         UIManager.Show<UI_Action>((int)_uiInventory.CurType, _rectTransform, _item, Index);
     }
 
@@ -96,16 +93,11 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler
     }
     public void SetItem(InventoryItem item) // 슬롯에 아이템 등록
     {
-        Debug.Log($"HasItem : {HasItem}");
         _item = item;
-        //if (!HasItem)
+        if (HasItem)
             _btn.onClick.AddListener(OnClickItem);
 
         _countTxt.text = _item.Amount.ToString();
-        Debug.Log(_item.GetSprite());
-        _itemSprite = this.gameObject.transform.GetChild(0).GetComponent<Image>();
-        Debug.Log(_itemSprite);
-
         _itemSprite.sprite = _item.GetSprite();
         ShowIcon();
         ShowText();
@@ -115,7 +107,7 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler
     {
         _btn.onClick.RemoveAllListeners();
         _item = null;
-        //_itemSprite.sprite = null;
+        _itemSprite.sprite = null;
         _countTxt.text = string.Empty;
         HideIcon();
         HideText();
@@ -152,6 +144,10 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler
     {
         _itemSprite.color = _normalBorderColor;
     }
+    public void SetItemopaque()
+    {
+        _itemSprite.color = _opaqueColor;
+    }
 
     public void SetHighlight(bool isOn)
     {
@@ -169,5 +165,10 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler
         {
             SetNormalColor();
         }
+    }
+
+    public InventoryItem GetItem()
+    {
+        return _item;
     }
 }

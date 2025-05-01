@@ -52,7 +52,7 @@ public class Alchemy : MonoBehaviour
         curMaterials.Sort();
         return string.Join("", curMaterials);
     }
-    public (bool, ItemData, int) CreateItem(ItemData material1, int material1Amount, ItemData material2, int material2Amount, ItemData material3 = null, int material3Amount = 0)
+    public (bool, RecipeData, int) CreateItem(ItemData material1, int material1Amount, ItemData material2, int material2Amount, ItemData material3 = null, int material3Amount = 0)
     {
         Debug.Log($"재료 1 과 수량 :{material1},{material1Amount}");
         Debug.Log($"재료 2 와 수량 :{material2},{material2Amount}");
@@ -83,9 +83,15 @@ public class Alchemy : MonoBehaviour
         if (isReady)
         {
             Debug.Log($"제작 성공 {resultRecipe.recipe_name_kr} : {resultRecipe.output_amount} ");
-            ItemData item = ResourceManager.Instance.dicItemData[resultRecipe.output_item_id];
+            //ItemData item = ResourceManager.Instance.dicItemData[resultRecipe.output_item_id];
+            //return (isReady, item, amount); 
+
+            //반환용 레시피와 수량
             int amount = resultRecipe.output_amount;
-            return (isReady, item, amount); 
+            RecipeData recipe = resultRecipe;
+
+
+            return (isReady, recipe, amount); 
         }
         else
         {

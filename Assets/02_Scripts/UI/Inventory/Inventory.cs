@@ -1,9 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 public class Inventory : Singleton<Inventory>
 {
@@ -20,8 +17,6 @@ public class Inventory : Singleton<Inventory>
 
     private List<InventoryItem> _craftList = new(); // 제작 테이블에 올라간 아이템list
     private List<int> _highlightItemIds = new List<int>(); // 강조되는 아이템 list
-
-    //private Dictionary<int, InventoryItem> _craftDic = new();
 
     private void Start()
     {
@@ -129,6 +124,17 @@ public class Inventory : Singleton<Inventory>
         return -1;
     }
 
+    private int GetItemIndex(int id)
+    {
+        for (int i = 0; i < items.Length; i++)
+        {
+            if (items[i].GetItemId() == id)
+                return i;
+        }
+
+        return -1;
+    }
+
     private void RemoveItem(int index, int amount = 1)
     {
         if(items[index].Amount >= 1)
@@ -140,9 +146,16 @@ public class Inventory : Singleton<Inventory>
                 _uiInventory.RemoveItem(index);
             }
             else
-                _uiInventory.ReduceItem(index);
+                _uiInventory.ReduceItem(index,amount);
 
         }
+    }
+
+    public void DecreaseUseItem(InventoryItem item)// 임시 코드
+    {
+        int i = FindItemId(item.itemData);
+        int index = GetItemIndex(i);
+        RemoveItem(index);
     }
 
     public void FilterAndDisplay(params Item_Type[] types)
@@ -175,7 +188,7 @@ public class Inventory : Singleton<Inventory>
     public void TryCraft()
     {
         //제작 결과 담을 변수
-        (bool boolResult, ItemData dataResult, int amount) result;
+        (bool boolResult, RecipeData dataResult, int amount) result;
 
         if (_craftList.Count >= 3)
         {
@@ -190,21 +203,34 @@ public class Inventory : Singleton<Inventory>
             _craftList[0].itemData, _craftList[0].Amount,
             _craftList[1].itemData, _craftList[1].Amount);
         }
-
-        //결과를 각각 변수로 저장.
         var (boolResult, dataResult, amount) = result;
 
         if (boolResult) // 제작에 성공했을 경우
         {
             //성공했을 경우,기존 Item에서 Amount만큼 감소를 해야하고 Craft창도 비워야함.
             _craftTool.RemoveCraftSlot(); // UI제작테이블 비우기
-            InventoryItem resultItem = Add(dataResult,amount,false);
-            //원본 Inventory의 수량을 직접 깍는 로직잉벗다.
-            //제작 성공시 사용한 재료들의 수량을 감소시키는 로직이 필요함.
+            ItemData item = ResourceManager.Instance.dicItemData[dataResult.output_item_id];
 
-            Debug.Log($"제작 생성된 아이템의 갯수 : {amount}개");
+            InventoryItem resultItem = Add(item, amount, false);
             _craftTool.CraftComplete(resultItem); //결과 슬롯에 제작 성공아이템 전달
+
+            var materials = new List<(int id, int amo)>
+            {
+                (dataResult.material_1_item_id, dataResult.material_1_amount),
+                (dataResult.material_2_item_id, dataResult.material_2_amount),
+                (dataResult.material_3_item_id, dataResult.material_3_amount),
+            };
+
+            foreach (var (id, amo) in materials)
+            {
+                if(id >= 0) // 3번째 비어있을시
+                {
+                    int index = GetItemIndex(id);
+                    RemoveItem(index, amo);
+                }
+            }
             _craftList.RemoveAll(slot => slot != null);
+
         }
         else
         {
@@ -345,5 +371,28 @@ public class Inventory : Singleton<Inventory>
             _uiInventory.UnhighlightSlot(i);
         }
         _highlightItemIds.Clear();
+    }
+
+    public void SetItemAtoB(int indexA,int indexB )
+    {
+        //B인덱스가 비어있다면 A를 B로 옮기기
+        if (items[indexB] == null)
+        {
+            InventoryItem temp = items[indexA];
+            items[indexB] = temp;
+            items[indexA] = null;
+            _uiInventory.SetInventorySlot(indexB, items[indexB]);
+            _uiInventory.RemoveItem(indexA);
+        }
+        else
+        {
+            _uiInventory.SetInventorySlot(indexA, items[indexB]);
+            _uiInventory.SetInventorySlot(indexB, items[indexA]);
+            InventoryItem temp = items[indexA];
+            items[indexA] = items[indexB];
+            items[indexB] = temp;
+
+        }
+
     }
 }
