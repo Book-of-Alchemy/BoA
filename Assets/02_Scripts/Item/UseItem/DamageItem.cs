@@ -21,7 +21,7 @@ public class DamageItem : BaseItem
     /// drop시 위치가 맞지않는 현상
     /// </summary>
     /// <param name="data"></param>
-    public void Init(ItemData data)
+    public void UseInit(ItemData data)
     {
         _player = GameManager.Instance.PlayerTransform;
         itemData = data;
@@ -37,7 +37,7 @@ public class DamageItem : BaseItem
     /// <param name="data"></param>
     public override void UseItem(ItemData data)
     {
-        Init(data);
+        UseInit(data);
         rangeTiles = CheckRange(data);
         InputManager.Instance.EnableMouseTracking = true;
         InputManager.Instance.OnMouseMove += CheckEffectRange;
@@ -59,7 +59,33 @@ public class DamageItem : BaseItem
 
         // 사거리 내에 타일을 클릭했는지 확인하는 조건, 사거리 내의 타일을 클릭했다면 효과범위내에 대상들이 있는지 확인
         if (rangeTiles.Contains(mouseClickTile))
-            CheckObject(itemData, mouseClickTile);
+        {
+            List<Tile> tiles =TileUtility.GetLineTile(_player.curLevel, _player.CurTile, mouseClickTile);
+            Tile targetTile = mouseClickTile;
+            foreach (Tile objectTile in tiles)
+            {
+                if(objectTile.CharacterStatsOnTile != null)
+                {
+                    targetTile = objectTile;
+                    break;
+                }
+            }
+            Sequence seq = DOTween.Sequence();
+            seq.Append(transform.DORotate(new Vector3(0, 0, 360), 0.3f, RotateMode.FastBeyond360)
+                .SetRelative(true)
+                .SetEase(Ease.Linear)
+                .SetLoops(-1));
+            seq.Join(transform.DOMove(new Vector3(targetTile.gridPosition.x, targetTile.gridPosition.y + 0.5f, 0), 0.5f)
+                .SetEase(Ease.Linear)
+                .OnComplete(() =>
+                {
+                    if (itemData != null)
+                        AttackBehavior(itemData, targetTile);
+                    else
+                        Debug.Log("데이터가 null");
+                }
+                ));
+        }
         else
         {
             Debug.Log("거리범위에 해당하는 타일을 누르지 않았습니다.");
@@ -69,66 +95,56 @@ public class DamageItem : BaseItem
         }
 
         // 범위내에 대상들이 있다면 이동 및 공격동작
-        if (_isObject)
-        {
-            Sequence seq = DOTween.Sequence();
-            seq.Append(transform.DORotate(new Vector3(0, 0, 360), 1f/TurnManager.Instance.turnSpeed, RotateMode.FastBeyond360)
-                .SetRelative(true)
-                .SetEase(Ease.Linear)
-                .SetLoops(-1));
-            seq.Join(transform.DOMove(new Vector3(mouseClickTile.gridPosition.x, mouseClickTile.gridPosition.y + 0.5f, 0), 1f/ TurnManager.Instance.turnSpeed)
-                .SetEase(Ease.Linear)
-                .OnComplete(() =>
-                {
-                    if (itemData != null)
-                        AttackBehavior(itemData);
-                    else
-                        Debug.Log("데이터가 null");
-                }
-                ));
-        }
-        else
-        {
-            Debug.Log("목표지점 범위에 대상이 없습니다.");
-            InputManager.Instance.OnMouseClick -= OnClick;
-            InputManager.Instance.EnableMouseTracking = false;
-            Destroy(this.gameObject);
-        }
+        //if (_isObject)
+        //{
+        //    
+        //}
+        //else
+        //{
+        //    Debug.Log("목표지점 범위에 대상이 없습니다.");
+        //    InputManager.Instance.OnMouseClick -= OnClick;
+        //    InputManager.Instance.EnableMouseTracking = false;
+        //    Destroy(this.gameObject);
+        //}
     }
 
     /// <summary>
     /// 공격 로직
     /// </summary>
     /// <param name="data"></param>
-    private void AttackBehavior(ItemData data)
+    private void AttackBehavior(ItemData data, Tile targetTile)
     {
         List<Tile> tiles = new List<Tile>();
         if (data.target_range == 0)
         {
             if (data.effect_range == 1)
             {
-                tiles = TileUtility.GetAdjacentTileList(_player.curLevel, mouseClickTile, true);
+                tiles = TileUtility.GetAdjacentTileList(_player.curLevel, targetTile, true);
             }
             else if (data.effect_range >= 2)
             {
-                tiles = TileUtility.GetItemRangedTile(_player.curLevel, mouseClickTile, data.effect_range, false);
+                tiles = TileUtility.GetItemRangedTile(_player.curLevel, targetTile, data.effect_range, false);
             }
         }
         else if (data.target_range > 0)
         {
             if (data.effect_range == 1)
             {
-                tiles = TileUtility.GetNineTileList(_player.curLevel, mouseClickTile);
+                tiles = TileUtility.GetNineTileList(_player.curLevel, targetTile);
             }
             else
             {
-                tiles = TileUtility.GetItemRangedTile(_player.curLevel, mouseClickTile, data.effect_range, true);
+                tiles = TileUtility.GetItemRangedTile(_player.curLevel, targetTile, data.effect_range, true);
             }
         }
         foreach (Tile ojTile in tiles)
         {
+            if (data.attribute == Attribute.Fire)
+                EffectProjectileManager.Instance.PlayEffect(ojTile.gridPosition, 30010);
             if (ojTile.CharacterStatsOnTile != null)
             {
+                if(data.attribute == Attribute.None)
+                    EffectProjectileManager.Instance.PlayEffect(ojTile.gridPosition, 30013);
                 _player.Attack(ojTile.CharacterStatsOnTile);
             }
         }
@@ -154,7 +170,7 @@ public class DamageItem : BaseItem
         {
             List<Tile> checkItemRangeTiles = new List<Tile>();
             if (itemData.effect_range == 0)
-                checkItemRangeTiles = TileUtility.GetItemRangedTile(_player.curLevel, mouseTile, itemData.effect_range);
+                checkItemRangeTiles = TileUtility.GetItemRangedTile(_player.curLevel, mouseTile, itemData.effect_range,true);
             else if (itemData.effect_range == 1)
                 checkItemRangeTiles = TileUtility.GetNineTileList(_player.curLevel, mouseTile);
             else if (itemData.effect_range >= 2)
@@ -169,9 +185,10 @@ public class DamageItem : BaseItem
     /// </summary>
     public List<Tile> CheckRange(ItemData data)
     {
+        ItemManager.Instance.DestroyRange();
         List<Tile> checkRangeTiles = new List<Tile>();
         if (data.target_range == 0)
-            checkRangeTiles = TileUtility.GetItemRangedTile(_player.curLevel, _player.CurTile, data.target_range);
+            checkRangeTiles = TileUtility.GetItemRangedTile(_player.curLevel, _player.CurTile, data.target_range,true);
         else if (data.target_range == 1)
             checkRangeTiles = TileUtility.GetNineTileList(_player.curLevel, _player.CurTile);
         else if (data.target_range >= 2)

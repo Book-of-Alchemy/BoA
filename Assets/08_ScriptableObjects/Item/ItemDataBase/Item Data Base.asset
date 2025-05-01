@@ -13,35 +13,36 @@ MonoBehaviour:
   m_Name: Item Data Base
   m_EditorClassIdentifier: 
   itemDatas:
-  - {fileID: 11400000, guid: 4313e6421d9fc2b4499f98ab672737af, type: 2}
-  - {fileID: 11400000, guid: dd6656321a7a63a4eb3259bfb95e083f, type: 2}
-  - {fileID: 11400000, guid: eff31068e44e2444f8ace88718c002c6, type: 2}
-  - {fileID: 11400000, guid: 2c9d7fde858345741b9de5992a016aa8, type: 2}
-  - {fileID: 11400000, guid: a7a23f89ab39cb744b5e9dd1934bfb7f, type: 2}
-  - {fileID: 11400000, guid: d74961ba067751f41958be9009aab1c7, type: 2}
-  - {fileID: 11400000, guid: fdf4198e82f8dff4caccf0134f3419d9, type: 2}
-  - {fileID: 11400000, guid: 1f39403927c38f54fb1e079b1cbea152, type: 2}
-  - {fileID: 11400000, guid: 96e6c6ad5eab6e442ab7c6beb77ef83c, type: 2}
-  - {fileID: 11400000, guid: 70a5dd0ab6fadab428ed20b8196e6a1b, type: 2}
-  - {fileID: 11400000, guid: ae490d7daa74e5f4295c26177bb726d1, type: 2}
-  - {fileID: 11400000, guid: 5d8931d329631cc44a5e4f75a1c2b6c0, type: 2}
-  - {fileID: 11400000, guid: 6022bc1c7788db34d8d5fdde22187f50, type: 2}
-  - {fileID: 11400000, guid: 0d4858082ad9e8a41bd5ca41e80d11f1, type: 2}
-  - {fileID: 11400000, guid: 2e304c7e2f23d054fad362d8c05fbed8, type: 2}
-  - {fileID: 11400000, guid: 38b07ae7f0460f44f97f38f07115dbbb, type: 2}
-  - {fileID: 11400000, guid: 36c3eefc0dc74044189db8a72dde6a70, type: 2}
-  - {fileID: 11400000, guid: 13007c7ff94565e448f0e303dc2a386f, type: 2}
-  - {fileID: 11400000, guid: b4f90ae93ed4ca74da43785a66ab4ec6, type: 2}
-  - {fileID: 11400000, guid: 5cf5bd0007a56344ea9fbd9d30063cc9, type: 2}
-  - {fileID: 11400000, guid: 8f59656b4074d994e8646859d29f90ad, type: 2}
-  - {fileID: 11400000, guid: 217d8f8ad67ae924992b7b54a6be1d3c, type: 2}
-  - {fileID: 11400000, guid: df86e41f71aba3a4b8ddf5144deb2e48, type: 2}
-  - {fileID: 11400000, guid: f38ce0eb02e8c224e832c8697ea54ae5, type: 2}
-  - {fileID: 11400000, guid: dc3c9cdb5d4760941b7524c543778174, type: 2}
-  - {fileID: 11400000, guid: 039b46257fb53d14581427340a3f1113, type: 2}
-  - {fileID: 11400000, guid: 949853599f1569c47be52a142aee1394, type: 2}
-  - {fileID: 11400000, guid: 44faecc9518f2224db5a1db6d841e5f0, type: 2}
-  - {fileID: 11400000, guid: 0e54621b7548320448958f282f9e1753, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   recipeDatas:
   - {fileID: 11400000, guid: e043dbacc7fb27d4a82ed52375a7e0ed, type: 2}
   - {fileID: 11400000, guid: 7a282945f5e1c8c409d69a23d2950937, type: 2}
