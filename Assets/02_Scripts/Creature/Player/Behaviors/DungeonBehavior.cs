@@ -48,7 +48,12 @@ public class DungeonBehavior : PlayerBaseBehavior
     {
         if (raw == Vector2.zero) return;
         var o = new Vector2Int(raw.x > 0 ? 1 : raw.x < 0 ? -1 : 0, raw.y > 0 ? 1 : raw.y < 0 ? -1 : 0);
-        if (o != Vector2Int.zero) { lastMoveDir = o; spriteRenderer.flipX = o.x < 0; }
+        if (o != Vector2Int.zero)
+        {
+            lastMoveDir = o;
+            if (o.x != 0)  // ← 수평 이동인 경우에만 flipX 갱신
+                spriteRenderer.flipX = o.x < 0;
+        }
         if (isCtrlHeld) return;
         var cur = stats.CurTile.gridPosition; var tgt = cur + o;
         if (!stats.curLevel.tiles.TryGetValue(tgt, out var tile) || !tile.IsWalkable || tile.CharacterStatsOnTile != null) return;
@@ -96,7 +101,9 @@ public class DungeonBehavior : PlayerBaseBehavior
             var s = dashQueue.Dequeue(); var cur = stats.CurTile.gridPosition; var nxt = cur + s;
             if (!stats.curLevel.tiles.TryGetValue(nxt, out var tile) || !tile.IsWalkable || tile.CharacterStatsOnTile != null || stats.CurrentHealth < dashStartHealth) break;
             foreach (var v in stats.tilesOnVision) if (v.CharacterStatsOnTile is EnemyStats e && !initialEnemies.Contains(e)) { c = true; break; }
-            spriteRenderer.flipX = s.x < 0; animator.PlayMove(); stats.CurTile.CharacterStatsOnTile = null; stats.CurTile = tile; tile.CharacterStatsOnTile = stats;
+            if (s.x != 0)    // ← 대시 방향이 수평일 때만
+                spriteRenderer.flipX = s.x < 0; 
+            animator.PlayMove(); stats.CurTile.CharacterStatsOnTile = null; stats.CurTile = tile; tile.CharacterStatsOnTile = stats;
             yield return transform.DOMove(new Vector3(nxt.x, nxt.y, 0), 0.01f).SetEase(Ease.Linear).WaitForCompletion();
             Controller.onActionConfirmed?.Invoke();
             foreach (var v in stats.tilesOnVision) if (v.CharacterStatsOnTile is EnemyStats e && !initialEnemies.Contains(e)) { c = true; break; }
