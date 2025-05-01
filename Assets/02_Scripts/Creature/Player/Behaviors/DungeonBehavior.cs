@@ -8,248 +8,278 @@ using DG.Tweening;
 public class DungeonBehavior : PlayerBaseBehavior
 {
     [Header("Dungeon Settings")]
-    [SerializeField] private float inputBufferDuration = 0.1f;
-    [SerializeField] private int dashDistance = 3;
+    [SerializeField] private float _inputBufferDuration = 0.1f;
+    [SerializeField] private int _dashDistance = 3;
     public GameObject highlightPrefab;
 
-    private PlayerStats stats;
-    private CharacterAnimator animator;
-    private SpriteRenderer spriteRenderer;
+    private PlayerStats _stats;
+    private CharacterAnimator _animator;
+    private SpriteRenderer _spriteRenderer;
 
-    private bool isMoving;
-    private bool isCtrlHeld;
-    private Coroutine moveBuffer, attackBuffer, dashBuffer, dashCoroutine, highlightCoroutine;
+    private bool _isMoving;
+    private bool _isCtrlHeld;
 
-    private Vector2Int lastMoveDir = Vector2Int.right;
-    private Queue<Vector2Int> dashQueue;
-    private float savedTurnSpeed, dashStartHealth;
-    private HashSet<EnemyStats> initialEnemies;
+    private Coroutine _moveBuffer;
+    private Coroutine _attackBuffer;
+    private Coroutine _dashBuffer;
+    private Coroutine _dashCoroutine;
+    private Coroutine _highlightCoroutine;
 
-    private GameObject highlightInstance;
-    private BaseItem currentItem;
+    private Vector2Int _lastMoveDir = Vector2Int.right;
+    private Queue<Vector2Int> _dashQueue;
+
+    private float _savedTurnSpeed;
+    private float _dashStartHealth;
+
+    private HashSet<EnemyStats> _initialEnemies;
+    private GameObject _highlightInstance;
+    private BaseItem _currentItem;
 
     public override void Initialize(PlayerController controller)
     {
         base.Initialize(controller);
-        stats = GetComponent<PlayerStats>();
-        animator = GetComponent<CharacterAnimator>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
+
+        _stats = GetComponent<PlayerStats>();
+        _animator = GetComponent<CharacterAnimator>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    #region 이동
     public override void OnMove(InputAction.CallbackContext ctx)
     {
-        if (!Controller.isPlayerTurn || isMoving || moveBuffer != null || !ctx.started) return;
-        moveBuffer = StartCoroutine(BufferMove());
+        if (!Controller.isPlayerTurn || _isMoving || _moveBuffer != null || !ctx.started) return;
+        _moveBuffer = StartCoroutine(BufferMove());
     }
 
-    IEnumerator BufferMove()
+    private IEnumerator BufferMove()
     {
-        float t = 0;
-        Vector2 buf = Vector2.zero;
+        float time = 0f;
+        Vector2 bufferedDir = Vector2.zero;
 
-        while (t < inputBufferDuration)
+        while (time < _inputBufferDuration)
         {
-            var val = InputActions.PC.Move.ReadValue<Vector2>();
-            if (val != Vector2.zero) buf = val;
-            t += Time.deltaTime;
+            Vector2 inputDir = InputActions.PC.Move.ReadValue<Vector2>();
+            if (inputDir != Vector2.zero)
+                bufferedDir = inputDir;
+
+            time += Time.deltaTime;
             yield return null;
         }
 
-        ExecuteMove(buf);
-        moveBuffer = null;
+        ExecuteMove(bufferedDir);
+        _moveBuffer = null;
     }
 
-    void ExecuteMove(Vector2 raw)
+    private void ExecuteMove(Vector2 rawDir)
     {
-        if (raw == Vector2.zero) return;
+        if (rawDir == Vector2.zero) return;
 
-        var dir = new Vector2Int(
-            raw.x > 0 ? 1 : raw.x < 0 ? -1 : 0,
-            raw.y > 0 ? 1 : raw.y < 0 ? -1 : 0
+        Vector2Int dir = new(
+            rawDir.x > 0 ? 1 : rawDir.x < 0 ? -1 : 0,
+            rawDir.y > 0 ? 1 : rawDir.y < 0 ? -1 : 0
         );
 
         if (dir != Vector2Int.zero)
         {
-            lastMoveDir = dir;
-            if (dir.x != 0) spriteRenderer.flipX = dir.x < 0;
+            _lastMoveDir = dir;
+            if (dir.x != 0)
+                _spriteRenderer.flipX = dir.x < 0;
         }
 
-        if (isCtrlHeld) return;
+        if (_isCtrlHeld) return;
 
-        var cur = stats.CurTile.gridPosition;
-        var tgt = cur + dir;
+        Vector2Int cur = _stats.CurTile.gridPosition;
+        Vector2Int tgt = cur + dir;
 
-        if (!stats.curLevel.tiles.TryGetValue(tgt, out var tile) || !tile.IsWalkable || tile.CharacterStatsOnTile != null) return;
+        if (!_stats.curLevel.tiles.TryGetValue(tgt, out Tile tile) || !tile.IsWalkable || tile.CharacterStatsOnTile != null)
+            return;
 
-        isMoving = true;
-        stats.CurTile.CharacterStatsOnTile = null;
-        stats.CurTile = tile;
-        tile.CharacterStatsOnTile = stats;
-        spriteRenderer.sortingOrder = -tgt.y * 10 + 1;
+        _isMoving = true;
+        _stats.CurTile.CharacterStatsOnTile = null;
+        _stats.CurTile = tile;
+        tile.CharacterStatsOnTile = _stats;
 
-        animator.PlayMove();
-        transform.DOMove(new Vector3(tgt.x, tgt.y, 0), 0.1f).SetEase(Ease.Linear).OnComplete(() => isMoving = false);
+        _spriteRenderer.sortingOrder = -tgt.y * 10 + 1;
+        _animator.PlayMove();
+
+        transform.DOMove(new Vector3(tgt.x, tgt.y, 0), 0.1f)
+            .SetEase(Ease.Linear)
+            .OnComplete(() => _isMoving = false);
+
         Controller.onActionConfirmed?.Invoke();
     }
-    #endregion
 
-    #region 공격
     public override void OnAttack(InputAction.CallbackContext ctx)
     {
-        if (!Controller.isPlayerTurn || attackBuffer != null || !ctx.started) return;
-        attackBuffer = StartCoroutine(BufferAttack());
+        if (!Controller.isPlayerTurn || _attackBuffer != null || !ctx.started) return;
+        _attackBuffer = StartCoroutine(BufferAttack());
     }
 
-    IEnumerator BufferAttack()
+    private IEnumerator BufferAttack()
     {
-        yield return new WaitForSeconds(inputBufferDuration);
-        animator.PlayAttack();
+        yield return new WaitForSeconds(_inputBufferDuration);
+        _animator.PlayAttack();
         Controller.onActionConfirmed?.Invoke();
-        attackBuffer = null;
+        _attackBuffer = null;
     }
 
     public void OnAttackHit()
     {
-        var tp = stats.CurTile.gridPosition + lastMoveDir;
-        if (stats.curLevel.tiles.TryGetValue(tp, out var tile) && tile.CharacterStatsOnTile != null)
-            stats.Attack(tile.CharacterStatsOnTile);
-    }
-    #endregion
+        Vector2Int targetPos = _stats.CurTile.gridPosition + _lastMoveDir;
 
-    #region 대시
+        if (_stats.curLevel.tiles.TryGetValue(targetPos, out Tile tile)
+            && tile.CharacterStatsOnTile != null)
+        {
+            _stats.Attack(tile.CharacterStatsOnTile);
+        }
+    }
+
     public override void OnDash(InputAction.CallbackContext ctx)
     {
-        if (!Controller.isPlayerTurn || dashBuffer != null || !ctx.started) return;
-        dashBuffer = StartCoroutine(BufferDash());
+        if (!Controller.isPlayerTurn || _dashBuffer != null || !ctx.started) return;
+        _dashBuffer = StartCoroutine(BufferDash());
     }
 
-    IEnumerator BufferDash()
+    private IEnumerator BufferDash()
     {
-        float t = 0;
-        Vector2 buf = Vector2.zero;
+        float time = 0f;
+        Vector2 bufferedDir = Vector2.zero;
 
-        while (t < inputBufferDuration)
+        while (time < _inputBufferDuration)
         {
-            var v = InputActions.PC.Move.ReadValue<Vector2>();
-            if (v != Vector2.zero) buf = v;
-            t += Time.deltaTime;
+            Vector2 inputDir = InputActions.PC.Move.ReadValue<Vector2>();
+            if (inputDir != Vector2.zero)
+                bufferedDir = inputDir;
+
+            time += Time.deltaTime;
             yield return null;
         }
 
-        StartDash(buf);
-        dashBuffer = null;
+        StartDash(bufferedDir);
+        _dashBuffer = null;
     }
 
-    void StartDash(Vector2 raw)
+    private void StartDash(Vector2 rawDir)
     {
-        var dr = raw != Vector2.zero ? raw : new Vector2(lastMoveDir.x, lastMoveDir.y);
-        var dir = new Vector2Int(
-            dr.x > 0 ? 1 : dr.x < 0 ? -1 : 0,
-            dr.y > 0 ? 1 : dr.y < 0 ? -1 : 0
+        Vector2 dirVector = rawDir != Vector2.zero ? rawDir : new Vector2(_lastMoveDir.x, _lastMoveDir.y);
+        Vector2Int dir = new(
+            dirVector.x > 0 ? 1 : dirVector.x < 0 ? -1 : 0,
+            dirVector.y > 0 ? 1 : dirVector.y < 0 ? -1 : 0
         );
 
-        lastMoveDir = dir;
-        var start = stats.CurTile.gridPosition;
-        int max = 0;
+        _lastMoveDir = dir;
+        Vector2Int startPos = _stats.CurTile.gridPosition;
+        int maxDistance = 0;
 
-        for (int i = 1; i <= dashDistance; i++)
+        for (int i = 1; i <= _dashDistance; i++)
         {
-            var pos = start + dir * i;
-            if (!stats.curLevel.tiles.TryGetValue(pos, out var t) || !t.IsWalkable || t.CharacterStatsOnTile != null)
+            Vector2Int nextPos = startPos + dir * i;
+
+            if (!_stats.curLevel.tiles.TryGetValue(nextPos, out Tile tile) || !tile.IsWalkable || tile.CharacterStatsOnTile != null)
                 break;
-            max = i;
+
+            maxDistance = i;
         }
 
-        if (max <= 0) return;
+        if (maxDistance <= 0) return;
 
-        dashStartHealth = stats.CurrentHealth;
-        initialEnemies = new HashSet<EnemyStats>();
-        foreach (var v in stats.tilesOnVision)
-            if (v.CharacterStatsOnTile is EnemyStats e) initialEnemies.Add(e);
+        _dashStartHealth = _stats.CurrentHealth;
+        _initialEnemies = new HashSet<EnemyStats>();
 
-        var tm = TurnManager.Instance;
-        savedTurnSpeed = tm.turnSpeed;
+        foreach (var tile in _stats.tilesOnVision)
+        {
+            if (tile.CharacterStatsOnTile is EnemyStats enemy)
+                _initialEnemies.Add(enemy);
+        }
+
+        TurnManager tm = TurnManager.Instance;
+        _savedTurnSpeed = tm.turnSpeed;
         tm.turnSpeed *= 10;
         Controller.moveSpeed *= 10;
         Time.timeScale *= 10;
 
-        dashQueue = new Queue<Vector2Int>();
-        for (int i = 0; i < max; i++) dashQueue.Enqueue(dir);
+        _dashQueue = new Queue<Vector2Int>();
+        for (int i = 0; i < maxDistance; i++)
+            _dashQueue.Enqueue(dir);
 
-        dashCoroutine = StartCoroutine(DashCoroutine());
+        _dashCoroutine = StartCoroutine(DashCoroutine());
     }
 
-    IEnumerator DashCoroutine()
+    private IEnumerator DashCoroutine()
     {
-        var tm = TurnManager.Instance;
-        bool cancelled = false, first = true;
+        TurnManager tm = TurnManager.Instance;
+        bool stop = false;
+        bool waitForTurn = true;
 
-        while (dashQueue.Count > 0 && !cancelled)
+        while (_dashQueue.Count > 0 && !stop)
         {
-            if (!first) yield return new WaitUntil(() => Controller.isPlayerTurn);
-            first = false;
+            if (!waitForTurn)
+                yield return new WaitUntil(() => Controller.isPlayerTurn);
+            waitForTurn = false;
 
-            var step = dashQueue.Dequeue();
-            var cur = stats.CurTile.gridPosition;
-            var nxt = cur + step;
+            Vector2Int step = _dashQueue.Dequeue();
+            Vector2Int cur = _stats.CurTile.gridPosition;
+            Vector2Int next = cur + step;
 
-            if (!stats.curLevel.tiles.TryGetValue(nxt, out var tile) ||
-                !tile.IsWalkable ||
-                tile.CharacterStatsOnTile != null ||
-                stats.CurrentHealth < dashStartHealth)
+            if (!_stats.curLevel.tiles.TryGetValue(next, out Tile tile)
+                || !tile.IsWalkable
+                || tile.CharacterStatsOnTile != null
+                || _stats.CurrentHealth < _dashStartHealth)
                 break;
 
-            foreach (var v in stats.tilesOnVision)
-                if (v.CharacterStatsOnTile is EnemyStats e && !initialEnemies.Contains(e))
+            foreach (var visTile in _stats.tilesOnVision)
+            {
+                if (visTile.CharacterStatsOnTile is EnemyStats enemy && !_initialEnemies.Contains(enemy))
                 {
-                    cancelled = true;
+                    stop = true;
                     break;
                 }
+            }
 
-            if (step.x != 0) spriteRenderer.flipX = step.x < 0;
+            if (step.x != 0)
+                _spriteRenderer.flipX = step.x < 0;
 
-            animator.PlayMove();
-            stats.CurTile.CharacterStatsOnTile = null;
-            stats.CurTile = tile;
-            tile.CharacterStatsOnTile = stats;
+            _animator.PlayMove();
+            _stats.CurTile.CharacterStatsOnTile = null;
+            _stats.CurTile = tile;
+            tile.CharacterStatsOnTile = _stats;
 
-            yield return transform.DOMove(new Vector3(nxt.x, nxt.y, 0), 0.01f).SetEase(Ease.Linear).WaitForCompletion();
+            yield return transform.DOMove(new Vector3(next.x, next.y, 0), 0.01f).SetEase(Ease.Linear).WaitForCompletion();
+
             Controller.onActionConfirmed?.Invoke();
         }
 
         yield return new WaitUntil(() => Controller.isPlayerTurn);
-        tm.turnSpeed = savedTurnSpeed;
+
+        tm.turnSpeed = _savedTurnSpeed;
         Controller.moveSpeed /= 10;
         Time.timeScale /= 10;
-        dashCoroutine = null;
+        _dashCoroutine = null;
     }
-    #endregion
 
-    #region Ctrl & 하이라이트
     public override void OnCtrl(InputAction.CallbackContext ctx)
     {
         if (ctx.started)
         {
-            isCtrlHeld = true;
-            highlightCoroutine = StartCoroutine(HighlightLoop());
+            _isCtrlHeld = true;
+            _highlightCoroutine = StartCoroutine(HighlightLoop());
         }
         else if (ctx.canceled)
         {
-            isCtrlHeld = false;
-            if (highlightCoroutine != null) StopCoroutine(highlightCoroutine);
+            _isCtrlHeld = false;
+            if (_highlightCoroutine != null)
+                StopCoroutine(_highlightCoroutine);
             HideHighlight();
         }
     }
 
-    IEnumerator HighlightLoop()
+    private IEnumerator HighlightLoop()
     {
-        if (highlightInstance == null)
-            highlightInstance = Instantiate(highlightPrefab);
+        if (_highlightInstance == null)
+            _highlightInstance = Instantiate(highlightPrefab);
         else
-            highlightInstance.SetActive(true);
+            _highlightInstance.SetActive(true);
 
-        while (isCtrlHeld)
+        while (_isCtrlHeld)
         {
             UpdateHighlightPosition();
             yield return null;
@@ -258,61 +288,56 @@ public class DungeonBehavior : PlayerBaseBehavior
         HideHighlight();
     }
 
-    void UpdateHighlightPosition()
+    private void UpdateHighlightPosition()
     {
-        var cur = stats.CurTile.gridPosition;
-        var tgt = cur + lastMoveDir;
+        Vector2Int cur = _stats.CurTile.gridPosition;
+        Vector2Int tgt = cur + _lastMoveDir;
 
-        if (!stats.curLevel.tiles.TryGetValue(tgt, out var tile))
+        if (!_stats.curLevel.tiles.TryGetValue(tgt, out Tile tile))
         {
-            highlightInstance.SetActive(false);
+            _highlightInstance.SetActive(false);
             return;
         }
 
-        highlightInstance.SetActive(true);
-        highlightInstance.transform.position = new Vector3(tgt.x, tgt.y, 0);
+        _highlightInstance.SetActive(true);
+        _highlightInstance.transform.position = new Vector3(tgt.x, tgt.y, 0);
 
-        var sr = highlightInstance.GetComponent<SpriteRenderer>();
+        SpriteRenderer sr = _highlightInstance.GetComponent<SpriteRenderer>();
         if (sr != null)
         {
             int y = tgt.y;
-            sr.sortingOrder = y == 0 ? -y - 1 : -y * (y > 0 ? 11 : 9);
+            sr.sortingOrder = y == 0 ? -y - 1 : (y > 0 ? -y * 11 : -y * 9);
         }
     }
 
-    void HideHighlight()
+    private void HideHighlight()
     {
-        if (highlightInstance != null) highlightInstance.SetActive(false);
+        if (_highlightInstance != null)
+            _highlightInstance.SetActive(false);
     }
-    #endregion
 
-    #region 아이템 사용
     public void UseItem(ItemData data)
     {
-        currentItem = ItemFactory.Instance.CreateItem(data.id);
-        if (currentItem == null) return;
+        _currentItem = ItemFactory.Instance.CreateItem(data.id);
+        if (_currentItem == null) return;
 
-        currentItem.ItemUseDone += HandleItemUseDone;
-        currentItem.UseItem(data);
+        _currentItem.ItemUseDone += HandleItemUseDone;
+        _currentItem.UseItem(data);
     }
 
-    void HandleItemUseDone()
+    private void HandleItemUseDone()
     {
-        if (currentItem != null)
-        {
-            currentItem.ItemUseDone -= HandleItemUseDone;
-            Controller.onActionConfirmed?.Invoke();
-            currentItem = null;
-        }
-    }
-    #endregion
+        if (_currentItem == null) return;
 
-    #region 사용하지 않는 입력
+        _currentItem.ItemUseDone -= HandleItemUseDone;
+        Controller.onActionConfirmed?.Invoke();
+        _currentItem = null;
+    }
+
     public override void OnInteract(InputAction.CallbackContext ctx) { }
     public override void OnCancel(InputAction.CallbackContext ctx) { }
     public override void OnMenu(InputAction.CallbackContext ctx) { }
     public override void OnAttackDirection(InputAction.CallbackContext ctx) { }
     public override void OnMousePosition(InputAction.CallbackContext ctx) { }
     public override void OnMouseClick(InputAction.CallbackContext ctx) { }
-    #endregion
 }

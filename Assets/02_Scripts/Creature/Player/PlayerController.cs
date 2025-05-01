@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
     public Action onActionConfirmed;
     public bool isPlayerTurn;
 
-    [SerializeField] private GameObject highlightPrefab;
+    [SerializeField] private GameObject _highlightPrefab;
 
     private PlayerBaseBehavior currentBehavior;
 
@@ -51,7 +51,7 @@ public class PlayerController : MonoBehaviour
         {
             case SceneType.Dungeon:
                 var db = gameObject.AddComponent<DungeonBehavior>();
-                db.highlightPrefab = highlightPrefab;     // ← 여기서 할당
+                db.highlightPrefab = _highlightPrefab;     // ← 여기서 할당
                 currentBehavior = db;
                 break;
             case SceneType.Town:
