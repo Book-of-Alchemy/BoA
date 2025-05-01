@@ -154,7 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   isPlayerTurn: 0
-  highlightPrefab: {fileID: 5156306786401311766, guid: 2a1fddc33e84e2b4bb5cfd8f62b7f3f1, type: 3}
+  _highlightPrefab: {fileID: 5156306786401311766, guid: 2a1fddc33e84e2b4bb5cfd8f62b7f3f1, type: 3}
 --- !u!58 &4089814967209199884
 CircleCollider2D:
   m_ObjectHideFlags: 0

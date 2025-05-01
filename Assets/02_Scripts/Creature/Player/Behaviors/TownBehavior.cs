@@ -1,70 +1,73 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using DG.Tweening;
 
 [RequireComponent(typeof(CharacterAnimator), typeof(SpriteRenderer))]
 public class TownBehavior : PlayerBaseBehavior
 {
     [Header("Town Settings")]
-    [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float _moveSpeed = 5f;
+    private const float _far = 1000f;
 
-    private CharacterAnimator animator;
-    private SpriteRenderer spriteRenderer;
-    private Coroutine moveCoroutine;
+    private CharacterAnimator _animator;
+    private SpriteRenderer _spriteRenderer;
+    private Tween _moveTween;
 
     public override void Initialize(PlayerController controller)
     {
         base.Initialize(controller);
-        animator = GetComponent<CharacterAnimator>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        _animator = GetComponent<CharacterAnimator>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     public override void OnMove(InputAction.CallbackContext ctx)
     {
-        Vector2 dir = ctx.ReadValue<Vector2>();
+        Vector2 raw = ctx.ReadValue<Vector2>();
+        Vector2 dir = raw.normalized;
+
         if (ctx.performed && dir != Vector2.zero)
         {
-            // 좌우 반전
-            spriteRenderer.flipX = dir.x < 0;
+            // 좌우 반전 (수평 이동 시)
+            if (dir.x != 0f)
+                _spriteRenderer.flipX = dir.x < 0;
 
-            // 기존 이동 코루틴 중지
-            if (moveCoroutine != null)
-                StopCoroutine(moveCoroutine);
-            moveCoroutine = StartCoroutine(MoveRoutine(dir));
+            // 기존 트윈 있으면 죽이고
+            _moveTween?.Kill();
+
+            // 현재 위치 기준 _far 만큼 dir 방향으로 이동하는 트윈
+            Vector3 target = transform.position + (Vector3)dir * _far;
+
+            _moveTween = transform
+                .DOMove(target, _moveSpeed)    //  두 번째 파라미터는 속도
+                .SetSpeedBased()
+                .SetEase(Ease.Linear)
+                .OnPlay(() => _animator.PlayMove());
         }
         else if (ctx.canceled || dir == Vector2.zero)
         {
-            if (moveCoroutine != null)
-                StopCoroutine(moveCoroutine);
-            moveCoroutine = null;
-        }
-    }
-
-    private IEnumerator MoveRoutine(Vector2 dir)
-    {
-        while (true)
-        {
-            animator.PlayMove();
-            transform.Translate((Vector3)dir * moveSpeed * Time.deltaTime);
-            yield return null;
+            // 키 뗄 때 바로 멈추기
+            if (_moveTween != null)
+            {
+                _moveTween.Kill();
+                _moveTween = null;
+            }
         }
     }
 
     public override void OnDash(InputAction.CallbackContext ctx)
     {
         if (ctx.started)
-            moveSpeed *= 2f;
+            _moveSpeed *= 2f;
         else if (ctx.canceled)
-            moveSpeed /= 2f;
+            _moveSpeed /= 2f;
     }
 
     public override void OnInteract(InputAction.CallbackContext ctx)
     {
-        if (ctx.started)
-            Controller.onActionConfirmed?.Invoke();
+        //if (ctx.started)
     }
 
-    // 빈 콜백 구현
+    // 사용 안 하는 콜백은 빈 구현
     public override void OnAttack(InputAction.CallbackContext ctx) { }
     public override void OnCancel(InputAction.CallbackContext ctx) { }
     public override void OnMenu(InputAction.CallbackContext ctx) { }
