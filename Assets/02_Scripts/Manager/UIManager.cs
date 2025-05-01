@@ -6,7 +6,7 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private List<UIBase> uiList = new List<UIBase>(); // SerializeField for Debugging
 
     [Tooltip("한번 출력되는 UI의 생명기간")]
-    [SerializeField] static private float _fadeOutDuration = 1.2f;
+    [SerializeField] static private float _fadeOutDuration = 1.4f;
 
     private void Start()
     {

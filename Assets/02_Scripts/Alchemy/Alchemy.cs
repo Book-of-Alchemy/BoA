@@ -77,7 +77,7 @@ public class Alchemy : MonoBehaviour
         else 
         {
             Debug.Log("레시피가 없습니다.");
-            return (!isReady, null, 0);
+            return (isReady, null, 0);
         }
 
         if (isReady)
@@ -96,7 +96,7 @@ public class Alchemy : MonoBehaviour
         else
         {
             Debug.Log("제작 실패");
-            return (!isReady, null, 0);
+            return (isReady, null, 0);
         }
         // 레시피 결과물 리턴 추가
 
