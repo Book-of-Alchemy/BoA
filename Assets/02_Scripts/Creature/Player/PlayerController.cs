@@ -284,24 +284,23 @@ public class PlayerController : MonoBehaviour
 
     private void DoAttack(Vector2 dir)
     {
-        if (dir.x != 0) _spriteRenderer.flipX = dir.x < 0;
-        PerformAttackRaycast(dir);
-    }
 
-    private void PerformAttackRaycast(Vector2 dir)
-    {
-        onActionConfirmed?.Invoke();
-        float originOffset = _collider.bounds.extents.magnitude + 0.1f;
-        Vector2 origin = (Vector2)transform.position + dir.normalized * originOffset;
-        Vector2 direction = dir.normalized;
+        if (dir.x != 0)
+            _spriteRenderer.flipX = dir.x < 0;
 
-        Debug.DrawRay(origin, direction * 0.5f, Color.red, 0.5f);
-        var hit = Physics2D.Raycast(origin, direction, 0.5f, unitLayer);
+        Vector2Int cur = _playerStats.CurTile.gridPosition;
 
-        if (hit.collider != null && hit.collider.CompareTag("Enemy"))
+        Vector2Int offset = new Vector2Int(
+            dir.x > 0 ? 1 : dir.x < 0 ? -1 : 0,
+            dir.y > 0 ? 1 : dir.y < 0 ? -1 : 0
+        );
+
+        Vector2Int targetPos = cur + offset;
+
+        if (_playerStats.curLevel.tiles.TryGetValue(targetPos, out var targetTile))
         {
-            var enemyStats = hit.collider.GetComponent<EnemyStats>();
-            if (enemyStats != null) _playerStats.Attack(enemyStats);
+            if (targetTile.CharacterStatsOnTile != null)
+                _playerStats.Attack(targetTile.CharacterStatsOnTile);
         }
     }
 
