@@ -187,6 +187,10 @@ public class Inventory : Singleton<Inventory>
 
     public void TryCraft()
     {
+        if (_craftList.Count < 1)
+        {
+            return;
+        }
         //제작 결과 담을 변수
         (bool boolResult, RecipeData dataResult, int amount) result;
 
