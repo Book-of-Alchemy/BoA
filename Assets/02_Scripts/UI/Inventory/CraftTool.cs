@@ -59,8 +59,8 @@ public class CraftTool : MonoBehaviour
 
     public void CraftComplete(InventoryItem item)
     {
-        //ClearPreviewSlot();
-        //_slotResult.SetItem(item);
-        _slotResult.SetItemNormalColor();
+        ClearPreviewSlot();
+        _slotResult.SetItem(item);
+        _slotResult.SetItemopaque();
     }
 }

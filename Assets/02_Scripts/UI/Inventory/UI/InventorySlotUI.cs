@@ -4,8 +4,12 @@ using TMPro;
 using UnityEngine.UI;
 using System;
 using System.Collections.Generic;
+public interface IUsable
+{
+    void Use();
+}
 
-public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler
+public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerDownHandler, IPointerUpHandler
 {
     [SerializeField] protected Image _itemSprite;
     [SerializeField] protected TextMeshProUGUI _countTxt;
@@ -14,14 +18,20 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler
     [SerializeField] protected UI_Inventory _uiInventory;
     [SerializeField] private Image _borderImage; // 테두리용 이미지
 
+    private CanvasGroup _canvasGroup;
+    private RectTransform _draggingTransform;
+    private Transform _originalParent;
+
     protected GameObject _imageObject;
     protected GameObject _textObject;
     protected InventoryItem _item;
+    public InventoryItem Item => _item;
 
     public int Index { get; set; }
     public bool HasItem => _item != null; //있다면 True
 
     private Color _normalBorderColor = new Color(1f, 1f, 1f, 0f); // 기본(투명)
+    private Color _opaqueColor = new Color(1f, 1f, 1f, 1f); // 기본(투명)
     private Color _highlightBorderColor = Color.yellow; // 강조(노란색)
     private Color _blurColor = new Color(0.7f, 0.7f, 0.7f, 0.5f); // 흐리게
     private Color _selectedBorderColor = Color.blue; // 강조(파란색)
@@ -33,6 +43,10 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler
 
     public event Action<int> OnSelected;
     public event Action<int> OnDeselected;
+
+    private Vector2 _pointerDownPos;
+    private bool _isDragging;
+    private const float DragThreshold = 10f;
 
     private Dictionary<EInventoryType, Action> _OnClickActions = new(); //Type에 따른 Action 바인딩
 
@@ -46,11 +60,10 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler
         if (_borderImage != null)
             _borderImage.color = _normalBorderColor;
     }
-
     public void Initialize(UI_Inventory uiInventory)
     {
         _uiInventory = uiInventory;
-
+        _canvasGroup = GetComponent<CanvasGroup>();
         // 인벤토리 타입에 따른 Action 매핑
         _OnClickActions[EInventoryType.Inventory] = OnInventoryClick;
         _OnClickActions[EInventoryType.Craft] = OnCraftClick;
@@ -98,13 +111,13 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler
     {
         Debug.Log($"HasItem : {HasItem}");
         _item = item;
-        //if (!HasItem)
+        if (HasItem)
             _btn.onClick.AddListener(OnClickItem);
 
         _countTxt.text = _item.Amount.ToString();
-        Debug.Log(_item.GetSprite());
-        _itemSprite = this.gameObject.transform.GetChild(0).GetComponent<Image>();
-        Debug.Log(_itemSprite);
+        //Debug.Log(_item.GetSprite());
+        //_itemSprite = this.gameObject.transform.GetChild(0).GetComponent<Image>();
+        //Debug.Log(_itemSprite);
 
         _itemSprite.sprite = _item.GetSprite();
         ShowIcon();
@@ -115,7 +128,7 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler
     {
         _btn.onClick.RemoveAllListeners();
         _item = null;
-        //_itemSprite.sprite = null;
+        _itemSprite.sprite = null;
         _countTxt.text = string.Empty;
         HideIcon();
         HideText();
@@ -152,6 +165,10 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler
     {
         _itemSprite.color = _normalBorderColor;
     }
+    public void SetItemopaque()
+    {
+        _itemSprite.color = _opaqueColor;
+    }
 
     public void SetHighlight(bool isOn)
     {
@@ -168,6 +185,58 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler
         else
         {
             SetNormalColor();
+        }
+    }
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        if (!HasItem) return;
+        //DragManager.Instance.BeginDrag(_item, transform.position);
+        if (Vector2.Distance(eventData.position, _pointerDownPos) < DragThreshold)
+        {
+            _isDragging = false;
+            return;
+        }
+
+        _isDragging = true;
+        _originalParent = transform.parent;
+        _draggingTransform = transform as RectTransform;
+        _canvasGroup.blocksRaycasts = false;
+
+        transform.SetParent(_uiInventory.transform.root); // 캔버스 루트로 이동
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        //DragManager.Instance.UpdateDrag(eventData.position);
+        if (!HasItem) return;
+        if (_isDragging)
+            _draggingTransform.position = eventData.position;
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        //DragManager.Instance.EndDrag(eventData);
+        if (_isDragging)
+        {
+            transform.SetParent(_originalParent);
+            transform.localPosition = Vector3.zero;
+            _canvasGroup.blocksRaycasts = true;
+            _isDragging = false;
+        }
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        _pointerDownPos = eventData.position;
+        _isDragging = false;
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        if (!_isDragging && HasItem)
+        {
+            // 클릭 처리
+            //OnClickItem(); // 기존의 버튼 클릭 로직 호출
         }
     }
 }

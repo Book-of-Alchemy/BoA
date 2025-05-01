@@ -131,9 +131,9 @@ public class UI_Inventory : UIBase
     {
         _slotUIList[index].RemoveItem();
     }
-    public void ReduceItem(int index) // 슬롯에 아이템 아이콘, 갯수 제거
+    public void ReduceItem(int index,int amount) // 슬롯에 아이템 아이콘, 갯수 제거
     {
-        _slotUIList[index].ReduceItem();
+        _slotUIList[index].ReduceItem(amount);
     }
 
     public void OnSlotSelected(int index)

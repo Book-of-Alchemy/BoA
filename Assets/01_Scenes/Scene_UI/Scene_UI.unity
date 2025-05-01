@@ -693,7 +693,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18834f4f2f60c4e4789bd6ca84cad0e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dragImage: {fileID: 0}
+  _uiCanvas: {fileID: 1800594750}
+  _dragIconPrefab: {fileID: 0}
 --- !u!4 &806461645
 Transform:
   m_ObjectHideFlags: 0
@@ -702,12 +703,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 806461643}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -960, y: -540, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1800594751}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &916698578
 GameObject:
@@ -3012,6 +3013,7 @@ RectTransform:
   - {fileID: 2076388714}
   - {fileID: 271232315}
   - {fileID: 988688591}
+  - {fileID: 806461645}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -3177,4 +3179,3 @@ SceneRoots:
   - {fileID: 100099831}
   - {fileID: 350949113}
   - {fileID: 36620241}
-  - {fileID: 806461645}
