@@ -116,7 +116,31 @@ public class DungeonBehavior : PlayerBaseBehavior
         while (isCtrlHeld) { UpdateHighlightPosition(); yield return null; }
         HideHighlight();
     }
-    void UpdateHighlightPosition() { var cur = stats.CurTile.gridPosition; var tgt = cur + lastMoveDir; if (!stats.curLevel.tiles.TryGetValue(tgt, out var t)) { highlightInstance.SetActive(false); return; } highlightInstance.SetActive(true); highlightInstance.transform.position = new Vector3(tgt.x, tgt.y, 0); var sr = highlightInstance.GetComponent<SpriteRenderer>(); sr.sortingOrder = tgt.y >= 0 ? -tgt.y * 11 : -tgt.y * 9; }
+    void UpdateHighlightPosition()
+    {
+        var cur = stats.CurTile.gridPosition;
+        var tgt = cur + lastMoveDir;
+        if (!stats.curLevel.tiles.TryGetValue(tgt, out var tile))
+        {
+            highlightInstance.SetActive(false);
+            return;
+        }
+
+        highlightInstance.SetActive(true);
+        highlightInstance.transform.position = new Vector3(tgt.x, tgt.y, 0);
+
+        var sr = highlightInstance.GetComponent<SpriteRenderer>();
+        if (sr != null)
+        {
+            int y = tgt.y;
+            if (y == 0)
+                sr.sortingOrder = -y - 1;
+            else if (y > 0)
+                sr.sortingOrder = -y * 11;
+            else
+                sr.sortingOrder = -y * 9;
+        }
+    }
     void HideHighlight() { if (highlightInstance != null) highlightInstance.SetActive(false); }
 
     // 아이템 사용
