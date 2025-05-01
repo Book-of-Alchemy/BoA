@@ -42,5 +42,6 @@ public class ShotSkill : EnemySkill
     public override void DealDamage()
     {
         stats.Attack(attackBaseBehaviour.playetStats, 2f);
+        attackBaseBehaviour.EndTurn();
     }
 }

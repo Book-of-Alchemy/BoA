@@ -351,6 +351,36 @@ public static class TileUtility
         return line;
     }
 
+    public static List<Tile> GetRoomTileOnLeaf(Level level, Leaf leaf,bool isSafe = false)
+    {
+        List<Tile> availableTiles = new List<Tile>();
+        foreach (var pos in TileUtility.GetPositionsInRect(leaf.rect))
+        {
+            if (level.tiles.TryGetValue(pos, out Tile tile))
+            {
+                if (tile.tileType == TileType.ground && !tile.isOccupied)
+                {
+                    availableTiles.Add(tile);
+                }
+            }
+        }
+
+        foreach (var tile in level.corridorTiles)
+        {
+            availableTiles.Remove(tile);
+        }
+
+        if (isSafe)
+        {
+            foreach (var tile in level.trapPoint)
+            {
+                availableTiles.Remove(tile);
+            }
+        }
+
+        return availableTiles;
+    }
+
     public static List<Vector2Int> GetPositionsInRect(RectInt rect)
     {
         List<Vector2Int> positions = new List<Vector2Int>();

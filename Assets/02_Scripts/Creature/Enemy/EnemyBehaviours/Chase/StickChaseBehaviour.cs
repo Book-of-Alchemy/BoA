@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StayIdleBehaviour : IdleBaseBehaviour
+public class StickChaseBehaviour : ChaseBaseBehaviour
 {
     public override void Action()
     {

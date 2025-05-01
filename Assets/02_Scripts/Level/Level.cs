@@ -32,6 +32,7 @@ public class Level : MonoBehaviour
     public Dictionary<Vector2Int, Tile> tiles = new Dictionary<Vector2Int, Tile>();
     public Tile startTile;
     public Tile endTile;
+    public HashSet<Tile> corridorTiles = new HashSet<Tile>();
     public List<Tile> trapPoint = new List<Tile>();
     public List<Leaf> seletedLeaves;
     public Leaf startLeaf;
