@@ -66,10 +66,10 @@ public class ChaseBaseBehaviour : BaseBehaviour
                 CurTile.CharacterStatsOnTile = null;
                 CurTile = target;
                 CurTile.CharacterStatsOnTile = enemyStats;
-
+                EndTurn();
                 if (target == controller.LastCheckedTile)
                     controller.LastCheckedTile = null;
-                EndTurn();
+                
             }
         );
 

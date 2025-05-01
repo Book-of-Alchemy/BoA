@@ -122,13 +122,13 @@ public class DungeonBehavior : PlayerBaseBehavior
     // 아이템 사용
     public void UseItem(ItemData data)
     {
-        currentItem = Instantiate(data.itemPrefab).GetComponent<BaseItem>();
+        currentItem = ItemFactory.Instance.CreateItem(data.id);
         if (currentItem == null) return;
         currentItem.ItemUseDone += HandleItemUseDone;
         currentItem.UseItem(data);
     }
     void HandleItemUseDone() { if (currentItem != null) { currentItem.ItemUseDone -= HandleItemUseDone; Controller.onActionConfirmed?.Invoke(); currentItem = null; } }
-    public override void OnInteract(InputAction.CallbackContext ctx) {  }
+    public override void OnInteract(InputAction.CallbackContext ctx) { }
     public override void OnCancel(InputAction.CallbackContext ctx) { }
     public override void OnMenu(InputAction.CallbackContext ctx) { }
     public override void OnAttackDirection(InputAction.CallbackContext ctx) { }
