@@ -24,9 +24,10 @@ public class LevelGenerator : MonoBehaviour
         curBiomeSet = biomeSet;
     }
 
-    public Level GenerateLevel(int minSize = 7, bool isBossRoom = false)
+    public Level GenerateLevel(int minSize = 7, QuestData questData =null)
     {
         Level level = new GameObject("Level").AddComponent<Level>();
+        level.questData = SODataManager.Instance.questDataBase.questData[0];//임시코드
         level.biomeSet = curBiomeSet;
         level.tileDataBase = TileManger.Instance.tileData;
 
@@ -64,6 +65,7 @@ public class LevelGenerator : MonoBehaviour
         if (scretLeaf != null)
             seletedLeaves.Add(scretLeaf);
 
+        
         SetRoomOnLeaves(seletedLeaves);
 
         Dictionary<Vector2Int, Tile> tiles = GenerateTilesFromLeaf(root);//우선 empty 깔고 시작
@@ -73,10 +75,7 @@ public class LevelGenerator : MonoBehaviour
         level.tiles = tiles;
 
         ConnectEdgesWithPaths(Edges, level);
-        foreach (var tile in level.tiles)
-        {
-            FillWallByCorridor(tile.Value, level);
-        }
+        FillWallByCorridorOnLevel(level);
 
         level.startTile = startLeaf.centerTile != null ? startLeaf.centerTile : null;
         level.endTile = endLeaf.centerTile != null ? endLeaf.centerTile : null;
@@ -90,6 +89,9 @@ public class LevelGenerator : MonoBehaviour
         }
 
         SetLevelOnTiles(tiles, level);
+
+        level.seletedLeaves = seletedLeaves;
+        level.startLeaf = startLeaf;
 
         return level;
     }
@@ -201,6 +203,9 @@ public class LevelGenerator : MonoBehaviour
                 }
             }
         }
+
+        if (trapLeaf == null || treasureLeaf == null)
+            return;
 
         trapLeaf.roomType = RoomType.trap;
         treasureLeaf.roomType = RoomType.treasure;
@@ -537,6 +542,7 @@ public class LevelGenerator : MonoBehaviour
                 foreach (var tile in path)
                 {
                     TurnToGroundTile(tile);
+                    level.corridorTiles.Add(tile);
                 }
 
                 level.tiles[doorA.gridPosition].isDoorPoint = false;
@@ -576,6 +582,18 @@ public class LevelGenerator : MonoBehaviour
 
         return closest;
     }
+
+    void FillWallByCorridorOnLevel(Level level)
+    {
+        // Dictionary의 Value만 리스트로 복사
+        List<Tile> tileList = new List<Tile>(level.tiles.Values);
+
+        foreach (var tile in tileList)
+        {
+            FillWallByCorridor(tile, level); 
+        }
+    }
+
 
     void FillWallByCorridor(Tile tile, Level level)
     {
@@ -656,7 +674,9 @@ public class LevelGenerator : MonoBehaviour
         }
     }
 
-    //임시코드
+    /// <summary>
+    /// 임시코드 새로운 로직의 절차적 맵생성
+    /// </summary>
     public GameObject roomPrefab;
     public int maxBranches = 5;
     public int maxDepth = 5;

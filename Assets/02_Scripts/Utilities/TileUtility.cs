@@ -299,15 +299,15 @@ public static class TileUtility
         if (level == null || origin == null) return null;
         List<Tile> tiles = new List<Tile>();
         List<Vector2Int> line = GetLine(origin.gridPosition, target.gridPosition);
-
+        if (!isIncludeSelf)
+            line.Remove(origin.gridPosition);
         foreach (Vector2Int pos in line)
         {
             if (level.tiles.TryGetValue(pos, out Tile tile))
                 tiles.Add(tile);
         }
 
-        if (!isIncludeSelf)
-            tiles.Remove(origin);
+        
 
         return tiles;
     }
@@ -349,5 +349,50 @@ public static class TileUtility
         }
 
         return line;
+    }
+
+    public static List<Tile> GetRoomTileOnLeaf(Level level, Leaf leaf,bool isSafe = false)
+    {
+        List<Tile> availableTiles = new List<Tile>();
+        foreach (var pos in TileUtility.GetPositionsInRect(leaf.rect))
+        {
+            if (level.tiles.TryGetValue(pos, out Tile tile))
+            {
+                if (tile.tileType == TileType.ground && !tile.isOccupied)
+                {
+                    availableTiles.Add(tile);
+                }
+            }
+        }
+
+        foreach (var tile in level.corridorTiles)
+        {
+            availableTiles.Remove(tile);
+        }
+
+        if (isSafe)
+        {
+            foreach (var tile in level.trapPoint)
+            {
+                availableTiles.Remove(tile);
+            }
+        }
+
+        return availableTiles;
+    }
+
+    public static List<Vector2Int> GetPositionsInRect(RectInt rect)
+    {
+        List<Vector2Int> positions = new List<Vector2Int>();
+
+        for (int x = rect.xMin; x < rect.xMax; x++)
+        {
+            for (int y = rect.yMin; y < rect.yMax; y++)
+            {
+                positions.Add(new Vector2Int(x, y));
+            }
+        }
+
+        return positions;
     }
 }

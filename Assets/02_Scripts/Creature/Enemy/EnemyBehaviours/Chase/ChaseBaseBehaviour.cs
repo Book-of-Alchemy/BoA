@@ -55,12 +55,20 @@ public class ChaseBaseBehaviour : BaseBehaviour
     {
         if (target.CharacterStatsOnTile != null)//character 존재시 이동불가
             return;
-        CurTile.CharacterStatsOnTile = null;
-        controller.MoveTo(target.gridPosition);
-        CurTile = target;
-        CurTile.CharacterStatsOnTile = enemyStats;
 
-        if (target == controller.LastCheckedTile)
-            controller.LastCheckedTile = null;
+        controller.MoveTo(
+            target.gridPosition,
+            () =>
+            {
+                CurTile.CharacterStatsOnTile = null;
+                CurTile = target;
+                CurTile.CharacterStatsOnTile = enemyStats;
+
+                if (target == controller.LastCheckedTile)
+                    controller.LastCheckedTile = null;
+                EndTurn();
+            }
+        );
+
     }
 }

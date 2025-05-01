@@ -9,5 +9,7 @@ public class SODataManager : Singleton<SODataManager>
     public QuestDataBase questDataBase;
     public ProjectileDataBase projectileDataBase;
     public EffectDataBase effectDataBase;
+    public ItemDataBase itemDataBase;
     public GameObject playerPrefab;
+
 }

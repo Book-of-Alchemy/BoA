@@ -66,7 +66,7 @@ public abstract class CharacterStats : MonoBehaviour
     public float light;
     public float dark;
 
-    public UnitBase BuffManager { get; protected set; }
+    public UnitBase unitBase { get; protected set; }
     private CharacterAnimator _anim;
 
     //체력 변경 이벤트
@@ -105,7 +105,7 @@ public abstract class CharacterStats : MonoBehaviour
     protected virtual void Awake()
     {
         _anim = GetComponent<CharacterAnimator>();
-        BuffManager = GetComponent<UnitBase>() ?? gameObject.AddComponent<UnitBase>();
+        unitBase = GetComponent<UnitBase>();
     }
 
     public virtual void Attack(CharacterStats target, DamageType damageType = DamageType.None)

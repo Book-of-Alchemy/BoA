@@ -46,7 +46,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tileDataBase: {fileID: 11400000, guid: 3b38638883768d946bcf1f6695507f0d, type: 2}
   enemyDataBase: {fileID: 11400000, guid: fe5112d6adcb6364bba839c0b620c889, type: 2}
-  questDataBase: {fileID: 0}
+  questDataBase: {fileID: 11400000, guid: 69f36144dd01d7640a6860674d752327, type: 2}
   projectileDataBase: {fileID: 11400000, guid: 0e7a19d9e26daaa4e87559533a2df0a2, type: 2}
   effectDataBase: {fileID: 11400000, guid: 0e1d3de297452ea4baccf6d60ce92783, type: 2}
+  itemDataBase: {fileID: 11400000, guid: cd8bd01065132854094ebeead4b9e911, type: 2}
   playerPrefab: {fileID: 6804339739346013789, guid: 3999d0f34cbe9ef418c5a85ae2944482, type: 3}

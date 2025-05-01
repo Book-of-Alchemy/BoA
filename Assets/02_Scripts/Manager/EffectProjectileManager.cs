@@ -10,9 +10,10 @@ public class EffectProjectileManager : Singleton<EffectProjectileManager>
     public ProjectilePool projectilePool;
     public Vector3 offset = new Vector3(0,0.5f,0);
 
-    public void PlayEffect(Vector2Int position, int id)
+    public void PlayEffect(Vector2Int position, int id,bool isFlip = false)
     {
         Effect effect = effectPool.GetFromPool(id, position);
+        effect.spriteRenderer.flipX = isFlip;
         effect.Play();
         DOVirtual.DelayedCall
             (
@@ -24,6 +25,8 @@ public class EffectProjectileManager : Singleton<EffectProjectileManager>
     public void LaunchProjectile(Vector2Int origin, Vector2Int target, int id,Action onComplete = null)
     {
         Projectile projectile = projectilePool.GetFromPool(id, origin, this.offset);
+        bool isFlip = target.x - origin.x < 0 ? true : false;
+        projectile.spriteRenderer.flipX = isFlip;
         Vector3 adjustedPosition = new Vector3(target.x, target.y, 0) + offset;
         projectile.Play();
         projectile.transform.DOMove(adjustedPosition, 0.1f)
@@ -37,6 +40,8 @@ public class EffectProjectileManager : Singleton<EffectProjectileManager>
     public void LaunchProjectile(Vector2Int origin, Vector2Int target, int projectileId, int effectId, Action onComplete = null)
     {
         Projectile projectile = projectilePool.GetFromPool(projectileId, origin, this.offset);
+        bool isFlip = target.x - origin.x < 0 ? true : false;
+        projectile.spriteRenderer.flipX = isFlip;
         Vector3 adjustedPosition = new Vector3(target.x, target.y, 0) + offset;
         projectile.Play();
         projectile.transform.DOMove(adjustedPosition, 0.1f)
@@ -44,7 +49,7 @@ public class EffectProjectileManager : Singleton<EffectProjectileManager>
             {
                 onComplete?.Invoke();
                 projectilePool.ReturnToPool(projectile);
-                PlayEffect(target, effectId);
+                PlayEffect(target, effectId, isFlip);
             });
     }
 }

@@ -17,6 +17,8 @@ public class DamageItem : BaseItem
 
     /// <summary>
     /// UseItem 위치, 정보, 스프라이트 초기화
+    /// 현재 init은 dropitem에서도 사용중임 useitem에서 생성되는것은 다른 메서드로 해야함
+    /// drop시 위치가 맞지않는 현상
     /// </summary>
     /// <param name="data"></param>
     public void Init(ItemData data)
@@ -53,7 +55,7 @@ public class DamageItem : BaseItem
         ItemManager.Instance.DestroyRange(); // 아이템 효과 범위 삭제
 
         Vector2Int mouseWorldPos = Vector2Int.RoundToInt(mouseClickPos);
-        TestTileManger.Instance.curLevel.tiles.TryGetValue(mouseWorldPos, out mouseClickTile);
+        GameManager.Instance.PlayerTransform.curLevel.tiles.TryGetValue(mouseWorldPos, out mouseClickTile);
 
         // 사거리 내에 타일을 클릭했는지 확인하는 조건, 사거리 내의 타일을 클릭했다면 효과범위내에 대상들이 있는지 확인
         if (rangeTiles.Contains(mouseClickTile))
@@ -133,7 +135,8 @@ public class DamageItem : BaseItem
         Debug.Log(data.name_en);
         InputManager.Instance.EnableMouseTracking = false;
         InputManager.Instance.OnMouseClick -= OnClick;
-        Destroy(this.gameObject);
+        FinishUse();
+        Destroy(this.gameObject,0.1f);
     }
 
     /// <summary>
@@ -146,7 +149,7 @@ public class DamageItem : BaseItem
 
         Vector2Int mouseWorldPos = Vector2Int.RoundToInt(mousePos);
 
-        TestTileManger.Instance.curLevel.tiles.TryGetValue(mouseWorldPos, out Tile mouseTile);
+        GameManager.Instance.PlayerTransform.curLevel.tiles.TryGetValue(mouseWorldPos, out Tile mouseTile);
         if (rangeTiles.Contains(mouseTile))
         {
             List<Tile> checkItemRangeTiles = new List<Tile>();
@@ -203,5 +206,4 @@ public class DamageItem : BaseItem
             }
         }
     }
-
 }

@@ -16,7 +16,7 @@ public class TileManger : Singleton<TileManger>
     public GameObject environmentalPrefab;
     PlayerStats player;
 
-    private void Start()
+    private void Start()//임시코드
     {
         SetLevelGenerator(tileData.biomeSet[0], 8, 40, 40);
         curLevel = GenerateLevel();
@@ -37,7 +37,8 @@ public class TileManger : Singleton<TileManger>
         GameManager.Instance.PlayerTransform.curLevel = curLevel;
         GameManager.Instance.PlayerTransform.CurTile = curLevel.startTile;
         GameManager.Instance.PlayerTransform.transform.position = new Vector3(curLevel.startTile.gridPosition.x, curLevel.startTile.gridPosition.y,0);
-        //SpawnPlayer();
+        SpawnEnemy(curLevel);
+        SpawnItem(curLevel);
     }
 
     public void SetLevelGenerator(BiomeSet biomeSet, int roomCnt, int rootWidth, int rootHeight)
@@ -82,6 +83,15 @@ public class TileManger : Singleton<TileManger>
         player.CurTile = curLevel.startTile;
     }
 
+    public void SpawnEnemy(Level level)
+    {
+        EnemyFactory.Instance.EnemySpawnAtStart(level);
+    }
+
+    public void SpawnItem(Level level)
+    {
+        ItemFactory.Instance.ItemSpawnAtStart(level);
+    }
     public void CompleteQuest()
     {
 

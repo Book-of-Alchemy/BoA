@@ -22,6 +22,7 @@ public class EnemyController : MonoBehaviour
         get => _lastCheckedTile;
         set => _lastCheckedTile = value;
     }
+    public event Action onTurnEnd;
     IdleBaseBehaviour idleBehaviour;
     ChaseBaseBehaviour chaseBehaviour;
     AttackBaseBehaviour attackBehaviour;
@@ -47,6 +48,7 @@ public class EnemyController : MonoBehaviour
     {
         _playerStats = GameManager.Instance.PlayerTransform.GetComponent<PlayerStats>();
         _spriteRenderer.sortingOrder = -Mathf.RoundToInt(transform.position.y)*10;
+        UpdateVisual();
     }
 
     public void TakeTurn()
@@ -63,7 +65,6 @@ public class EnemyController : MonoBehaviour
                 break;
             case EnemyState.Attack:
                 HandleAttack();
-                FlipTowardsPlayer();
                 break;
         }
     }
@@ -94,18 +95,26 @@ public class EnemyController : MonoBehaviour
     private void HandleIdle()
     {
         idleBehaviour?.Excute();
+        FlipTowardsPlayer();
     }
 
     private void HandleChase()
     {
         chaseBehaviour?.Excute();
+        FlipTowardsPlayer();
     }
 
     private void HandleAttack()
     {
         attackBehaviour?.Excute();
+        FlipTowardsPlayer();
     }
 
+    public void EndTurn()
+    {
+        onTurnEnd?.Invoke();
+        UpdateVisual();
+    }
 
     public void MoveTo(Vector2Int targetPosition,  Action onComplete = null)
     {
@@ -134,6 +143,7 @@ public class EnemyController : MonoBehaviour
     {
         if (_playerStats != null)
             _enemyStats.Attack(_playerStats);
+        EndTurn();
     }
     public void Attack( Action onComplete = null)
     {
@@ -179,5 +189,26 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    public void UpdateVisual()
+    {
+        if (!_spriteRenderer|| !_enemyStats) 
+            return;
 
+        if(_enemyStats.CurTile == null)
+            return;
+
+       
+        bool shouldEnable;
+
+        if (_enemyStats.CurTile.IsOnSight)
+        {
+            shouldEnable = true;
+        }
+        else
+        {
+            shouldEnable = false;
+        }
+
+        _spriteRenderer.enabled = shouldEnable;
+    }
 }

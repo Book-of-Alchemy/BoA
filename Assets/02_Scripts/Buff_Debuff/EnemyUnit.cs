@@ -10,7 +10,27 @@ public class EnemyUnit : UnitBase
     {
         base.Awake();
         _controller = GetComponent<EnemyController>();
+        _controller.onTurnEnd += OnTurnEnd;
     }
+    private void OnEnable()
+    {
+        if (_controller == null)
+            return;
+        _controller.onTurnEnd -= OnTurnEnd;
+        _controller.onTurnEnd += OnTurnEnd;
+    }
+    private void OnDisable()
+    {
+        if (_controller == null)
+            return;
+        _controller.onTurnEnd -= OnTurnEnd;
+    }
+
+    public void UpdateVisual()
+    {
+        _controller.UpdateVisual();
+    }
+
     public override void PerformAction()
     {
         _controller.TakeTurn();

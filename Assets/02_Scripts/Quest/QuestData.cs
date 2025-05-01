@@ -15,7 +15,7 @@ public class QuestData : ScriptableObject
     public string name_kr;
     public int biome_id;
     public int base_monster_level;
-    public float level_per_floor;
+    public int level_per_floor;
     public float map_size_prob_small;
     public float map_size_prob_medium;
     public float map_size_prob_large;
