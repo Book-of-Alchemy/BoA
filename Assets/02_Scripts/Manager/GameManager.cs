@@ -13,23 +13,20 @@ public class GameManager : Singleton<GameManager>
     protected override void Awake()
     {
         base.Awake();
-        // gameSceneManager의 이벤트 구독
-        GameSceneManager.Instance.OnSceneTypeChanged += sceneType =>
-        {
-            OnSceneTypeChanged?.Invoke(sceneType);
-        };
+        // gameSceneManager의 이벤트 구독 , 씬이 바뀔때마다 메서드 실행됨
+        GameSceneManager.Instance.OnSceneTypeChanged += SceneChange;
     }
 
     private void OnDestroy()
     {
         //구독 해제
         if (GameSceneManager.HasInstance)
-            GameSceneManager.Instance.OnSceneTypeChanged -= sceneType =>
-            {
-                OnSceneTypeChanged?.Invoke(sceneType);
-            };
+            GameSceneManager.Instance.OnSceneTypeChanged -= SceneChange;
     }
-
+    public void SceneChange(SceneType sceneType)
+    {
+        OnSceneTypeChanged?.Invoke(sceneType);
+    }
     public void RegisterPlayer(PlayerStats player)
     {
         PlayerTransform = player;

@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour
     }
     private void Start()
     {
-        HandleSceneTypeChanged(GameSceneManager.Instance.CurrentSceneType);
+        HandleSceneTypeChanged(GameSceneManager.Instance.CurrentSceneType);//씬 타입에 맞는 Vehavior적용
     }
     private void OnEnable()
     {
@@ -44,14 +44,14 @@ public class PlayerController : MonoBehaviour
         if (currentBehavior != null)
         {
             InputActions.PC.RemoveCallbacks(currentBehavior);
-            Destroy(currentBehavior);       // ← 컴포넌트만 삭제
+            Destroy(currentBehavior);       // 컴포넌트만 삭제
         }
 
         switch (sceneType)
         {
             case SceneType.Dungeon:
                 var db = gameObject.AddComponent<DungeonBehavior>();
-                db.highlightPrefab = _highlightPrefab;     // ← 여기서 할당
+                db.highlightPrefab = _highlightPrefab;     // 하이라이트 프리펩 할당
                 currentBehavior = db;
                 break;
             case SceneType.Town:

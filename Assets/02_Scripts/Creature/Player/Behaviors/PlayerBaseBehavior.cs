@@ -15,9 +15,9 @@ public abstract class PlayerBaseBehavior : MonoBehaviour, PlayerInputActions.IPC
     /// </summary>
     public virtual void Initialize(PlayerController controller)
     {
-        Controller = controller;
-        InputActions = controller.InputActions;
-        InputActions.PC.SetCallbacks(this);
+        Controller = controller;//Behavior가 속할 플레이어 컨트롤러 참조 저장
+        InputActions = controller.InputActions;//플레이어 컨트롤러가 가지고 있는 인풋액션 에셋 참조 가져오기
+        InputActions.PC.SetCallbacks(this); //인풋시스템 에 이 Behavior의 메서드를 코ㄹ백으로 등록
     }
 
     //  입력 콜백

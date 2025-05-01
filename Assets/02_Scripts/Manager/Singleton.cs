@@ -6,7 +6,7 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 {
     private static T _instance;
 
-    public static bool HasInstance => _instance != null;//싱글톤의 인스턴스가 이미 생성되어 있는지 확인하는 용도의 프로퍼티
+    public static bool HasInstance => _instance != null;//싱글톤의 인스턴스가 이미 생성되어 있는지 확인하는 용도의 프로퍼티(사용 예시:Awake() OnDestroy() 타이밍 체크
 
     public static T Instance
     {
