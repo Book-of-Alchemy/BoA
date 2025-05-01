@@ -132,5 +132,24 @@ public class ItemFactory : Singleton<ItemFactory>
 
         return item;
     }
+    public BaseItem DropItem(int id, Tile targetTile, int quantity = 5)
+    {
+        if (!itemdataById.TryGetValue(id, out ItemData data))
+        {
+            Debug.LogWarning($"{id} is not exist!");
+            return null;
+        }
+        GameObject go = new GameObject(data.name_en);
+        go.AddComponent<SpriteRenderer>();
+        BaseItem item = data.effect_type switch
+        {
+            Effect_Type.Damage => go.AddComponent<DamageItem>() as BaseItem,
+            _ => go.AddComponent<MaterialItem>()
+        };
+        item.DropItem(data, quantity, targetTile);
+        item.spriteRenderer.sortingOrder = -8000;
+        item.transform.SetParent(targetTile.curLevel.transform);
 
+        return item;
+    }
 }
