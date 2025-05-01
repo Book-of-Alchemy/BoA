@@ -187,6 +187,11 @@ public class Inventory : Singleton<Inventory>
 
     public void TryCraft()
     {
+        if (_craftList.Count < 1)
+        {
+            UIManager.ShowOnce<UI_Text>("재료가 부족한 것 같다...");
+            return;
+        }
         //제작 결과 담을 변수
         (bool boolResult, RecipeData dataResult, int amount) result;
 
@@ -234,6 +239,7 @@ public class Inventory : Singleton<Inventory>
         }
         else
         {
+            UIManager.ShowOnce<UI_Text>("재료가 다른 것 같다...");
             Debug.Log(boolResult);
         }
 

@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class QuickSlot : MonoBehaviour
 {
@@ -17,9 +16,18 @@ public class QuickSlot : MonoBehaviour
 
     private void Update()
     {
+        //테스트용 코드 PlayerInput과 연결예정
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             _slots[0].UseItem();
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            _slots[1].UseItem();
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            _slots[2].UseItem();
         }
     }
 
