@@ -41,15 +41,15 @@ public class UI_Action : UIBase
             switch (type)
             {
                 case EUIActionType.Use:
-                    SetButtonText("Use","Drop");
+                    SetButtonText("사용","버리기");
                     AddButton(()=>Inventory.Instance.Use(item,index), ()=>Inventory.Instance.Drop(item,index));
                     break;
                 case EUIActionType.Craft:
-                    SetButtonText("Craft", "Cancel");
+                    SetButtonText("제작", "취소");
                     AddButton(() => Inventory.Instance.Craft(item), () => Inventory.Instance.Cancel(item));
                     break;
                 case EUIActionType.Equip:
-                    SetButtonText("Equip", "UnEquip");
+                    SetButtonText("장착", "장착해제");
                     AddButton(()=>Inventory.Instance.Equip(item), () => Inventory.Instance.UnEquip(item));
                     break;
             }
