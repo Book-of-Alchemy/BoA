@@ -154,17 +154,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
-  moveActionCost: 1
-  unitLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  obstacleLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  inputBufferDuration: 0.1
-  dashDistance: 3
-  _highlightPrefab: {fileID: 5156306786401311766, guid: 2a1fddc33e84e2b4bb5cfd8f62b7f3f1, type: 3}
   isPlayerTurn: 0
+  highlightPrefab: {fileID: 5156306786401311766, guid: 2a1fddc33e84e2b4bb5cfd8f62b7f3f1, type: 3}
 --- !u!114 &2204240404359461593
 MonoBehaviour:
   m_ObjectHideFlags: 0
