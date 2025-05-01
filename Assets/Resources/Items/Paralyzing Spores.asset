@@ -20,6 +20,8 @@ MonoBehaviour:
   target_range: -1
   effect_range: -1
   effect_type: 6
+  tag: 
+  tags: 15000000
   effect_value: -1
   effect_id: -1
   effect_duration: -1
@@ -28,4 +30,5 @@ MonoBehaviour:
   max_stack: 9999
   iteminfo_kr: "\uD589\uB3D9 \uC81C\uC57D \uAE30\uBCF8 \uC7AC\uB8CC"
   icon_sprite: Image/Item/Paralyzing Spores
-  Sprite: {fileID: 0}
+  Sprite: {fileID: 21300000, guid: 49d156d28b4c7db4fb6b9f29f334a0d5, type: 3}
+  itemPrefab: {fileID: 0}

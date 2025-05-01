@@ -51,7 +51,7 @@ public abstract class BaseItem : MonoBehaviour
     /// <param name="dropTile">아이템을 드롭하려는 위치, 기본 null로 되어있어저 입력하지 않으면 플레이어 위치로 잡음</param>
     public void DropItem(ItemData data, int amount, Tile dropTile = null)
     {
-        Init(data, dropTile);//테스트를 위하여 일단 수정했습니다...(04.29 이성재)
+        DropInit(data, dropTile);//테스트를 위하여 일단 수정했습니다...(04.29 이성재)
         //Init(data, _curTile);
         dropAmount = amount;
         _curTile.itemsOnTile.Add(this);
@@ -67,7 +67,7 @@ public abstract class BaseItem : MonoBehaviour
     /// </summary>
     /// <param name="data"></param>
     /// <param name="dropTile"></param>
-    public void Init(ItemData data, Tile dropTile)
+    public void DropInit(ItemData data, Tile dropTile)
     {
         _player = GameManager.Instance.PlayerTransform;
 
