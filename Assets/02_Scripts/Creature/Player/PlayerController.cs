@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviour
     public bool isPlayerTurn;
 
     //아이템 사용 관련 필드들
-    private BaseItem _currentItem;
+    private BaseItem baseItem;
 
     private void Awake()
     {
@@ -345,19 +345,19 @@ public class PlayerController : MonoBehaviour
     public void UseItem(ItemData data)
     {
         //아이템 데이터에 정의된 프리팹을 바로 생성
-        _currentItem = Instantiate(data.itemPrefab).GetComponent<BaseItem>();
-        if (_currentItem == null) return;
+        baseItem = Instantiate(data.itemPrefab).GetComponent<BaseItem>();
+        if (baseItem == null) return;
 
-        _currentItem.ItemUseDone += HandleItemUseDone;//구독하기
-        _currentItem.UseItem(data);//아이템 사용
+        baseItem.ItemUseDone += HandleItemUseDone;//구독하기
+        baseItem.UseItem(data);//아이템 사용
     }
 
     private void HandleItemUseDone()
     {
-        _currentItem.ItemUseDone -= HandleItemUseDone;//다시 구독해제
+        baseItem.ItemUseDone -= HandleItemUseDone;//다시 구독해제
 
         onActionConfirmed?.Invoke();//턴 종료
 
-        _currentItem = null;//널로 초기화
+        baseItem = null;//널로 초기화
     }
 }
