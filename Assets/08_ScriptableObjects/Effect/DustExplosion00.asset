@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 211ed1321e97c4e46afc6b2e77a9038d, type: 3}
-  m_Name: New Effect Data
+  m_Name: DustExplosion00
   m_EditorClassIdentifier: 
-  id: 0
-  prefab: {fileID: 0}
+  id: 30012
+  prefab: {fileID: 5240274439777908476, guid: c15900d538cd59b45916740ff0066cd7, type: 3}

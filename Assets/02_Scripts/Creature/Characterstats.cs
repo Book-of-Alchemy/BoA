@@ -143,6 +143,7 @@ public abstract class CharacterStats : MonoBehaviour
     public virtual void TakeDamage(float amount)
     {
         CurrentHealth -= amount;
+        UIManager.ShowOnce<DamageText>(amount, transform.position);
         Debug.Log($"{gameObject.name}는 {amount}의 피해를 받았습니다.");
         _anim.PlayKnockBack();
     }

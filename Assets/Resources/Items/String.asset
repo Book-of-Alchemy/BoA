@@ -20,6 +20,8 @@ MonoBehaviour:
   target_range: -1
   effect_range: -1
   effect_type: 6
+  tag: 
+  tags: 15000000
   effect_value: -1
   effect_id: -1
   effect_duration: -1
@@ -28,4 +30,5 @@ MonoBehaviour:
   max_stack: 9999
   iteminfo_kr: "\uD2B8\uB7A9 \uAE30\uBCF8 \uC7AC\uB8CC"
   icon_sprite: Image/Item/String
-  Sprite: {fileID: 0}
+  Sprite: {fileID: 21300000, guid: a018588fe1b328242996fe5c236917bf, type: 3}
+  itemPrefab: {fileID: 0}

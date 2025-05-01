@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,6 +15,8 @@ public class UI_HUD : UIBase
     [SerializeField] private TextMeshProUGUI _floorTxt;
     [SerializeField] private TextMeshProUGUI _questTxt;
 
+    [SerializeField] private List<QuickSlot> _quickSlots;
+
     private HUDPresenter _presenter;
 
     public override void HideDirect()
@@ -28,8 +31,8 @@ public class UI_HUD : UIBase
 
     public void UpdateHp(float per)
     {
-        _hpSlider.DOValue(per, 0.3f);
-        _hpImage.DOFillAmount(per, 1.5f);
+        _hpSlider.DOValue(per, 0.3f)
+            .OnComplete(()=> _hpImage.DOFillAmount(per, 1.5f));
     }
 
     public void UpdateMp(float per)

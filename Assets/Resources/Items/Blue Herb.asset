@@ -20,6 +20,8 @@ MonoBehaviour:
   target_range: -1
   effect_range: -1
   effect_type: 6
+  tag: 
+  tags: 15000000
   effect_value: -1
   effect_id: -1
   effect_duration: -1
@@ -29,3 +31,4 @@ MonoBehaviour:
   iteminfo_kr: "\uB9C8\uB098 \uD68C\uBCF5 \uAE30\uBCF8 \uC7AC\uB8CC"
   icon_sprite: Image/Item/Blue Herb
   Sprite: {fileID: 21300000, guid: bc7b28aa6bd8d774287d8ae1d2ca96dd, type: 3}
+  itemPrefab: {fileID: 0}

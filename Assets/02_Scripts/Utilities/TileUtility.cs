@@ -299,15 +299,15 @@ public static class TileUtility
         if (level == null || origin == null) return null;
         List<Tile> tiles = new List<Tile>();
         List<Vector2Int> line = GetLine(origin.gridPosition, target.gridPosition);
-
+        if (!isIncludeSelf)
+            line.Remove(origin.gridPosition);
         foreach (Vector2Int pos in line)
         {
             if (level.tiles.TryGetValue(pos, out Tile tile))
                 tiles.Add(tile);
         }
 
-        if (!isIncludeSelf)
-            tiles.Remove(origin);
+        
 
         return tiles;
     }

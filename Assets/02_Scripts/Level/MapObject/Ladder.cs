@@ -11,7 +11,8 @@ public class Ladder : MapObject
     }
     public override void Interact()
     {
-        TileManger.Instance.GetDownToNextLevel();
+        if (CurTile.CharacterStatsOnTile is PlayerStats)
+            TileManger.Instance.GetDownToNextLevel();
     }
 
     private void OnDisable()

@@ -54,7 +54,10 @@ public class ChaseBaseBehaviour : BaseBehaviour
     protected void MoveTo(Tile target)
     {
         if (target.CharacterStatsOnTile != null)//character 존재시 이동불가
+        {
+            EndTurn();
             return;
+        }
 
         controller.MoveTo(
             target.gridPosition,

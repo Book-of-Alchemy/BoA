@@ -18,8 +18,10 @@ MonoBehaviour:
   item_type: 0
   attribute: 9
   target_range: 0
-  effect_range: 1
+  effect_range: 0
   effect_type: 2
+  tag: 
+  tags: 010000000e00000012000000
   effect_value: 0
   effect_id: 220113
   effect_duration: 3
@@ -30,3 +32,4 @@ MonoBehaviour:
     \uBE60\uB974\uAC8C \uC6C0\uC9C1\uC774\uB3C4\uB85D \uD574\uC90D\uB2C8\uB2E4."
   icon_sprite: Image/Item/Lightweight Scroll
   Sprite: {fileID: 21300000, guid: 62d7383a0bcc8ea408f8e95e620658d2, type: 3}
+  itemPrefab: {fileID: 0}
