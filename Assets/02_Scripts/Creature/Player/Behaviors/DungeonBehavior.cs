@@ -163,7 +163,16 @@ public class DungeonBehavior : PlayerBaseBehavior
         Controller.onActionConfirmed?.Invoke();
         _attackBuffer = null;
     }
+    public void OnAttackHit()
+    {
+        Vector2Int targetPos = _stats.CurTile.gridPosition + _lastMoveDir;
 
+        if (_stats.curLevel.tiles.TryGetValue(targetPos, out Tile tile)
+            && tile.CharacterStatsOnTile != null)
+        {
+            _stats.Attack(tile.CharacterStatsOnTile);
+        }
+    }
     // ────────────────────────────────────────────────────────
     // 4) Shift 누름 시: 타임스케일 증가
     private void HandleDashStart()
@@ -231,8 +240,7 @@ public class DungeonBehavior : PlayerBaseBehavior
         var cur = _stats.CurTile.gridPosition;
         var tgt = cur + _lastMoveDir;
 
-        if (!_stats.curLevel.tiles.TryGetValue(tgt, out var tile) ||
-            !tile.IsWalkable)
+        if (!_stats.curLevel.tiles.TryGetValue(tgt, out var tile))
         {
             _highlightInstance.SetActive(false);
             return;
