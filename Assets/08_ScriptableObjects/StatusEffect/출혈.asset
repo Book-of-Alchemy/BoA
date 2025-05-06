@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e100cd3cc9ad47348a9885b727e60fc0, type: 3}
+  m_Name: "\uCD9C\uD608"
+  m_EditorClassIdentifier: 
+  id: 220011
+  name_kr: "\uCD9C\uD608"
+  type: 1
+  effect_category: 2
+  icon_sprite: icon_bleed
+  description: "\uB9E4 \uD134 \uD53C\uD574. \uC774\uB3D9 \uC2DC \uC2A4\uD0DD \uC99D\uAC00,
+    \uC9C0\uC18D\uC2DC\uAC04\uC740 \uACE0\uC815"
+  duration_type: 0
+  isStackable: 1
+  special_note: "\uC9C0\uC18D\uC2DC\uAC04\uC740 \uACF5\uACA9 \uC2DC \uAC31\uC2E0"
+  icon: {fileID: 0}

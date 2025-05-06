@@ -16,6 +16,7 @@ public class DungeonBehavior : PlayerBaseBehavior
     private CharacterAnimator _animator;
     private SpriteRenderer _spriteRenderer;
 
+    public bool canMove = true;
     private bool _isMoving;
     private bool _isCtrlHeld;
 
@@ -47,7 +48,24 @@ public class DungeonBehavior : PlayerBaseBehavior
     public override void OnMove(InputAction.CallbackContext ctx)
     {
         if (!Controller.isPlayerTurn || _isMoving || _moveBuffer != null || !ctx.started) return;
+        if(!canMove)
+        {
+            Shake();
+            return;
+        }
         _moveBuffer = StartCoroutine(BufferMove());
+    }
+
+    void Shake()
+    {
+        transform.DOShakePosition(
+            duration: 0.2f,
+            strength: new Vector3(0.2f, 0, 0),  // 좌우 흔들림 세기 (X축만)
+            vibrato: 30,            // 진동 횟수
+            randomness: 0,
+            snapping: false,
+            fadeOut: true           // 점점 작아지게
+        );
     }
 
     private IEnumerator BufferMove()
@@ -136,6 +154,11 @@ public class DungeonBehavior : PlayerBaseBehavior
     public override void OnDash(InputAction.CallbackContext ctx)
     {
         if (!Controller.isPlayerTurn || _dashBuffer != null || !ctx.started) return;
+        if (!canMove)
+        {
+            Shake();
+            return;
+        }
         _dashBuffer = StartCoroutine(BufferDash());
     }
 

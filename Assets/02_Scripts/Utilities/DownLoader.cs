@@ -18,9 +18,12 @@ public class DownLoader : EditorWindow
     string itemJsonSavePath = "Assets/Resources/Json/ItemData.json";
     string recipeDBUrl = "https://opensheet.elk.sh/1CPbtP4IkSU3za-8Y-BjNnG6_fGdG-z7c2eRJC1ZmOFk/Recipe_DB";
     string recipeJsonSavePath = "Assets/Resources/Json/RecipeData.json";
+    string statusEffectDBUrl = "https://opensheet.elk.sh/1ILhdJKFLc1kmaMduHtTpcZEXAzIarNJo-YM6jcW-KIM/Buff%2FDebuff_DB";
+    string statusEffectJsonSavePath = "Assets/Resources/Json/StatusEffect.json";
 
     string saveItemSOPath = "Assets/Resources/Items";
     string saveRecipeSOPath = "Assets/Resources/Recipes";
+    string saveStatusEffectSOPath = "Assets/08_ScriptableObjects/StatusEffect";
 
 #if UNITY_EDITOR
     [MenuItem("Window/DownLoader")]
@@ -35,22 +38,27 @@ public class DownLoader : EditorWindow
         // URL 입력 필드
         itemDBUrl = EditorGUILayout.TextField("ItemURL", itemDBUrl);
         recipeDBUrl = EditorGUILayout.TextField("RecipeURL", recipeDBUrl);
+        statusEffectDBUrl = EditorGUILayout.TextField("StatusEffectURL", statusEffectDBUrl);
 
         // 저장 경로 입력 필드
         itemJsonSavePath = EditorGUILayout.TextField("Item Json Save Path", itemJsonSavePath);
         recipeJsonSavePath = EditorGUILayout.TextField("Recipe Json Save Path", recipeJsonSavePath);
-
+        statusEffectJsonSavePath = EditorGUILayout.TextField("StatusEffect Json Save Path", statusEffectJsonSavePath);
+        
         // 다운로드 버튼
         if (GUILayout.Button("Download JSON"))
         {
             DownloadAndSaveJson(itemDBUrl,itemJsonSavePath);
             DownloadAndSaveJson(recipeDBUrl, recipeJsonSavePath);
+            DownloadAndSaveJson(statusEffectDBUrl, statusEffectJsonSavePath);
         }
 
         GUILayout.Label("Json To SO", EditorStyles.boldLabel);
 
         saveItemSOPath = EditorGUILayout.TextField("SaveItemSOPath", saveItemSOPath);
         saveRecipeSOPath = EditorGUILayout.TextField("SaveRecipeSOPath", saveRecipeSOPath);
+        saveRecipeSOPath = EditorGUILayout.TextField("SaveStatusEffectSOPath", saveStatusEffectSOPath);
+
         if (GUILayout.Button("ItemConvert"))
         {
             ItemConvertJsonToSO();
@@ -58,6 +66,10 @@ public class DownLoader : EditorWindow
         if (GUILayout.Button("RecipeConvert"))
         {
             RecipeConvertJsonToSO();
+        }
+        if (GUILayout.Button("StatusEffectConvert"))
+        {
+            StatusEffectConvertJsonToSO();
         }
     }
 
@@ -190,6 +202,48 @@ public class DownLoader : EditorWindow
         Debug.Log("Json변환 완료");
     }
 
+    void StatusEffectConvertJsonToSO()
+    {
+        string jsonText = File.ReadAllText(statusEffectJsonSavePath);
+        List<StatusEffectData> dataList = JsonConvert.DeserializeObject<List<StatusEffectData>>(jsonText);
 
+        if (AssetDatabase.IsValidFolder(saveStatusEffectSOPath))
+        {
+            FileUtil.DeleteFileOrDirectory(saveStatusEffectSOPath);
+            AssetDatabase.Refresh();
+        }
+
+        if (!Directory.Exists(saveStatusEffectSOPath))
+        {
+            Directory.CreateDirectory(saveStatusEffectSOPath);
+        }
+
+        foreach (var data in dataList)
+        {
+            if (data == null)
+            {
+                Debug.LogError("data가 null입니다!");
+                continue;
+            }
+            StatusEffectData so = ScriptableObject.CreateInstance<StatusEffectData>();
+            so.id = data.id;
+            so.name_kr = data.name_kr;
+            so.type = data.type;
+            so.effect_category = data.effect_category;
+            so.icon_sprite = data.icon_sprite;
+            so.description = data.description;
+            so.duration_type = data.duration_type;
+            so.isStackable = data.isStackable;
+            so.special_note = data.special_note;
+            so.icon = Resources.Load<Sprite>(data.icon_sprite);
+
+            string assetPath = $"{saveStatusEffectSOPath}/{data.name_kr}.asset";
+            AssetDatabase.CreateAsset(so, assetPath);
+
+        }
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+        Debug.Log("Json변환 완료");
+    }
 }
 #endif

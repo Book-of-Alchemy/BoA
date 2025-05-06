@@ -11,7 +11,7 @@ public interface IBehaviour
 
 public abstract class BaseBehaviour : MonoBehaviour, IBehaviour
 {
-    public abstract int ActionCost { get; }
+    public abstract float ActionCostMultiPlier { get; }
     [HideInInspector]
     public EnemyController controller;
     [HideInInspector]

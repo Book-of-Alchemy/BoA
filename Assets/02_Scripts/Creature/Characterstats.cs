@@ -1,12 +1,27 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
+public enum ModifierType
+{
+    flat,
+    precent,
+}
+[System.Serializable]
+public class StatModifier
+{
+    public string Source;
+    public int Value;
+    public ModifierType Type; // Flat, Percent
+}
 public abstract class CharacterStats : MonoBehaviour
 {
     [Header("버프 디버프")]//위치 아래로 내릴것
     public List<StatusEffect> activeEffects = new();
+    
+    public bool hasImmunityToAll = false;
     [Header("기본 스탯")]
     public int level = 1;
     public int experience = 0;
@@ -71,7 +86,7 @@ public abstract class CharacterStats : MonoBehaviour
 
     //체력 변경 이벤트
     public event Action<float> OnHealthRatioChanged;
-    // BuffManager를 통해 상태 효과를 관리할 수 있도록 프로퍼티 추가
+    public event Action OnTakeDamage;
     public float MaxHealth
     {
         get => maxHealth;
@@ -124,10 +139,10 @@ public abstract class CharacterStats : MonoBehaviour
         target.TakeDamage(finalDamage);
         Debug.Log($"{gameObject.name}가 {target.gameObject.name}을 공격함니다." + $"속성:{damageType}, 최종 대미지:{finalDamage}");
     }
-    public virtual void Attack(CharacterStats target,float multiplier, DamageType damageType = DamageType.None)
+    public virtual void Attack(CharacterStats target, float multiplier, DamageType damageType = DamageType.None)
     {
         //기본 데미지 계산
-        float baseDamage = UnityEngine.Random.Range(attackMin, attackMax)* multiplier;
+        float baseDamage = UnityEngine.Random.Range(attackMin, attackMax) * multiplier;
         //치명타 게산
         bool isCrit = UnityEngine.Random.value < critChance;
         if (isCrit)
@@ -145,6 +160,7 @@ public abstract class CharacterStats : MonoBehaviour
         CurrentHealth -= amount;
         UIManager.ShowOnce<DamageText>(amount, transform.position);
         Debug.Log($"{gameObject.name}는 {amount}의 피해를 받았습니다.");
+        OnTakeDamage?.Invoke();
         _anim.PlayKnockBack();
     }
 
@@ -182,7 +198,7 @@ public abstract class CharacterStats : MonoBehaviour
         effect.Initialize(TurnManager.Instance.globalTime);
         activeEffects.Add(effect);
         effect.OnApply(this);
-        Debug.Log($"{name}에게 {effect.Name} 적용됨");
+        Debug.Log($"{name}에게 {effect.data.name_kr} 적용됨");
     }
 
     public void TickEffects(int globalTime)
@@ -193,9 +209,17 @@ public abstract class CharacterStats : MonoBehaviour
             if (activeEffects[i].IsExpired)
             {
                 activeEffects[i].OnExpire(this);
-                Debug.Log($"{name}의 {activeEffects[i].Name} 해제됨");
+                Debug.Log($"{name}의 {activeEffects[i].data.name_kr} 해제됨");
                 activeEffects.RemoveAt(i);
             }
         }
     }
+
+    public bool HasImmunity(Type effectType)
+    {
+        return activeEffects
+            .OfType<IImunity>()
+            .Any(im => im.BlockedTypes.Contains(effectType));
+    }
+
 }

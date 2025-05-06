@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AttackBaseBehaviour : BaseBehaviour
 {
-    public override int ActionCost => 10;
+    public override float ActionCostMultiPlier => 1f;
     public EnemySkill skill_0;
     public EnemySkill skill_1;
     [HideInInspector]

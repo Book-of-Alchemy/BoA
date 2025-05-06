@@ -34,21 +34,39 @@ public enum BuffEffectType
     BleedingImmunity   // 출혈 면역
 }
 
-[System.Serializable]
-public class BuffEffect
+public enum StatusType
 {
-    public BuffEffectType effectType; // 효과 타입
-    public Sprite icon;               // 아이콘
-    public float effectValue;         // 효과 수치 (버프는 양수, 디버프는 음수)
-    public int duration;              // 지속 턴 수
-    public bool stackable;            // 중첩 가능 여부
+    buff,
+    debuff
+}
+public enum EffectCategory
+{
+    stat_down,
+    action_block,
+    dot,
+    stat_up,
+    immunity,
+    extra_action,
+    sustain,
+}
 
-    public BuffEffect(BuffEffectType effectType, Sprite icon, float effectValue, int duration, bool stackable)
-    {
-        this.effectType = effectType;
-        this.icon = icon;
-        this.effectValue = effectValue;
-        this.duration = duration;
-        this.stackable = stackable;
-    }
+public enum DurationType
+{
+    turn,
+    damage_absorb
+}
+
+[CreateAssetMenu(fileName = "StatusEffectInfo", menuName = "StatusEffect/StatusEffect")]
+public class StatusEffectData : ScriptableObject
+{
+    public int id;
+    public string name_kr;
+    public StatusType type;
+    public EffectCategory effect_category;
+    public string icon_sprite;
+    public string description;
+    public DurationType duration_type;
+    public bool isStackable;
+    public string special_note;
+    public Sprite icon;
 }

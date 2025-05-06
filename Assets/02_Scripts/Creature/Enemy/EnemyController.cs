@@ -13,7 +13,8 @@ public enum EnemyState
 public class EnemyController : MonoBehaviour
 {
     public float MoveSpeed => TurnManager.Instance.turnSpeed;
-    public float DetectionRange = 10f;
+    public bool IsDead => _enemyStats == null ? true : _enemyStats.CurrentHealth <= 0;
+    public bool canMove = true;
     public EnemyState _currentState = EnemyState.Idle;
     public EnemySkill curSkill;
     private Tile _lastCheckedTile;
@@ -53,7 +54,14 @@ public class EnemyController : MonoBehaviour
 
     public void TakeTurn()
     {
-        if (_currentTween != null && _currentTween.IsActive()) _currentTween.Kill();
+        if(IsDead)
+        {
+            EndTurn();
+            return;
+        }
+
+        if (_currentTween != null && _currentTween.IsActive()) 
+            _currentTween.Kill();
 
         switch (_currentState)
         {
@@ -81,14 +89,14 @@ public class EnemyController : MonoBehaviour
     /// 각 behaviour 마다 actioncost 반환
     /// </summary>
     /// <returns></returns>
-    public int GetCurrentActionCost()
+    public float GetCurrentActionCostMultiplier()
     {
         return _currentState switch
         {
-            EnemyState.Idle => idleBehaviour?.ActionCost ?? 10,
-            EnemyState.Chase => chaseBehaviour?.ActionCost ?? 10,
-            EnemyState.Attack => attackBehaviour?.ActionCost ?? 10,
-            _ => 10
+            EnemyState.Idle => idleBehaviour?.ActionCostMultiPlier ?? 1f,
+            EnemyState.Chase => chaseBehaviour?.ActionCostMultiPlier ?? 1f,
+            EnemyState.Attack => attackBehaviour?.ActionCostMultiPlier ?? 1f,
+            _ => 1f
         };
     }
 
@@ -118,6 +126,12 @@ public class EnemyController : MonoBehaviour
 
     public void MoveTo(Vector2Int targetPosition,  Action onComplete = null)
     {
+        if(!canMove)
+        {
+            EndTurn();
+            return;
+        }
+
         Vector3 position = new Vector3(targetPosition.x, targetPosition.y, 0);
         _spriteRenderer.sortingOrder = -targetPosition.y * 10;
         if (moveStrategy != null)
