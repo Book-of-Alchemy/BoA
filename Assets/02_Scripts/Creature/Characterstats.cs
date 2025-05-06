@@ -4,18 +4,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 
-public enum ModifierType
-{
-    flat,
-    precent,
-}
-[System.Serializable]
-public class StatModifier
-{
-    public string Source;
-    public int Value;
-    public ModifierType Type; // Flat, Percent
-}
+
 public abstract class CharacterStats : MonoBehaviour
 {
     [Header("버프 디버프")]//위치 아래로 내릴것
@@ -45,13 +34,6 @@ public abstract class CharacterStats : MonoBehaviour
     public float evasion = 0.05f;
     public float accuracy = 1.0f;
 
-    [Header("행동력")]
-    [SerializeField] private float actionPoints = 1.0f;
-    public float ActionPoints
-    {
-        get => actionPoints;
-        set => actionPoints = Mathf.Clamp(value, 0f, 1f);
-    }
 
     [Header("시야")]
     public int visionRange = 6;
@@ -122,7 +104,7 @@ public abstract class CharacterStats : MonoBehaviour
         _anim = GetComponent<CharacterAnimator>();
         unitBase = GetComponent<UnitBase>();
     }
-
+    
     public virtual void Attack(CharacterStats target, DamageType damageType = DamageType.None)
     {
         //기본 데미지 계산
