@@ -20,7 +20,7 @@ public static class StatusEffectFactory
             default: throw new Exception("Unknown status ID: " + id);
         }
     }
-    public static StatusEffect CreateEffect(int id, float value = 10f, int remainingTime = 30, int tickInterval = 10)
+    public static StatusEffect CreateEffect(int id, int value = 10, int remainingTime = 30, int tickInterval = 10)
     {
         if (SODataManager.Instance.StatusEffectDataBase == null)
             return null;

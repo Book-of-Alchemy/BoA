@@ -17,12 +17,12 @@ public class EnemyData : PrefabWithId
     public int atk_per_level;
     public int base_def;
     public int def_per_level;
-    public float resist_fire;
-    public float resist_water;
-    public float resist_cold;
-    public float resist_wind;
-    public float resist_lightning;
-    public float resist_earth;
-    public float resist_light;
-    public float resist_dark;
+    public int resist_fire;
+    public int resist_water;
+    public int resist_cold;
+    public int resist_wind;
+    public int resist_lightning;
+    public int resist_earth;
+    public int resist_light;
+    public int resist_dark;
 }

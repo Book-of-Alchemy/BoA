@@ -43,6 +43,13 @@ public class StatModifier
     public string source;
     public int value;
     public ModifierType type; // Flat, Percent
+    public StatModifier() { }
+    public StatModifier(string source, int value, ModifierType type)
+    {
+        this.source = source;
+        this.value = value;
+        this.type = type;
+    }
 }
 
 [System.Serializable]
@@ -76,17 +83,24 @@ public class StatEntry
 
     public void AddModifier(string source, int value, ModifierType type)
     {
-        RemoveModifier(source);
-        modifiers.Add(new StatModifier { source = source, value = value, type = type });
+        modifiers.Add(new StatModifier ( source , value, type ));
         onStatChanged?.Invoke();
     }
-
+    public void AddModifier(StatModifier statModifier)
+    {
+        modifiers.Add(statModifier);
+        onStatChanged?.Invoke();
+    }
     public void RemoveModifier(string source)
     {
         modifiers.RemoveAll(m => m.source == source);
         onStatChanged?.Invoke();
     }
-
+    public void RemoveModifier(StatModifier statModifier)
+    {
+        modifiers.Remove(statModifier);
+        onStatChanged?.Invoke();
+    }
     public void SetBaseValue(int value)
     {
         baseValue = value;
@@ -105,17 +119,26 @@ public class StatBlock
     }
 
     public int Get(StatType type) => stats[type].Value;
+    public StatEntry GetEntry(StatType type) => stats[type];
 
     public void AddModifier(StatType type, string source, int value, ModifierType modType)
     {
         stats[type].AddModifier(source, value, modType);
     }
 
+    public void AddModifier(StatType type, StatModifier statModifier)
+    {
+        stats[type].AddModifier(statModifier);
+    }
+
     public void RemoveModifier(StatType type, string source)
     {
         stats[type].RemoveModifier(source);
     }
-
+    public void RemoveModifier(StatType type, StatModifier statModifier)
+    {
+        stats[type].RemoveModifier(statModifier);
+    }
     public void SetBaseValue(StatType type, int baseValue)
     {
         stats[type].SetBaseValue(baseValue);

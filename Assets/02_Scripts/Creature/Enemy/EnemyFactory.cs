@@ -49,7 +49,7 @@ public class EnemyFactory : Singleton<EnemyFactory>
 
                 int id = GetRandomEnemyId(enemyData);
                 EnemyStats enemy = enemyPool.GetFromPool(id, targetTile.gridPosition, level.transform);
-                
+
                 SetEnemyStat(GetCurEnemyLevel(level), enemy, enemyDataById[id]);
                 InitEnemy(enemy, targetTile);
             }
@@ -89,7 +89,7 @@ public class EnemyFactory : Singleton<EnemyFactory>
     }
 
     int GetCurEnemyLevel(Level level)
-    { 
+    {
         return level.questData.base_monster_level + level.questData.level_per_floor * level.curDepth;
     }
 
@@ -101,30 +101,44 @@ public class EnemyFactory : Singleton<EnemyFactory>
     void SetEnemyStat(int curEnemyLevel, EnemyStats enemy, EnemyData enemyData)
     {
         //if (!enemyDataById.TryGetValue(id, out var data))
-            //return;
+        //return;
 
 
         enemy.level = curEnemyLevel;
 
-        // 체력 설정추가
-        enemy.MaxHealth = enemyData.base_hp + enemyData.hp_per_level * curEnemyLevel;
-        enemy.CurrentHealth = enemyData.base_hp + enemyData.hp_per_level * curEnemyLevel;
-        // 공방
-        enemy.attackMin = enemyData.base_atk + enemyData.atk_per_level * curEnemyLevel;
-        enemy.attackMax = enemy.attackMin + 5f;
-        enemy.defense = enemyData.base_def + enemyData.def_per_level * curEnemyLevel;
-        // 속성 저항
-        enemy.fire = enemyData.resist_fire;
-        enemy.water = enemyData.resist_water;
-        enemy.ice = enemyData.resist_cold;
-        enemy.electric = enemyData.resist_wind;
-        enemy.earth = enemyData.resist_lightning;
-        enemy.wind = enemyData.resist_earth;
-        enemy.light = enemyData.resist_light;
-        enemy.dark = enemyData.resist_dark;
-        // 시야 사거리
-        enemy.attackRange = enemyData.attack_range;
-        enemy.visionRange = enemyData.sight;
+        enemy.statBlock = new StatBlock(new Dictionary<StatType, int>
+        {
+            {StatType.MaxHealth, enemyData.base_hp + enemyData.hp_per_level * curEnemyLevel },
+            {StatType.MaxMana, 50 },
+            {StatType.Attack, enemyData.base_atk + enemyData.atk_per_level * curEnemyLevel },
+            {StatType.Defence, 5 },
+            {StatType.CritChance, 10 },
+            {StatType.CritDamage, 150 },
+            {StatType.Evasion, 5 },
+            {StatType.Accuracy, 100 },
+            {StatType.VisionRange, enemyData.sight },
+            {StatType.AttackRange, enemyData.attack_range },
+            {StatType.FireDef, enemyData.resist_fire },
+            {StatType.WaterDef, enemyData.resist_water },
+            {StatType.IceDef, enemyData.resist_cold },
+            {StatType.ElectricDef, enemyData.resist_lightning },
+            {StatType.EarthDef, enemyData.resist_earth},
+            {StatType.WindDef, enemyData.resist_wind },
+            {StatType.LightDef, enemyData.resist_light },
+            {StatType.DarkDef, enemyData.resist_dark },
+            {StatType.FireAtk, 100 },
+            {StatType.WaterAtk, 100 },
+            {StatType.IceAtk, 100 },
+            {StatType.ElectricAtk, 100 },
+            {StatType.EarthAtk, 100 },
+            {StatType.WindAtk, 100 },
+            {StatType.LightAtk, 100 },
+            {StatType.DarkAtk, 100 },
+         });
+
+
+        enemy.CurrentHealth = enemy.statBlock.Get(StatType.MaxHealth);
+
     }
 
     void InitEnemy(EnemyStats enemy, Tile tile)

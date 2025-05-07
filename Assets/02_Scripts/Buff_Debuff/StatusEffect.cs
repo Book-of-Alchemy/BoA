@@ -12,7 +12,7 @@ public abstract class  StatusEffect
     public int remainingTime = 30;//30턴 = 3턴을 의미
     public int tickInterval = 10;
     protected int nextTickTime;
-    public float value = 10f;
+    public int value = 10;
     public StatusEffectData data;
 
     // 지속 효과인지 여부
