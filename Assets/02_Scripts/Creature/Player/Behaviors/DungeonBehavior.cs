@@ -16,7 +16,9 @@ public class DungeonBehavior : PlayerBaseBehavior
     private CharacterAnimator _animator;
     private SpriteRenderer _spriteRenderer;
 
-    // 상태 플래그
+
+    public bool canMove = true;
+
     private bool _isMoving;
     private bool _isCtrlHeld;
     private bool _isDashHeld;
@@ -67,6 +69,28 @@ public class DungeonBehavior : PlayerBaseBehavior
     }
 
     protected override void UnsubscribeInput()
+        if (!Controller.isPlayerTurn || _isMoving || _moveBuffer != null || !ctx.started) return;
+        if(!canMove)
+        {
+            Shake();
+            return;
+        }
+        _moveBuffer = StartCoroutine(BufferMove());
+    }
+
+    void Shake()
+    {
+        transform.DOShakePosition(
+            duration: 0.2f,
+            strength: new Vector3(0.2f, 0, 0),  // 좌우 흔들림 세기 (X축만)
+            vibrato: 30,            // 진동 횟수
+            randomness: 0,
+            snapping: false,
+            fadeOut: true           // 점점 작아지게
+        );
+    }
+
+    private IEnumerator BufferMove()
     {
         InputManager.OnMove -= HandleMove;
         InputManager.OnAttack -= HandleAttack;
@@ -257,8 +281,19 @@ public class DungeonBehavior : PlayerBaseBehavior
     //  Shift 누름 시: 타임스케일 증가
     private void HandleDashStart()
     {
+
         if (_isDashHeld) return;
         _isDashHeld = true;
+
+        if (!Controller.isPlayerTurn || _dashBuffer != null || !ctx.started) return;
+        if (!canMove)
+        {
+            Shake();
+            return;
+        }
+        _dashBuffer = StartCoroutine(BufferDash());
+    }
+
 
         var tm = TurnManager.Instance;
         _savedTurnSpeed = tm.turnSpeed;

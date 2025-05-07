@@ -43,6 +43,7 @@ public abstract class TrapBase : MonoBehaviour
     public virtual void Initialize(Tile tile)
     {
         this.tile = tile;
+        tile.onCharacterChanged -= Execute;
         tile.onCharacterChanged += Execute;
     }
 

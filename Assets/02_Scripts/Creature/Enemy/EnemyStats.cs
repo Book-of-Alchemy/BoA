@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class EnemyStats : CharacterStats,IPoolableId
+public class EnemyStats : CharacterStats, IPoolableId
 {
     [Header("드랍 아이템 설정")]
     [Tooltip("죽었을 때 드랍할 아이템 데이터")]
@@ -31,8 +31,7 @@ public class EnemyStats : CharacterStats,IPoolableId
         TryDropItem();
 
         var unit = GetComponent<EnemyUnit>();
-        if (TurnManager.Instance != null)
-            TurnManager.Instance.RemoveUnit(unit);
+        TurnManager.Instance.RemoveUnit(unit);
 
         StopAllCoroutines();
 
