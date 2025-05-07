@@ -12,7 +12,7 @@ public class HUDPresenter
         {
             //PlayerStats 찾아서 이벤트 구독
             _playerStats = GameManager.Instance.PlayerTransform.GetComponent<PlayerStats>();
-            _playerStats.OnHealthRatioChanged += UpdateUIBar;
+            //_playerStats.OnHealthRatioChanged += UpdateUIBar;
         }
     }
 
