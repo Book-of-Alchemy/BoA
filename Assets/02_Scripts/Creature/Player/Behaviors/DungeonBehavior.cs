@@ -1,5 +1,3 @@
-// DungeonBehavior.cs
-
 using UnityEngine;
 using DG.Tweening;
 using System;
@@ -27,6 +25,7 @@ public class DungeonBehavior : PlayerBaseBehavior
     private Coroutine _moveBuffer;
     private Coroutine _attackBuffer;
     private Coroutine _highlightBuffer;
+    private Coroutine _mousePathCoroutine;
 
     // 마지막 이동 방향 (하이라이트용)
     private Vector2Int _lastMoveDir = Vector2Int.right;
@@ -48,6 +47,8 @@ public class DungeonBehavior : PlayerBaseBehavior
         _animator = GetComponent<CharacterAnimator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
 
+        InputManager.Instance.EnableMouseTracking = true;
+
         SubscribeInput();
     }
 
@@ -60,6 +61,9 @@ public class DungeonBehavior : PlayerBaseBehavior
         InputManager.OnCtrlStart += HandleCtrlStart;
         InputManager.OnCtrlEnd += HandleCtrlEnd;
         InputManager.OnInteract += HandleInteract;
+
+        InputManager.OnMouseMove += HandleMouseMove;
+        InputManager.OnMouseClick += HandleMouseClick;
     }
 
     protected override void UnsubscribeInput()
@@ -71,10 +75,86 @@ public class DungeonBehavior : PlayerBaseBehavior
         InputManager.OnCtrlStart -= HandleCtrlStart;
         InputManager.OnCtrlEnd -= HandleCtrlEnd;
         InputManager.OnInteract -= HandleInteract;
+
+        InputManager.OnMouseMove -= HandleMouseMove;
+        InputManager.OnMouseClick -= HandleMouseClick;
+}
+    // ────────────────────────────────────────────────────────
+    //  마우스 이동(하이라이트) 처리
+    private void HandleMouseMove(Vector3 worldPos)
+    {
+        Vector2Int gridPos = new Vector2Int(
+            Mathf.RoundToInt(worldPos.x),
+            Mathf.RoundToInt(worldPos.y)
+        );
+
+        if (_highlightInstance == null)
+            _highlightInstance = Instantiate(highlightPrefab);
+
+        if (!_stats.curLevel.tiles.ContainsKey(gridPos))
+        {
+            _highlightInstance.SetActive(false);
+            return;
+        }
+
+        _highlightInstance.SetActive(true);
+        _highlightInstance.transform.position = new Vector3(gridPos.x, gridPos.y, 0);
+        var sr = _highlightInstance.GetComponent<SpriteRenderer>();
+        if (sr != null)
+        {
+            int y = gridPos.y;
+            sr.sortingOrder = y == 0 ? -1 : (y > 0 ? -y * 11 : -y * 9);
+        }
     }
 
     // ────────────────────────────────────────────────────────
-    // 1) 공통 버퍼 입력 코루틴
+    //  마우스 클릭으로 목적지 지정 후 경로 이동
+    private void HandleMouseClick(Vector3 worldPos)
+    {
+        if (!Controller.isPlayerTurn || _isMoving || _mousePathCoroutine != null)
+            return;
+
+        // 클릭 위치를 그리드 좌표로 변환
+        Vector2Int goalPos = new Vector2Int(
+            Mathf.RoundToInt(worldPos.x),
+            Mathf.RoundToInt(worldPos.y)
+        );
+
+        //목표 타일이 유효한지 확인
+        if (!_stats.curLevel.tiles.TryGetValue(goalPos, out Tile goalTile))
+            return;
+
+        // 경로 탐색 호출
+        Tile startTile = _stats.CurTile;
+        List<Tile> path = AStarPathfinder.FindPath(startTile, goalTile, _stats.curLevel);
+
+        // 유효한 경로인지 확인
+        if (path == null || path.Count <= 1)
+            return;
+
+        // 이동 코루틴 실행 (첫 번째 요소는 현재 타일이므로 제거)
+        _mousePathCoroutine = StartCoroutine(MoveAlongPath(path));
+    }
+
+    private IEnumerator MoveAlongPath(List<Tile> path)
+    {
+        // 현재 위치 제외
+        path.RemoveAt(0);
+
+        foreach (var tile in path)
+        {
+            // 이전 이동이 끝날 때까지 대기
+            yield return new WaitUntil(() => !_isMoving);
+
+            // 한 칸씩 이동
+            Vector2Int dir = tile.gridPosition - _stats.CurTile.gridPosition;
+            ExecuteMove(dir);
+        }
+
+        _mousePathCoroutine = null;
+    }
+    // ────────────────────────────────────────────────────────
+    //  공통 버퍼 입력 코루틴
     private IEnumerator BufferInput(Action<Vector2Int> onBuffered)
     {
         float elapsed = 0f;
@@ -100,7 +180,7 @@ public class DungeonBehavior : PlayerBaseBehavior
     }
 
     // ────────────────────────────────────────────────────────
-    // 2) 이동 처리
+    //  이동 처리
     private void HandleMove(Vector2 raw)
     {
         if (!Controller.isPlayerTurn ||
@@ -149,7 +229,7 @@ public class DungeonBehavior : PlayerBaseBehavior
     }
 
     // ────────────────────────────────────────────────────────
-    // 3) 공격 처리
+    //  공격 처리
     private void HandleAttack()
     {
         if (!Controller.isPlayerTurn || _attackBuffer != null) return;
@@ -174,7 +254,7 @@ public class DungeonBehavior : PlayerBaseBehavior
         }
     }
     // ────────────────────────────────────────────────────────
-    // 4) Shift 누름 시: 타임스케일 증가
+    //  Shift 누름 시: 타임스케일 증가
     private void HandleDashStart()
     {
         if (_isDashHeld) return;
@@ -188,7 +268,7 @@ public class DungeonBehavior : PlayerBaseBehavior
     }
 
     // ────────────────────────────────────────────────────────
-    // 5) Shift 해제 시: 원상 복구
+    // Shift 해제 시: 원상 복구
     private void HandleDashEnd()
     {
         if (!_isDashHeld) return;
@@ -201,7 +281,7 @@ public class DungeonBehavior : PlayerBaseBehavior
     }
 
     // ────────────────────────────────────────────────────────
-    // 6) Ctrl + 하이라이트
+    // Ctrl + 하이라이트
     private void HandleCtrlStart()
     {
         _isCtrlHeld = true;
@@ -266,7 +346,7 @@ public class DungeonBehavior : PlayerBaseBehavior
     }
 
     // ────────────────────────────────────────────────────────
-    // 7) 상호작용 & 아이템 사용
+    // 상호작용 & 아이템 사용
     private void HandleInteract()
     {
         // 필요 시 구현
