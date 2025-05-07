@@ -107,20 +107,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   level: 1
   experience: 0
-  maxHealth: 100
   currentHealth: 100
-  maxMana: 50
   currentMana: 50
-  attackMin: 5
-  attackMax: 10
-  defense: 5
-  critChance: 0.1
-  critDamage: 1.5
-  evasion: 0.05
-  accuracy: 1
-  actionPoints: 1
-  visionRange: 6
-  attackRange: 1
+  fire: 0
+  water: 0
+  ice: 0
+  electric: 0
+  earth: 0
+  wind: 0
+  light: 0
+  dark: 0
+  hasImmunityToAll: 0
   curLevel: {fileID: 0}
   curTile:
     curLevel: {fileID: 0}
@@ -135,14 +132,6 @@ MonoBehaviour:
     trpaOnTile: {fileID: 0}
     mapObject: {fileID: 0}
     itemsOnTile: []
-  fire: 0
-  water: 0
-  ice: 0
-  electric: 0
-  earth: 0
-  wind: 0
-  light: 0
-  dark: 0
   dropItemData: {fileID: 0}
   dropAmount: 1
   id: 0
@@ -193,7 +182,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 813b6bdc984ddd7468c6d2ae47077150, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DetectionRange: 10
+  canMove: 1
   _currentState: 0
   curSkill: {fileID: 0}
 --- !u!114 &2703150196935352911
@@ -288,6 +277,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentTime: 0
   nextActionTime: 0
-  actionCost: 10
+  actionCostStat:
+    baseValue: 10
   actionCostMultiplier: 1
   Stats: {fileID: 0}

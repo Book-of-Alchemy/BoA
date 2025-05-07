@@ -31,6 +31,7 @@ public enum StatType
     WindAtk,
     LightAtk,
     DarkAtk,
+
 }
 public enum ModifierType
 {
@@ -107,10 +108,14 @@ public class StatEntry
         onStatChanged?.Invoke();
     }
 }
+[Serializable]
+public class StatDictionary : SerializableDictionary<StatType, StatEntry> { }
+
 [System.Serializable]
 public class StatBlock
 {
-    private Dictionary<StatType, StatEntry> stats = new();
+    [SerializeField]
+    private StatDictionary stats = new();
 
     public StatBlock(Dictionary<StatType, int> baseStats)
     {
