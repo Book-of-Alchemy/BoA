@@ -155,7 +155,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""9d50d682-a8b4-43da-89df-fccd3fadd39e"",
-                    ""path"": ""<Keyboard>/{Cancel}"",
+                    ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

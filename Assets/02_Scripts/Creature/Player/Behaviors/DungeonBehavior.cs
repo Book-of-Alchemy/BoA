@@ -66,6 +66,8 @@ public class DungeonBehavior : PlayerBaseBehavior
         InputManager.OnCtrlStart += HandleCtrlStart;
         InputManager.OnCtrlEnd += HandleCtrlEnd;
         InputManager.OnInteract += HandleInteract;
+        InputManager.Instance.OnCancel += HandleCancel;
+        InputManager.Instance.OnMenu += HandleMenu;
 
         InputManager.OnMouseMove += HandleMouseMove;
         InputManager.OnMouseClick += HandleMouseClick;
@@ -80,6 +82,8 @@ public class DungeonBehavior : PlayerBaseBehavior
         InputManager.OnCtrlStart -= HandleCtrlStart;
         InputManager.OnCtrlEnd -= HandleCtrlEnd;
         InputManager.OnInteract -= HandleInteract;
+        InputManager.Instance.OnCancel -= HandleCancel;
+        InputManager.Instance.OnMenu -= HandleMenu;
 
         InputManager.OnMouseMove -= HandleMouseMove;
         InputManager.OnMouseClick -= HandleMouseClick;
@@ -452,6 +456,54 @@ public class DungeonBehavior : PlayerBaseBehavior
         Controller.onActionConfirmed?.Invoke();
         _currentItem = null;
     }
+    // ──────────── 취소 키(X / ESC) ────────────
+    private void HandleCancel()
+    {
+        // 아이템 사용 중이면 취소
+        if (_currentItem != null)
+        {
+            //_currentItem.CancelUse();  // CancelUse 메서드 구현 필요
+            _currentItem = null;
+            return;
+        }
+
+        // 인벤 닫기
+        if (UIManager.IsOpened<UI_Inventory>())
+        {
+            UIManager.Hide<UI_Inventory>();
+            return;
+        }
+
+        //제작 닫기
+        if (UIManager.IsOpened<UI_Craft>())
+        {
+            UIManager.Hide<UI_Craft>();
+            return;
+        }
+
+        //이동 취소
+        if (_mousePathCoroutine != null)
+        {
+            StopMousePathMovement();
+            return;
+        }
+
+    }
+
+    // ──────────── 메뉴 키(Tab) ────────────
+    private void HandleMenu()
+    {
+        Debug.Log("HandleMenu 호출됨");
+        if (UIManager.IsOpened<UI_Menu>())
+        {
+            UIManager.Hide<UI_Menu>();
+        }
+        else
+        {
+            UIManager.Show<UI_Menu>();
+        }
+    }
+    //──────────── 적 검사 메서드 ────────────
     private List<CharacterStats> GetEnemiesInSight()
     {
         
@@ -490,4 +542,5 @@ public class DungeonBehavior : PlayerBaseBehavior
         // 이동 플래그 초기화
         _isMoving = false;
     }
+
 }

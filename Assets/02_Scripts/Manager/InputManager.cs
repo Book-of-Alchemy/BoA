@@ -20,6 +20,8 @@ public class InputManager : Singleton<InputManager>
     public event Action OnCtrlEnd;                // Ctrl(하이라이트) 뗌
     public event Action<Vector3> OnMouseClick;    // 마우스 클릭
     public event Action<Vector3> OnMouseMove;     // 마우스 이동
+    public event Action OnCancel;
+    public event Action OnMenu;
 
     public bool EnableMouseTracking { get; set; } = false;
 
@@ -68,6 +70,10 @@ public class InputManager : Singleton<InputManager>
             if (!EnableMouseTracking) return;
             OnMouseClick?.Invoke(MouseWorldPosition);
         };
+        // 취소
+        _input.PC.Cancel.performed += _ => OnCancel?.Invoke();
+        // 메뉴
+        _input.PC.Menu.performed += _ => OnMenu?.Invoke();
     }
 
     public void OnEnable() => _input.PC.Enable();
