@@ -68,15 +68,29 @@ public class DungeonBehavior : PlayerBaseBehavior
         InputManager.OnMouseClick += HandleMouseClick;
     }
 
-    protected override void UnsubscribeInput()
-        if (!Controller.isPlayerTurn || _isMoving || _moveBuffer != null || !ctx.started) return;
-        if(!canMove)
-        {
-            Shake();
-            return;
-        }
-        _moveBuffer = StartCoroutine(BufferMove());
+    protected override void UnsubscribeInput() 
+    {
+        InputManager.OnMove -= HandleMove;
+        InputManager.OnAttack -= HandleAttack;
+        InputManager.OnDashStart -= HandleDashStart;
+        InputManager.OnDashEnd -= HandleDashEnd;
+        InputManager.OnCtrlStart -= HandleCtrlStart;
+        InputManager.OnCtrlEnd -= HandleCtrlEnd;
+        InputManager.OnInteract -= HandleInteract;
+
+        InputManager.OnMouseMove -= HandleMouseMove;
+        InputManager.OnMouseClick -= HandleMouseClick;
     }
+    
+    //{
+    //    if (!Controller.isPlayerTurn || _isMoving || _moveBuffer != null || !ctx.started) return;
+    //    if(!canMove)
+    //    {
+    //        Shake();
+    //        return;
+    //    }
+    //    _moveBuffer = StartCoroutine(BufferMove());
+    //}
 
     void Shake()
     {
@@ -90,19 +104,7 @@ public class DungeonBehavior : PlayerBaseBehavior
         );
     }
 
-    private IEnumerator BufferMove()
-    {
-        InputManager.OnMove -= HandleMove;
-        InputManager.OnAttack -= HandleAttack;
-        InputManager.OnDashStart -= HandleDashStart;
-        InputManager.OnDashEnd -= HandleDashEnd;
-        InputManager.OnCtrlStart -= HandleCtrlStart;
-        InputManager.OnCtrlEnd -= HandleCtrlEnd;
-        InputManager.OnInteract -= HandleInteract;
-
-        InputManager.OnMouseMove -= HandleMouseMove;
-        InputManager.OnMouseClick -= HandleMouseClick;
-}
+  
     // ────────────────────────────────────────────────────────
     //  마우스 이동(하이라이트) 처리
     private void HandleMouseMove(Vector3 worldPos)
@@ -285,14 +287,14 @@ public class DungeonBehavior : PlayerBaseBehavior
         if (_isDashHeld) return;
         _isDashHeld = true;
 
-        if (!Controller.isPlayerTurn || _dashBuffer != null || !ctx.started) return;
-        if (!canMove)
-        {
-            Shake();
-            return;
-        }
-        _dashBuffer = StartCoroutine(BufferDash());
-    }
+        //if (!controller.isplayerturn || _dashbuffer != null || !ctx.started) return;
+        //if (!canmove)
+        //{
+        //    shake();
+        //    return;
+        //}
+        //_dashbuffer = startcoroutine(bufferdash());
+
 
 
         var tm = TurnManager.Instance;
