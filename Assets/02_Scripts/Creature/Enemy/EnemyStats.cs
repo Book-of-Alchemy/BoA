@@ -30,8 +30,7 @@ public class EnemyStats : CharacterStats, IPoolableId
         Debug.Log("적이 사망했습니다.");
         TryDropItem();
 
-        var unit = GetComponent<EnemyUnit>();
-        TurnManager.Instance.RemoveUnit(unit);
+        TurnManager.Instance.RemoveUnit(unitBase);
 
         StopAllCoroutines();
 

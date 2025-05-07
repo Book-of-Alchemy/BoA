@@ -1,50 +1,99 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public enum StatType
 {
-    None,
+    MaxHealth,
+    MaxMana,
+    Attack,
+    Defence,
+    CritChance,
+    CritDamage,
+    Evasion,
+    Accuracy,
+    VisionRange,
+    AttackRange,
+    FireDef,
+    WaterDef,
+    IceDef,
+    ElectricDef,
+    EarthDef,
+    WindDef,
+    LightDef,
+    DarkDef,
+    FireAtk,
+    WaterAtk,
+    IceAtk,
+    ElectricAtk,
+    EarthAtk,
+    WindAtk,
+    LightAtk,
+    DarkAtk,
 }
 public enum ModifierType
 {
-    flat,
-    precent,
+    Flat,
+    Precent,
 }
 [System.Serializable]
 public class StatModifier
 {
-    public string Source;
-    public int Value;
-    public ModifierType Type; // Flat, Percent
+    public string source;
+    public int value;
+    public ModifierType type; // Flat, Percent
 }
+
+[System.Serializable]
 public class StatEntry
 {
-    public int BaseValue;
+    public event Action onStatChanged;
+    public int baseValue;
     private List<StatModifier> modifiers = new();
 
     public int Value
     {
         get
         {
-            int flat = modifiers.Where(m => m.Type == ModifierType.flat).Sum(m => m.Value);
-            float percent = modifiers.Where(m => m.Type == ModifierType.precent).Sum(m => m.Value) / 100f;
-            return Mathf.FloorToInt((BaseValue + flat) * (1f + percent));
+            int flat = 0;
+            float percent = 0f;
+            foreach (StatModifier modifier in modifiers)
+            {
+                if(modifier.type == ModifierType.Flat)
+                {
+                    flat += modifier.value;
+                }
+                else if(modifier.type == ModifierType.Precent)
+                {
+                    percent += modifier.value;
+                }
+            }
+            percent /= 100f;
+            return Mathf.FloorToInt((baseValue + flat) * (1f + percent));
         }
     }
 
     public void AddModifier(string source, int value, ModifierType type)
     {
         RemoveModifier(source);
-        modifiers.Add(new StatModifier { Source = source, Value = value, Type = type });
+        modifiers.Add(new StatModifier { source = source, value = value, type = type });
+        onStatChanged?.Invoke();
     }
 
     public void RemoveModifier(string source)
     {
-        modifiers.RemoveAll(m => m.Source == source);
+        modifiers.RemoveAll(m => m.source == source);
+        onStatChanged?.Invoke();
+    }
+
+    public void SetBaseValue(int value)
+    {
+        baseValue = value;
+        onStatChanged?.Invoke();
     }
 }
+[System.Serializable]
 public class StatBlock
 {
     private Dictionary<StatType, StatEntry> stats = new();
@@ -52,7 +101,7 @@ public class StatBlock
     public StatBlock(Dictionary<StatType, int> baseStats)
     {
         foreach (var pair in baseStats)
-            stats[pair.Key] = new StatEntry { BaseValue = pair.Value };
+            stats[pair.Key] = new StatEntry { baseValue = pair.Value };
     }
 
     public int Get(StatType type) => stats[type].Value;
@@ -69,7 +118,7 @@ public class StatBlock
 
     public void SetBaseValue(StatType type, int baseValue)
     {
-        stats[type].BaseValue = baseValue;
+        stats[type].SetBaseValue(baseValue);
     }
 }
 

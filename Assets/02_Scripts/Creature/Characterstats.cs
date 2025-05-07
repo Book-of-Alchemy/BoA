@@ -7,6 +7,36 @@ using UnityEngine;
 
 public abstract class CharacterStats : MonoBehaviour
 {
+    public StatBlock statBlock = new StatBlock(new Dictionary<StatType, int>
+    {
+        {StatType.MaxHealth, 100 },
+        {StatType.MaxMana, 50 },
+        {StatType.Attack, 10 },
+        {StatType.Defence, 5 },
+        {StatType.CritChance, 10 },
+        {StatType.CritDamage, 150 },
+        {StatType.Evasion, 5 },
+        {StatType.Accuracy, 100 },
+        {StatType.VisionRange, 6 },
+        {StatType.AttackRange, 1 },
+        {StatType.FireDef, 0 },
+        {StatType.WaterDef, 0 },
+        {StatType.IceDef, 0 },
+        {StatType.ElectricDef, 0 },
+        {StatType.EarthDef, 0 },
+        {StatType.WindDef, 0 },
+        {StatType.LightDef, 0 },
+        {StatType.DarkDef, 0 },
+        {StatType.FireAtk, 100 },
+        {StatType.WaterAtk, 100 },
+        {StatType.IceAtk, 100 },
+        {StatType.ElectricAtk, 100 },
+        {StatType.EarthAtk, 100 },
+        {StatType.WindAtk, 100 },
+        {StatType.LightAtk, 100 },
+        {StatType.DarkAtk, 100 },
+    });
+
     [Header("버프 디버프")]//위치 아래로 내릴것
     public List<StatusEffect> activeEffects = new();
     

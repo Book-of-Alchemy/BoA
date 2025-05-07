@@ -22,11 +22,11 @@ public class Slowed : Debuff
         base.OnApply(target);
         unit = target.GetComponent<UnitBase>();
         unit.nextActionTime += 5;
-        unit.actionCost += 5;
+        //unit.actionCostStat.AddModifier("Slowed");
     }
 
     public override void OnExpire(CharacterStats target)
     {
-        unit.actionCost -= 5;
+        //unit.actionCost -= 5;
     }
 }
