@@ -105,6 +105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05ef582f0bde9584ebd677d78b35d52a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hasImmunityToAll: 0
   level: 1
   experience: 0
   maxHealth: 100
@@ -193,7 +194,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 813b6bdc984ddd7468c6d2ae47077150, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DetectionRange: 10
+  canMove: 1
   _currentState: 0
   curSkill: {fileID: 0}
 --- !u!114 &8854934060031573908
