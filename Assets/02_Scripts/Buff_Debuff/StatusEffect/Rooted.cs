@@ -8,7 +8,7 @@ public class Rooted : Debuff
     {
         this.data = data;
     }
-    public Rooted(StatusEffectData data, float value, int remainingTime, int tickInterval)
+    public Rooted(StatusEffectData data, int value, int remainingTime, int tickInterval)
     {
         this.data = data;
         this.value = value;

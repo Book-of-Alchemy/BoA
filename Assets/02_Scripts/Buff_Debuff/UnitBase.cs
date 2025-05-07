@@ -6,7 +6,8 @@ public abstract class UnitBase : MonoBehaviour
 
     public int currentTime = 0;
     public int nextActionTime = 0;
-    public int actionCost = 10;
+    public StatEntry actionCostStat = new StatEntry() { baseValue = 10 };
+    public int actionCost => actionCostStat.Value;
     public float actionCostMultiplier = 1f;
     public bool ActionInProgress { get; private set; }
     public Tile CurTile => Stats?.CurTile;

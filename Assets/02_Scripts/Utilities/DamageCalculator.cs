@@ -32,7 +32,7 @@ public static class DamageCalculator
             DamageType.Dark => target.dark,
             _ => 0f
         };
-        multiplier = Mathf.Max(0f , 1f- multiplier);
+        multiplier = Mathf.Max(0 , (100 - multiplier)/100f);
 
         result = multiplier * baseDamage;//속성 대미지 계산
         //버프 디버프에 의한 대미지 계산 추가

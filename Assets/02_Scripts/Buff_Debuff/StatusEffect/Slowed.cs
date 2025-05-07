@@ -8,8 +8,9 @@ public class Slowed : Debuff
     public Slowed(StatusEffectData data)
     {
         this.data = data;
+        value = 5;
     }
-    public Slowed(StatusEffectData data, float value, int remainingTime, int tickInterval)
+    public Slowed(StatusEffectData data, int value, int remainingTime, int tickInterval)
     {
         this.data = data;
         this.value = value;
@@ -20,13 +21,14 @@ public class Slowed : Debuff
     public override void OnApply(CharacterStats target)
     {
         base.OnApply(target);
-        unit = target.GetComponent<UnitBase>();
+        unit = target.unitBase;
         unit.nextActionTime += 5;
-        unit.actionCost += 5;
+        modifier = new StatModifier("Slowed", - value, ModifierType.Flat);
+        unit.actionCostStat.AddModifier(modifier);
     }
 
     public override void OnExpire(CharacterStats target)
     {
-        unit.actionCost -= 5;
+        unit.actionCostStat.RemoveModifier(modifier);
     }
 }
