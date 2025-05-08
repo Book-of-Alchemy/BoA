@@ -2,31 +2,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Burn : StackableDebuff<Burn>
+public class Burn : Debuff
 {
+
     public override void OnApply(CharacterStats target)
     {
         base.OnApply(target);
         if (!shouldRegister) return;
-        target.OnTakeDamage += Cleanse;
+        this.target = target;
+        target.OnTakeDamage += TryCleanse;
     }
     public override void OnExpire(CharacterStats target)
     {
-        target.OnTakeDamage -= Cleanse;
+        target.OnTakeDamage -= TryCleanse;
     }
 
     public override void Tick(CharacterStats target)
     {
-        
-        DamageInfo damageInfo = new DamageInfo();
+        float damage = value * 2f;
+        DamageInfo damageInfo = new DamageInfo(damage, DamageType.Fire,null, target);
+        target.TakeDamage(damageInfo);
     }
 
-    protected void Cleanse(DamageInfo damageInfo)
+    protected void TryCleanse(DamageInfo damageInfo)
     {
-        if(damageInfo.damageType == DamageType.Water || damageInfo.damageType == DamageType.Ice)
+        if (damageInfo.damageType == DamageType.Water || damageInfo.damageType == DamageType.Ice)
         {
-            OnExpire(damageInfo.target);
-            damageInfo.target.activeEffects.Remove(this);
+            Cleanse();
         }
     }
+    
 }

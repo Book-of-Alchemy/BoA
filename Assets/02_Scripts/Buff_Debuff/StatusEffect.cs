@@ -3,10 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-public interface IImunity
-{
-    public IEnumerable<Type> BlockedTypes { get; }
-}
 
 public abstract class StatusEffect
 {
