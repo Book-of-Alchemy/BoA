@@ -40,8 +40,8 @@ public class QuickSlotUI : MonoBehaviour , IDropHandler
 
         if (_item.itemData.effect_type is Effect_Type.Damage)
         {
-            BaseItem baseItem = ItemManager.Instance.CreateItem(_item.itemData);
-            baseItem.UseItem(_item.itemData);
+            var controller = GameManager.Instance.PlayerTransform.GetComponent<DungeonBehavior>();
+            controller.UseItem(_item.itemData);
         }
     }
 

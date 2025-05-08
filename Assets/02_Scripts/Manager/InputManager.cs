@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System;
+using UnityEngine.EventSystems;
 
 public class InputManager : Singleton<InputManager>
 {
@@ -22,6 +23,7 @@ public class InputManager : Singleton<InputManager>
     public event Action<Vector3> OnMouseMove;     // 마우스 이동
     public event Action OnCancel;
     public event Action OnMenu;
+    public event Action OnRest;
 
     public bool EnableMouseTracking { get; set; } = false;
 
@@ -68,12 +70,19 @@ public class InputManager : Singleton<InputManager>
         _input.PC.MouseClick.performed += _ =>
         {
             if (!EnableMouseTracking) return;
+            // UI 위면 무시
+            if (EventSystem.current != null &&
+                EventSystem.current.IsPointerOverGameObject())
+                return;
             OnMouseClick?.Invoke(MouseWorldPosition);
         };
         // 취소
         _input.PC.Cancel.performed += _ => OnCancel?.Invoke();
         // 메뉴
         _input.PC.Menu.performed += _ => OnMenu?.Invoke();
+
+        //한턴 쉬기
+        _input.PC.Space.performed += _ => OnRest?.Invoke();
     }
 
     public void OnEnable() => _input.PC.Enable();

@@ -116,6 +116,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Space"",
+                    ""type"": ""Button"",
+                    ""id"": ""68f8e42e-acd0-460b-b43b-b8c82c58eeee"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -470,6 +479,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Ctrl"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a6e29d3a-98e0-473b-9d19-81df4f8c4f42"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Space"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -488,6 +508,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_PC_MousePosition = m_PC.FindAction("MousePosition", throwIfNotFound: true);
         m_PC_MouseClick = m_PC.FindAction("MouseClick", throwIfNotFound: true);
         m_PC_Ctrl = m_PC.FindAction("Ctrl", throwIfNotFound: true);
+        m_PC_Space = m_PC.FindAction("Space", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -559,6 +580,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_PC_MousePosition;
     private readonly InputAction m_PC_MouseClick;
     private readonly InputAction m_PC_Ctrl;
+    private readonly InputAction m_PC_Space;
     public struct PCActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -573,6 +595,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @MousePosition => m_Wrapper.m_PC_MousePosition;
         public InputAction @MouseClick => m_Wrapper.m_PC_MouseClick;
         public InputAction @Ctrl => m_Wrapper.m_PC_Ctrl;
+        public InputAction @Space => m_Wrapper.m_PC_Space;
         public InputActionMap Get() { return m_Wrapper.m_PC; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -612,6 +635,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Ctrl.started += instance.OnCtrl;
             @Ctrl.performed += instance.OnCtrl;
             @Ctrl.canceled += instance.OnCtrl;
+            @Space.started += instance.OnSpace;
+            @Space.performed += instance.OnSpace;
+            @Space.canceled += instance.OnSpace;
         }
 
         private void UnregisterCallbacks(IPCActions instance)
@@ -646,6 +672,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Ctrl.started -= instance.OnCtrl;
             @Ctrl.performed -= instance.OnCtrl;
             @Ctrl.canceled -= instance.OnCtrl;
+            @Space.started -= instance.OnSpace;
+            @Space.performed -= instance.OnSpace;
+            @Space.canceled -= instance.OnSpace;
         }
 
         public void RemoveCallbacks(IPCActions instance)
@@ -675,5 +704,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnMousePosition(InputAction.CallbackContext context);
         void OnMouseClick(InputAction.CallbackContext context);
         void OnCtrl(InputAction.CallbackContext context);
+        void OnSpace(InputAction.CallbackContext context);
     }
 }
