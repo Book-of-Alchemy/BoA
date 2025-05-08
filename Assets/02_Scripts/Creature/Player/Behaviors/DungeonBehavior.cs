@@ -188,8 +188,18 @@ public class DungeonBehavior : PlayerBaseBehavior
 
         if (goalTile.CharacterStatsOnTile != null && isAdjacent)
         {
-            ExecuteMouseAttack(goalTile);
-            return;
+            var targetStats = goalTile.CharacterStatsOnTile;
+
+            if (targetStats.gameObject.CompareTag("NPC"))
+            {
+                HandleInteract();
+                return;
+            }
+            else
+            {
+                ExecuteMouseAttack(goalTile);
+                return;
+            }   
         }
 
         // 이동 처리
@@ -343,7 +353,17 @@ public class DungeonBehavior : PlayerBaseBehavior
     //  공격 처리
     private void HandleAttack()
     {
-        if (!Controller.isPlayerTurn || _attackBuffer != null) return;
+        if (!Controller.isPlayerTurn || _attackBuffer != null)
+            return;
+        
+        Vector2Int targetPos = _stats.CurTile.gridPosition + _lastMoveDir;
+        if (_stats.curLevel.tiles.TryGetValue(targetPos, out Tile frontTile) &&
+            frontTile.CharacterStatsOnTile != null &&
+            frontTile.CharacterStatsOnTile.gameObject.CompareTag("NPC"))
+        {
+            return;
+        }
+
         _attackBuffer = StartCoroutine(BufferAttack());
     }
 
@@ -372,16 +392,6 @@ public class DungeonBehavior : PlayerBaseBehavior
 
         if (_isDashHeld) return;
         _isDashHeld = true;
-
-        //if (!controller.isplayerturn || _dashbuffer != null || !ctx.started) return;
-        //if (!canmove)
-        //{
-        //    shake();
-        //    return;
-        //}
-        //_dashbuffer = startcoroutine(bufferdash());
-
-
 
         var tm = TurnManager.Instance;
         _savedTurnSpeed = tm.turnSpeed;
@@ -472,7 +482,23 @@ public class DungeonBehavior : PlayerBaseBehavior
     // 상호작용 & 아이템 사용
     private void HandleInteract()
     {
-        // 필요 시 구현
+        if (!Controller.isPlayerTurn)
+            return;
+
+        // 플레이어가 바라보는 방향의 타일 위치
+        Vector2Int frontPos = _stats.CurTile.gridPosition + _lastMoveDir;
+
+        if (_stats.curLevel.tiles.TryGetValue(frontPos, out Tile frontTile) &&
+            frontTile.CharacterStatsOnTile != null)
+        {
+            var targetStats = frontTile.CharacterStatsOnTile;
+
+            if (targetStats.gameObject.CompareTag("NPC"))
+            {
+                Debug.Log("NPC입니다");
+                return;
+            }
+        }
     }
 
     public void UseItem(ItemData data)
