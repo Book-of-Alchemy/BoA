@@ -19,6 +19,7 @@ public class Confused : Debuff
     public override void OnApply(CharacterStats target)
     {
         base.OnApply(target);
+        if (!shouldRegister) return;
         if (target is PlayerStats player)
         {
             var behavior = player.GetComponent<DungeonBehavior>();

@@ -1,19 +1,21 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 public interface IImunity
 {
     public IEnumerable<Type> BlockedTypes { get; }
 }
 
-public abstract class  StatusEffect
+public abstract class StatusEffect
 {
     public int remainingTime = 30;//30턴 = 3턴을 의미
     public int tickInterval = 10;
     protected int nextTickTime;
     public int value = 10;
     public StatusEffectData data;
+    protected bool shouldRegister = true;
 
     // 지속 효과인지 여부
     public virtual bool IsPersistent => false;
@@ -46,6 +48,14 @@ public abstract class  StatusEffect
 
     public virtual void OnApply(CharacterStats target) { }
     public virtual void OnExpire(CharacterStats target) { }
+    public virtual bool TryRegist(CharacterStats target)
+    {
+        if (shouldRegister)
+        {
+            target.activeEffects.Add(this);
+        }
+        return shouldRegister;
+    }
 
     public bool IsExpired => remainingTime <= 0;
 }

@@ -6,6 +6,7 @@ using UnityEngine;
 public abstract class TrapBase : MonoBehaviour
 {
     public Tile tile;
+    public CharacterStats creatorStats;
     public TrapData trapData;
     public List<Tile> effectTiles;
     [SerializeField]

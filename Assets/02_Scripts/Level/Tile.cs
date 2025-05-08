@@ -153,5 +153,8 @@ public class Tile
 
         return isWalkable;
     }
+    public void AffectOnTile(DamageInfo damageInfo)
+    {
 
+    }
 }

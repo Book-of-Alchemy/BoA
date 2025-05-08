@@ -21,6 +21,7 @@ public class Slowed : Debuff
     public override void OnApply(CharacterStats target)
     {
         base.OnApply(target);
+        if (!shouldRegister) return;
         unit = target.unitBase;
         unit.nextActionTime += 5;
         modifier = new StatModifier("Slowed", - value, ModifierType.Flat);

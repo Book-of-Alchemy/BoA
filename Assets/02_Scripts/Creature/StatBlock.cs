@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public enum StatType
 {
     MaxHealth,
+    MaxShield,
     MaxMana,
     Attack,
     Defence,
@@ -15,23 +17,26 @@ public enum StatType
     Accuracy,
     VisionRange,
     AttackRange,
-    FireDef,
-    WaterDef,
-    IceDef,
-    ElectricDef,
-    EarthDef,
-    WindDef,
-    LightDef,
-    DarkDef,
-    FireAtk,
-    WaterAtk,
-    IceAtk,
-    ElectricAtk,
-    EarthAtk,
-    WindAtk,
-    LightAtk,
-    DarkAtk,
-
+    FireResist,
+    WaterResist,
+    IceResist,
+    ElectricResist,
+    EarthResist,
+    WindResist,
+    LightResist,
+    DarkResist,
+    FireDmg,
+    WaterDmg,
+    IceDmg,
+    ElectricDmg,
+    EarthDmg,
+    WindDmg,
+    LightDmg,
+    DarkDmg,
+    ThrownDmg,
+    TrapDmg,
+    ScrollDmg,
+    FinalDmg,
 }
 public enum ModifierType
 {
@@ -68,11 +73,11 @@ public class StatEntry
             float percent = 0f;
             foreach (StatModifier modifier in modifiers)
             {
-                if(modifier.type == ModifierType.Flat)
+                if (modifier.type == ModifierType.Flat)
                 {
                     flat += modifier.value;
                 }
-                else if(modifier.type == ModifierType.Precent)
+                else if (modifier.type == ModifierType.Precent)
                 {
                     percent += modifier.value;
                 }
@@ -84,7 +89,7 @@ public class StatEntry
 
     public void AddModifier(string source, int value, ModifierType type)
     {
-        modifiers.Add(new StatModifier ( source , value, type ));
+        modifiers.Add(new StatModifier(source, value, type));
         onStatChanged?.Invoke();
     }
     public void AddModifier(StatModifier statModifier)
@@ -123,7 +128,13 @@ public class StatBlock
             stats[pair.Key] = new StatEntry { baseValue = pair.Value };
     }
 
-    public int Get(StatType type) => stats[type].Value;
+    public int Get(StatType type)
+    {
+        if (stats.TryGetValue(type, out var value))
+            return value.Value;
+
+        return 0;
+    }
     public StatEntry GetEntry(StatType type) => stats[type];
 
     public void AddModifier(StatType type, string source, int value, ModifierType modType)

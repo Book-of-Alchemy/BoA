@@ -16,6 +16,7 @@ public class Stuned : Debuff
     public override void OnApply(CharacterStats target)
     {
         base.OnApply(target);
+        if (!shouldRegister) return;
         unit = target.GetComponent<UnitBase>();
         Tick(target);
     }

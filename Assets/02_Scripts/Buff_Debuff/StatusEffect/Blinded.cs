@@ -19,6 +19,7 @@ public class Blinded : Debuff
     public override void OnApply(CharacterStats target)
     {
         base.OnApply(target);
+        if (!shouldRegister) return;
         modifier = new StatModifier("Blinded", -value, ModifierType.Flat);
         target.statBlock.AddModifier(StatType.VisionRange, modifier);
     }

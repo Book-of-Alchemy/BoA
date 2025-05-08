@@ -10,8 +10,9 @@ public class Debuff : StatusEffect
     {
         if(target.hasImmunityToAll || target.HasImmunity(this.GetType()))
         {
-            target.activeEffects.Remove(this);
+            shouldRegister = false;
             return;
         }
+
     }
 }

@@ -20,6 +20,7 @@ public class AttackDown : Debuff
     public override void OnApply(CharacterStats target)
     {
         base.OnApply(target);
+        if (!shouldRegister) return;
         modifier = new StatModifier("AttackDown", - value, ModifierType.Flat);
         target.statBlock.AddModifier(StatType.Attack, modifier);
     }

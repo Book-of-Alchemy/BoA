@@ -18,6 +18,7 @@ public class Asleep : Debuff
     public override void OnApply(CharacterStats target)
     {
         base.OnApply(target);
+        if (!shouldRegister) return;
         stats = target;
         unit = target.unitBase;
         target.OnTakeDamage += WakeUp;
@@ -30,7 +31,7 @@ public class Asleep : Debuff
         target.OnTakeDamage -= WakeUp;
     }
 
-    void WakeUp()
+    void WakeUp(DamageInfo damageInfo)
     {
         OnExpire(stats);
         stats.activeEffects.Remove(this);

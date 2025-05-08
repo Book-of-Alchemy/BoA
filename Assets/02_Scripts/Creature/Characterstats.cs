@@ -10,6 +10,7 @@ public abstract class CharacterStats : MonoBehaviour
     public StatBlock statBlock = new StatBlock(new Dictionary<StatType, int>
     {
         {StatType.MaxHealth, 100 },
+        {StatType.MaxShield, 0 },
         {StatType.MaxMana, 50 },
         {StatType.Attack, 10 },
         {StatType.Defence, 5 },
@@ -19,22 +20,26 @@ public abstract class CharacterStats : MonoBehaviour
         {StatType.Accuracy, 100 },
         {StatType.VisionRange, 6 },
         {StatType.AttackRange, 1 },
-        {StatType.FireDef, 0 },
-        {StatType.WaterDef, 0 },
-        {StatType.IceDef, 0 },
-        {StatType.ElectricDef, 0 },
-        {StatType.EarthDef, 0 },
-        {StatType.WindDef, 0 },
-        {StatType.LightDef, 0 },
-        {StatType.DarkDef, 0 },
-        {StatType.FireAtk, 100 },
-        {StatType.WaterAtk, 100 },
-        {StatType.IceAtk, 100 },
-        {StatType.ElectricAtk, 100 },
-        {StatType.EarthAtk, 100 },
-        {StatType.WindAtk, 100 },
-        {StatType.LightAtk, 100 },
-        {StatType.DarkAtk, 100 },
+        {StatType.FireResist, 0 },
+        {StatType.WaterResist, 0 },
+        {StatType.IceResist, 0 },
+        {StatType.ElectricResist, 0 },
+        {StatType.EarthResist, 0 },
+        {StatType.WindResist, 0 },
+        {StatType.LightResist, 0 },
+        {StatType.DarkResist, 0 },
+        {StatType.FireDmg, 100 },
+        {StatType.WaterDmg, 100 },
+        {StatType.IceDmg, 100 },
+        {StatType.ElectricDmg, 100 },
+        {StatType.EarthDmg, 100 },
+        {StatType.WindDmg, 100 },
+        {StatType.LightDmg, 100 },
+        {StatType.DarkDmg, 100 },
+        {StatType.ThrownDmg, 100 },
+        {StatType.TrapDmg, 100 },
+        {StatType.ScrollDmg, 100 },
+        {StatType.FinalDmg, 100 },
     });
 
 
@@ -42,12 +47,32 @@ public abstract class CharacterStats : MonoBehaviour
     public int level = 1;
     public int experience = 0;
 
-    [Header("체력 및 마나")]
+    //체력 쉴드 마나
+    public float MaxHealth => statBlock.Get(StatType.MaxHealth);
     [SerializeField] protected float currentHealth = 100f;
-
-    [Header("마나")]
+    public float CurrentHealth
+    {
+        get => currentHealth;
+        set
+        {
+            currentHealth = Mathf.Clamp(value, 0f, MaxHealth);
+            OnHealthRatioChanged?.Invoke();
+            if (currentHealth <= 0f) Die();
+        }
+    }
+    [SerializeField] protected float currentShield = 0f;
+    public float CurrentShield { get => currentShield; set => currentShield = value; }
+    public float MaxMana => statBlock.Get(StatType.MaxMana);
     [SerializeField] protected float currentMana = 50f;
-
+    public float CurrentMana
+    {
+        get => currentMana;
+        set
+        {
+            currentMana = Mathf.Clamp(value, 0f, MaxMana);
+            OnManaChanged?.Invoke();
+        }
+    }
     //공격력
     public int AttackDamage => statBlock.Get(StatType.Attack);
     public int attackMin => Mathf.RoundToInt(AttackDamage * 0.9f);
@@ -58,19 +83,35 @@ public abstract class CharacterStats : MonoBehaviour
 
     //속성 공격
 
+    public int fireDmg;
+    public int waterDmg;
+    public int iceDmg;
+    public int lightningDmg;
+    public int earthDmg;
+    public int windDmg;
+    public int lightDmg;
+    public int darkDmg;
+
+    //특성공격력
+
+    public int ThrownDmg;
+    public int TrapDmg;
+    public int ScrollDmg;
+    public int FinalDmg;
+
     //방어력
     public int defense => statBlock.Get(StatType.Defence);
     public int evasion => statBlock.Get(StatType.Evasion);
 
     //속성방어
-    public int fire;
-    public int water;
-    public int ice;
-    public int lightning;
-    public int earth;
-    public int wind;
-    public int light;
-    public int dark;
+    public int fireDef;
+    public int waterDef;
+    public int iceDef;
+    public int lightningDef;
+    public int earthDef;
+    public int windDef;
+    public int lightDef;
+    public int darkDef;
 
 
     //시야
@@ -111,30 +152,9 @@ public abstract class CharacterStats : MonoBehaviour
     //체력 변경 이벤트
     public event Action OnHealthRatioChanged;
     public event Action OnManaChanged;
-    public event Action OnTakeDamage;
-    public float MaxHealth => statBlock.Get(StatType.MaxHealth);
+    public event Action<DamageInfo> OnTakeDamage;
 
-    public float CurrentHealth
-    {
-        get => currentHealth;
-        set
-        {
-            currentHealth = Mathf.Clamp(value, 0f, MaxHealth);
-            OnHealthRatioChanged?.Invoke();
-            if (currentHealth <= 0f) Die();
-        }
-    }
-    public float MaxMana => statBlock.Get(StatType.MaxMana);
 
-    public float CurrentMana
-    {
-        get => currentMana;
-        set
-        {
-            currentMana = Mathf.Clamp(value, 0f, MaxMana);
-            OnManaChanged?.Invoke();
-        }
-    }
     protected virtual void Awake()
     {
         _anim = GetComponent<CharacterAnimator>();
@@ -153,47 +173,61 @@ public abstract class CharacterStats : MonoBehaviour
     /// <summary>
     /// 일반 공격의 경우
     /// </summary>
-    public virtual void Attack(CharacterStats target, DamageType damageType = DamageType.None)
+    public virtual void Attack(CharacterStats target, DamageType damageType = DamageType.None, int statusEffectID = -1)
     {
         //기본 데미지 계산
         float baseDamage = UnityEngine.Random.Range(attackMin, attackMax);
         //치명타 게산
         bool isCrit = UnityEngine.Random.value < critChance / 100f;
         if (isCrit)
-        {
-            baseDamage *= critDamage / 100f;
-            Debug.Log($"{gameObject.name}가 치명타!");
-        }
+            Debug.Log("치명타 발생!");
 
-        float finalDamage = DamageCalculator.CalculateDamage(target, baseDamage, damageType);
-        target.TakeDamage(finalDamage);
-        Debug.Log($"{gameObject.name}가 {target.gameObject.name}을 공격함니다." + $"속성:{damageType}, 최종 대미지:{finalDamage}");
+        DamageInfo damageInfo = new DamageInfo(baseDamage, damageType, this, target, isCrit);
+
+
+        target.TakeDamage(damageInfo);
+        Debug.Log($"{gameObject.name}가 {target.gameObject.name}을 공격함니다." + $"속성:{damageType}, 기본 대미지:{baseDamage}");
     }
     /// <summary>
     /// 공격 배율이 있는경우
     /// </summary>
-    public virtual void Attack(CharacterStats target, float multiplier, DamageType damageType = DamageType.None)
+    public virtual void Attack(CharacterStats target, float multiplier, DamageType damageType = DamageType.None, int statusEffectID = -1)
     {
         //기본 데미지 계산
         float baseDamage = UnityEngine.Random.Range(attackMin, attackMax) * multiplier;
         //치명타 게산
         bool isCrit = UnityEngine.Random.value < critChance / 100f;
         if (isCrit)
+            Debug.Log("치명타 발생!");
+
+        DamageInfo damageInfo = new DamageInfo(baseDamage, damageType, this, target, isCrit);
+
+        target.TakeDamage(damageInfo);
+        Debug.Log($"{gameObject.name}가 {target.gameObject.name}을 공격함니다." + $"속성:{damageType}, 기본 대미지:{baseDamage}");
+    }
+    public virtual void TakeDamage(DamageInfo damageInfo)
+    {
+        float value = DamageCalculator.CalculateDamage(damageInfo);
+        if (CurrentShield > 0)
         {
-            baseDamage *= critDamage / 100f;
-            Debug.Log($"{gameObject.name}가 치명타!");
+            if (value > CurrentShield)
+            {
+                Debug.Log($"{gameObject.name}는 쉴드에 {CurrentShield}의 피해를 받았습니다.");
+                value -= CurrentShield;
+                CurrentShield = 0;
+            }
+            else
+            {
+                Debug.Log($"{gameObject.name}는 쉴드에 {value}의 피해를 받았습니다.");
+                CurrentShield -= value;
+                value = 0;
+            }
         }
 
-        float finalDamage = DamageCalculator.CalculateDamage(target, baseDamage, damageType);
-        target.TakeDamage(finalDamage, damageType);
-        Debug.Log($"{gameObject.name}가 {target.gameObject.name}을 공격함니다." + $"속성:{damageType}, 최종 대미지:{finalDamage}");
-    }
-    public virtual void TakeDamage(float amount, DamageType damageType = DamageType.None)
-    {
-        CurrentHealth -= amount;
-        UIManager.ShowOnce<DamageText>(amount, transform.position);
-        Debug.Log($"{gameObject.name}는 {amount}의 피해를 받았습니다.");
-        OnTakeDamage?.Invoke();
+        CurrentHealth -= value;
+        UIManager.ShowOnce<DamageText>(value, transform.position);
+        Debug.Log($"{gameObject.name}는 {value}의 피해를 받았습니다.");
+        OnTakeDamage?.Invoke(damageInfo);
         _anim.PlayKnockBack();
     }
 
@@ -228,15 +262,10 @@ public abstract class CharacterStats : MonoBehaviour
 
     public void ApplyEffect(StatusEffect effect)
     {
-        if (effect.IsStackable)
-        {
-
-        }
-
         effect.Initialize(TurnManager.Instance.globalTime);
-        activeEffects.Add(effect);
         effect.OnApply(this);
-        Debug.Log($"{name}에게 {effect.data.name_kr} 적용됨");
+        if (effect.TryRegist(this))
+            Debug.Log($"{name}에게 {effect.data.name_kr} 적용됨");
     }
 
     public void TickEffects(int globalTime)
@@ -258,10 +287,5 @@ public abstract class CharacterStats : MonoBehaviour
         return activeEffects
             .OfType<IImunity>()
             .Any(im => im.BlockedTypes.Contains(effectType));
-    }
-
-    public void AffectOnTile(DamageInfo damageInfo)
-    {
-
     }
 }

@@ -19,6 +19,7 @@ public class DefenceDown : Debuff
     public override void OnApply(CharacterStats target)
     {
         base.OnApply(target);
+        if (!shouldRegister) return;
         modifier = new StatModifier("DefenceDown", -value, ModifierType.Flat);
         target.statBlock.AddModifier(StatType.Defence, modifier);
     }

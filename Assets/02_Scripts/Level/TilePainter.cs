@@ -41,7 +41,7 @@ public static class TilePainter
         }
 
         PlaceTrap(level, trapData);
-        PlaceTrap(level, tileDataBase);
+        PlaceLadder(level, tileDataBase);
     }
 
     private static void SetGroundTile(Tile tile, Level level, List<GroundTileSet> groundTileSets, GameObject groundPrefab)
@@ -157,19 +157,11 @@ public static class TilePainter
         foreach (var tile in tiles)
         {
             int randomTrap = UnityEngine.Random.Range(0, trapData.Count - 1);
-            TrapBase TrapGO = UnityEngine.Object.Instantiate
-                (
-                trapData[randomTrap].trapPrefab,
-                new Vector3Int(tile.gridPosition.x, tile.gridPosition.y, 0),
-                Quaternion.identity
-                ).GetComponent<TrapBase>();
-            
-            tile.TrpaOnTile = TrapGO;
-            TrapGO.spriteRenderer.sortingOrder = -tile.gridPosition.y * 10;
+            TrapFactory.CreateTrap(randomTrap,level,tile);
         }
     }
 
-    private static void PlaceTrap(Level level, TileDataBase tileDataBase)
+    private static void PlaceLadder(Level level, TileDataBase tileDataBase)
     {
         level.endTile.mapObject = UnityEngine.Object.Instantiate
                 (
