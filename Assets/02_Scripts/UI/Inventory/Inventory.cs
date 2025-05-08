@@ -32,9 +32,10 @@ public class Inventory : Singleton<Inventory>
         _uiInventory = inventory;
         _craftTool = craftTool;
 
-        if (HasItem) return;
+        if (!HasItem) return;
         for (int i = 0; i < items.Length; i++)
         {
+            //아이템이 있으면 UI에 갱신
             if (items[i] != null)
             {
                 UpdateUISlot(i);
@@ -168,7 +169,6 @@ public class Inventory : Singleton<Inventory>
     public void FilterAndDisplay(params Item_Type[] types)
     {
         if (!HasItem) return;
-
         // type 과 enum값이 같은 item을 검색해서 배열로 저장
         InventoryItem[] filtered = Array.FindAll(items, item =>
             item != null && Array.Exists(types, type => item.GetItemType() == type));
@@ -179,8 +179,7 @@ public class Inventory : Singleton<Inventory>
 
         if(filtered.Length != 0)
         {
-            for (int i = 0; i < _uiInventory.SlotCount; i++)
-                _uiInventory.RemoveItem(i); // UI 슬롯 초기화
+            _uiInventory.ClearAllSlots();
 
             for (int i = 0; i < filtered.Length; i++)
                 _uiInventory.SetInventorySlot(i, filtered[i]); // UI 슬롯에 재배치
@@ -190,10 +189,10 @@ public class Inventory : Singleton<Inventory>
     public void RestoreBeforeFilter()
     {
         if (!HasItem) return;
-
+        _uiInventory.ClearAllSlots();
         for (int i = 0; i < _uiInventory.SlotCount; i++)
         {
-            _uiInventory.RemoveItem(i); // 슬롯 초기화 및 재배치
+            //_uiInventory.RemoveItem(i); // 슬롯 초기화 및 재배치
             if (items[i] != null)
                 _uiInventory.SetInventorySlot(i, items[i]);
         }

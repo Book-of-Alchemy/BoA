@@ -61,6 +61,7 @@ public class UI_Inventory : UIBase
     private bool _isFirstTypeSet = true;
 
     private CraftTool _craftTool;
+    private EInventoryType _showType;
 
     private void Start()
     {
@@ -93,6 +94,7 @@ public class UI_Inventory : UIBase
             _inventory = Inventory.Instance;
             _craftTool = _toolList[1].GetComponent<CraftTool>();
             _inventory.Initialize(this,_craftTool);
+            //버튼 등록
             _addBtn.onClick.AddListener(_inventory.OnClickAddItem);
             _removeBtn.onClick.AddListener(_inventory.OnClickRemoveItem);
             _sortBtn.onClick.AddListener(() => _inventory.FilterAndDisplay(Item_Type.Material));
@@ -116,12 +118,11 @@ public class UI_Inventory : UIBase
 
         //인벤토리 초기화
         InitInventoryType();
-        InitInventory();
+        InitInventory(); //인벤토리 UI 초기화
    
         if (param.Length > 0 && param[0] is EInventoryType)
         {
-            SetCurType((EInventoryType)param[0]); 
-            ShowRightTool(CurType);
+            _showType = (EInventoryType)param[0];
         }
         else
         {
@@ -132,18 +133,19 @@ public class UI_Inventory : UIBase
     private void OnHide() 
     {
         //모든 하위요소를 숨겼다면 Close
+        UIManager.Hide<UI_Action>();
         _animator.SetTrigger("Close");
     }
 
-    public void BookOpened()
+    public void BookOpened() //OpenAnimation 이벤트에서 호출
     {
         //열렸다면 모든 하위요소 FadeIn
-        _uiAnimator.FadeIn();
+        _uiAnimator.FadeIn(()=> ShowRightTool(_showType));
     }
+
     public void BookClosed()
     {
         UIManager.Hide<UI_Inventory>();
-        UIManager.Hide<UI_Action>();
     }
 
     public void SetInventorySlot(int index, InventoryItem item) //슬롯에 아이템 UI 갱신
@@ -153,13 +155,21 @@ public class UI_Inventory : UIBase
 
     public void RemoveItem(int index) // 슬롯에 아이템 아이콘, 갯수 제거
     {
-        _slotUIList[index].RemoveItem();
+        var slot = _slotUIList[index];
+        //빈슬롯이면 return
+        if (!slot.HasItem) return;
+        slot.RemoveItem();
     }
+
     public void ReduceItem(int index,int amount) // 슬롯에 아이템 아이콘, 갯수 제거
     {
         _slotUIList[index].ReduceItem(amount);
     }
-
+    public void ClearAllSlots()
+    {
+        foreach (var slot in _slotUIList)
+            slot.RemoveItem();
+    }
     public void OnSlotSelected(int index)
     {
         if (_inventory.items[index] != null)
@@ -175,9 +185,10 @@ public class UI_Inventory : UIBase
     {
         for (int i = 0; i < _toolList.Count; i++)
         {
-            if(i == (int)type)
+            if(i == (int)type) 
             {
-                SetCurType((EInventoryType)i);
+                //type에 맞는 InventoryTool 노출
+                SetCurType(type);
                 //_toolList[i].gameObject.SetActive(true);
                 _imageList[i].color = _activeColor;
                 UIManager.Hide<UI_Action>();
@@ -203,7 +214,7 @@ public class UI_Inventory : UIBase
         
         Inventory.Instance.ClearAllHighlights();
 
-        //키에 맞는 Type찾아서 인벤토리 필터링
+        //현재 Type의 값(필터링할 아이템 타입들) 찾아서 인벤토리 필터링
         if (_typeFilter.TryGetValue(type, out Item_Type[] types))
             _inventory.FilterAndDisplay(types);
         else //기본 인벤토리는 필터링 없기때문에 
