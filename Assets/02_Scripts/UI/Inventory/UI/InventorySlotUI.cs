@@ -42,12 +42,14 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler, 
     {
         _imageObject = _itemSprite.gameObject;
         _textObject = _countTxt.gameObject;
+
         HideIcon();
         HideText();
 
         if (_borderImage != null)
             _borderImage.color = _normalBorderColor;
     }
+
     public void Initialize(UI_Inventory uiInventory)
     {
         _uiInventory = uiInventory;

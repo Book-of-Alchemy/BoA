@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Inventory : Singleton<Inventory>
@@ -18,6 +19,9 @@ public class Inventory : Singleton<Inventory>
     private List<InventoryItem> _craftList = new(); // 제작 테이블에 올라간 아이템list
     private List<int> _highlightItemIds = new List<int>(); // 강조되는 아이템 list
 
+    //인벤토리 아이템 유무 bool변수
+    public bool HasItem => items != null && items.Any(item => item != null);
+
     private void Start()
     {
         items = new InventoryItem[_capacity]; // 인벤토리 용량만큼 Data상 용량을 맞춰줌.
@@ -28,10 +32,13 @@ public class Inventory : Singleton<Inventory>
         _uiInventory = inventory;
         _craftTool = craftTool;
 
+        if (HasItem) return;
         for (int i = 0; i < items.Length; i++)
         {
             if (items[i] != null)
+            {
                 UpdateUISlot(i);
+            }
         }
     }
 
@@ -160,6 +167,8 @@ public class Inventory : Singleton<Inventory>
 
     public void FilterAndDisplay(params Item_Type[] types)
     {
+        if (!HasItem) return;
+
         // type 과 enum값이 같은 item을 검색해서 배열로 저장
         InventoryItem[] filtered = Array.FindAll(items, item =>
             item != null && Array.Exists(types, type => item.GetItemType() == type));
@@ -168,15 +177,20 @@ public class Inventory : Singleton<Inventory>
         Array.Sort(filtered, (a, b) =>
             string.Compare(a.GetItemId().ToString(), b.GetItemId().ToString()));
 
-        for (int i = 0; i < _uiInventory.SlotCount; i++)
-            _uiInventory.RemoveItem(i); // UI 슬롯 초기화
+        if(filtered.Length != 0)
+        {
+            for (int i = 0; i < _uiInventory.SlotCount; i++)
+                _uiInventory.RemoveItem(i); // UI 슬롯 초기화
 
-        for (int i = 0; i < filtered.Length/* && i < _uiInventory.SlotCount*/; i++)
-            _uiInventory.SetInventorySlot(i, filtered[i]); // UI 슬롯에 재배치
+            for (int i = 0; i < filtered.Length; i++)
+                _uiInventory.SetInventorySlot(i, filtered[i]); // UI 슬롯에 재배치
+        }
     }
 
     public void RestoreBeforeFilter()
     {
+        if (!HasItem) return;
+
         for (int i = 0; i < _uiInventory.SlotCount; i++)
         {
             _uiInventory.RemoveItem(i); // 슬롯 초기화 및 재배치
