@@ -1,34 +1,39 @@
+// PlayerBaseBehavior.cs
+
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 /// <summary>
 /// 모든 플레이어 행동(Behavior)의 공통 추상 클래스
-/// InputSystem 콜백 메서드를 선언하고, Initialize()에서 바인딩합니다.
+/// InputSystem 콜백 대신 InputManager 이벤트 방식으로 동작합니다.
+/// 자식 클래스는 SubscribeInput/UnsubscribeInput 만 구현하세요.
 /// </summary>
-public abstract class PlayerBaseBehavior : MonoBehaviour, PlayerInputActions.IPCActions
+public abstract class PlayerBaseBehavior : MonoBehaviour
 {
+    /// <summary>이 Behavior를 소유한 PlayerController</summary>
     protected PlayerController Controller;
-    protected PlayerInputActions InputActions;
+    /// <summary>입력 매니저 shortcut</summary>
+    protected InputManager InputManager => InputManager.Instance;
 
     /// <summary>
-    /// PlayerController 에서 호출하여 초기화
+    /// PlayerController에서 호출하여 초기화합니다.
     /// </summary>
     public virtual void Initialize(PlayerController controller)
     {
-        Controller = controller;//Behavior가 속할 플레이어 컨트롤러 참조 저장
-        InputActions = controller.InputActions;//플레이어 컨트롤러가 가지고 있는 인풋액션 에셋 참조 가져오기
-        InputActions.PC.SetCallbacks(this); //인풋시스템 에 이 Behavior의 메서드를 코ㄹ백으로 등록
+        Controller = controller;
+        // 자식에서 SubscribeInput() 호출
     }
 
-    //  입력 콜백
-    public abstract void OnMove(InputAction.CallbackContext ctx);
-    public abstract void OnInteract(InputAction.CallbackContext ctx);
-    public abstract void OnCancel(InputAction.CallbackContext ctx);
-    public abstract void OnMenu(InputAction.CallbackContext ctx);
-    public abstract void OnDash(InputAction.CallbackContext ctx);
-    public abstract void OnAttackDirection(InputAction.CallbackContext ctx);
-    public abstract void OnAttack(InputAction.CallbackContext ctx);
-    public abstract void OnMousePosition(InputAction.CallbackContext ctx);
-    public abstract void OnMouseClick(InputAction.CallbackContext ctx);
-    public abstract void OnCtrl(InputAction.CallbackContext ctx);
+    /// <summary>입력 이벤트 구독</summary>
+    protected abstract void SubscribeInput();
+
+    /// <summary>입력 이벤트 구독 해제</summary>
+    protected abstract void UnsubscribeInput();
+
+    /// <summary>
+    /// MonoBehaviour 비활성화 시 구독 해제 자동 호출
+    /// </summary>
+    protected virtual void OnDisable()
+    {
+        UnsubscribeInput();
+    }
 }

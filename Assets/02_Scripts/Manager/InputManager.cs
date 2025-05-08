@@ -4,22 +4,22 @@ using System;
 
 public class InputManager : Singleton<InputManager>
 {
-
     public PlayerInputActions _input;
 
     public Vector2 MoveInput { get; private set; }
     public Vector2 MouseScreenPosition { get; private set; }
     public Vector3 MouseWorldPosition { get; private set; }
 
-    public event Action OnAttack;
-    public event Action OnInteract;
-
-    /// <summary>
-    /// 필독!  아이템 사용 시작시 마우스 무브와 클릭에 구독 사용이 끝날때 구독해제하면 됨
-    /// vector3 매개변수를 받는 void를 구독할것 EnableMouseTracking를 true해준뒤 사용할것
-    /// </summary>
-    public event Action<Vector3> OnMouseClick;
-    public event Action<Vector3> OnMouseMove;
+    // 새로 추가된 이벤트들
+    public event Action<Vector2> OnMove;          // 방향 입력(perform/cancel)
+    public event Action OnAttack;                 // 공격
+    public event Action OnInteract;               // 상호작용
+    public event Action OnDashStart;              // 대시 시작
+    public event Action OnDashEnd;                // 대시 종료
+    public event Action OnCtrlStart;              // Ctrl(하이라이트) 누름
+    public event Action OnCtrlEnd;                // Ctrl(하이라이트) 뗌
+    public event Action<Vector3> OnMouseClick;    // 마우스 클릭
+    public event Action<Vector3> OnMouseMove;     // 마우스 이동
 
     public bool EnableMouseTracking { get; set; } = false;
 
@@ -28,36 +28,48 @@ public class InputManager : Singleton<InputManager>
     protected override void Awake()
     {
         base.Awake();
-
-        if (_input == null)
-            _input = new PlayerInputActions(); // 런타임 생성
+        if (_input == null) _input = new PlayerInputActions();
         _mainCam = Camera.main;
 
-        _input.PC.Move.performed += ctx => MoveInput = ctx.ReadValue<Vector2>();
-        _input.PC.Move.canceled += _ => MoveInput = Vector2.zero;//_사용시 매개변수를 사용하지 않는 경우 ctx는 callback 매개변수를 받아야함
+        // 이동
+        _input.PC.Move.performed += ctx =>
+        {
+            MoveInput = ctx.ReadValue<Vector2>();
+            OnMove?.Invoke(MoveInput);
+        };
+        _input.PC.Move.canceled += _ =>
+        {
+            MoveInput = Vector2.zero;
+            OnMove?.Invoke(Vector2.zero);
+        };
 
+        // 공격 · 상호작용
         _input.PC.Attack.performed += _ => OnAttack?.Invoke();
         _input.PC.Interact.performed += _ => OnInteract?.Invoke();
 
+        // 대시
+        _input.PC.Dash.started += _ => OnDashStart?.Invoke();
+        _input.PC.Dash.canceled += _ => OnDashEnd?.Invoke();
+
+        // Ctrl (하이라이트)
+        _input.PC.Ctrl.started += _ => OnCtrlStart?.Invoke();
+        _input.PC.Ctrl.canceled += _ => OnCtrlEnd?.Invoke();
+
+        // 마우스 이동 · 클릭
         _input.PC.MousePosition.performed += ctx =>
         {
             if (!EnableMouseTracking) return;
             MouseScreenPosition = ctx.ReadValue<Vector2>();
             MouseWorldPosition = _mainCam.ScreenToWorldPoint(MouseScreenPosition);
-            OnMouseMove?.Invoke(MouseWorldPosition);//vector3 매개변수로 받는 메서드로 추가
+            OnMouseMove?.Invoke(MouseWorldPosition);
         };
-
         _input.PC.MouseClick.performed += _ =>
         {
             if (!EnableMouseTracking) return;
-            OnMouseClick?.Invoke(MouseWorldPosition);//vector3 매개변수로 받는 메서드로 추가
+            OnMouseClick?.Invoke(MouseWorldPosition);
         };
     }
-    public PlayerInputActions GetInputSafe()
-    {
-        if (_input == null) _input = new PlayerInputActions();
-        return _input;
-    }
-    private void OnEnable() => _input.PC.Enable();
-    private void OnDisable() => _input.PC.Disable();
+
+    public void OnEnable() => _input.PC.Enable();
+    public void OnDisable() => _input.PC.Disable();
 }

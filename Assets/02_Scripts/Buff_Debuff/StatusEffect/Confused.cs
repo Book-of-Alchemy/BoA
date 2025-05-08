@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Rooted : Debuff
+public class Confused : Debuff
 {
-    public Rooted(StatusEffectData data)
+    public Confused(StatusEffectData data)
     {
         this.data = data;
     }
-    public Rooted(StatusEffectData data, int value, int remainingTime, int tickInterval)
+    public Confused(StatusEffectData data, int value, int remainingTime, int tickInterval)
     {
         this.data = data;
         this.value = value;
@@ -24,7 +24,7 @@ public class Rooted : Debuff
             var behavior = player.GetComponent<DungeonBehavior>();
             if (behavior != null)
             {
-                behavior.canMove = false;
+                //behavior.canMove = false;
             }
         }
         else if (target is EnemyStats enemy)
@@ -32,7 +32,7 @@ public class Rooted : Debuff
             var controller = enemy.GetComponent<EnemyController>();
             if (controller != null)
             {
-                controller.canMove = false; 
+                controller.isConfused = true;
             }
         }
     }
@@ -52,7 +52,7 @@ public class Rooted : Debuff
             var controller = enemy.GetComponent<EnemyController>();
             if (controller != null)
             {
-                controller.canMove = true; 
+                controller.isConfused = false;
             }
         }
     }

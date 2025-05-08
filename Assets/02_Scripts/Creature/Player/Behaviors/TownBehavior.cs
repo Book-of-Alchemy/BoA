@@ -1,5 +1,6 @@
+// TownBehavior.cs
+
 using UnityEngine;
-using UnityEngine.InputSystem;
 using DG.Tweening;
 
 [RequireComponent(typeof(CharacterAnimator), typeof(SpriteRenderer))]
@@ -16,36 +17,48 @@ public class TownBehavior : PlayerBaseBehavior
     public override void Initialize(PlayerController controller)
     {
         base.Initialize(controller);
+
         _animator = GetComponent<CharacterAnimator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
+
+        SubscribeInput();
     }
 
-    public override void OnMove(InputAction.CallbackContext ctx)
+    protected override void SubscribeInput()
     {
-        Vector2 raw = ctx.ReadValue<Vector2>();
-        Vector2 dir = raw.normalized;
+        var im = InputManager;
+        im.OnMove += HandleMoveInput;
+        im.OnDashStart += () => _moveSpeed *= 2f;
+        im.OnDashEnd += () => _moveSpeed /= 2f;
+        im.OnInteract += HandleInteractInput;
+    }
 
-        if (ctx.performed && dir != Vector2.zero)
+    protected override void UnsubscribeInput()
+    {
+        var im = InputManager;
+        im.OnMove -= HandleMoveInput;
+        im.OnDashStart -= () => _moveSpeed *= 2f;
+        im.OnDashEnd -= () => _moveSpeed /= 2f;
+        im.OnInteract -= HandleInteractInput;
+    }
+
+    private void HandleMoveInput(Vector2 raw)
+    {
+        var dir = raw.normalized;
+        if (dir != Vector2.zero)
         {
-            // 좌우 반전 (수평 이동 시)
-            if (dir.x != 0f)
-                _spriteRenderer.flipX = dir.x < 0;
-
-            // 기존 트윈 있으면 죽이고
+            if (dir.x != 0f) _spriteRenderer.flipX = dir.x < 0;
             _moveTween?.Kill();
 
-            // 현재 위치 기준 _far 만큼 dir 방향으로 이동하는 트윈
-            Vector3 target = transform.position + (Vector3)dir * _far;
-
+            var target = transform.position + (Vector3)dir * _far;
             _moveTween = transform
-                .DOMove(target, _moveSpeed)    //  두 번째 파라미터는 속도
+                .DOMove(target, _moveSpeed)
                 .SetSpeedBased()
                 .SetEase(Ease.Linear)
                 .OnPlay(() => _animator.PlayMove());
         }
-        else if (ctx.canceled || dir == Vector2.zero)
+        else
         {
-            // 키 뗄 때 바로 멈추기
             if (_moveTween != null)
             {
                 _moveTween.Kill();
@@ -54,25 +67,8 @@ public class TownBehavior : PlayerBaseBehavior
         }
     }
 
-    public override void OnDash(InputAction.CallbackContext ctx)
+    private void HandleInteractInput()
     {
-        if (ctx.started)
-            _moveSpeed *= 2f;
-        else if (ctx.canceled)
-            _moveSpeed /= 2f;
+        // 필요 시 구현
     }
-
-    public override void OnInteract(InputAction.CallbackContext ctx)
-    {
-        //if (ctx.started)
-    }
-
-    // 사용 안 하는 콜백은 빈 구현
-    public override void OnAttack(InputAction.CallbackContext ctx) { }
-    public override void OnCancel(InputAction.CallbackContext ctx) { }
-    public override void OnMenu(InputAction.CallbackContext ctx) { }
-    public override void OnAttackDirection(InputAction.CallbackContext ctx) { }
-    public override void OnMousePosition(InputAction.CallbackContext ctx) { }
-    public override void OnMouseClick(InputAction.CallbackContext ctx) { }
-    public override void OnCtrl(InputAction.CallbackContext ctx) { }
 }

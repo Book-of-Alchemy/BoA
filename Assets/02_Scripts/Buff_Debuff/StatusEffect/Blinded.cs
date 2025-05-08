@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DefenceDown : Debuff
+public class Blinded : Debuff
 {
-    public DefenceDown(StatusEffectData data)
+    public Blinded(StatusEffectData data)
     {
         this.data = data;
     }
-    public DefenceDown(StatusEffectData data, int value, int remainingTime, int tickInterval)
+    public Blinded(StatusEffectData data, int value, int remainingTime, int tickInterval)
     {
         this.data = data;
         this.value = value;
@@ -19,12 +19,12 @@ public class DefenceDown : Debuff
     public override void OnApply(CharacterStats target)
     {
         base.OnApply(target);
-        modifier = new StatModifier("DefenceDown", -value, ModifierType.Flat);
-        target.statBlock.AddModifier(StatType.Defence, modifier);
+        modifier = new StatModifier("Blinded", -value, ModifierType.Flat);
+        target.statBlock.AddModifier(StatType.VisionRange, modifier);
     }
 
     public override void OnExpire(CharacterStats target)
     {
-        target.statBlock.RemoveModifier(StatType.Defence, modifier);
+        target.statBlock.RemoveModifier(StatType.VisionRange, modifier);
     }
 }

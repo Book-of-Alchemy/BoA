@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class AttackDown : Debuff
 {
-    public AttackDown(StatusEffectData data) 
+    
+    public AttackDown(StatusEffectData data)
     {
         this.data = data;
     }
-    public AttackDown(StatusEffectData data,float value, int remainingTime, int tickInterval)
+    public AttackDown(StatusEffectData data, int value, int remainingTime, int tickInterval)
     {
         this.data = data;
         this.value = value;
@@ -19,13 +20,12 @@ public class AttackDown : Debuff
     public override void OnApply(CharacterStats target)
     {
         base.OnApply(target);
-        target.attackMax -= value;
-        target.attackMin -= value;
+        modifier = new StatModifier("AttackDown", - value, ModifierType.Flat);
+        target.statBlock.AddModifier(StatType.Attack, modifier);
     }
 
     public override void OnExpire(CharacterStats target)
     {
-        target.attackMax += value;
-        target.attackMin += value;
+        target.statBlock.RemoveModifier(StatType.Attack, modifier);
     }
 }

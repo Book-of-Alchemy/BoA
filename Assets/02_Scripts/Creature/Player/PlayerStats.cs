@@ -32,20 +32,15 @@ public class PlayerStats : CharacterStats
     public void LevelUp()
     {
         level++;
-        MaxHealth += 10f;
+        statBlock.SetBaseValue(StatType.MaxHealth, 100 + 10 * level);
         CurrentHealth = MaxHealth;
-        MaxMana += 5f;
+        statBlock.SetBaseValue(StatType.MaxMana, 50 + 5 * level);
         CurrentMana = MaxMana;
-        attackMin += 1f;
-        attackMax += 1f;
-        defense += 1f;
+        statBlock.SetBaseValue(StatType.Attack, 10 + 1 * level);
         Debug.Log("레벨업 " + level);
     }
 
-    public override void TakeDamage(float amount)
-    {
-        base.TakeDamage(amount);
-    }
+
 
     public override void Heal(float amount)
     {

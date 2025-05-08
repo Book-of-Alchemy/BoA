@@ -19,7 +19,7 @@ public class Asleep : Debuff
     {
         base.OnApply(target);
         stats = target;
-        unit = target.GetComponent<UnitBase>();
+        unit = target.unitBase;
         target.OnTakeDamage += WakeUp;
 
         Tick(target);
