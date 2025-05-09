@@ -42,12 +42,14 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler, 
     {
         _imageObject = _itemSprite.gameObject;
         _textObject = _countTxt.gameObject;
+
         HideIcon();
         HideText();
 
         if (_borderImage != null)
             _borderImage.color = _normalBorderColor;
     }
+
     public void Initialize(UI_Inventory uiInventory)
     {
         _uiInventory = uiInventory;
@@ -93,24 +95,37 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler, 
     }
     public void SetItem(InventoryItem item) // 슬롯에 아이템 등록
     {
-        _item = item;
-        if (HasItem)
-            _btn.onClick.AddListener(OnClickItem);
+        if (item == null)
+        {
+           RemoveItem();
+           return;
+        }
 
-        _countTxt.text = _item.Amount.ToString();
-        _itemSprite.sprite = _item.GetSprite();
+        _item = item;
+        _btn?.onClick.AddListener(OnClickItem);
+
+        if (_countTxt != null) _countTxt.text = _item.Amount.ToString();
+        if (_itemSprite != null) _itemSprite.sprite = _item.GetSprite();
+
+        _imageObject = _itemSprite.gameObject;
+        _textObject = _countTxt.gameObject;
         ShowIcon();
         ShowText();
     }
 
     public void RemoveItem() // 슬롯에서 아이템제거
     {
-        _btn.onClick.RemoveAllListeners();
+        if (!HasItem) return;
+        
+        if (_btn != null)
+                _btn.onClick.RemoveAllListeners();
+        
         _item = null;
-        _itemSprite.sprite = null;
-        _countTxt.text = string.Empty;
-        HideIcon();
-        HideText();
+        if (_itemSprite != null) _itemSprite.sprite = null;
+        if (_countTxt != null) _countTxt.text = string.Empty;
+    
+        if (_imageObject != null) HideIcon();
+        if (_textObject != null) HideText();
     }
 
     public void ReduceItem(int amount = 1) // 아이템 수량감소
