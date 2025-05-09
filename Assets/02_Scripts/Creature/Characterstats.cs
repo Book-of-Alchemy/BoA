@@ -67,7 +67,7 @@ public abstract class CharacterStats : MonoBehaviour
         get => currentShield;
         set
         { 
-            currentShield = value;
+            currentShield = MathF.Max(0, value);
             OnShieldChanged?.Invoke();
         } 
     }
@@ -142,7 +142,16 @@ public abstract class CharacterStats : MonoBehaviour
 
     [Header("버프 디버프")]
     public List<StatusEffect> activeEffects = new();
-    public bool isHidden = false;
+    [SerializeField] protected bool isHidden = false;
+    public bool IsHidden
+    {
+        get => isHidden;
+        set
+        {
+            isHidden = value;
+            OnHide();
+        }
+    }
     public bool isInvincible =false;
     public bool hasImmunityToAll = false;
 
@@ -162,7 +171,8 @@ public abstract class CharacterStats : MonoBehaviour
 
 
     public UnitBase unitBase { get; protected set; }
-    private CharacterAnimator _anim;
+    protected CharacterAnimator _anim;
+    protected SpriteRenderer _spriteRenderer;
 
     //체력 변경 이벤트
     public event Action OnHealthRatioChanged;
@@ -176,6 +186,7 @@ public abstract class CharacterStats : MonoBehaviour
     {
         _anim = GetComponent<CharacterAnimator>();
         unitBase = GetComponent<UnitBase>();
+
         statBlock.GetEntry(StatType.MaxHealth).onStatChanged += OnHealthRatioChanged;
         statBlock.GetEntry(StatType.MaxHealth).onStatChanged += OnManaChanged;
     }
@@ -262,6 +273,11 @@ public abstract class CharacterStats : MonoBehaviour
     {
         float multiplier = ShieldMultiplier / 100f;
         CurrentShield += amount * multiplier;
+    }
+
+    public virtual void OnHide()
+    {
+        _spriteRenderer.color = new Color(1f,1f, 1f, IsHidden ? 0.7f: 1f);
     }
     public virtual void Die()
     {

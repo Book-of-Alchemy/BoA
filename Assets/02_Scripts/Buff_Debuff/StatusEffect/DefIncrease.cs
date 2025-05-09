@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DefenceIncrease : StatBuff
+public class DefIncrease : StatBuff
 {
-    public DefenceIncrease(StatusEffectData data)
+    public DefIncrease(StatusEffectData data)
     {
         this.data = data;
     }
-    public DefenceIncrease(StatusEffectData data, int value, int remainingTime, int tickInterval)
+    public DefIncrease(StatusEffectData data, int value, int remainingTime, int tickInterval)
     {
         this.data = data;
         this.value = value;

@@ -4,24 +4,44 @@ using UnityEngine;
 
 public class Shield : Buff
 {
+    public override bool IsExpired => false;
+    public Shield(StatusEffectData data)
+    {
+        this.data = data;
+    }
+    public Shield(StatusEffectData data, int value, int remainingTime, int tickInterval)
+    {
+        this.data = data;
+        this.value = value;
+        this.remainingTime = remainingTime;
+        this.tickInterval = tickInterval;
+    }
     public override void OnApply(CharacterStats target)
     {
+        this.target = target;
         foreach (var effect in target.activeEffects.ToArray())
         {
             if (effect.GetType() == this.GetType())
             {
-                if (effect.value < value)//구 effect value 가 낮다면 파기후 신 effect 적용
-                {
-                    effect.OnExpire(target);
-                    target.activeEffects.Remove(effect);
-                    break;
-                }
                 shouldRegister = false;
             }
         }
-        if (!shouldRegister) return;
-        modifier = new StatModifier("AttackIncrese", value, ModifierType.Flat);
-        target.statBlock.AddModifier(StatType.Attack, modifier);
+        target.GetShield(value);
+        if(!shouldRegister)
+            return;
+        target.OnShieldChanged += CheckShield;
 
+    }
+
+    public override void OnExpire(CharacterStats target)
+    {
+        target.OnShieldChanged -= CheckShield;
+    }
+
+    protected virtual void CheckShield()
+    {
+        if (target.CurrentShield > 0)
+            return;
+        OnExpire(target);
     }
 }

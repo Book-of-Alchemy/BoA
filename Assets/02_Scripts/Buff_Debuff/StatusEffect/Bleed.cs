@@ -5,6 +5,17 @@ using UnityEngine;
 
 public class Bleed : StackableDebuff<Bleed>
 {
+    public Bleed(StatusEffectData data)
+    {
+        this.data = data;
+    }
+    public Bleed(StatusEffectData data, int value, int remainingTime, int tickInterval)
+    {
+        this.data = data;
+        this.value = value;
+        this.remainingTime = remainingTime;
+        this.tickInterval = tickInterval;
+    }
     public override void OnApply(CharacterStats target)
     {
         base.OnApply(target);

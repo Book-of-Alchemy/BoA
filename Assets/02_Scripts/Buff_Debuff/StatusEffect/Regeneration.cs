@@ -4,6 +4,17 @@ using UnityEngine;
 
 public class Regeneration : Buff
 {
+    public Regeneration(StatusEffectData data)
+    {
+        this.data = data;
+    }
+    public Regeneration(StatusEffectData data, int value, int remainingTime, int tickInterval)
+    {
+        this.data = data;
+        this.value = value;
+        this.remainingTime = remainingTime;
+        this.tickInterval = tickInterval;
+    }
     public override void OnApply(CharacterStats target)
     {
         base.OnApply(target);
