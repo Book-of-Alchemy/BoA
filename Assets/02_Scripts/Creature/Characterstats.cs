@@ -10,7 +10,6 @@ public abstract class CharacterStats : MonoBehaviour
     public StatBlock statBlock = new StatBlock(new Dictionary<StatType, int>
     {
         {StatType.MaxHealth, 100 },
-        {StatType.MaxShield, 0 },
         {StatType.MaxMana, 50 },
         {StatType.Attack, 10 },
         {StatType.Defence, 5 },
@@ -40,6 +39,8 @@ public abstract class CharacterStats : MonoBehaviour
         {StatType.TrapDmg, 100 },
         {StatType.ScrollDmg, 100 },
         {StatType.FinalDmg, 100 },
+        {StatType.ShieldMultiplier, 100 },
+        {StatType.RegenerationMultiplier, 100 },
     });
 
 
@@ -61,7 +62,15 @@ public abstract class CharacterStats : MonoBehaviour
         }
     }
     [SerializeField] protected float currentShield = 0f;
-    public float CurrentShield { get => currentShield; set => currentShield = value; }
+    public float CurrentShield 
+    { 
+        get => currentShield;
+        set
+        { 
+            currentShield = value;
+            OnShieldChanged?.Invoke();
+        } 
+    }
     public float MaxMana => statBlock.Get(StatType.MaxMana);
     [SerializeField] protected float currentMana = 50f;
     public float CurrentMana
@@ -73,6 +82,11 @@ public abstract class CharacterStats : MonoBehaviour
             OnManaChanged?.Invoke();
         }
     }
+    //쉴드 체력 재생
+    public int RegenerationMultiplier => statBlock.Get(StatType.RegenerationMultiplier);
+    public int ShieldMultiplier => statBlock.Get(StatType.ShieldMultiplier);
+    
+
     //공격력
     public int AttackDamage => statBlock.Get(StatType.Attack);
     public int AttackMin => Mathf.RoundToInt(AttackDamage * 0.9f);
@@ -152,6 +166,7 @@ public abstract class CharacterStats : MonoBehaviour
 
     //체력 변경 이벤트
     public event Action OnHealthRatioChanged;
+    public event Action OnShieldChanged;
     public event Action OnManaChanged;
     public event Action<DamageInfo> OnTakeDamage;
     public event Action OnTileChanged;
@@ -210,6 +225,9 @@ public abstract class CharacterStats : MonoBehaviour
     public virtual void TakeDamage(DamageInfo damageInfo)
     {
         float value = DamageCalculator.CalculateDamage(damageInfo);
+        if(isInvincible) 
+            value = 0;
+
         if (CurrentShield > 0)
         {
             if (value > CurrentShield)
@@ -235,10 +253,16 @@ public abstract class CharacterStats : MonoBehaviour
 
     public virtual void Heal(float amount)
     {
-        CurrentHealth += amount;
-        Debug.Log($"{gameObject.name}는 {amount}만큼 회복되었습니다.");
+        float multiplier = RegenerationMultiplier / 100f;
+        CurrentHealth += amount * multiplier;
+        Debug.Log($"{gameObject.name}는 {amount * multiplier}만큼 회복되었습니다.");
     }
 
+    public virtual void GetShield(float amount)
+    {
+        float multiplier = ShieldMultiplier / 100f;
+        CurrentShield += amount * multiplier;
+    }
     public virtual void Die()
     {
         Debug.Log($"{gameObject.name}이(가) 사망했습니다.");
@@ -262,7 +286,6 @@ public abstract class CharacterStats : MonoBehaviour
 
         OnTileChanged?.Invoke();
     }
-
 
     public void ApplyEffect(StatusEffect effect)
     {

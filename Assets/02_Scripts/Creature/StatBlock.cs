@@ -7,7 +7,6 @@ using UnityEngine;
 public enum StatType
 {
     MaxHealth,
-    MaxShield,
     MaxMana,
     Attack,
     Defence,
@@ -37,6 +36,8 @@ public enum StatType
     TrapDmg,
     ScrollDmg,
     FinalDmg,
+    ShieldMultiplier,
+    RegenerationMultiplier,
 }
 public enum ModifierType
 {

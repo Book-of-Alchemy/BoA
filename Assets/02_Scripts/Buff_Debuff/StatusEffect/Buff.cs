@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StatBuff : StatusEffect
+public class Buff : StatusEffect
 {
     protected StatModifier modifier;
     protected CharacterStats target;
@@ -30,3 +30,4 @@ public class StatBuff : StatusEffect
         }
     }
 }
+

@@ -2,11 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StatBuff : StatusEffect
+public class Shield : Buff
 {
-    protected StatModifier modifier;
-    protected CharacterStats target;
-
     public override void OnApply(CharacterStats target)
     {
         foreach (var effect in target.activeEffects.ToArray())
@@ -19,14 +16,12 @@ public class StatBuff : StatusEffect
                     target.activeEffects.Remove(effect);
                     break;
                 }
-
-                if (effect.remainingTime < remainingTime)//신 effect value가 더 낮지만 remaining이 더 많다면 신 remaining 적용
-                {
-                    effect.remainingTime = remainingTime;
-                }
-
                 shouldRegister = false;
             }
         }
+        if (!shouldRegister) return;
+        modifier = new StatModifier("AttackIncrese", value, ModifierType.Flat);
+        target.statBlock.AddModifier(StatType.Attack, modifier);
+
     }
 }
