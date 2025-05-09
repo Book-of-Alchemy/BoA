@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 570ed5bf6f410b041b0e35885a685fe6, type: 3}
+  m_Name: Bless of Wind Fairy
+  m_EditorClassIdentifier: 
+  id: 190116
+  name_kr: "\uBC14\uB78C \uC815\uB839\uC758 \uCD95\uBCF5"
+  name_en: Bless of Wind Fairy
+  description: "\uC790\uC2E0\uC758 \uACF5\uACA9 \uB610\uB294 \uC544\uC774\uD15C \uC0AC\uC6A9\uC73C\uB85C
+    \uD55C \uBC88\uC5D0 \uC14B \uC774\uC0C1\uC758 \uC801\uC758 \uC704\uCE58\uAC00
+    \uBCC0\uACBD\uB420 \uACBD\uC6B0 30\uAE00\uB85C\uBC8C\uD0C0\uC784\uAC04 \uC790\uC2E0\uC758
+    \uBAA8\uB4E0 \uC18D\uB3C4\uAC00 100% \uC99D\uAC00\uD569\uB2C8\uB2E4."
+  icon_sprite_id: 
+  icon_sprite: {fileID: 0}
+  rarity: 1

@@ -40,10 +40,7 @@ public class PlayerStats : CharacterStats
         Debug.Log("레벨업 " + level);
     }
 
-    public override void TakeDamage(float amount)
-    {
-        base.TakeDamage(amount);
-    }
+
 
     public override void Heal(float amount)
     {

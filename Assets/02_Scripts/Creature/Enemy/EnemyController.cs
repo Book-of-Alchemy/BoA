@@ -2,6 +2,7 @@ using UnityEngine;
 using DG.Tweening;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 public enum EnemyState
 {
@@ -15,6 +16,7 @@ public class EnemyController : MonoBehaviour
     public float MoveSpeed => TurnManager.Instance.turnSpeed;
     public bool IsDead => _enemyStats == null ? true : _enemyStats.CurrentHealth <= 0;
     public bool canMove = true;
+    public bool isConfused = false;
     public EnemyState _currentState = EnemyState.Idle;
     public EnemySkill curSkill;
     private Tile _lastCheckedTile;
@@ -29,7 +31,7 @@ public class EnemyController : MonoBehaviour
     AttackBaseBehaviour attackBehaviour;
     IMovementStrategy moveStrategy;
     CharacterAnimator characterAnimator;
-    PlayerStats _playerStats;
+    CharacterStats _targetStats;
     EnemyStats _enemyStats;
     Tween _currentTween;
     SpriteRenderer _spriteRenderer;
@@ -47,20 +49,20 @@ public class EnemyController : MonoBehaviour
 
     void Start()
     {
-        _playerStats = GameManager.Instance.PlayerTransform.GetComponent<PlayerStats>();
-        _spriteRenderer.sortingOrder = -Mathf.RoundToInt(transform.position.y)*10;
+        _targetStats = GameManager.Instance.PlayerTransform.GetComponent<PlayerStats>();
+        _spriteRenderer.sortingOrder = -Mathf.RoundToInt(transform.position.y) * 10;
         UpdateVisual();
     }
 
     public void TakeTurn()
     {
-        if(IsDead)
+        if (IsDead)
         {
             EndTurn();
             return;
         }
 
-        if (_currentTween != null && _currentTween.IsActive()) 
+        if (_currentTween != null && _currentTween.IsActive())
             _currentTween.Kill();
 
         switch (_currentState)
@@ -124,23 +126,36 @@ public class EnemyController : MonoBehaviour
         UpdateVisual();
     }
 
-    public void MoveTo(Vector2Int targetPosition,  Action onComplete = null)
+    public void MoveTo(Vector2Int targetPosition, Action onComplete = null)
     {
-        if(!canMove)
+        if (!canMove)
         {
             EndTurn();
             return;
         }
 
+        if (isConfused)
+        {
+            List<Tile> tiles = TileUtility.GetAdjacentTileList(_enemyStats.curLevel, _enemyStats.CurTile, true);
+            foreach (Tile tile in tiles.ToArray())
+            {
+                if (tile.IsWalkable)
+                    tiles.Remove(tile);
+            }
+
+            if (tiles != null)
+                targetPosition = tiles[UnityEngine.Random.Range(0, tiles.Count)].gridPosition;
+        }
+
         Vector3 position = new Vector3(targetPosition.x, targetPosition.y, 0);
         _spriteRenderer.sortingOrder = -targetPosition.y * 10;
         if (moveStrategy != null)
-            moveStrategy.Move(this.transform , position, characterAnimator, onComplete);
+            moveStrategy.Move(this.transform, position, characterAnimator, onComplete);
         else
             BasicMove(position, onComplete);
     }
 
-    void BasicMove(Vector3 targetPosition,  Action onComplete = null)
+    void BasicMove(Vector3 targetPosition, Action onComplete = null)
     {
         characterAnimator?.PlayMove();
 
@@ -150,16 +165,16 @@ public class EnemyController : MonoBehaviour
             .OnComplete(() =>
             {
                 onComplete?.Invoke();
-                });
+            });
     }
     //애니메이션 이벤트에 추가해야함
     public void OnAttackHit()
     {
-        if (_playerStats != null)
-            _enemyStats.Attack(_playerStats);
+        if (_targetStats != null)
+            _enemyStats.Attack(_targetStats);
         EndTurn();
     }
-    public void Attack( Action onComplete = null)
+    public void Attack(Action onComplete = null)
     {
         onComplete?.Invoke();
         characterAnimator?.PlayAttack();
@@ -192,9 +207,9 @@ public class EnemyController : MonoBehaviour
     // 플레이어 바라보기 메서드(감지되면 호출하기)
     private void FlipTowardsPlayer()
     {
-        if (_playerStats == null) return;  // 안전장치
+        if (_targetStats == null) return;  // 안전장치
 
-        float dirX = _playerStats.transform.position.x - transform.position.x;//플레이어 방향 구하기
+        float dirX = _targetStats.transform.position.x - transform.position.x;//플레이어 방향 구하기
         if (Mathf.Abs(dirX) > 0.01f)
         {
             Vector3 scale = transform.localScale;
@@ -205,13 +220,13 @@ public class EnemyController : MonoBehaviour
 
     public void UpdateVisual()
     {
-        if (!_spriteRenderer|| !_enemyStats) 
+        if (!_spriteRenderer || !_enemyStats)
             return;
 
-        if(_enemyStats.CurTile == null)
+        if (_enemyStats.CurTile == null)
             return;
 
-       
+
         bool shouldEnable;
 
         if (_enemyStats.CurTile.IsOnSight)

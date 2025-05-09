@@ -31,6 +31,7 @@ public class Tile
     public Level curLevel;
     public Vector2Int gridPosition;
     public TileType tileType;
+    public event Action<DamageInfo> onAffectOnEnvironmet;
     public EnvironmentType environmentType;
     public bool isDoorPoint;
 

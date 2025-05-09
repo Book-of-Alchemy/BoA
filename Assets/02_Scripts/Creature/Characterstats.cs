@@ -66,7 +66,8 @@ public abstract class CharacterStats : MonoBehaviour
     public int fire;
     public int water;
     public int ice;
-    public int electric;
+    public int lightning;
+
     public int earth;
     public int wind;
     public int light;
@@ -151,15 +152,18 @@ public abstract class CharacterStats : MonoBehaviour
 
 
 
+    /// <summary>
+    /// 일반 공격의 경우
+    /// </summary>
     public virtual void Attack(CharacterStats target, DamageType damageType = DamageType.None)
     {
         //기본 데미지 계산
         float baseDamage = UnityEngine.Random.Range(attackMin, attackMax);
         //치명타 게산
-        bool isCrit = UnityEngine.Random.value < critChance;
+        bool isCrit = UnityEngine.Random.value < critChance / 100f;
         if (isCrit)
         {
-            baseDamage *= critDamage;
+            baseDamage *= critDamage / 100f;
             Debug.Log($"{gameObject.name}가 치명타!");
         }
 
@@ -167,23 +171,26 @@ public abstract class CharacterStats : MonoBehaviour
         target.TakeDamage(finalDamage);
         Debug.Log($"{gameObject.name}가 {target.gameObject.name}을 공격함니다." + $"속성:{damageType}, 최종 대미지:{finalDamage}");
     }
+    /// <summary>
+    /// 공격 배율이 있는경우
+    /// </summary>
     public virtual void Attack(CharacterStats target, float multiplier, DamageType damageType = DamageType.None)
     {
         //기본 데미지 계산
         float baseDamage = UnityEngine.Random.Range(attackMin, attackMax) * multiplier;
         //치명타 게산
-        bool isCrit = UnityEngine.Random.value < critChance;
+        bool isCrit = UnityEngine.Random.value < critChance / 100f;
         if (isCrit)
         {
-            baseDamage *= critDamage;
+            baseDamage *= critDamage / 100f;
             Debug.Log($"{gameObject.name}가 치명타!");
         }
 
         float finalDamage = DamageCalculator.CalculateDamage(target, baseDamage, damageType);
-        target.TakeDamage(finalDamage);
+        target.TakeDamage(finalDamage, damageType);
         Debug.Log($"{gameObject.name}가 {target.gameObject.name}을 공격함니다." + $"속성:{damageType}, 최종 대미지:{finalDamage}");
     }
-    public virtual void TakeDamage(float amount)
+    public virtual void TakeDamage(float amount, DamageType damageType = DamageType.None)
     {
         CurrentHealth -= amount;
         UIManager.ShowOnce<DamageText>(amount, transform.position);
@@ -223,6 +230,11 @@ public abstract class CharacterStats : MonoBehaviour
 
     public void ApplyEffect(StatusEffect effect)
     {
+        if (effect.IsStackable)
+        {
+
+        }
+
         effect.Initialize(TurnManager.Instance.globalTime);
         activeEffects.Add(effect);
         effect.OnApply(this);
@@ -250,4 +262,8 @@ public abstract class CharacterStats : MonoBehaviour
             .Any(im => im.BlockedTypes.Contains(effectType));
     }
 
+    public void AffectOnTile(DamageInfo damageInfo)
+    {
+
+    }
 }

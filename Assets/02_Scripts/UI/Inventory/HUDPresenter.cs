@@ -16,9 +16,10 @@ public class HUDPresenter
         }
     }
 
-    public void UpdateUIBar(float val)
+    public void UpdateUIBar()
     {
         //UI 바 업데이트
+        float val = _playerStats.CurrentHealth/_playerStats.MaxHealth;
         _hud.UpdateHp(val);
     }
 
