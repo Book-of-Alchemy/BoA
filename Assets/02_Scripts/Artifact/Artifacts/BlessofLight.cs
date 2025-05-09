@@ -12,12 +12,12 @@ public class BlessofLight : Artifact
     {
         base.Equip(player);
         modifier = new StatModifier("BlessofLight", 20, ModifierType.Precent);
-        player.statBlock.AddModifier(StatType.LightAtk, modifier);
+        player.statBlock.AddModifier(StatType.LightDmg, modifier);
     }
 
     public override void UnEquip(PlayerStats player)
     {
         base.UnEquip(player);
-        player.statBlock.RemoveModifier(StatType.LightAtk,modifier);
+        player.statBlock.RemoveModifier(StatType.LightDmg,modifier);
     }
 }

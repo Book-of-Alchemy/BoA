@@ -12,12 +12,12 @@ public class BlessofLightning : Artifact
     {
         base.Equip(player);
         modifier = new StatModifier("BlessofLightning", 20, ModifierType.Precent);
-        player.statBlock.AddModifier(StatType.ElectricAtk, modifier);
+        player.statBlock.AddModifier(StatType.ElectricDmg, modifier);
     }
 
     public override void UnEquip(PlayerStats player)
     {
         base.UnEquip(player);
-        player.statBlock.RemoveModifier(StatType.ElectricAtk,modifier);
+        player.statBlock.RemoveModifier(StatType.ElectricDmg,modifier);
     }
 }

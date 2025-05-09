@@ -12,12 +12,12 @@ public class DarkAmplifier : Artifact
     {
         base.Equip(player);
         modifier = new StatModifier("DarkAmplifier", 30, ModifierType.Precent);
-        player.statBlock.AddModifier(StatType.DarkAtk, modifier);
+        player.statBlock.AddModifier(StatType.DarkDmg, modifier);
     }
 
     public override void UnEquip(PlayerStats player)
     {
         base.UnEquip(player);
-        player.statBlock.RemoveModifier(StatType.DarkAtk, modifier);
+        player.statBlock.RemoveModifier(StatType.DarkDmg, modifier);
     }
 }

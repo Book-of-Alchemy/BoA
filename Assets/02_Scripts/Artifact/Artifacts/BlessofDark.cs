@@ -12,12 +12,12 @@ public class BlessofDark : Artifact
     {
         base.Equip(player);
         modifier = new StatModifier("BlessofDark", 20, ModifierType.Precent);
-        player.statBlock.AddModifier(StatType.DarkAtk, modifier);
+        player.statBlock.AddModifier(StatType.DarkDmg, modifier);
     }
 
     public override void UnEquip(PlayerStats player)
     {
         base.UnEquip(player);
-        player.statBlock.RemoveModifier(StatType.DarkAtk, modifier);
+        player.statBlock.RemoveModifier(StatType.DarkDmg, modifier);
     }
 }

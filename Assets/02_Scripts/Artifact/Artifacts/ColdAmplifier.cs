@@ -13,12 +13,12 @@ public class ColdAmplifier : Artifact
     {
         base.Equip(player);
         modifier = new StatModifier("ColdAmplifier", 30, ModifierType.Precent);
-        player.statBlock.AddModifier(StatType.IceAtk, modifier);
+        player.statBlock.AddModifier(StatType.IceDmg, modifier);
     }
 
     public override void UnEquip(PlayerStats player)
     {
         base.UnEquip(player);
-        player.statBlock.RemoveModifier(StatType.IceAtk, modifier);
+        player.statBlock.RemoveModifier(StatType.IceDmg, modifier);
     }
 }

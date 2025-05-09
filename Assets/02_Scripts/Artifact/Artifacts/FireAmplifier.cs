@@ -12,12 +12,12 @@ public class FireAmplifier : Artifact
     {
         base.Equip(player);
         modifier = new StatModifier("FireAmplifier", 30, ModifierType.Precent);
-        player.statBlock.AddModifier(StatType.FireAtk, modifier);
+        player.statBlock.AddModifier(StatType.FireDmg, modifier);
     }
 
     public override void UnEquip(PlayerStats player)
     {
         base.UnEquip(player);
-        player.statBlock.RemoveModifier(StatType.FireAtk, modifier);
+        player.statBlock.RemoveModifier(StatType.FireDmg, modifier);
     }
 }

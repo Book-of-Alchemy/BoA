@@ -12,12 +12,12 @@ public class EssenceofCold : Artifact
     {
         base.Equip(player);
         modifier = new StatModifier("EssenceofCold", 20, ModifierType.Precent);
-        player.statBlock.AddModifier(StatType.IceDef,modifier);
+        player.statBlock.AddModifier(StatType.IceResist, modifier);
     }
 
     public override void UnEquip(PlayerStats player)
     {
         base.UnEquip(player);
-        player.statBlock.RemoveModifier(StatType.IceDef,modifier);
+        player.statBlock.RemoveModifier(StatType.IceResist, modifier);
     }
 }

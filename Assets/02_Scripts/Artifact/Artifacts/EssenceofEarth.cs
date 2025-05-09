@@ -12,12 +12,12 @@ public class EssenceofEarth : Artifact
     {
         base.Equip(player);
         modifier = new("EssenceofEarth", 20, ModifierType.Precent);
-        player.statBlock.AddModifier(StatType.EarthDef, modifier);
+        player.statBlock.AddModifier(StatType.EarthResist, modifier);
     }
 
     public override void UnEquip(PlayerStats player)
     {
         base.UnEquip(player);
-        player.statBlock.RemoveModifier(StatType.EarthDef, modifier);
+        player.statBlock.RemoveModifier(StatType.EarthResist, modifier);
     }
 }

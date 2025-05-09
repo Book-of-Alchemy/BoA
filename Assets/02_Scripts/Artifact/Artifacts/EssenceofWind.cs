@@ -12,13 +12,13 @@ public class EssenceofWind : Artifact
     {
         base.Equip(player);
         modifier = new StatModifier("EssenceofWind", 20, ModifierType.Precent);
-        player.statBlock.AddModifier(StatType.WindDef, modifier);
+        player.statBlock.AddModifier(StatType.WindResist, modifier);
         
     }
 
     public override void UnEquip(PlayerStats player)
     {
         base.UnEquip(player);
-        player.statBlock.RemoveModifier(StatType.WindDef, modifier);
+        player.statBlock.RemoveModifier(StatType.WindResist, modifier);
     }
 }

@@ -11,13 +11,13 @@ public class WindAmpllifier : Artifact
     {
         base.Equip(player);
         modifier = new StatModifier("WindAmpllifier", 30, ModifierType.Precent);
-        player.statBlock.AddModifier(StatType.WindAtk, modifier);
+        player.statBlock.AddModifier(StatType.WindDmg, modifier);
     }
 
     public override void UnEquip(PlayerStats player)
     {
         base.UnEquip(player);
-        player.statBlock.RemoveModifier(StatType.WindAtk, modifier);
+        player.statBlock.RemoveModifier(StatType.WindDmg, modifier);
     }
 
 }

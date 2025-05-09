@@ -12,12 +12,12 @@ public class EssenceOfWater : Artifact
     {
         base.Equip(player);
         modifier = new StatModifier("EssenceofWater", 20, ModifierType.Precent);
-        player.statBlock.AddModifier(StatType.WaterDef, modifier);
+        player.statBlock.AddModifier(StatType.WaterResist, modifier);
     }
 
     public override void UnEquip(PlayerStats player)
     {
         base.UnEquip(player);
-        player.statBlock.RemoveModifier(StatType.WaterDef, modifier);
+        player.statBlock.RemoveModifier(StatType.WaterResist, modifier);
     }
 }

@@ -12,12 +12,12 @@ public class EssemceofLight : Artifact
     {
         base.Equip(player);
         modifier = new StatModifier("EssenceofLight",20,ModifierType.Precent);
-        player.statBlock.AddModifier(StatType.LightDef, modifier);
+        player.statBlock.AddModifier(StatType.LightResist, modifier);
     }
 
     public override void UnEquip(PlayerStats player)
     {
         base.UnEquip(player);
-        player.statBlock.RemoveModifier(StatType.LightDef, modifier);
+        player.statBlock.RemoveModifier(StatType.LightResist, modifier);
     }
 }

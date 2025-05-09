@@ -12,12 +12,12 @@ public class WaterAmplifier : Artifact
     {
         base.Equip(player);
         modifier = new StatModifier("WaterAmplifier", 30, ModifierType.Precent);
-        player.statBlock.AddModifier(StatType.WaterAtk, modifier);
+        player.statBlock.AddModifier(StatType.WaterDmg, modifier);
     }
 
     public override void UnEquip(PlayerStats player)
     {
         base.UnEquip(player);
-        player.statBlock.RemoveModifier(StatType.WaterAtk, modifier);
+        player.statBlock.RemoveModifier(StatType.WaterDmg, modifier);
     }
 }

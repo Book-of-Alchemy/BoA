@@ -134,7 +134,7 @@ public class DamageItem : BaseItem
             {
                 if(data.attribute == Attribute.None)
                     EffectProjectileManager.Instance.PlayEffect(ojTile.gridPosition, 30013);
-                ojTile.CharacterStatsOnTile.TakeDamage(DamageCalculator.CalculateDamage(new DamageInfo(data.effect_value,(DamageType)data.attribute,_player,ojTile.CharacterStatsOnTile,false)));
+                ojTile.CharacterStatsOnTile.TakeDamage(new DamageInfo(data.effect_value,(DamageType)data.attribute,_player,ojTile.CharacterStatsOnTile,false));
             }
         }
         Debug.Log(data.name_en);

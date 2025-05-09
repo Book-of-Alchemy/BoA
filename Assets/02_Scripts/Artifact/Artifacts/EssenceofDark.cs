@@ -12,12 +12,12 @@ public class EssenceofDark : Artifact
     {
         base.Equip(player);
         modifier = new StatModifier("EssenceofDark", 20, ModifierType.Precent);
-        player.statBlock.AddModifier(StatType.DarkDef, modifier);
+        player.statBlock.AddModifier(StatType.DarkResist, modifier);
     }
 
     public override void UnEquip(PlayerStats player)
     {
         base.UnEquip(player);
-        player.statBlock.RemoveModifier(StatType.DarkDef, modifier);
+        player.statBlock.RemoveModifier(StatType.DarkResist, modifier);
     }
 }
