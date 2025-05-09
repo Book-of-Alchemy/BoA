@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Poison : StackableDebuff<Poison>
 {
+
     public override void Tick(CharacterStats target)
     {
         float damage = value * stackCount;

@@ -126,9 +126,10 @@ public abstract class CharacterStats : MonoBehaviour
     public int attackRange => statBlock.Get(StatType.AttackRange);
 
 
-    [Header("버프 디버프")]//위치 아래로 내릴것
+    [Header("버프 디버프")]
     public List<StatusEffect> activeEffects = new();
-
+    public bool isHidden = false;
+    public bool isInvincible =false;
     public bool hasImmunityToAll = false;
 
     [Header("Level & Tile")]
@@ -153,6 +154,7 @@ public abstract class CharacterStats : MonoBehaviour
     public event Action OnHealthRatioChanged;
     public event Action OnManaChanged;
     public event Action<DamageInfo> OnTakeDamage;
+    public event Action OnTileChanged;
 
 
     protected virtual void Awake()
@@ -257,6 +259,8 @@ public abstract class CharacterStats : MonoBehaviour
 
         //curTile 갱신
         CurTile = targetTile;
+
+        OnTileChanged?.Invoke();
     }
 
 
