@@ -285,7 +285,7 @@ public abstract class CharacterStats : MonoBehaviour
     public bool HasImmunity(Type effectType)
     {
         return activeEffects
-            .OfType<IImunity>()
+            .OfType<IImmunity>()
             .Any(im => im.BlockedTypes.Contains(effectType));
     }
 }
