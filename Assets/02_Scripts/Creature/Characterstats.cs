@@ -178,7 +178,9 @@ public abstract class CharacterStats : MonoBehaviour
     public event Action OnHealthRatioChanged;
     public event Action OnShieldChanged;
     public event Action OnManaChanged;
+    public event Action<DamageInfo> OnPreTakeDamage;
     public event Action<DamageInfo> OnTakeDamage;
+    public event Action<DamageInfo> OnAttack; 
     public event Action OnTileChanged;
 
 
@@ -235,6 +237,11 @@ public abstract class CharacterStats : MonoBehaviour
     }
     public virtual void TakeDamage(DamageInfo damageInfo)
     {
+        if(damageInfo.source != null && damageInfo.source is PlayerStats player)
+        {
+            player.OnAttackDamage(damageInfo);
+        }
+        OnPreTakeDamage?.Invoke(damageInfo);
         float value = DamageCalculator.CalculateDamage(damageInfo);
         if(isInvincible) 
             value = 0;
@@ -261,6 +268,12 @@ public abstract class CharacterStats : MonoBehaviour
         OnTakeDamage?.Invoke(damageInfo);
         _anim.PlayKnockBack();
     }
+
+    public void OnAttackDamage(DamageInfo damageInfo)
+    {
+        OnAttack?.Invoke(damageInfo);
+    }
+
 
     public virtual void Heal(float amount)
     {
