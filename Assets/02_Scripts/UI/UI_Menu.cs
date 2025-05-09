@@ -54,6 +54,11 @@ public class UI_Menu : UIBase
         else
             ShowInventory(EInventoryType.Inventory);
     }
+    public void OnClickQuest()  // Call At OnClick Event
+    {
+        //UIManager.Show<>
+        HideDirect();
+    }
 
     public void OnClickSetting() // Call At OnClick Event
     {
