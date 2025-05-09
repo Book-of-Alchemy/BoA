@@ -23,7 +23,7 @@ public abstract class CharacterStats : MonoBehaviour
         {StatType.FireResist, 0 },
         {StatType.WaterResist, 0 },
         {StatType.IceResist, 0 },
-        {StatType.ElectricResist, 0 },
+        {StatType.LightningResist, 0 },
         {StatType.EarthResist, 0 },
         {StatType.WindResist, 0 },
         {StatType.LightResist, 0 },
@@ -31,7 +31,7 @@ public abstract class CharacterStats : MonoBehaviour
         {StatType.FireDmg, 100 },
         {StatType.WaterDmg, 100 },
         {StatType.IceDmg, 100 },
-        {StatType.ElectricDmg, 100 },
+        {StatType.LightningDmg, 100 },
         {StatType.EarthDmg, 100 },
         {StatType.WindDmg, 100 },
         {StatType.LightDmg, 100 },
@@ -75,43 +75,43 @@ public abstract class CharacterStats : MonoBehaviour
     }
     //공격력
     public int AttackDamage => statBlock.Get(StatType.Attack);
-    public int attackMin => Mathf.RoundToInt(AttackDamage * 0.9f);
-    public int attackMax => Mathf.RoundToInt(AttackDamage * 1.1f);
-    public int critChance => statBlock.Get(StatType.CritChance);
-    public int critDamage => statBlock.Get(StatType.CritDamage);
-    public int accuracy => statBlock.Get(StatType.Accuracy);
+    public int AttackMin => Mathf.RoundToInt(AttackDamage * 0.9f);
+    public int AttackMax => Mathf.RoundToInt(AttackDamage * 1.1f);
+    public int CritChance => statBlock.Get(StatType.CritChance);
+    public int CritDamage => statBlock.Get(StatType.CritDamage);
+    public int Accuracy => statBlock.Get(StatType.Accuracy);
 
     //속성 공격
 
-    public int fireDmg;
-    public int waterDmg;
-    public int iceDmg;
-    public int lightningDmg;
-    public int earthDmg;
-    public int windDmg;
-    public int lightDmg;
-    public int darkDmg;
+    public int FireDmg => statBlock.Get(StatType.FireDmg);
+    public int WaterDmg => statBlock.Get(StatType.WaterDmg);
+    public int IceDmg => statBlock.Get(StatType.IceDmg);
+    public int LightningDmg => statBlock.Get(StatType.LightningDmg);
+    public int EarthDmg => statBlock.Get(StatType.EarthDmg);
+    public int WindDmg => statBlock.Get(StatType.WindDmg);
+    public int LightDmg => statBlock.Get(StatType.LightDmg);
+    public int DarkDmg => statBlock.Get(StatType.DarkDmg);
 
     //특성공격력
 
-    public int ThrownDmg;
-    public int TrapDmg;
-    public int ScrollDmg;
-    public int FinalDmg;
+    public int ThrownDmg => statBlock.Get(StatType.ThrownDmg);
+    public int TrapDmg => statBlock.Get(StatType.TrapDmg);
+    public int ScrollDmg => statBlock.Get(StatType.ScrollDmg);
+    public int FinalDmg => statBlock.Get(StatType.FinalDmg);
 
     //방어력
-    public int defense => statBlock.Get(StatType.Defence);
-    public int evasion => statBlock.Get(StatType.Evasion);
+    public int Defence => statBlock.Get(StatType.Defence);
+    public int Evasion => statBlock.Get(StatType.Evasion);
 
     //속성방어
-    public int fireDef;
-    public int waterDef;
-    public int iceDef;
-    public int lightningDef;
-    public int earthDef;
-    public int windDef;
-    public int lightDef;
-    public int darkDef;
+    public int FireResist => statBlock.Get(StatType.FireResist);
+    public int WaterResist => statBlock.Get(StatType.WaterResist);
+    public int IceResist => statBlock.Get(StatType.IceResist);
+    public int LightningResist => statBlock.Get(StatType.LightningResist);
+    public int EarthResist => statBlock.Get(StatType.EarthResist);
+    public int WindResist => statBlock.Get(StatType.WindResist);
+    public int LightResist => statBlock.Get(StatType.LightResist);
+    public int DarkResist => statBlock.Get(StatType.DarkResist);
 
 
     //시야
@@ -176,9 +176,9 @@ public abstract class CharacterStats : MonoBehaviour
     public virtual void Attack(CharacterStats target, DamageType damageType = DamageType.None, int statusEffectID = -1)
     {
         //기본 데미지 계산
-        float baseDamage = UnityEngine.Random.Range(attackMin, attackMax);
+        float baseDamage = UnityEngine.Random.Range(AttackMin, AttackMax);
         //치명타 게산
-        bool isCrit = UnityEngine.Random.value < critChance / 100f;
+        bool isCrit = UnityEngine.Random.value < CritChance / 100f;
         if (isCrit)
             Debug.Log("치명타 발생!");
 
@@ -194,9 +194,9 @@ public abstract class CharacterStats : MonoBehaviour
     public virtual void Attack(CharacterStats target, float multiplier, DamageType damageType = DamageType.None, int statusEffectID = -1)
     {
         //기본 데미지 계산
-        float baseDamage = UnityEngine.Random.Range(attackMin, attackMax) * multiplier;
+        float baseDamage = UnityEngine.Random.Range(AttackMin, AttackMax) * multiplier;
         //치명타 게산
-        bool isCrit = UnityEngine.Random.value < critChance / 100f;
+        bool isCrit = UnityEngine.Random.value < CritChance / 100f;
         if (isCrit)
             Debug.Log("치명타 발생!");
 
