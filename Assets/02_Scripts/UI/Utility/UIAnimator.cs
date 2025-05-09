@@ -11,7 +11,8 @@ public class UIAnimator : MonoBehaviour
     [Tooltip("나타나고 사라지는 시간")]
     [SerializeField] private float fadeDuration = 0.4f;
     [Tooltip("Slide할 X축 거리")]
-    [SerializeField] private float slideOffset = 300f;
+    [SerializeField] private float slideOffsetX = 300f;
+    [SerializeField] private float slideOffsetY = 300f;
     [SerializeField] private float slideDuration = 1f;
     [SerializeField] private float popupScale = 1.1f;
     [SerializeField] private float popupDuration = 0.3f;
@@ -48,18 +49,29 @@ public class UIAnimator : MonoBehaviour
     public void SlideFrom(Action onComplete = null)
     {
         Vector2 origin = rectTransform.anchoredPosition;
-        rectTransform.anchoredPosition = new Vector2(slideOffset, origin.y);
+        rectTransform.anchoredPosition = new Vector2(slideOffsetX, origin.y);
         gameObject.SetActive(true);
 
         rectTransform.DOAnchorPosX(origin.x, slideDuration)
             .SetEase(Ease.OutCubic)
             .OnComplete(() => onComplete?.Invoke());
     }
+
     //Offset으로 슬라이드
     public void SlideTo( Action onComplete = null)
     {
         gameObject.SetActive(true);
-        rectTransform.DOAnchorPosX(slideOffset, slideDuration)
+        rectTransform.DOAnchorPosX(slideOffsetX, slideDuration)
+            .SetEase(Ease.OutCubic)
+            .OnComplete(() => onComplete?.Invoke());
+    }
+    public void SlideFromY(Action onComplete = null)
+    {
+        Vector2 origin = rectTransform.anchoredPosition;
+        rectTransform.anchoredPosition = new Vector2(origin.x, slideOffsetY);
+        gameObject.SetActive(true);
+
+        rectTransform.DOAnchorPosY(origin.y, slideDuration)
             .SetEase(Ease.OutCubic)
             .OnComplete(() => onComplete?.Invoke());
     }
