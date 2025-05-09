@@ -1,18 +1,19 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BurnImmune : MonoBehaviour
+public class BurnImmune : Immune
 {
-    // Start is called before the first frame update
-    void Start()
+    public BurnImmune(StatusEffectData data) : base(data, new HashSet<Type>() { typeof(Rooted) })
     {
-        
+        this.data = data;
     }
-
-    // Update is called once per frame
-    void Update()
+    public BurnImmune(StatusEffectData data, int value, int remainingTime, int tickInterval) : base(data, new HashSet<Type>() { typeof(Rooted) })
     {
-        
+        this.data = data;
+        this.value = value;
+        this.remainingTime = remainingTime;
+        this.tickInterval = tickInterval;
     }
 }
