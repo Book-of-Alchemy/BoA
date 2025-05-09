@@ -3,8 +3,14 @@ using UnityEngine;
 public class UI_Menu : UIBase
 {
     private UI_Inventory _Inventory;
+    [SerializeField] private UIAnimator _uiAnimator; // Inspector 참조
 
     public override void HideDirect()
+    {
+        Debug.Log("Hide Menu");
+        _uiAnimator.SlideTo(OnHide);
+    }
+    private void OnHide()
     {
         UIManager.Hide<UI_Menu>();
     }
@@ -12,6 +18,7 @@ public class UI_Menu : UIBase
     public override void Opened(params object[] param)
     {
         _Inventory = UIManager.Get<UI_Inventory>(); //인벤토리 캐싱
+        _uiAnimator.SlideFrom();
     }
 
     public void OnClickEquipment()  // Call At OnClick Event
