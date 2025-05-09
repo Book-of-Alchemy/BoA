@@ -3,6 +3,7 @@ using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 [RequireComponent(typeof(PlayerStats), typeof(CharacterAnimator), typeof(SpriteRenderer))]
 public class DungeonBehavior : PlayerBaseBehavior
@@ -22,6 +23,9 @@ public class DungeonBehavior : PlayerBaseBehavior
     private bool _isMoving;
     private bool _isCtrlHeld;
     private bool _isDashHeld;
+
+    private float _startHp;
+    private HashSet<CharacterStats> _initialEnemiesInSight;
 
     // 코루틴 핸들
     private Coroutine _moveBuffer;
@@ -51,6 +55,17 @@ public class DungeonBehavior : PlayerBaseBehavior
 
         InputManager.Instance.EnableMouseTracking = true;
 
+        if (highlightPrefab != null)
+        {
+            _highlightInstance = Instantiate(highlightPrefab);
+            _highlightInstance.SetActive(false);
+        }
+        else
+        {
+            Debug.LogError("highlightPrefab이 할당되지 않았습니다!");
+        }
+
+
         SubscribeInput();
     }
 
@@ -63,12 +78,15 @@ public class DungeonBehavior : PlayerBaseBehavior
         InputManager.OnCtrlStart += HandleCtrlStart;
         InputManager.OnCtrlEnd += HandleCtrlEnd;
         InputManager.OnInteract += HandleInteract;
+        InputManager.Instance.OnCancel += HandleCancel;
+        InputManager.Instance.OnMenu += HandleMenu;
+        InputManager.OnRest += HandleRest;
 
         InputManager.OnMouseMove += HandleMouseMove;
         InputManager.OnMouseClick += HandleMouseClick;
     }
 
-    protected override void UnsubscribeInput() 
+    protected override void UnsubscribeInput()
     {
         InputManager.OnMove -= HandleMove;
         InputManager.OnAttack -= HandleAttack;
@@ -77,11 +95,14 @@ public class DungeonBehavior : PlayerBaseBehavior
         InputManager.OnCtrlStart -= HandleCtrlStart;
         InputManager.OnCtrlEnd -= HandleCtrlEnd;
         InputManager.OnInteract -= HandleInteract;
+        InputManager.Instance.OnCancel -= HandleCancel;
+        InputManager.Instance.OnMenu -= HandleMenu;
+        InputManager.OnRest -= HandleRest;
 
         InputManager.OnMouseMove -= HandleMouseMove;
         InputManager.OnMouseClick -= HandleMouseClick;
     }
-    
+
     //{
     //    if (!Controller.isPlayerTurn || _isMoving || _moveBuffer != null || !ctx.started) return;
     //    if(!canMove)
@@ -104,18 +125,23 @@ public class DungeonBehavior : PlayerBaseBehavior
         );
     }
 
-  
+
     // ────────────────────────────────────────────────────────
     //  마우스 이동(하이라이트) 처리
     private void HandleMouseMove(Vector3 worldPos)
     {
+        //아이템 사용중일땐 하이라이트타일 안뜸
+        if (_currentItem != null)
+        {
+            _highlightInstance.SetActive(false);
+            return;
+        }
+
         Vector2Int gridPos = new Vector2Int(
             Mathf.RoundToInt(worldPos.x),
             Mathf.RoundToInt(worldPos.y)
         );
-
-        if (_highlightInstance == null)
-            _highlightInstance = Instantiate(highlightPrefab);
+        
 
         if (!_stats.curLevel.tiles.ContainsKey(gridPos))
         {
@@ -137,31 +163,69 @@ public class DungeonBehavior : PlayerBaseBehavior
     //  마우스 클릭으로 목적지 지정 후 경로 이동
     private void HandleMouseClick(Vector3 worldPos)
     {
+        //아이템 사용중일 땐 이동 무시
+        if (_currentItem != null)
+        {
+            _highlightInstance.SetActive(false);
+            return;
+        }
+
         if (!Controller.isPlayerTurn || _isMoving || _mousePathCoroutine != null)
             return;
 
-        // 클릭 위치를 그리드 좌표로 변환
         Vector2Int goalPos = new Vector2Int(
             Mathf.RoundToInt(worldPos.x),
             Mathf.RoundToInt(worldPos.y)
         );
 
-        //목표 타일이 유효한지 확인
         if (!_stats.curLevel.tiles.TryGetValue(goalPos, out Tile goalTile))
             return;
 
-        // 경로 탐색 호출
-        Tile startTile = _stats.CurTile;
-        List<Tile> path = AStarPathfinder.FindPath(startTile, goalTile, _stats.curLevel);
+        // 공격 조건
+        Vector2Int curPos = _stats.CurTile.gridPosition;
+        Vector2Int delta = goalPos - curPos;
+        bool isAdjacent = Mathf.Max(Mathf.Abs(delta.x), Mathf.Abs(delta.y)) == 1;
 
-        // 유효한 경로인지 확인
+        if (goalTile.CharacterStatsOnTile != null && isAdjacent)
+        {
+            var targetStats = goalTile.CharacterStatsOnTile;
+
+            if (targetStats.gameObject.CompareTag("NPC"))
+            {
+                HandleInteract();
+                return;
+            }
+            else
+            {
+                ExecuteMouseAttack(goalTile);
+                return;
+            }   
+        }
+
+        // 이동 처리
+        List<Tile> path = AStarPathfinder.FindPath(_stats.CurTile, goalTile, _stats.curLevel);
         if (path == null || path.Count <= 1)
             return;
 
-        // 이동 코루틴 실행 (첫 번째 요소는 현재 타일이므로 제거)
+        // 이동 중단 검사 초기화
+        _startHp = _stats.CurrentHealth;
+        _initialEnemiesInSight = new HashSet<CharacterStats>(GetEnemiesInSight());
+
         _mousePathCoroutine = StartCoroutine(MoveAlongPath(path));
     }
+    private void ExecuteMouseAttack(Tile targetTile)
+    {
+        // 회전 및 애니메이터 설정 (기존 공격 방향 사용)
+        Vector2Int dir = targetTile.gridPosition - _stats.CurTile.gridPosition;
+        _lastMoveDir = dir;
+        if (dir.x != 0)
+            _spriteRenderer.flipX = dir.x < 0;
 
+        // 공격 애니메이션 재생
+        _animator.PlayAttack();
+
+        Controller.onActionConfirmed?.Invoke();
+    }
     private IEnumerator MoveAlongPath(List<Tile> path)
     {
         // 현재 위치 제외
@@ -172,9 +236,22 @@ public class DungeonBehavior : PlayerBaseBehavior
             // 이전 이동이 끝날 때까지 대기
             yield return new WaitUntil(() => !_isMoving);
 
-            // 한 칸씩 이동
+            // 한 칸 이동 실행
             Vector2Int dir = tile.gridPosition - _stats.CurTile.gridPosition;
             ExecuteMove(dir);
+
+            // 이동 애니메이션이 완전히 끝날 때까지 대기
+            yield return new WaitUntil(() => !_isMoving);
+
+            // 턴 매니저가 플레이어 턴을 다시 열어줄 때까지 대기
+            yield return new WaitUntil(() => Controller.isPlayerTurn);
+
+            // 중단 조건 검사
+            if (_stats.CurrentHealth < _startHp ||
+                HasNewEnemy(_initialEnemiesInSight, GetEnemiesInSight()))
+            {
+                break;
+            }
         }
 
         _mousePathCoroutine = null;
@@ -227,6 +304,7 @@ public class DungeonBehavior : PlayerBaseBehavior
         if (dir == Vector2Int.zero) return;
 
         _lastMoveDir = dir;
+        
         if (dir.x != 0)
             _spriteRenderer.flipX = dir.x < 0;
 
@@ -234,10 +312,14 @@ public class DungeonBehavior : PlayerBaseBehavior
 
         var cur = _stats.CurTile.gridPosition;
         var nxt = cur + dir;
+        
         if (!_stats.curLevel.tiles.TryGetValue(nxt, out var tile) ||
             !tile.IsWalkable ||
              tile.CharacterStatsOnTile != null)
+        {
+            Shake();
             return;
+        }
 
         _isMoving = true;
         _stats.CurTile.CharacterStatsOnTile = null;
@@ -247,18 +329,41 @@ public class DungeonBehavior : PlayerBaseBehavior
         _spriteRenderer.sortingOrder = -nxt.y * 10 + 1;
         _animator.PlayMove();
 
-        transform.DOMove(new Vector3(nxt.x, nxt.y, 0), 0.1f)
+        transform
+            .DOMove(new Vector3(nxt.x, nxt.y, 0), 0.1f)
             .SetEase(Ease.Linear)
-            .OnComplete(() => _isMoving = false);
-
-        Controller.onActionConfirmed?.Invoke();
+            .OnUpdate(() =>
+            {
+                // 피격 또는 신규 적 발견 시 즉시 중단
+                if (_stats.CurrentHealth < _startHp ||
+                    HasNewEnemy(_initialEnemiesInSight, GetEnemiesInSight()))
+                {
+                    StopMousePathMovement();
+                }
+            })
+            .OnComplete(() =>
+            {
+                // 애니메이션이 완전히 끝난 시점에 이동 플래그 해제 및 턴 소비
+                _isMoving = false;
+                Controller.onActionConfirmed?.Invoke();
+            });
     }
 
     // ────────────────────────────────────────────────────────
     //  공격 처리
     private void HandleAttack()
     {
-        if (!Controller.isPlayerTurn || _attackBuffer != null) return;
+        if (!Controller.isPlayerTurn || _attackBuffer != null)
+            return;
+        
+        Vector2Int targetPos = _stats.CurTile.gridPosition + _lastMoveDir;
+        if (_stats.curLevel.tiles.TryGetValue(targetPos, out Tile frontTile) &&
+            frontTile.CharacterStatsOnTile != null &&
+            frontTile.CharacterStatsOnTile.gameObject.CompareTag("NPC"))
+        {
+            return;
+        }
+
         _attackBuffer = StartCoroutine(BufferAttack());
     }
 
@@ -266,7 +371,7 @@ public class DungeonBehavior : PlayerBaseBehavior
     {
         yield return new WaitForSeconds(_inputBufferDuration);
         _animator.PlayAttack();
-        Controller.onActionConfirmed?.Invoke();
+        
         _attackBuffer = null;
     }
     public void OnAttackHit()
@@ -278,6 +383,7 @@ public class DungeonBehavior : PlayerBaseBehavior
         {
             _stats.Attack(tile.CharacterStatsOnTile);
         }
+        Controller.onActionConfirmed?.Invoke();
     }
     // ────────────────────────────────────────────────────────
     //  Shift 누름 시: 타임스케일 증가
@@ -286,16 +392,6 @@ public class DungeonBehavior : PlayerBaseBehavior
 
         if (_isDashHeld) return;
         _isDashHeld = true;
-
-        //if (!controller.isplayerturn || _dashbuffer != null || !ctx.started) return;
-        //if (!canmove)
-        //{
-        //    shake();
-        //    return;
-        //}
-        //_dashbuffer = startcoroutine(bufferdash());
-
-
 
         var tm = TurnManager.Instance;
         _savedTurnSpeed = tm.turnSpeed;
@@ -386,7 +482,23 @@ public class DungeonBehavior : PlayerBaseBehavior
     // 상호작용 & 아이템 사용
     private void HandleInteract()
     {
-        // 필요 시 구현
+        if (!Controller.isPlayerTurn)
+            return;
+
+        // 플레이어가 바라보는 방향의 타일 위치
+        Vector2Int frontPos = _stats.CurTile.gridPosition + _lastMoveDir;
+
+        if (_stats.curLevel.tiles.TryGetValue(frontPos, out Tile frontTile) &&
+            frontTile.CharacterStatsOnTile != null)
+        {
+            var targetStats = frontTile.CharacterStatsOnTile;
+
+            if (targetStats.gameObject.CompareTag("NPC"))
+            {
+                Debug.Log("NPC입니다");
+                return;
+            }
+        }
     }
 
     public void UseItem(ItemData data)
@@ -405,5 +517,101 @@ public class DungeonBehavior : PlayerBaseBehavior
         _currentItem.ItemUseDone -= HandleItemUseDone;
         Controller.onActionConfirmed?.Invoke();
         _currentItem = null;
+        InputManager.Instance.EnableMouseTracking = true;
+        _highlightInstance.SetActive(false);
     }
+    // ──────────── 취소 키(X / ESC) ────────────
+    private void HandleCancel()
+    {
+        // 아이템 사용 중이면 취소
+        if (_currentItem != null)
+        {
+            //_currentItem.CancelUse();  // CancelUse 메서드 구현 필요
+            _currentItem = null;
+            return;
+        }
+
+        // 인벤 닫기
+        if (UIManager.IsOpened<UI_Inventory>())
+        {
+            UIManager.Hide<UI_Inventory>();
+            return;
+        }
+
+        //제작 닫기
+        if (UIManager.IsOpened<UI_Craft>())
+        {
+            UIManager.Hide<UI_Craft>();
+            return;
+        }
+
+        //이동 취소
+        if (_mousePathCoroutine != null)
+        {
+            StopMousePathMovement();
+            return;
+        }
+
+    }
+
+    // ──────────── 메뉴 키(Tab) ────────────
+    private void HandleMenu()
+    {
+        Debug.Log("HandleMenu 호출됨");
+        if (UIManager.IsOpened<UI_Menu>())
+        {
+            UIManager.Hide<UI_Menu>();
+        }
+        else
+        {
+            UIManager.Show<UI_Menu>();
+        }
+    }
+    //──────────── 적 검사 메서드 ────────────
+    private List<CharacterStats> GetEnemiesInSight()
+    {
+
+        var enemies = new List<CharacterStats>();
+        foreach (var etile in _stats.tilesOnVision)
+        {
+            if (etile == null) continue;
+            foreach (var tile in _stats.tilesOnVision)
+            {
+                if (tile == null) continue;
+                var stats = tile.CharacterStatsOnTile;
+                if (stats != null && stats != _stats)
+                    enemies.Add(stats);
+            }
+        }
+        return enemies;
+    }
+    private bool HasNewEnemy(HashSet<CharacterStats> initial, List<CharacterStats> current)
+    {
+        foreach (var e in current)
+            if (!initial.Contains(e))
+                return true;
+        return false;
+    }
+
+    private void StopMousePathMovement()
+    {
+        // 코루틴부터 멈추고
+        if (_mousePathCoroutine != null)
+        {
+            StopCoroutine(_mousePathCoroutine);
+            _mousePathCoroutine = null;
+        }
+        // 이동 플래그 초기화
+        _isMoving = false;
+    }
+
+    private void HandleRest()
+    {
+        // 플레이어 턴이 아니거나 이동/아이템 사용 중이면 무시
+        if (!Controller.isPlayerTurn || _isMoving || _mousePathCoroutine != null || _currentItem != null)
+            return;
+
+        Controller.onActionConfirmed?.Invoke();
+    }
+
 }

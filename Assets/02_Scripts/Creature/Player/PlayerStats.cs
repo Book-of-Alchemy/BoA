@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerStats : CharacterStats
 {
     private PlayerController _player;
+    public List<Artifact> equipArtifacts = new();
     public override Tile CurTile
     {
         get => curTile;

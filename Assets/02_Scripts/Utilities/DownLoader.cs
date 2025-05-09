@@ -20,10 +20,13 @@ public class DownLoader : EditorWindow
     string recipeJsonSavePath = "Assets/Resources/Json/RecipeData.json";
     string statusEffectDBUrl = "https://opensheet.elk.sh/1ILhdJKFLc1kmaMduHtTpcZEXAzIarNJo-YM6jcW-KIM/Buff%2FDebuff_DB";
     string statusEffectJsonSavePath = "Assets/Resources/Json/StatusEffect.json";
+    string artifactDBUrl = "https://opensheet.elk.sh/16BPAGJg1d_g6m4tCxN9aJWzjWwzPmHyOaTcqg1uclhI/Artifact_DB";
+    string artifactJsonSavePath = "Assets/Resources/Json/Artifact.json";
 
     string saveItemSOPath = "Assets/Resources/Items";
     string saveRecipeSOPath = "Assets/Resources/Recipes";
     string saveStatusEffectSOPath = "Assets/08_ScriptableObjects/StatusEffect";
+    string saveArtifactSOPath = "Assets/08_ScriptableObjects/Artifact";
 
 #if UNITY_EDITOR
     [MenuItem("Window/DownLoader")]
@@ -39,25 +42,31 @@ public class DownLoader : EditorWindow
         itemDBUrl = EditorGUILayout.TextField("ItemURL", itemDBUrl);
         recipeDBUrl = EditorGUILayout.TextField("RecipeURL", recipeDBUrl);
         statusEffectDBUrl = EditorGUILayout.TextField("StatusEffectURL", statusEffectDBUrl);
+        artifactDBUrl = EditorGUILayout.TextField("ArtifactDBUrl", artifactDBUrl);
+
 
         // 저장 경로 입력 필드
         itemJsonSavePath = EditorGUILayout.TextField("Item Json Save Path", itemJsonSavePath);
         recipeJsonSavePath = EditorGUILayout.TextField("Recipe Json Save Path", recipeJsonSavePath);
         statusEffectJsonSavePath = EditorGUILayout.TextField("StatusEffect Json Save Path", statusEffectJsonSavePath);
-        
+        artifactJsonSavePath = EditorGUILayout.TextField("Artifact Json Save Path", artifactJsonSavePath);
+
+
         // 다운로드 버튼
         if (GUILayout.Button("Download JSON"))
         {
             DownloadAndSaveJson(itemDBUrl,itemJsonSavePath);
             DownloadAndSaveJson(recipeDBUrl, recipeJsonSavePath);
             DownloadAndSaveJson(statusEffectDBUrl, statusEffectJsonSavePath);
+            DownloadAndSaveJson(artifactDBUrl, artifactJsonSavePath);
         }
 
         GUILayout.Label("Json To SO", EditorStyles.boldLabel);
 
         saveItemSOPath = EditorGUILayout.TextField("SaveItemSOPath", saveItemSOPath);
         saveRecipeSOPath = EditorGUILayout.TextField("SaveRecipeSOPath", saveRecipeSOPath);
-        saveRecipeSOPath = EditorGUILayout.TextField("SaveStatusEffectSOPath", saveStatusEffectSOPath);
+        saveStatusEffectSOPath = EditorGUILayout.TextField("SaveStatusEffectSOPath", saveStatusEffectSOPath);
+        saveArtifactSOPath = EditorGUILayout.TextField("SaveArtifactSOPath", saveArtifactSOPath);
 
         if (GUILayout.Button("ItemConvert"))
         {
@@ -70,6 +79,10 @@ public class DownLoader : EditorWindow
         if (GUILayout.Button("StatusEffectConvert"))
         {
             StatusEffectConvertJsonToSO();
+        }
+        if (GUILayout.Button("ArtifactConvert"))
+        {
+            ArtifactConvertJsonToSO();
         }
     }
 
@@ -245,5 +258,46 @@ public class DownLoader : EditorWindow
         AssetDatabase.Refresh();
         Debug.Log("Json변환 완료");
     }
+
+    void ArtifactConvertJsonToSO()
+    {
+        string jsonText = File.ReadAllText(artifactJsonSavePath);
+        List<ArtifactData> dataList = JsonConvert.DeserializeObject<List<ArtifactData>>(jsonText);
+
+        if (AssetDatabase.IsValidFolder(saveArtifactSOPath))
+        {
+            FileUtil.DeleteFileOrDirectory(saveArtifactSOPath);
+            AssetDatabase.Refresh();
+        }
+
+        if (!Directory.Exists(saveArtifactSOPath))
+        {
+            Directory.CreateDirectory(saveArtifactSOPath);
+        }
+
+        foreach (var data in dataList)
+        {
+            if (data == null)
+            {
+                Debug.LogError("data가 null입니다!");
+                continue;
+            }
+            ArtifactData so = ScriptableObject.CreateInstance<ArtifactData>();
+            so.id = data.id;
+            so.name_kr = data.name_kr;
+            so.name_en = data.name_en;
+            so.description = data.description;
+            so.icon_sprite = Resources.Load<Sprite>(data.icon_sprite_id);
+            so.rarity = data.rarity;
+
+            string assetPath = $"{saveArtifactSOPath}/{data.name_en}.asset";
+            AssetDatabase.CreateAsset(so, assetPath);
+
+        }
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+        Debug.Log("Json변환 완료");
+    }
+
 }
 #endif

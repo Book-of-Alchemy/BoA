@@ -13,6 +13,7 @@ public class DamageItem : BaseItem
     private bool _isObject;
     private List<Tile> rangeTiles = new List<Tile>();
     private Tile mouseClickTile;
+    public float moveSpeed = 5f;
 
 
     /// <summary>
@@ -27,6 +28,7 @@ public class DamageItem : BaseItem
         itemData = data;
         spriteRenderer = GetComponent<SpriteRenderer>();
         transform.position = new Vector3(_player.CurTile.gridPosition.x, _player.CurTile.gridPosition.y + 0.5f, 0);
+        transform.localScale = new Vector3(2, 2, 1);
         SetType(data);
         _isObject = false;
     }
@@ -39,7 +41,6 @@ public class DamageItem : BaseItem
     {
         UseInit(data);
         rangeTiles = CheckRange(data);
-        InputManager.Instance.EnableMouseTracking = true;
         InputManager.Instance.OnMouseMove += CheckEffectRange;
         InputManager.Instance.OnMouseClick += OnClick;
     }
@@ -70,12 +71,14 @@ public class DamageItem : BaseItem
                     break;
                 }
             }
+            float distance = Vector2Int.Distance(_player.CurTile.gridPosition, targetTile.gridPosition);
+            float duration = distance / moveSpeed;
             Sequence seq = DOTween.Sequence();
             seq.Append(transform.DORotate(new Vector3(0, 0, 360), 0.3f, RotateMode.FastBeyond360)
                 .SetRelative(true)
                 .SetEase(Ease.Linear)
                 .SetLoops(-1));
-            seq.Join(transform.DOMove(new Vector3(targetTile.gridPosition.x, targetTile.gridPosition.y + 0.5f, 0), 0.5f)
+            seq.Join(transform.DOMove(new Vector3(targetTile.gridPosition.x, targetTile.gridPosition.y + 0.5f, 0), duration)
                 .SetEase(Ease.Linear)
                 .OnComplete(() =>
                 {
@@ -89,23 +92,9 @@ public class DamageItem : BaseItem
         else
         {
             Debug.Log("거리범위에 해당하는 타일을 누르지 않았습니다.");
-            InputManager.Instance.EnableMouseTracking = false;
             InputManager.Instance.OnMouseClick -= OnClick;
             Destroy(this.gameObject);
         }
-
-        // 범위내에 대상들이 있다면 이동 및 공격동작
-        //if (_isObject)
-        //{
-        //    
-        //}
-        //else
-        //{
-        //    Debug.Log("목표지점 범위에 대상이 없습니다.");
-        //    InputManager.Instance.OnMouseClick -= OnClick;
-        //    InputManager.Instance.EnableMouseTracking = false;
-        //    Destroy(this.gameObject);
-        //}
     }
 
     /// <summary>
@@ -145,11 +134,10 @@ public class DamageItem : BaseItem
             {
                 if(data.attribute == Attribute.None)
                     EffectProjectileManager.Instance.PlayEffect(ojTile.gridPosition, 30013);
-                _player.Attack(ojTile.CharacterStatsOnTile);
+                ojTile.CharacterStatsOnTile.TakeDamage(DamageCalculator.CalculateDamage(new DamageInfo(data.effect_value,(DamageType)data.attribute,_player,ojTile.CharacterStatsOnTile,false)));
             }
         }
         Debug.Log(data.name_en);
-        InputManager.Instance.EnableMouseTracking = false;
         InputManager.Instance.OnMouseClick -= OnClick;
         FinishUse();
         Destroy(this.gameObject,0.1f);

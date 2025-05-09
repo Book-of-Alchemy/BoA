@@ -64,6 +64,7 @@ public static class DamageCalculator
             DamageType.Dark => target.darkDef,
             _ => 0f
         };
+
         multiplier = Mathf.Max(0, (100 - multiplier) / 100f);
 
         result = multiplier * baseDamage;//속성 대미지 계산
