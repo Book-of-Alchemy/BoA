@@ -106,7 +106,7 @@ public class EnemyFactory : Singleton<EnemyFactory>
 
         enemy.level = curEnemyLevel;
 
-        enemy.statBlock = new StatBlock(new Dictionary<StatType, int>
+        enemy.statBlock.ResetStatBlock(new Dictionary<StatType, int>
         {
             {StatType.MaxHealth, enemyData.base_hp + enemyData.hp_per_level * curEnemyLevel },
             {StatType.MaxMana, 50 },

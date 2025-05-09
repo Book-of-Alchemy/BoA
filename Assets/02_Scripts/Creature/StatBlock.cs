@@ -128,6 +128,12 @@ public class StatBlock
             stats[pair.Key] = new StatEntry { baseValue = pair.Value };
     }
 
+    public void ResetStatBlock(Dictionary<StatType, int> baseStats)
+    {
+        foreach (var pair in baseStats)
+            stats[pair.Key] = new StatEntry { baseValue = pair.Value };
+    }
+
     public int Get(StatType type)
     {
         if (stats.TryGetValue(type, out var value))
