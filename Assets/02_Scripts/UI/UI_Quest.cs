@@ -1,17 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class UI_Quest : MonoBehaviour
+public class UI_Quest : UIBase
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private UIAnimator _uiAnimator;
+    [SerializeField] private Animator _animator;
+
+    public override void HideDirect()
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void Opened(params object[] param)
     {
         
     }
