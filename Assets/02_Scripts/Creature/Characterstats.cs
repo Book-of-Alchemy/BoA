@@ -10,7 +10,6 @@ public abstract class CharacterStats : MonoBehaviour
     public StatBlock statBlock = new StatBlock(new Dictionary<StatType, int>
     {
         {StatType.MaxHealth, 100 },
-        {StatType.MaxShield, 0 },
         {StatType.MaxMana, 50 },
         {StatType.Attack, 10 },
         {StatType.Defence, 5 },
@@ -23,7 +22,7 @@ public abstract class CharacterStats : MonoBehaviour
         {StatType.FireResist, 0 },
         {StatType.WaterResist, 0 },
         {StatType.IceResist, 0 },
-        {StatType.ElectricResist, 0 },
+        {StatType.LightningResist, 0 },
         {StatType.EarthResist, 0 },
         {StatType.WindResist, 0 },
         {StatType.LightResist, 0 },
@@ -31,7 +30,7 @@ public abstract class CharacterStats : MonoBehaviour
         {StatType.FireDmg, 100 },
         {StatType.WaterDmg, 100 },
         {StatType.IceDmg, 100 },
-        {StatType.ElectricDmg, 100 },
+        {StatType.LightningDmg, 100 },
         {StatType.EarthDmg, 100 },
         {StatType.WindDmg, 100 },
         {StatType.LightDmg, 100 },
@@ -40,6 +39,8 @@ public abstract class CharacterStats : MonoBehaviour
         {StatType.TrapDmg, 100 },
         {StatType.ScrollDmg, 100 },
         {StatType.FinalDmg, 100 },
+        {StatType.ShieldMultiplier, 100 },
+        {StatType.RegenerationMultiplier, 100 },
     });
 
 
@@ -61,7 +62,15 @@ public abstract class CharacterStats : MonoBehaviour
         }
     }
     [SerializeField] protected float currentShield = 0f;
-    public float CurrentShield { get => currentShield; set => currentShield = value; }
+    public float CurrentShield 
+    { 
+        get => currentShield;
+        set
+        { 
+            currentShield = MathF.Max(0, value);
+            OnShieldChanged?.Invoke();
+        } 
+    }
     public float MaxMana => statBlock.Get(StatType.MaxMana);
     [SerializeField] protected float currentMana = 50f;
     public float CurrentMana
@@ -73,45 +82,50 @@ public abstract class CharacterStats : MonoBehaviour
             OnManaChanged?.Invoke();
         }
     }
+    //쉴드 체력 재생
+    public int RegenerationMultiplier => statBlock.Get(StatType.RegenerationMultiplier);
+    public int ShieldMultiplier => statBlock.Get(StatType.ShieldMultiplier);
+    
+
     //공격력
     public int AttackDamage => statBlock.Get(StatType.Attack);
-    public int attackMin => Mathf.RoundToInt(AttackDamage * 0.9f);
-    public int attackMax => Mathf.RoundToInt(AttackDamage * 1.1f);
-    public int critChance => statBlock.Get(StatType.CritChance);
-    public int critDamage => statBlock.Get(StatType.CritDamage);
-    public int accuracy => statBlock.Get(StatType.Accuracy);
+    public int AttackMin => Mathf.RoundToInt(AttackDamage * 0.9f);
+    public int AttackMax => Mathf.RoundToInt(AttackDamage * 1.1f);
+    public int CritChance => statBlock.Get(StatType.CritChance);
+    public int CritDamage => statBlock.Get(StatType.CritDamage);
+    public int Accuracy => statBlock.Get(StatType.Accuracy);
 
     //속성 공격
 
-    public int fireDmg;
-    public int waterDmg;
-    public int iceDmg;
-    public int lightningDmg;
-    public int earthDmg;
-    public int windDmg;
-    public int lightDmg;
-    public int darkDmg;
+    public int FireDmg => statBlock.Get(StatType.FireDmg);
+    public int WaterDmg => statBlock.Get(StatType.WaterDmg);
+    public int IceDmg => statBlock.Get(StatType.IceDmg);
+    public int LightningDmg => statBlock.Get(StatType.LightningDmg);
+    public int EarthDmg => statBlock.Get(StatType.EarthDmg);
+    public int WindDmg => statBlock.Get(StatType.WindDmg);
+    public int LightDmg => statBlock.Get(StatType.LightDmg);
+    public int DarkDmg => statBlock.Get(StatType.DarkDmg);
 
     //특성공격력
 
-    public int ThrownDmg;
-    public int TrapDmg;
-    public int ScrollDmg;
-    public int FinalDmg;
+    public int ThrownDmg => statBlock.Get(StatType.ThrownDmg);
+    public int TrapDmg => statBlock.Get(StatType.TrapDmg);
+    public int ScrollDmg => statBlock.Get(StatType.ScrollDmg);
+    public int FinalDmg => statBlock.Get(StatType.FinalDmg);
 
     //방어력
-    public int defense => statBlock.Get(StatType.Defence);
-    public int evasion => statBlock.Get(StatType.Evasion);
+    public int Defence => statBlock.Get(StatType.Defence);
+    public int Evasion => statBlock.Get(StatType.Evasion);
 
     //속성방어
-    public int fireDef;
-    public int waterDef;
-    public int iceDef;
-    public int lightningDef;
-    public int earthDef;
-    public int windDef;
-    public int lightDef;
-    public int darkDef;
+    public int FireResist => statBlock.Get(StatType.FireResist);
+    public int WaterResist => statBlock.Get(StatType.WaterResist);
+    public int IceResist => statBlock.Get(StatType.IceResist);
+    public int LightningResist => statBlock.Get(StatType.LightningResist);
+    public int EarthResist => statBlock.Get(StatType.EarthResist);
+    public int WindResist => statBlock.Get(StatType.WindResist);
+    public int LightResist => statBlock.Get(StatType.LightResist);
+    public int DarkResist => statBlock.Get(StatType.DarkResist);
 
 
     //시야
@@ -126,9 +140,19 @@ public abstract class CharacterStats : MonoBehaviour
     public int attackRange => statBlock.Get(StatType.AttackRange);
 
 
-    [Header("버프 디버프")]//위치 아래로 내릴것
+    [Header("버프 디버프")]
     public List<StatusEffect> activeEffects = new();
-
+    [SerializeField] protected bool isHidden = false;
+    public bool IsHidden
+    {
+        get => isHidden;
+        set
+        {
+            isHidden = value;
+            OnHide();
+        }
+    }
+    public bool isInvincible =false;
     public bool hasImmunityToAll = false;
 
     [Header("Level & Tile")]
@@ -147,18 +171,24 @@ public abstract class CharacterStats : MonoBehaviour
 
 
     public UnitBase unitBase { get; protected set; }
-    private CharacterAnimator _anim;
+    protected CharacterAnimator _anim;
+    protected SpriteRenderer _spriteRenderer;
 
     //체력 변경 이벤트
     public event Action OnHealthRatioChanged;
+    public event Action OnShieldChanged;
     public event Action OnManaChanged;
+    public event Action<DamageInfo> OnPreTakeDamage;
     public event Action<DamageInfo> OnTakeDamage;
+    public event Action<DamageInfo> OnAttack; 
+    public event Action OnTileChanged;
 
 
     protected virtual void Awake()
     {
         _anim = GetComponent<CharacterAnimator>();
         unitBase = GetComponent<UnitBase>();
+
         statBlock.GetEntry(StatType.MaxHealth).onStatChanged += OnHealthRatioChanged;
         statBlock.GetEntry(StatType.MaxHealth).onStatChanged += OnManaChanged;
     }
@@ -176,9 +206,9 @@ public abstract class CharacterStats : MonoBehaviour
     public virtual void Attack(CharacterStats target, DamageType damageType = DamageType.None, int statusEffectID = -1)
     {
         //기본 데미지 계산
-        float baseDamage = UnityEngine.Random.Range(attackMin, attackMax);
+        float baseDamage = UnityEngine.Random.Range(AttackMin, AttackMax);
         //치명타 게산
-        bool isCrit = UnityEngine.Random.value < critChance / 100f;
+        bool isCrit = UnityEngine.Random.value < CritChance / 100f;
         if (isCrit)
             Debug.Log("치명타 발생!");
 
@@ -194,9 +224,9 @@ public abstract class CharacterStats : MonoBehaviour
     public virtual void Attack(CharacterStats target, float multiplier, DamageType damageType = DamageType.None, int statusEffectID = -1)
     {
         //기본 데미지 계산
-        float baseDamage = UnityEngine.Random.Range(attackMin, attackMax) * multiplier;
+        float baseDamage = UnityEngine.Random.Range(AttackMin, AttackMax) * multiplier;
         //치명타 게산
-        bool isCrit = UnityEngine.Random.value < critChance / 100f;
+        bool isCrit = UnityEngine.Random.value < CritChance / 100f;
         if (isCrit)
             Debug.Log("치명타 발생!");
 
@@ -207,7 +237,15 @@ public abstract class CharacterStats : MonoBehaviour
     }
     public virtual void TakeDamage(DamageInfo damageInfo)
     {
+        if(damageInfo.source != null && damageInfo.source is PlayerStats player)
+        {
+            player.OnAttackDamage(damageInfo);
+        }
+        OnPreTakeDamage?.Invoke(damageInfo);
         float value = DamageCalculator.CalculateDamage(damageInfo);
+        if(isInvincible) 
+            value = 0;
+
         if (CurrentShield > 0)
         {
             if (value > CurrentShield)
@@ -231,12 +269,29 @@ public abstract class CharacterStats : MonoBehaviour
         _anim.PlayKnockBack();
     }
 
-    public virtual void Heal(float amount)
+    public void OnAttackDamage(DamageInfo damageInfo)
     {
-        CurrentHealth += amount;
-        Debug.Log($"{gameObject.name}는 {amount}만큼 회복되었습니다.");
+        OnAttack?.Invoke(damageInfo);
     }
 
+
+    public virtual void Heal(float amount)
+    {
+        float multiplier = RegenerationMultiplier / 100f;
+        CurrentHealth += amount * multiplier;
+        Debug.Log($"{gameObject.name}는 {amount * multiplier}만큼 회복되었습니다.");
+    }
+
+    public virtual void GetShield(float amount)
+    {
+        float multiplier = ShieldMultiplier / 100f;
+        CurrentShield += amount * multiplier;
+    }
+
+    public virtual void OnHide()
+    {
+        _spriteRenderer.color = new Color(1f,1f, 1f, IsHidden ? 0.7f: 1f);
+    }
     public virtual void Die()
     {
         Debug.Log($"{gameObject.name}이(가) 사망했습니다.");
@@ -257,8 +312,9 @@ public abstract class CharacterStats : MonoBehaviour
 
         //curTile 갱신
         CurTile = targetTile;
-    }
 
+        OnTileChanged?.Invoke();
+    }
 
     public void ApplyEffect(StatusEffect effect)
     {

@@ -5,6 +5,17 @@ using UnityEngine;
 public class Shock : StackableDebuff<Poison>
 {
     private bool isProcessingExtraTick = false;
+    public Shock(StatusEffectData data)
+    {
+        this.data = data;
+    }
+    public Shock(StatusEffectData data, int value, int remainingTime, int tickInterval)
+    {
+        this.data = data;
+        this.value = value;
+        this.remainingTime = remainingTime;
+        this.tickInterval = tickInterval;
+    }
     public override void OnApply(CharacterStats target)
     {
         base.OnApply(target);

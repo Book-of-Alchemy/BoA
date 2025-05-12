@@ -21,6 +21,8 @@ public class AttackBaseBehaviour : BaseBehaviour
         {
             if (tile.CharacterStatsOnTile is PlayerStats player)
             {
+                if (player.IsHidden)
+                    continue;
                 if (TileUtility.IsTileVisible(level, CurTile, tile))
                 {
                     playetStats = player;

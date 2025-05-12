@@ -7,7 +7,6 @@ using UnityEngine;
 public enum StatType
 {
     MaxHealth,
-    MaxShield,
     MaxMana,
     Attack,
     Defence,
@@ -20,7 +19,7 @@ public enum StatType
     FireResist,
     WaterResist,
     IceResist,
-    ElectricResist,
+    LightningResist,
     EarthResist,
     WindResist,
     LightResist,
@@ -28,7 +27,7 @@ public enum StatType
     FireDmg,
     WaterDmg,
     IceDmg,
-    ElectricDmg,
+    LightningDmg,
     EarthDmg,
     WindDmg,
     LightDmg,
@@ -37,6 +36,8 @@ public enum StatType
     TrapDmg,
     ScrollDmg,
     FinalDmg,
+    ShieldMultiplier,
+    RegenerationMultiplier,
 }
 public enum ModifierType
 {
@@ -123,6 +124,12 @@ public class StatBlock
     private StatDictionary stats = new();
 
     public StatBlock(Dictionary<StatType, int> baseStats)
+    {
+        foreach (var pair in baseStats)
+            stats[pair.Key] = new StatEntry { baseValue = pair.Value };
+    }
+
+    public void ResetStatBlock(Dictionary<StatType, int> baseStats)
     {
         foreach (var pair in baseStats)
             stats[pair.Key] = new StatEntry { baseValue = pair.Value };

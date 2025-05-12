@@ -17,6 +17,8 @@ public class IdleBaseBehaviour : BaseBehaviour
         {
             if (tile.CharacterStatsOnTile is PlayerStats player)
             {
+                if (player.IsHidden)
+                    continue;
                 controller.ChangeState(EnemyState.Chase);
                 controller.LastCheckedTile = tile;
                 return false;
