@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DefenceIncrease : StatBuff
+public class Invisible : Buff
 {
-    public DefenceIncrease(StatusEffectData data)
+    public Invisible(StatusEffectData data)
     {
         this.data = data;
     }
-    public DefenceIncrease(StatusEffectData data, int value, int remainingTime, int tickInterval)
+    public Invisible(StatusEffectData data, int value, int remainingTime, int tickInterval)
     {
         this.data = data;
         this.value = value;
@@ -20,12 +20,11 @@ public class DefenceIncrease : StatBuff
     {
         base.OnApply(target);
         if (!shouldRegister) return;
-        modifier = new StatModifier("DefenceIncrease", value, ModifierType.Flat);
-        target.statBlock.AddModifier(StatType.Defence, modifier);
+        target.IsHidden = true;
     }
 
     public override void OnExpire(CharacterStats target)
     {
-        target.statBlock.RemoveModifier(StatType.Defence, modifier);
+        target.IsHidden = false;
     }
 }

@@ -5,14 +5,17 @@ using UnityEngine;
 
 public class ShotSkill : EnemySkill
 {
+    List<Tile> neighbors => attackBaseBehaviour.adjacentiveTile;
+    List<Tile> attackRange => attackBaseBehaviour.attackRangeTile;
     public override bool CanUse()
     {
-        List<Tile> neighbors = attackBaseBehaviour.adjacentiveTile;
-        List<Tile> attackRange = attackBaseBehaviour.attackRangeTile;
+        
         foreach (Tile tile in neighbors)
         {
-            if (tile.CharacterStatsOnTile is PlayerStats)
+            if (tile.CharacterStatsOnTile is PlayerStats player)
             {
+                if(player.IsHidden)
+                    continue;
                 return false;
             }
         }
@@ -21,6 +24,8 @@ public class ShotSkill : EnemySkill
         {
             if (tile.CharacterStatsOnTile is PlayerStats player)
             {
+                if (player.IsHidden)
+                    continue;
                 attackBaseBehaviour.playetStats = player;
                 return true;
             }

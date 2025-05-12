@@ -54,14 +54,14 @@ public static class DamageCalculator
         float result;
         float multiplier = damageType switch
         {
-            DamageType.Fire => target.fireDef,
-            DamageType.Water => target.waterDef,
-            DamageType.Ice => target.iceDef,
-            DamageType.Lightning => target.lightningDef,
-            DamageType.Earth => target.earthDef,
-            DamageType.Wind => target.windDef,
-            DamageType.Light => target.lightDef,
-            DamageType.Dark => target.darkDef,
+            DamageType.Fire => target.FireResist,
+            DamageType.Water => target.WaterResist,
+            DamageType.Ice => target.IceResist,
+            DamageType.Lightning => target.LightningResist,
+            DamageType.Earth => target.EarthResist,
+            DamageType.Wind => target.WindResist,
+            DamageType.Light => target.LightResist,
+            DamageType.Dark => target.DarkResist,
             _ => 0f
         };
 
@@ -69,7 +69,7 @@ public static class DamageCalculator
 
         result = multiplier * baseDamage;//속성 대미지 계산
         //버프 디버프에 의한 대미지 계산 추가
-        result = result * (1 - target.defense / (50 + target.defense));//방어력 계산
+        result = result * (1 - target.Defence / (50 + target.Defence));//방어력 계산
         Debug.Log($"최종 대미지 : {result}");
 
         return result;
@@ -91,14 +91,14 @@ public static class DamageCalculator
         {
             float elementalDmg = damageType switch
             {
-                DamageType.Fire => source.fireDmg,
-                DamageType.Water => source.waterDmg,
-                DamageType.Ice => source.iceDmg,
-                DamageType.Lightning => source.lightningDmg,
-                DamageType.Earth => source.earthDmg,
-                DamageType.Wind => source.windDmg,
-                DamageType.Light => source.lightDmg,
-                DamageType.Dark => source.darkDmg,
+                DamageType.Fire => source.FireDmg,
+                DamageType.Water => source.WaterDmg,
+                DamageType.Ice => source.IceDmg,
+                DamageType.Lightning => source.LightningDmg,
+                DamageType.Earth => source.EarthDmg,
+                DamageType.Wind => source.WindDmg,
+                DamageType.Light => source.LightDmg,
+                DamageType.Dark => source.DarkDmg,
                 _ => 100f
             };
             elementalDmg /= 100f;
@@ -130,21 +130,21 @@ public static class DamageCalculator
 
         float elementalDef = damageType switch
         {
-            DamageType.Fire => target.fireDef,
-            DamageType.Water => target.waterDef,
-            DamageType.Ice => target.iceDef,
-            DamageType.Lightning => target.lightningDef,
-            DamageType.Earth => target.earthDef,
-            DamageType.Wind => target.windDef,
-            DamageType.Light => target.lightDef,
-            DamageType.Dark => target.darkDef,
+            DamageType.Fire => target.FireResist,
+            DamageType.Water => target.WaterResist,
+            DamageType.Ice => target.IceResist,
+            DamageType.Lightning => target.LightningResist,
+            DamageType.Earth => target.EarthResist,
+            DamageType.Wind => target.WindResist,
+            DamageType.Light => target.LightResist,
+            DamageType.Dark => target.DarkResist,
             _ => 0f
         };
         elementalDef = Mathf.Max(0, (100 - elementalDef) / 100f);
 
         result = elementalDef * baseDamage;//속성 대미지 계산
         //버프 디버프에 의한 대미지 계산 추가
-        result = result * (1 - target.defense / (50 + target.defense));//방어력 계산
+        result = result * (1 - target.Defence / (50 + target.Defence));//방어력 계산
         Debug.Log($"최종 대미지 : {result}");
 
         return result;

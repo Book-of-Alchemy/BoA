@@ -53,5 +53,5 @@ public abstract class StatusEffect
         return shouldRegister;
     }
 
-    public bool IsExpired => remainingTime <= 0;
+    public virtual bool IsExpired => remainingTime <= 0;
 }

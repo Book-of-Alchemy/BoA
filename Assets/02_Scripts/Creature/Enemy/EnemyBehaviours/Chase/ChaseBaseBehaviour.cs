@@ -19,6 +19,8 @@ public class ChaseBaseBehaviour : BaseBehaviour
         {
             if (tile.CharacterStatsOnTile is PlayerStats player)
             {
+                if (player.IsHidden)
+                    continue;
                 if (TileUtility.IsTileVisible(level, CurTile, tile))
                 {
                     controller.ChangeState(EnemyState.Attack);
