@@ -145,7 +145,7 @@ public class UI_Inventory : UIBase
         _animator.SetTrigger("Close");
     }
 
-    public void BookOpened() //OpenAnimation 이벤트에서 호출
+    public void BookOpened() //Open Animation 이벤트에서 호출
     {
         //열렸다면 모든 하위요소 FadeIn
         _uiAnimator.FadeIn(()=> ShowRightTool(_showType));
@@ -213,23 +213,12 @@ public class UI_Inventory : UIBase
     {
         if (_curType == type) return;
 
+        _curType = type;
+
         if (!_isFirstTypeSet) //초기에는 Flip 예외
             _uiAnimator.FadeOut(OnPageFlip);
         else
-        {
-            _windowList[(int)type].gameObject.SetActive(true);
-            if (type switch // type이 _commonWindow가 필요한 인벤토리 타입인지 검사
-            {
-                EInventoryType.Craft or EInventoryType.Inventory or EInventoryType.Equipment => true,
-                _ => false
-            })
-                _commonWindow.SetActive(true); //필요한 타입이라면 공용Window 활성화
-            else
-                _commonWindow.SetActive(false); // 아니라면 비활성화
-
-        }
-
-        _curType = type;
+            ActiveWindow();
         
         Inventory.Instance.ClearAllHighlights();
 
@@ -244,19 +233,34 @@ public class UI_Inventory : UIBase
 
     private void OnPageFlip()
     {
-        _windowList[(int)_curType].gameObject.SetActive(true);
+        ActiveWindow();
+
+        // 확률적으로 책넘기는 Animation 실행
         int rand = UnityEngine.Random.value < 0.5f ? 0 : 1;
         if(rand == 0)
         {
-            _animator.SetTrigger("FlipLeft");
+            _animator.SetTrigger("FlipLeft"); //OnFliped호출
         }
         else
         {
-            _animator.SetTrigger("FlipRight");
+            _animator.SetTrigger("FlipRight");//OnFliped호출
         }
     }
+
+    private void ActiveWindow()
+    {
+        _windowList[(int)_curType].gameObject.SetActive(true);
+        if (_curType switch // type이 _commonWindow가 필요한 인벤토리 타입인지 검사
+        {
+            EInventoryType.Craft or EInventoryType.Inventory or EInventoryType.Equipment => true,
+            _ => false
+        })
+            _commonWindow.SetActive(true); //필요한 타입이라면 공용Window 활성화
+        else
+            _commonWindow.SetActive(false); // 아니라면 비활성화
+    }
     
-    private void OnFliped()
+    private void OnFliped()// Call At FlipLeft,Right Animation Event
     {
         _uiAnimator.FadeIn();
     }
