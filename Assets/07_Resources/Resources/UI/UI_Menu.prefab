@@ -355,7 +355,7 @@ GameObject:
   - component: {fileID: 7679355502221175263}
   - component: {fileID: 2411175824685016921}
   m_Layer: 5
-  m_Name: Relic_Btn
+  m_Name: Artifact_Btn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -462,7 +462,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7679355502221175263}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6863607812344922706}
+        m_TargetAssemblyTypeName: UI_Menu, Assembly-CSharp
+        m_MethodName: OnClickArtifact
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1924747311775136616
 GameObject:
   m_ObjectHideFlags: 0
@@ -1169,7 +1181,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5303335287892755495}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6863607812344922706}
+        m_TargetAssemblyTypeName: UI_Menu, Assembly-CSharp
+        m_MethodName: OnClickMap
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &3752805768017311633
 GameObject:
   m_ObjectHideFlags: 0
@@ -1423,7 +1447,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1736153778826752102}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6863607812344922706}
+        m_TargetAssemblyTypeName: UI_Menu, Assembly-CSharp
+        m_MethodName: OnClickStatus
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &4476103158892046982
 GameObject:
   m_ObjectHideFlags: 0
@@ -3018,7 +3054,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b178aa6667ca2f84fb76dab98173da22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiPosition: 1
+  uiPosition: 0
   _uiAnimator: {fileID: 732609249230071822}
 --- !u!1 &8873841029273068006
 GameObject:

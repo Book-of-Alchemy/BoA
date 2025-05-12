@@ -2353,7 +2353,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec57244766d236a4a9dd5f52f1da7a26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiPosition: 0
+  uiPosition: 2
   _hpSlider: {fileID: 1334715428016880165}
   _hpImage: {fileID: 2586750093249014581}
   _mpSlider: {fileID: 2753866165110997802}

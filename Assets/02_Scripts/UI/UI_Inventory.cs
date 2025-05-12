@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum EInventoryType
+public enum EInventoryType //탭에 따라 보여질 Window 타입
 {
-    Inventory,
-    Craft,
+    Status,
     Equipment,
+    Craft,
+    Inventory,
+    Quest,
+    Map,
+    Artifact,
     None,
 }
 
@@ -18,10 +22,11 @@ public class UI_Inventory : UIBase
     [SerializeField] private Inventory _inventory; //데이터를 가지고 있는 인벤토리
     [SerializeField] private List<InventorySlotUI> _slotUIList;  //인벤토리 UI가 가지고있는 SlotUI를 리스트로 가지고 있음.
 
-    [Header("Tools")]
+    [Header("Windows")]
     [Tooltip("Connect with Enum")]
-    [SerializeField] private List<GameObject> _toolList; //UI_Inventory에 오른쪽에 바뀔 화면
-    [SerializeField] private List<Image> _imageList; //화면전환을 위한 탭버튼의 이미지 
+    [SerializeField] private List<GameObject> _windowList; //UI_Inventory에 오른쪽에 바뀔 화면
+    [SerializeField] private List<Image> _tabList; //화면전환을 위한 탭버튼의 이미지 
+    [SerializeField] private GameObject _commonWindow; 
 
     [Header("Test Comp")]
     [SerializeField] private Button _addBtn;
@@ -31,6 +36,7 @@ public class UI_Inventory : UIBase
 
     [SerializeField] private UIAnimator _uiAnimator;
     [SerializeField] private Animator _animator;
+    [SerializeField] private GameObject _canvasGroup;
     public int SlotCount => _slotUIList.Count;
 
     public event Action<EInventoryType> OnInventoryChanged;
@@ -79,11 +85,11 @@ public class UI_Inventory : UIBase
 
     private void InitInventoryType() //시작시 버튼 컬러 초기화
     {
-        _activeColor = _imageList[0].color; //기존 컬러 저장
+        _activeColor = _tabList[0].color; //기존 컬러 저장
 
-        for (int i = 0; i < _imageList.Count; i++)
+        for (int i = 0; i < _tabList.Count; i++)
         {
-            _imageList[i].color = _unActiveColor; 
+            _tabList[i].color = _unActiveColor; 
         }
     }
 
@@ -92,7 +98,7 @@ public class UI_Inventory : UIBase
         if (Inventory.Instance != null)
         {
             _inventory = Inventory.Instance;
-            _craftTool = _toolList[1].GetComponent<CraftTool>();
+            _craftTool = _windowList[1].GetComponent<CraftTool>();
             _inventory.Initialize(this,_craftTool);
             //버튼 등록
             _addBtn.onClick.AddListener(_inventory.OnClickAddItem);
@@ -113,6 +119,8 @@ public class UI_Inventory : UIBase
 
     public override void Opened(params object[] param)
     {
+        _canvasGroup.SetActive(false);
+
         IsOpened = true;
         _animator.SetTrigger("Open"); //인벤토리 여는 애니메이션
 
@@ -183,20 +191,20 @@ public class UI_Inventory : UIBase
 
     public void ShowRightTool(EInventoryType type) //어떤 InventoryTool을 사용할지 입력을 받아서 보여주는 역할
     {
-        for (int i = 0; i < _toolList.Count; i++)
+        for (int i = 0; i < _windowList.Count; i++)
         {
             if(i == (int)type) 
             {
                 //type에 맞는 InventoryTool 노출
                 SetCurType(type);
                 //_toolList[i].gameObject.SetActive(true);
-                _imageList[i].color = _activeColor;
+                _tabList[i].color = _activeColor;
                 UIManager.Hide<UI_Action>();
             }
             else
             {
-                _toolList[i].gameObject.SetActive(false);
-                _imageList[i].color = _unActiveColor;
+                _windowList[i].gameObject.SetActive(false);
+                _tabList[i].color = _unActiveColor;
             }
         }
     }
@@ -208,7 +216,18 @@ public class UI_Inventory : UIBase
         if (!_isFirstTypeSet) //초기에는 Flip 예외
             _uiAnimator.FadeOut(OnPageFlip);
         else
-            _toolList[(int)type].gameObject.SetActive(true);
+        {
+            _windowList[(int)type].gameObject.SetActive(true);
+            if (type switch // type이 _commonWindow가 필요한 인벤토리 타입인지 검사
+            {
+                EInventoryType.Craft or EInventoryType.Inventory or EInventoryType.Equipment => true,
+                _ => false
+            })
+                _commonWindow.SetActive(true); //필요한 타입이라면 공용Window 활성화
+            else
+                _commonWindow.SetActive(false); // 아니라면 비활성화
+
+        }
 
         _curType = type;
         
@@ -225,7 +244,7 @@ public class UI_Inventory : UIBase
 
     private void OnPageFlip()
     {
-        _toolList[(int)_curType].gameObject.SetActive(true);
+        _windowList[(int)_curType].gameObject.SetActive(true);
         int rand = UnityEngine.Random.value < 0.5f ? 0 : 1;
         if(rand == 0)
         {
@@ -259,21 +278,17 @@ public class UI_Inventory : UIBase
         _slotUIList[index].SetHighlight(false);
     }
 
-    public void OnClickInventoryBtn()
-    {
-        ShowRightTool(EInventoryType.Inventory);
-    }
-    public void OnClickCraftBtn()
-    {
-        ShowRightTool(EInventoryType.Craft);
-    }
-    public void OnClickEquipmentBtn()
-    {
-        ShowRightTool(EInventoryType.Equipment);
-    }
-
     public void SetSelectIndex(int index)
     {
         SelectIndex = index;
     }
+
+    //Inspector 연결된 버튼이벤트
+    public void OnClickStatusBtn() => ShowRightTool(EInventoryType.Status);
+    public void OnClickEquipmentBtn() => ShowRightTool(EInventoryType.Equipment);
+    public void OnClickCraftBtn() => ShowRightTool(EInventoryType.Craft);
+    public void OnClickInventoryBtn() => ShowRightTool(EInventoryType.Inventory);
+    public void OnClickQuestBtn() => ShowRightTool(EInventoryType.Quest);
+    public void OnClickMapBtn() => ShowRightTool(EInventoryType.Map);
+    public void OnClickArtifactBtn() => ShowRightTool(EInventoryType.Artifact);
 }
