@@ -58,6 +58,8 @@ public class DungeonBehavior : PlayerBaseBehavior
             || UIManager.IsOpened<UI_Craft>();
     }
 
+    public event Action OnPlayerMoved;
+
     public override void Initialize(PlayerController controller)
     {
         base.Initialize(controller);
@@ -377,6 +379,7 @@ public class DungeonBehavior : PlayerBaseBehavior
                 // 애니메이션이 완전히 끝난 시점에 이동 플래그 해제 및 턴 소비
                 _isMoving = false;
                 Controller.onActionConfirmed?.Invoke();
+                CameraController.Instance.RestoreCameraState();
             });
     }
 

@@ -125,6 +125,24 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Zoom"",
+                    ""type"": ""Value"",
+                    ""id"": ""30620eb6-c5ed-488a-b333-a09a0229b9e9"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""RightClick"",
+                    ""type"": ""Button"",
+                    ""id"": ""f8a8c99b-3d9d-4765-a351-3534c66ab41b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -460,17 +478,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""e3f8d810-82d1-4d4a-94cc-de6debc3ae41"",
-                    ""path"": ""<Mouse>/rightButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""MouseClick"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""cd2f6127-d055-4c25-9176-c2fd63b3d32a"",
                     ""path"": ""<Keyboard>/ctrl"",
                     ""interactions"": """",
@@ -488,6 +495,28 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Space"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""dcefec65-aaae-4bf6-acc2-a96ddc8fadf9"",
+                    ""path"": ""<Mouse>/scroll/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Zoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1b717b38-a6b6-4edc-9bb7-0d831c8e9432"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RightClick"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -509,6 +538,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_PC_MouseClick = m_PC.FindAction("MouseClick", throwIfNotFound: true);
         m_PC_Ctrl = m_PC.FindAction("Ctrl", throwIfNotFound: true);
         m_PC_Space = m_PC.FindAction("Space", throwIfNotFound: true);
+        m_PC_Zoom = m_PC.FindAction("Zoom", throwIfNotFound: true);
+        m_PC_RightClick = m_PC.FindAction("RightClick", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -581,6 +612,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_PC_MouseClick;
     private readonly InputAction m_PC_Ctrl;
     private readonly InputAction m_PC_Space;
+    private readonly InputAction m_PC_Zoom;
+    private readonly InputAction m_PC_RightClick;
     public struct PCActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -596,6 +629,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @MouseClick => m_Wrapper.m_PC_MouseClick;
         public InputAction @Ctrl => m_Wrapper.m_PC_Ctrl;
         public InputAction @Space => m_Wrapper.m_PC_Space;
+        public InputAction @Zoom => m_Wrapper.m_PC_Zoom;
+        public InputAction @RightClick => m_Wrapper.m_PC_RightClick;
         public InputActionMap Get() { return m_Wrapper.m_PC; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -638,6 +673,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Space.started += instance.OnSpace;
             @Space.performed += instance.OnSpace;
             @Space.canceled += instance.OnSpace;
+            @Zoom.started += instance.OnZoom;
+            @Zoom.performed += instance.OnZoom;
+            @Zoom.canceled += instance.OnZoom;
+            @RightClick.started += instance.OnRightClick;
+            @RightClick.performed += instance.OnRightClick;
+            @RightClick.canceled += instance.OnRightClick;
         }
 
         private void UnregisterCallbacks(IPCActions instance)
@@ -675,6 +716,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Space.started -= instance.OnSpace;
             @Space.performed -= instance.OnSpace;
             @Space.canceled -= instance.OnSpace;
+            @Zoom.started -= instance.OnZoom;
+            @Zoom.performed -= instance.OnZoom;
+            @Zoom.canceled -= instance.OnZoom;
+            @RightClick.started -= instance.OnRightClick;
+            @RightClick.performed -= instance.OnRightClick;
+            @RightClick.canceled -= instance.OnRightClick;
         }
 
         public void RemoveCallbacks(IPCActions instance)
@@ -705,5 +752,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnMouseClick(InputAction.CallbackContext context);
         void OnCtrl(InputAction.CallbackContext context);
         void OnSpace(InputAction.CallbackContext context);
+        void OnZoom(InputAction.CallbackContext context);
+        void OnRightClick(InputAction.CallbackContext context);
     }
 }
