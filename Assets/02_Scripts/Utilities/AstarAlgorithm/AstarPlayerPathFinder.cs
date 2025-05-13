@@ -141,10 +141,9 @@ public static class AstarPlayerPathFinder
         }
         return neighbors;
     }
-    // helper: 미탐색 타일이 “시야에 있는 타일의 인접”인지 검사
+    // 미탐색 타일이 시야에 있는 타일의 인접인지 검사
     private static bool IsAdjacentToVisible(Tile tile, Level level)
     {
-        // 4방향만 검사 (대각선을 허용하려면 allowDiagonal 파라미터를 추가하세요)
         Vector2Int[] dirs = {
         Vector2Int.up, Vector2Int.down,
         Vector2Int.left, Vector2Int.right
