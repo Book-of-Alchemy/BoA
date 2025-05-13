@@ -49,7 +49,8 @@ public static class AstarPlayerPathFinder
                 // 벽/미탐색/탐지된 함정 기존 필터
                 if (neighbor.tileType == TileType.wall)
                     continue;
-                if (!neighbor.IsExplored)
+                if (!neighbor.IsExplored
+                && !IsAdjacentToVisible(neighbor, level))
                     continue;
                 if (neighbor.TrpaOnTile != null && neighbor.TrpaOnTile.IsDetected)
                     continue;
@@ -139,5 +140,24 @@ public static class AstarPlayerPathFinder
                 neighbors.Add(nbr);
         }
         return neighbors;
+    }
+    // helper: 미탐색 타일이 “시야에 있는 타일의 인접”인지 검사
+    private static bool IsAdjacentToVisible(Tile tile, Level level)
+    {
+        // 4방향만 검사 (대각선을 허용하려면 allowDiagonal 파라미터를 추가하세요)
+        Vector2Int[] dirs = {
+        Vector2Int.up, Vector2Int.down,
+        Vector2Int.left, Vector2Int.right
+    };
+        foreach (var d in dirs)
+        {
+            var pos = tile.gridPosition + d;
+            if (level.tiles.TryGetValue(pos, out var adj)
+                && adj.IsExplored)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
