@@ -21,7 +21,7 @@ public class Stuned : Debuff
         if (unit == null || remainingTime <= tickInterval)
             return;
 
-        unit.nextActionTime += 10;
+        unit.NextActionTime += 10;
     }
 
     public override void OnApply(CharacterStats target)

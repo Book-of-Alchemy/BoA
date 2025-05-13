@@ -38,10 +38,10 @@ public class Tile
     public int MoveCost => CalculateMoveCost();
     public int AstarCost => CalculateAstarCost();
     public bool IsWalkable => CalculateIsWalkable();
-    public bool isOccupied;
-    public bool canSeeThrough = true;
+    public bool isOccupied;// map object or characterstat여부에 따라 자동으로 결정
+    public bool canSeeThrough = true;//벽타일 or map object의 canseethrough 여부에 따라 자동으로 결정
     public event Action onIsExploredChanged;
-    public bool isExplored;//향후 옵저버패턴 적용 이는 화면 표시방식에 적용 될예정이며 실제 entity의 시야와는 별개로 이용
+    private bool isExplored;
     public bool IsExplored
     {
         get => isExplored;
@@ -52,7 +52,7 @@ public class Tile
         }
     }
     public event Action onIsOnSightChanged;
-    public bool isOnSight;
+    private bool isOnSight;
     public bool IsOnSight
     {
         get => isOnSight;
@@ -87,8 +87,7 @@ public class Tile
     }
     public MapObject mapObject;
     public List<BaseItem> itemsOnTile = new List<BaseItem>();
-
-    //위에 올라간 mapObject 인스턴스
+    public TileStatusEffect environ;
 
     private int CalculateMoveCost()
     {

@@ -414,8 +414,8 @@ public class LevelGenerator : MonoBehaviour
                     isDoorPoint = info.isDoorPoint,
                     canSeeThrough = (info.tileType == TileType.wall ? false : true),
                     isOccupied = (info.tileType == TileType.wall ? true : false),
-                    isExplored = false,
-                    isOnSight = false
+                    IsExplored = false,
+                    IsOnSight = false
                 };
 
                 tiles[pos] = tile;
@@ -443,8 +443,8 @@ public class LevelGenerator : MonoBehaviour
                         environmentType = EnvironmentType.none,
                         isDoorPoint = false,
                         isOccupied = false,
-                        isExplored = false,
-                        isOnSight = false
+                        IsExplored = false,
+                        IsOnSight = false
                     };
 
                     tiles[pos] = tile;
@@ -661,8 +661,8 @@ public class LevelGenerator : MonoBehaviour
             isDoorPoint = false,
             isOccupied = false,
             canSeeThrough = false,
-            isExplored = false,
-            isOnSight = false
+            IsExplored = false,
+            IsOnSight = false
         };
     }
 

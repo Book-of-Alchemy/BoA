@@ -124,6 +124,7 @@ public static class TilePainter
         int bitask = CalculateEnvironmentBitmask(tile, level, tile.environmentType);
         tilePrefab.baseRenderer.sprite = environmentalSets[0].GetSprite(bitask);
         tilePrefab.baseRenderer.sortingOrder = -9000;
+        tilePrefab.CurTile = tile;
         TileGO.transform.SetParent(level.transform);
     }
 

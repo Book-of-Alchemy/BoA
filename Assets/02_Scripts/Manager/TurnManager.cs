@@ -51,7 +51,7 @@ public class TurnManager : Singleton<TurnManager>
             {
                 if (unit == null) continue; // null 체크
 
-                if (unit.nextActionTime <= globalTime)
+                if (unit.NextActionTime <= globalTime)
                 {
                     float originSpeed = turnSpeed;
                     if (!unit.IsPlayer && unit.CurTile != null)// 시야에 없는적 애니메이션 속도 가속
@@ -68,7 +68,7 @@ public class TurnManager : Singleton<TurnManager>
                     int cost = unit.GetModifiedActionCost();
                     Debug.Log($"[Tick {globalTime}] {unit.name} 턴 시작 (cost: {cost})");
 
-                    unit.nextActionTime += cost;
+                    unit.NextActionTime += cost;
 
                     turnSpeed = originSpeed;
                     //yield return wait;
