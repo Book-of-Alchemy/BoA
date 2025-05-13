@@ -254,10 +254,14 @@ public class UI_Inventory : UIBase
         {
             EInventoryType.Craft or EInventoryType.Inventory or EInventoryType.Equipment => true,
             _ => false
-        })
+        }) //조건문 끝
+        {
             _commonWindow.SetActive(true); //필요한 타입이라면 공용Window 활성화
+        }
         else
+        { 
             _commonWindow.SetActive(false); // 아니라면 비활성화
+        }
     }
     
     private void OnFliped()// Call At FlipLeft,Right Animation Event

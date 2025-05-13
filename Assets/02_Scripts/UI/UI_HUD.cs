@@ -44,14 +44,17 @@ public class UI_HUD : UIBase
         _expSlider.DOValue(per, 0.3f);
     }
 
-    private void OnClickCraft() // Call At OnClick Event
+    public void OnClickCraft() // Call At OnClick Event
     {
         UIManager.Show<UI_Inventory>(EInventoryType.Craft);
     }
 
-    private void OnClickMenu() // Call At OnClick Event
+    public void OnClickMenu() // Call At OnClick Event
     {
         UIManager.Show<UI_Menu>();
     }
-
+    public void OnLevelUpBtn() // Call At OnClick Event
+    {
+        UIManager.Show<UI_LvSelect>();
+    }
 }

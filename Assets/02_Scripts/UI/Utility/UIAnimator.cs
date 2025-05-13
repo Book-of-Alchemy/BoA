@@ -82,6 +82,6 @@ public class UIAnimator : MonoBehaviour
         gameObject.SetActive(true);
         transform.DOScale(popupScale, fadeDuration)
             .SetEase(Ease.OutBack)
-            .OnComplete(() => transform.DOScale(Vector3.one, fadeDuration).OnComplete(() => onComplete?.Invoke()));
+            .OnComplete(() => transform.DOScale(Vector3.one, popupDuration).OnComplete(() => onComplete?.Invoke()));
     }
 }
