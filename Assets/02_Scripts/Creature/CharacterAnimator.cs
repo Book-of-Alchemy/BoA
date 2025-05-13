@@ -13,6 +13,7 @@ public class CharacterAnimator : MonoBehaviour
     private static readonly int ThrowTriggerHash = Animator.StringToHash("Throw");
     private static readonly int DeathTriggerHash = Animator.StringToHash("Death");
     private static readonly int KnockBackTriggerHash = Animator.StringToHash("KnockBack");
+    private static readonly int IsWalkingHash = Animator.StringToHash("IsWalking");
     private void Awake()
     {
         _anim = GetComponent<Animator>();
@@ -50,5 +51,8 @@ public class CharacterAnimator : MonoBehaviour
     {
         _anim.SetTrigger(DeathTriggerHash);
     }
-    
+    public void SetWalking(bool isWalking)
+    {
+        _anim.SetBool(IsWalkingHash, isWalking);
+    }
 }

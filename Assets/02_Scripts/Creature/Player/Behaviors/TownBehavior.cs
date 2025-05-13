@@ -1,5 +1,3 @@
-// TownBehavior.cs
-
 using UnityEngine;
 using DG.Tweening;
 
@@ -13,6 +11,7 @@ public class TownBehavior : PlayerBaseBehavior
     private CharacterAnimator _animator;
     private SpriteRenderer _spriteRenderer;
     private Tween _moveTween;
+    private bool _isDashing = false;
 
     public override void Initialize(PlayerController controller)
     {
@@ -28,8 +27,8 @@ public class TownBehavior : PlayerBaseBehavior
     {
         var im = InputManager;
         im.OnMove += HandleMoveInput;
-        im.OnDashStart += () => _moveSpeed *= 2f;
-        im.OnDashEnd += () => _moveSpeed /= 2f;
+        im.OnDashStart += HandleDashStart;
+        im.OnDashEnd += HandleDashEnd;
         im.OnInteract += HandleInteractInput;
     }
 
@@ -37,9 +36,39 @@ public class TownBehavior : PlayerBaseBehavior
     {
         var im = InputManager;
         im.OnMove -= HandleMoveInput;
-        im.OnDashStart -= () => _moveSpeed *= 2f;
-        im.OnDashEnd -= () => _moveSpeed /= 2f;
+        im.OnDashStart -= HandleDashStart;
+        im.OnDashEnd -= HandleDashEnd;
         im.OnInteract -= HandleInteractInput;
+    }
+
+    private void HandleDashStart()
+    {
+        _isDashing = true;
+        if (_moveTween != null)
+        {
+            // 이동 중이면 바로 트윈 속도 두 배
+            _moveTween.timeScale = 2f;
+        }
+        else
+        {
+            // 아직 이동 전이면 다음 이동 속도를 두 배로
+            _moveSpeed *= 2f;
+        }
+    }
+
+    private void HandleDashEnd()
+    {
+        _isDashing = false;
+        if (_moveTween != null)
+        {
+            // 이동 중이면 트윈 속도 원상복구
+            _moveTween.timeScale = 1f;
+        }
+        else
+        {
+            // 아직 이동 전이면 다음 이동 속도 복구
+            _moveSpeed /= 2f;
+        }
     }
 
     private void HandleMoveInput(Vector2 raw)
@@ -48,6 +77,8 @@ public class TownBehavior : PlayerBaseBehavior
         if (dir != Vector2.zero)
         {
             if (dir.x != 0f) _spriteRenderer.flipX = dir.x < 0;
+
+            // 이전 트윈이 있으면 죽이고 새로 생성
             _moveTween?.Kill();
 
             var target = transform.position + (Vector3)dir * _far;
@@ -55,14 +86,20 @@ public class TownBehavior : PlayerBaseBehavior
                 .DOMove(target, _moveSpeed)
                 .SetSpeedBased()
                 .SetEase(Ease.Linear)
-                .OnPlay(() => _animator.PlayMove());
+                .OnPlay(() => _animator.SetWalking(true));
+
+            // 대시 중이었다면 바로 속도 적용
+            if (_isDashing)
+                _moveTween.timeScale = 2f;
         }
         else
         {
+            // 입력이 0이 되면 이동 중지
             if (_moveTween != null)
             {
                 _moveTween.Kill();
                 _moveTween = null;
+                _animator.SetWalking(false);
             }
         }
     }
