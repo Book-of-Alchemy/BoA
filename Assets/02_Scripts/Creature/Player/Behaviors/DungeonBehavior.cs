@@ -228,7 +228,7 @@ public class DungeonBehavior : PlayerBaseBehavior
         }
 
         // 이동 처리
-        List<Tile> path = AStarPathfinder.FindPath(_stats.CurTile, goalTile, _stats.curLevel);
+        List<Tile> path = AstarPlayerPathFinder.FindPath(_stats.CurTile, goalTile, _stats.curLevel);
         if (path == null || path.Count <= 1)
             return;
 

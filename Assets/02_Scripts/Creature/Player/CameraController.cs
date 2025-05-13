@@ -84,7 +84,7 @@ public class CameraController : Singleton<CameraController>
 
     /// <summary>
     /// CinemachineVirtualCamera 의 OrthographicSize 를
-    /// minZoom/maxZoom 사이로만 유지합니다.
+    /// minZoom/maxZoom 사이로만 유지
     /// </summary>
     private void CameraZoomLimit()
     { 
