@@ -17,6 +17,7 @@ public class TownBehavior : PlayerBaseBehavior
     private bool _isDashing = false;
     private Collider2D _interactZoneCollider;
     private InteractZone _interactZone;
+
     public override void Initialize(PlayerController controller)
     {
         base.Initialize(controller);
@@ -77,17 +78,23 @@ public class TownBehavior : PlayerBaseBehavior
             if (dir.x != 0f)
                 _spriteRenderer.flipX = dir.x < 0;
 
-            // 기존 트윈 종료
-            _moveTween?.Kill();
-
-            Vector2 target = _rb.position + dir * _far;
-            _moveTween = _rb
-                .DOMove(target, baseMoveSpeed)
-                .SetSpeedBased()
-                .SetEase(Ease.Linear)
-                .SetUpdate(UpdateType.Fixed)
-                .OnPlay(() => _animator.SetWalking(true))
-                .OnKill(() => _animator.SetWalking(false));
+        
+            Vector2 target = _rb.position + dir*_far;
+            Vector2 vector=Vector2.zero;
+            
+            if(vector!=dir)
+            {
+                _moveTween?.Kill();
+                _moveTween = _rb
+                    .DOMove(target, baseMoveSpeed)
+                    .SetSpeedBased()
+                    .SetEase(Ease.Linear)
+                    .SetUpdate(UpdateType.Fixed)
+                    .OnPlay(() => _animator.SetWalking(true))
+                    .OnKill(() => _animator.SetWalking(false));
+                vector = dir;
+                Debug.Log(dir);
+            }
 
             // 대시 상태라면 timeScale 적용
             if (_isDashing)
