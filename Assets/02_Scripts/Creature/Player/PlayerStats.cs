@@ -6,6 +6,10 @@ public class PlayerStats : CharacterStats
 {
     private PlayerController _player;
     public List<Artifact> equipArtifacts = new();
+    public bool isManaOverload = false;
+    public bool isEasyInstallationKit = false;
+    public bool isMarksman = false;
+    public bool isPrecisionAim = false;
     public override Tile CurTile
     {
         get => curTile;
