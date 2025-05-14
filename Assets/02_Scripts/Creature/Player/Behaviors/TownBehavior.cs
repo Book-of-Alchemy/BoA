@@ -85,6 +85,7 @@ public class TownBehavior : PlayerBaseBehavior
             var uiHandler = construct.GetComponent<IFacilityUI>();
             if (uiHandler != null)
             {
+                UnsubscribeInput();
                 uiHandler.ShowUI();
                 return;
             }
