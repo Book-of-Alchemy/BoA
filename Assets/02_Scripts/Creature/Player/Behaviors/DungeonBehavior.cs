@@ -628,6 +628,13 @@ public class DungeonBehavior : PlayerBaseBehavior
             return;
         }
 
+        //메뉴 닫기
+        if (UIManager.IsOpened<UI_Menu>())
+        {
+            UIManager.Hide<UI_Menu>();
+            return;
+        }
+
         //이동 취소
         if (_mousePathCoroutine != null)
         {
