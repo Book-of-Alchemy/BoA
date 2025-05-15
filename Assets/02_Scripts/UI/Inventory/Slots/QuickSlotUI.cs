@@ -1,56 +1,56 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
-public class QuickSlotUI : MonoBehaviour , IDropHandler
+public class QuickSlotUI : SlotUIBase<InventoryItem>, IDropHandler
 {
-    [SerializeField] private Image _icon;
     [SerializeField] private TextMeshProUGUI _indexText;
-    [SerializeField] private TextMeshProUGUI _amountText;
-
-    private InventoryItem _item;
-    private int _index;
 
     public void Initialize(int index)
     {
-        _index = index;
-        _indexText.text = _index.ToString();
-        ClearSlot();
+        Index = index;
+        _indexText.text = Index.ToString();
+        ClearUI();
     }
 
-    public void SetItem(InventoryItem item)
+    protected override void UpdateUI(InventoryItem data)
     {
-        _item = item;
-        _icon.sprite = item.itemData.Sprite;
-        _amountText.text = item.Amount.ToString();
+        _data = data;
+        _icon.sprite = data.itemData.Sprite;
+        _countTxt.text = data.Amount.ToString();
         _icon.enabled = true;
     }
 
-    public void ClearSlot()
+    protected override void ClearUI()
     {
-        _item = null;
-        _amountText.text = string.Empty;
+        _data = null;
+        _countTxt.text = string.Empty;
         _icon.enabled = false;
+    }
+
+    public override void OnClick()
+    {
+        
     }
 
     public void UseItem()
     {
-        if (_item == null) return;
+        if (_data == null) return;
 
-        if (_item.itemData.effect_type is Effect_Type.Damage)
+        if (_data.itemData.effect_type is Effect_Type.Damage)
         {
             var controller = GameManager.Instance.PlayerTransform.GetComponent<DungeonBehavior>();
-            controller.UseItem(_item.itemData);
+            controller.UseItem(_data.itemData);
         }
     }
 
     public void OnDrop(PointerEventData eventData)
     {
         var slotUI = eventData.pointerDrag?.GetComponent<InventorySlotUI>();
-        if (slotUI != null && slotUI.HasItem)
+        if (slotUI != null && slotUI.HasData)
         {
-            SetItem(slotUI.Item);
+            UpdateUI(slotUI.Data);
         }
     }
+
 }

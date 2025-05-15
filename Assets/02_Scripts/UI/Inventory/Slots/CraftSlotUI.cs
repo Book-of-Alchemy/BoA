@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class CraftSlotUI : InventorySlotUI
 {
-    public override void OnClickItem()
+    public override void OnClick()
     {
-        if (!HasItem) return;
-        Inventory.Instance.RemoveCraftTable(_item);
-        RemoveItem();
+        if (!HasData) return;
+        Inventory.Instance.RemoveCraftTable(_data);
+        ClearUI();
     }
 
 }

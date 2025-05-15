@@ -57,9 +57,6 @@ public class UI_Inventory : UIBase
     {
         { EInventoryType.Craft, new[] { Item_Type.Material, } },
     };
-
-    public int SelectIndex { get; private set; }
-
     public bool IsOpened { get; private set; }
 
     private Color _unActiveColor = Color.gray;
@@ -98,7 +95,7 @@ public class UI_Inventory : UIBase
         if (Inventory.Instance != null)
         {
             _inventory = Inventory.Instance;
-            _craftTool = _windowList[1].GetComponent<CraftTool>();
+            _craftTool = _windowList[2].GetComponent<CraftTool>();
             _inventory.Initialize(this,_craftTool);
             //버튼 등록
             _addBtn.onClick.AddListener(_inventory.OnClickAddItem);
@@ -158,15 +155,15 @@ public class UI_Inventory : UIBase
 
     public void SetInventorySlot(int index, InventoryItem item) //슬롯에 아이템 UI 갱신
     {
-        _slotUIList[index].SetItem(item);
+        _slotUIList[index].SetData(item);
     }
 
     public void RemoveItem(int index) // 슬롯에 아이템 아이콘, 갯수 제거
     {
         var slot = _slotUIList[index];
         //빈슬롯이면 return
-        if (!slot.HasItem) return;
-        slot.RemoveItem();
+        if (!slot.HasData) return;
+        slot.RemoveData();
     }
 
     public void ReduceItem(int index,int amount) // 슬롯에 아이템 아이콘, 갯수 제거
@@ -176,7 +173,7 @@ public class UI_Inventory : UIBase
     public void ClearAllSlots()
     {
         foreach (var slot in _slotUIList)
-            slot.RemoveItem();
+            slot.RemoveData();
     }
     public void OnSlotSelected(int index)
     {
@@ -284,11 +281,6 @@ public class UI_Inventory : UIBase
             return;
 
         _slotUIList[index].SetHighlight(false);
-    }
-
-    public void SetSelectIndex(int index)
-    {
-        SelectIndex = index;
     }
 
     //Inspector 연결된 버튼이벤트

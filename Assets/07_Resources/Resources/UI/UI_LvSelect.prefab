@@ -140,7 +140,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiPosition: 1
   _uiAnimator: {fileID: 3473887782451483086}
-  _arrowRect: {fileID: 2788996457883957068}
+  _selector: {fileID: 2788996457883957068}
   _panels:
   - {fileID: 6575957135674786696}
   - {fileID: 3713404902218828157}

@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 enum EUIActionType
 {
-    Use,
+    Equip = 1,
     Craft,
-    Equip
+    Use,
 }
 
 public class UI_Action : UIBase
