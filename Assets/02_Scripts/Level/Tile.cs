@@ -93,7 +93,8 @@ public class Tile
     }
     public MapObject mapObject;
     public List<BaseItem> itemsOnTile = new List<BaseItem>();
-    public TileEffect environ;
+    public TileEffect groundEffect;
+    public TileEffect airEffect;
 
 
 
