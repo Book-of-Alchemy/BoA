@@ -18,7 +18,7 @@ public abstract class BaseItem : MonoBehaviour
 
     public event Action ItemUseDone;// 아이템 사용이 완전히 끝났을때 발생시킬 이벤트
     public abstract void UseItem(ItemData data);
-
+    public abstract void CancelUse();
     protected void RaiseItemUseDone()
     {
         ItemUseDone?.Invoke();

@@ -8,19 +8,44 @@ public class HUDPresenter
     public HUDPresenter(UI_HUD hud)
     {
         _hud = hud;
-        if(GameManager.Instance.PlayerTransform != null)
-        {
-            //PlayerStats 찾아서 이벤트 구독
-            _playerStats = GameManager.Instance.PlayerTransform.GetComponent<PlayerStats>();
-            //_playerStats.OnHealthRatioChanged += UpdateUIBar;
-        }
+
+        _playerStats = GameManager.Instance.PlayerTransform.GetComponent<PlayerStats>();
+
+        // 체력 변경 이벤트 구독
+        _playerStats.OnHealthRatioChanged += UpdateHealth;
+        // 마나 변경 이벤트 구독
+        _playerStats.OnManaChanged += UpdateMana;
+        // 경험치 변경 이벤트 구독
+        _playerStats.OnExperienceChanged += UpdateExp;
+
+        // 초기 UI 업데이트
+        UpdateHealth();
+        UpdateMana();
+        UpdateExp();
+    }
+    private void UpdateHealth()
+    {
+        float healthRatio = _playerStats.CurrentHealth / _playerStats.MaxHealth;
+        _hud.UpdateHp(healthRatio);
     }
 
-    public void UpdateUIBar()
+    private void UpdateMana()
     {
-        //UI 바 업데이트
-        float val = _playerStats.CurrentHealth/_playerStats.MaxHealth;
-        _hud.UpdateHp(val);
+        float manaRatio = _playerStats.CurrentMana / _playerStats.MaxMana;
+        _hud.UpdateMp(manaRatio);
     }
+
+    private void UpdateExp()
+    {
+        float expRatio = (float)_playerStats.experience / _playerStats.nextLevelExp;
+        _hud.UpdateExp(expRatio);
+    }
+
+    //public void UpdateUIBar()
+    //{
+    //    //UI 바 업데이트
+    //    float val = _playerStats.CurrentHealth/_playerStats.MaxHealth;
+    //    _hud.UpdateHp(val);
+    //}
 
 }

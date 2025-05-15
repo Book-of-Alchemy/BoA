@@ -101,4 +101,7 @@ private List<Tile> rangeTiles = new List<Tile>();
             Destroy(this.gameObject, 0.1f);
         }
     }
+    public override void CancelUse()
+    {
+    }
 }
