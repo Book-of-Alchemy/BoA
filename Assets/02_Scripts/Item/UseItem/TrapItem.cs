@@ -17,7 +17,10 @@ public class TrapItem : BaseItem
         InputManager.Instance.OnMouseMove += CheckEffectRange;
         InputManager.Instance.OnMouseClick += OnClick;
     }
-
+    public override void CancelUse()
+    {
+        
+    }
     public List<Tile> CheckRange(ItemData data)
     {
         ItemManager.Instance.DestroyRange();
