@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 220007
   name_kr: "\uD63C\uB780"
-  type: 1
-  effect_category: 1
+  type: 0
+  effect_category: 0
   icon_sprite: icon_confuse
   description: "\uBB34\uC791\uC704 \uBC29\uD5A5 \uC774\uB3D9 \uBC0F \uACF5\uACA9"
   duration_type: 0

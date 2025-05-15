@@ -15,7 +15,7 @@ MonoBehaviour:
   id: 220112
   name_kr: "\uAC10\uC804 \uBA74\uC5ED"
   type: 0
-  effect_category: 4
+  effect_category: 0
   icon_sprite: icon_shockguard
   description: "\uAC10\uC804\uC5D0 \uBA74\uC5ED"
   duration_type: 0

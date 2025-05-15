@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 570ed5bf6f410b041b0e35885a685fe6, type: 3}
   m_Name: Overwhelming Odds
   m_EditorClassIdentifier: 
-  id: 190129
+  id: 190128
   name_kr: "\uC5ED\uC804\uC758 \uBA85\uC218"
   name_en: Overwhelming Odds
   description: "\uD50C\uB808\uC774\uC5B4\uC758 HP\uAC00 30% \uC774\uD558\uC77C \uB54C

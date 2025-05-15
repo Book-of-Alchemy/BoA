@@ -15,7 +15,7 @@ MonoBehaviour:
   id: 220118
   name_kr: "\uBB34\uC801"
   type: 0
-  effect_category: 6
+  effect_category: 0
   icon_sprite: icon_invicible
   description: "\uBAA8\uB4E0 \uD53C\uD574\uB97C \uBB34\uC2DC"
   duration_type: 0
