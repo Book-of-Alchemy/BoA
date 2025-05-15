@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 220011
   name_kr: "\uCD9C\uD608"
-  type: 1
-  effect_category: 2
+  type: 0
+  effect_category: 0
   icon_sprite: icon_bleed
   description: "\uB9E4 \uD134 \uD53C\uD574. \uC774\uB3D9 \uC2DC \uC2A4\uD0DD \uC99D\uAC00,
     \uC9C0\uC18D\uC2DC\uAC04\uC740 \uACE0\uC815"

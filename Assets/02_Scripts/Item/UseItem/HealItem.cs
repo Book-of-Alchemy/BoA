@@ -20,5 +20,8 @@ public class HealItem : BaseItem
             Destroy(this.gameObject);
         }
     }
+    public override void CancelUse()
+    {
+    }
 
 }

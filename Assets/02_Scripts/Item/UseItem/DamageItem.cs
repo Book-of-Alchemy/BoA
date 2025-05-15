@@ -45,7 +45,18 @@ public class DamageItem : BaseItem
         InputManager.Instance.OnMouseMove += CheckEffectRange;
         InputManager.Instance.OnMouseClick += OnClick;
     }
+    public override void CancelUse()
+    {
+        InputManager.Instance.OnMouseMove -= CheckEffectRange;
+        InputManager.Instance.OnMouseClick -= OnClick;
 
+        // 화면에 표시된 사거리 지우기
+        ItemManager.Instance.DestroyRange();
+        ItemManager.Instance.DestroyItemRange();
+
+        // 이 게임 오브젝트 파괴
+        Destroy(this.gameObject);
+    }
     /// <summary>
     /// 아이템 사용 후 사용하려는 위치에 마우스를 눌렀을때 동작하는 매서드
     /// </summary>

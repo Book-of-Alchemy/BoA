@@ -8,4 +8,7 @@ public class MaterialItem : BaseItem
     {
 
     }
+    public override void CancelUse()
+    {
+    }
 }

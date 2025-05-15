@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 220004
   name_kr: "\uAE30\uC808"
-  type: 1
-  effect_category: 1
+  type: 0
+  effect_category: 0
   icon_sprite: icon_stun
   description: "\uC774\uB3D9 \uBC0F \uACF5\uACA9 \uBAA8\uB450 \uBD88\uAC00\uB2A5"
   duration_type: 0

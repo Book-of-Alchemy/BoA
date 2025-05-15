@@ -1,17 +1,56 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using UnityEditorInternal.VR;
 using UnityEngine;
 
 public static class ArtifactFactory
 {
+    public static List<ArtifactData> copyArtifacts = new List<ArtifactData>(SODataManager.Instance.ArtifactDataBase.artifacts);
     public static Artifact EquipArtifact(int id)
     {
         Artifact artifact = CreateArtifact(id);
         GameManager.Instance.PlayerTransform.equipArtifacts.Add(artifact);
         artifact.Equip(GameManager.Instance.PlayerTransform);
+        copyArtifacts.Remove(artifact.data);
         return artifact;
+    }
+
+    public static ArtifactData[] RandomArtifacts()
+    {
+        List<ArtifactData> commonArtifacts = copyArtifacts.Where(artifact => artifact.rarity == Rarity.Common).ToList();
+        List<ArtifactData> uncommonArtifacts = copyArtifacts.Where(artifact => artifact.rarity == Rarity.Uncommon).ToList();
+        List<ArtifactData> rareArtifacts = copyArtifacts.Where(artifact => artifact.rarity == Rarity.Rare).ToList();
+        List<List<ArtifactData>> artifactsList = new List<List<ArtifactData>>();
+        List<ArtifactData> selectArtifacts = new List<ArtifactData>();
+
+        artifactsList.Add(commonArtifacts);
+        artifactsList.Add(uncommonArtifacts);
+        artifactsList.Add(rareArtifacts);
+        int[] weight = { 60, 30, 10 }; // 확률 가중치
+        int total = weight.Sum(); // 확률 합(100)
+
+        for(int i = 0; i < 3; i++)
+        {
+            int rand = UnityEngine.Random.Range(1, total + 1);
+            int cumulative = 0;
+
+            for (int j = 0; j < weight.Length; j++)
+            {
+                cumulative += weight[j];
+                if (rand <= cumulative)
+                {
+                    int randItemIndex = UnityEngine.Random.Range(0, artifactsList[j].Count);
+                    selectArtifacts.Add(artifactsList[j][randItemIndex]);
+                    break;
+                }
+            }
+        }
+        Debug.Log($"아티팩트 리스트{selectArtifacts[0]},{selectArtifacts[1]},{selectArtifacts[2]}");
+        return selectArtifacts.ToArray();
+
     }
     public static Artifact CreateArtifact(int id)
     {
@@ -70,11 +109,11 @@ public static class ArtifactFactory
             case 190124: return new RaiderintheDarkness(kvp[id]);
             case 190125: return new DarkAmplifier(kvp[id]);
             case 190126: return new UnstableGuardian(kvp[id]);
-            case 190128: return new MarkofRaider(kvp[id]);
-            case 190129: return new OverwhelmingOdds(kvp[id]);
-            case 190130: return new ShieldAmplifier(kvp[id]);
-            case 190131: return new AmuletofRestore(kvp[id]);
-            case 190132: return new TrapDetector(kvp[id]);
+            case 190127: return new MarkofRaider(kvp[id]);
+            case 190128: return new OverwhelmingOdds(kvp[id]);
+            case 190129: return new ShieldAmplifier(kvp[id]);
+            case 190130: return new AmuletofRestore(kvp[id]);
+            case 190131: return new TrapDetector(kvp[id]);
             case 190200: return new Marksman(kvp[id]);
             case 190201: return new Sharpeye(kvp[id]);
             case 190202: return new ManaOverload(kvp[id]);
@@ -83,4 +122,6 @@ public static class ArtifactFactory
             default: throw new Exception("Unknown status ID: " + id);
         }
     }
+
+
 }

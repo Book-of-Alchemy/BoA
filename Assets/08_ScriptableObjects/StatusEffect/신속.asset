@@ -15,7 +15,7 @@ MonoBehaviour:
   id: 220113
   name_kr: "\uC2E0\uC18D"
   type: 0
-  effect_category: 5
+  effect_category: 0
   icon_sprite: icon_swift
   description: "\uC18C\uBAA8\uB418\uB294 \uD589\uB3D9\uB825 \uAC10\uC18C"
   duration_type: 0

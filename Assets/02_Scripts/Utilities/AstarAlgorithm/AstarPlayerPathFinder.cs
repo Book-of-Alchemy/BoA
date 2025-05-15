@@ -144,19 +144,17 @@ public static class AstarPlayerPathFinder
     // 미탐색 타일이 시야에 있는 타일의 인접인지 검사
     private static bool IsAdjacentToVisible(Tile tile, Level level)
     {
-        Vector2Int[] dirs = {
-        Vector2Int.up, Vector2Int.down,
-        Vector2Int.left, Vector2Int.right
-    };
-        foreach (var d in dirs)
+        var adjacentTiles = TileUtility.GetAdjacentTileList(level, tile, isEightDir: false);
+
+        if (adjacentTiles == null)
+            return false;
+
+        foreach (var adj in adjacentTiles)
         {
-            var pos = tile.gridPosition + d;
-            if (level.tiles.TryGetValue(pos, out var adj)
-                && adj.IsExplored)
-            {
+            if (adj != null && adj.IsExplored)
                 return true;
-            }
         }
+
         return false;
     }
 }

@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 220010
   name_kr: "\uC911\uB3C5"
-  type: 1
-  effect_category: 2
+  type: 0
+  effect_category: 0
   icon_sprite: icon_poison
   description: "\uB9E4 \uD134 \uD53C\uD574. \uC2A4\uD0DD\uC5D0 \uB530\uB77C \uD53C\uD574\uB7C9
     \uC99D\uAC00"

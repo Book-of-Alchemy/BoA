@@ -15,7 +15,7 @@ MonoBehaviour:
   id: 220103
   name_kr: "\uC18D\uBC15 \uBA74\uC5ED"
   type: 0
-  effect_category: 4
+  effect_category: 0
   icon_sprite: icon_rootguard
   description: "\uC18D\uBC15\uC5D0 \uBA74\uC5ED"
   duration_type: 0

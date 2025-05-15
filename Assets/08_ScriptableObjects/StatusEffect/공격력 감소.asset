@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 220001
   name_kr: "\uACF5\uACA9\uB825 \uAC10\uC18C"
-  type: 1
+  type: 0
   effect_category: 0
   icon_sprite: icon_atkdown
   description: "\uC77C\uC815 \uC2DC\uAC04 \uB3D9\uC548 \uC801\uC758 \uACF5\uACA9\uB825\uC774

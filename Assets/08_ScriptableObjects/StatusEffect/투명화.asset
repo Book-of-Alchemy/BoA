@@ -15,7 +15,7 @@ MonoBehaviour:
   id: 220116
   name_kr: "\uD22C\uBA85\uD654"
   type: 0
-  effect_category: 6
+  effect_category: 0
   icon_sprite: icon_invisible
   description: "\uC801\uC5D0\uAC8C \uC778\uC2DD\uB418\uC9C0 \uC54A\uC74C. \uD2B9\uC815
     \uC801\uC740 \uAC10\uC9C0 \uAC00\uB2A5"
