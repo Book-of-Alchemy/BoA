@@ -30,5 +30,7 @@ MonoBehaviour:
   max_stack: 9999
   iteminfo_kr: "\uAE08\uC18D \uC7AC\uB8CC"
   icon_sprite: Image/Item/Scrap Iron
-  Sprite: {fileID: 21300000, guid: 103f89c2946c0af4c94eb5387cddcf68, type: 3}
+  sprite: {fileID: 21300000, guid: 103f89c2946c0af4c94eb5387cddcf68, type: 3}
+  itemRangeSprite: {fileID: 0}
+  itemEffectRangeSprite: {fileID: 0}
   itemPrefab: {fileID: 0}

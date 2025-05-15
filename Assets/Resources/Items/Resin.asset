@@ -30,5 +30,7 @@ MonoBehaviour:
   max_stack: 9999
   iteminfo_kr: "\uAE30\uBCF8 \uC7AC\uB8CC"
   icon_sprite: Image/Item/Resin
-  Sprite: {fileID: 21300000, guid: a4859218d39e70945b3bfe0b0b542bf4, type: 3}
+  sprite: {fileID: 21300000, guid: a4859218d39e70945b3bfe0b0b542bf4, type: 3}
+  itemRangeSprite: {fileID: 0}
+  itemEffectRangeSprite: {fileID: 0}
   itemPrefab: {fileID: 0}

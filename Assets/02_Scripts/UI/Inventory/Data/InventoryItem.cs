@@ -35,7 +35,7 @@ public class InventoryItem // Inventory에 배열로 존재하는 Item
     public Sprite GetSprite()
     {
         if(itemData != null)
-            return itemData.Sprite;
+            return itemData.sprite;
         else
         {
             Debug.LogWarning("Null에서 GetSprite호출");
