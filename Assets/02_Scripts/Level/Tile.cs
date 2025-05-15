@@ -17,10 +17,17 @@ public enum TileType
 public enum EnvironmentType
 {
     none = 0,
-    swamp,
-    lava,
-    grease,
-    water,
+    Shallow_Water,
+    Lava,
+    Oil,
+    Mud,
+    Toxic_Air,
+    Electrofied_Water,
+    Flame,
+    Solidfied_Lava,
+    Fog,
+    Iced_Water,
+    Slimed_Field,
 }
 
 
@@ -35,11 +42,10 @@ public class Tile
     public EnvironmentType environmentType;
     public bool isDoorPoint;
 
-    public int MoveCost => CalculateMoveCost();
     public int AstarCost => CalculateAstarCost();
     public bool IsWalkable => CalculateIsWalkable();
     public bool isOccupied;// map object or characterstat여부에 따라 자동으로 결정
-    public bool canSeeThrough = true;//벽타일 or map object의 canseethrough 여부에 따라 자동으로 결정
+    public bool CanSeeThrough => CalculateCanSeeThrough();//벽타일 or map object의 canseethrough 여부에 따라 자동으로 결정
     public event Action onIsExploredChanged;
     private bool isExplored;
     public bool IsExplored
@@ -87,30 +93,24 @@ public class Tile
     }
     public MapObject mapObject;
     public List<BaseItem> itemsOnTile = new List<BaseItem>();
-    public TileStatusEffect environ;
+    public TileEffect environ;
 
-    private int CalculateMoveCost()
-    {
-        int cost = environmentType switch
-        {
-            EnvironmentType.swamp => 2,
-            EnvironmentType.lava => 2,
-            EnvironmentType.grease => 1,
-            EnvironmentType.water => 1,
-            _ => 1
-        };
 
-        return cost;
-    }
 
     private int CalculateAstarCost()
     {
         int cost = environmentType switch
         {
-            EnvironmentType.swamp => 6,
-            EnvironmentType.lava => 6,
-            EnvironmentType.grease => 2,
-            EnvironmentType.water => 1,
+            EnvironmentType.Lava => 6,
+            EnvironmentType.Oil => 6,
+            EnvironmentType.Mud => 6,
+            EnvironmentType.Toxic_Air => 6,
+            EnvironmentType.Electrofied_Water => 6,
+            EnvironmentType.Flame => 6,
+            EnvironmentType.Solidfied_Lava => 6,
+            EnvironmentType.Fog => 6,
+            EnvironmentType.Iced_Water => 6,
+            EnvironmentType.Slimed_Field => 6,
             _ => 1
         };
 
@@ -152,6 +152,22 @@ public class Tile
 
         return isWalkable;
     }
+    
+    private bool CalculateCanSeeThrough()
+    {
+        bool isCanSeeThrough;
+        isCanSeeThrough = tileType switch
+        {
+            TileType.wall => false,
+            TileType.secretWall => false,
+            TileType.ground => !isOccupied,
+            TileType.door => !isOccupied,
+            _ => true,
+        };
+
+        return isCanSeeThrough;
+    }
+
     public void AffectOnTile(DamageInfo damageInfo)
     {
 

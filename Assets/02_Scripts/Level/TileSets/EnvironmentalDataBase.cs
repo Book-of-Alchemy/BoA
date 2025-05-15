@@ -1,0 +1,25 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[CreateAssetMenu(menuName = "Tile/EnvironmentalDataBase")]
+public class EnvironmentalDataBase : ScriptableObject
+{
+    public List<EnvironmentalData> environmentalDatas = new List<EnvironmentalData>();
+    public GameObject environmentalPrefab;
+
+    public Dictionary<EnvironmentType, EnvironmentalData> datasByType = new Dictionary<EnvironmentType, EnvironmentalData>();
+
+    private void OnValidate()
+    {
+        datasByType.Clear();
+
+        foreach (var data in environmentalDatas)
+        {
+            if (datasByType.ContainsKey(data.environment_type))
+                Debug.LogWarning("중복되는 환경타일입니다.");
+
+            datasByType[data.environment_type] = data;
+        }
+    }
+}

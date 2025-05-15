@@ -12,6 +12,7 @@ public class SODataManager : Singleton<SODataManager>
     public ItemDataBase itemDataBase;
     public StatusEffectDataBase StatusEffectDataBase;
     public ArtifactDataBase ArtifactDataBase;
+    public EnvironmentalDataBase environmentalDataBase;
     public GameObject playerPrefab;
 
 }

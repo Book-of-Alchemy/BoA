@@ -260,7 +260,7 @@ public static class TileUtility
 
             if (level.tiles.TryGetValue(pos, out Tile tile))
             {
-                if (!tile.canSeeThrough)
+                if (!tile.CanSeeThrough)
                 {
                     return false;
                 }
@@ -278,7 +278,7 @@ public static class TileUtility
         {
             if (level.tiles.TryGetValue(pos, out Tile tile))
             {
-                if (!tile.canSeeThrough)
+                if (!tile.CanSeeThrough)
                 {
                     return false;
                 }

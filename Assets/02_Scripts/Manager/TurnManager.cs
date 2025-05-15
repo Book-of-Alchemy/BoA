@@ -6,6 +6,7 @@ using UnityEngine;
 public class TurnManager : Singleton<TurnManager>
 {
     public List<UnitBase> allUnits = new List<UnitBase>();
+    public List<TileEffect> allTileEffects = new List<TileEffect>();
     HashSet<int> unitIds = new HashSet<int>();
     public int globalTime = 0;
     public float turnSpeed = 10;//나눈 값을 기준으로 정함 5 = 0.2초 10 = 0.1초 향후 이걸 기준으로 가속 + 도트윈 + 애니메이션에도 적용
@@ -49,7 +50,7 @@ public class TurnManager : Singleton<TurnManager>
             // 실제 턴 처리
             foreach (var unit in allUnits.ToArray())
             {
-                if (unit == null) continue; // null 체크
+                if (unit == null) continue; 
 
                 if (unit.NextActionTime <= globalTime)
                 {
@@ -121,5 +122,20 @@ public class TurnManager : Singleton<TurnManager>
         unitIds.Remove(unit.GetInstanceID());
         allUnits.Remove(unit);
     }
+    public void AddTileEffect(TileEffect tileEffect)
+    {
+        if (!unitIds.Add(tileEffect.GetInstanceID()))
+            return;
+        allTileEffects.Add(tileEffect);
+        tileEffect.Init();
+    }
 
+    public void RemoveTileEffectt(TileEffect tileEffect)
+    {
+        if (unitIds == null) unitIds = new HashSet<int>();
+        if (allUnits == null) allUnits = new List<UnitBase>();
+
+        unitIds.Remove(tileEffect.GetInstanceID());
+        allTileEffects.Remove(tileEffect);
+    }
 }

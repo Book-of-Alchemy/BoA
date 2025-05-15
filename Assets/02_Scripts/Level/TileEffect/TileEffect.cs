@@ -2,6 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public interface IGround
+{
+
+}
+
+public interface IAir
+{
+
+}
+
 public abstract class TileEffect : MonoBehaviour, ITurnProcessor
 {
     protected int currentTime = 0;
@@ -15,6 +25,7 @@ public abstract class TileEffect : MonoBehaviour, ITurnProcessor
 
     protected virtual void Awake()
     {
+
     }
 
     public virtual void Init()
