@@ -15,7 +15,7 @@ MonoBehaviour:
   id: 220114
   name_kr: "\uBA74\uC5ED"
   type: 0
-  effect_category: 4
+  effect_category: 0
   icon_sprite: icon_immune
   description: "\uBAA8\uB4E0 \uC0C1\uD0DC\uC774\uC0C1\uC5D0 \uBA74\uC5ED"
   duration_type: 0

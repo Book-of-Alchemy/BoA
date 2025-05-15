@@ -12,12 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 570ed5bf6f410b041b0e35885a685fe6, type: 3}
   m_Name: Trap Detector
   m_EditorClassIdentifier: 
-  id: 190132
+  id: 190131
   name_kr: "\uD568\uC815 \uD0D0\uC9C0\uAE30"
   name_en: Trap Detector
-  description: "\uCE35 \uC9C4\uC785 \uC2DC \uD574\uB2F9 \uCE35\uC758 \uBAA8\uB4E0
-    \uD568\uC815\uC744 50% \uD655\uB960\uB85C \uD0D0\uC9C0\uD574 \uBAA8\uC2B5\uC744
-    \uB4DC\uB7EC\uB0C5\uB2C8\uB2E4."
+  description: "\uC544\uD2F0\uD329\uD2B8 \uD68D\uB4DD \uC2DC \uBAA8\uB4E0 \uD568\uC815\uC744
+    90% \uD655\uB960\uB85C \uD0D0\uC9C0\uD574 \uBAA8\uC2B5\uC744 \uB4DC\uB7EC\uB0C5\uB2C8\uB2E4."
   icon_sprite_id: 
   icon_sprite: {fileID: 0}
   rarity: 1

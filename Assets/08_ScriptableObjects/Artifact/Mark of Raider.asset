@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 570ed5bf6f410b041b0e35885a685fe6, type: 3}
   m_Name: Mark of Raider
   m_EditorClassIdentifier: 
-  id: 190128
+  id: 190127
   name_kr: "\uAC15\uC2B5\uC790\uC758 \uC9D5\uD45C"
   name_en: Mark of Raider
   description: "\uD50C\uB808\uC774\uC5B4\uC758 HP\uAC00 90% \uC774\uC0C1\uC77C \uB54C

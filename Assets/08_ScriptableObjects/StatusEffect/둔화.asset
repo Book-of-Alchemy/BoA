@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 220006
   name_kr: "\uB454\uD654"
-  type: 1
-  effect_category: 1
+  type: 0
+  effect_category: 0
   icon_sprite: icon_slow
   description: "\uC18C\uBAA8\uB418\uB294 \uD589\uB3D9\uB825 \uC99D\uAC00"
   duration_type: 0

@@ -15,7 +15,7 @@ MonoBehaviour:
   id: 220117
   name_kr: "\uBCF4\uD638\uB9C9"
   type: 0
-  effect_category: 6
+  effect_category: 0
   icon_sprite: icon_shield
   description: "\uC77C\uC815\uB7C9\uC758 \uD53C\uD574\uB97C \uD761\uC218\uD558\uB294
     \uBCF4\uD638\uB9C9 \uC0DD\uC131"
