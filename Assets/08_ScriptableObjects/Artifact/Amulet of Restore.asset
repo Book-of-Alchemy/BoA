@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 570ed5bf6f410b041b0e35885a685fe6, type: 3}
   m_Name: Amulet of Restore
   m_EditorClassIdentifier: 
-  id: 190131
+  id: 190130
   name_kr: "\uC0C1\uCC98 \uCE58\uC720\uC758 \uBD80\uC801"
   name_en: Amulet of Restore
   description: "\uD50C\uB808\uC774\uC5B4\uC758 \uC783\uC740 HP 1%\uB2F9 \uBC1B\uB294

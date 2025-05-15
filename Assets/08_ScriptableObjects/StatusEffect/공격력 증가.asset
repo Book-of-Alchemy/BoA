@@ -15,7 +15,7 @@ MonoBehaviour:
   id: 220101
   name_kr: "\uACF5\uACA9\uB825 \uC99D\uAC00"
   type: 0
-  effect_category: 3
+  effect_category: 0
   icon_sprite: icon_atkup
   description: "\uC77C\uC815 \uC2DC\uAC04 \uB3D9\uC548 \uACF5\uACA9\uB825 \uC99D\uAC00"
   duration_type: 0

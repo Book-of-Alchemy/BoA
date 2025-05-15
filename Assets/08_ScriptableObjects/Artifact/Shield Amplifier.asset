@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 570ed5bf6f410b041b0e35885a685fe6, type: 3}
   m_Name: Shield Amplifier
   m_EditorClassIdentifier: 
-  id: 190130
+  id: 190129
   name_kr: "\uBCF4\uD638\uB9C9 \uC99D\uD3ED\uC7A5\uCE58"
   name_en: Shield Amplifier
   description: "\uD50C\uB808\uC774\uC5B4\uAC00 \uC5BB\uB294 \uBCF4\uD638\uB9C9 \uC591\uC774

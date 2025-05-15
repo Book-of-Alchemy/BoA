@@ -15,7 +15,7 @@ MonoBehaviour:
   id: 220110
   name_kr: "\uC911\uB3C5 \uBA74\uC5ED"
   type: 0
-  effect_category: 4
+  effect_category: 0
   icon_sprite: icon_poisonguard
   description: "\uC911\uB3C5\uC5D0 \uBA74\uC5ED"
   duration_type: 0

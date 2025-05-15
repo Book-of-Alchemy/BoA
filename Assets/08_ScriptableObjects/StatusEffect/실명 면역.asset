@@ -15,7 +15,7 @@ MonoBehaviour:
   id: 220108
   name_kr: "\uC2E4\uBA85 \uBA74\uC5ED"
   type: 0
-  effect_category: 4
+  effect_category: 0
   icon_sprite: icon_blindguard
   description: "\uC2E4\uBA85\uC5D0 \uBA74\uC5ED"
   duration_type: 0
