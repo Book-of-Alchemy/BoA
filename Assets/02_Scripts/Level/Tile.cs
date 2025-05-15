@@ -171,6 +171,24 @@ public class Tile
 
     public void AffectOnTile(DamageInfo damageInfo)
     {
+        //TileReactionResult groundResult = TileRuleProccessor.CheckRuleOnGround(damageInfo,this);
+        //if(groundResult.isReacted)
+        //{
+        //    EffectProjectileManager.Instance.PlayEffect(gridPosition, groundResult.effect_ID);
+        //    if(CharacterStatsOnTile != null)
+        //    {
+        //        DamageInfo damage = new DamageInfo(groundResult.damage, groundResult.damageType, damageInfo.source, CharacterStatsOnTile, damageInfo.isCritical, damageInfo.tags);
+        //        CharacterStatsOnTile.TakeDamage(damage);
+        //    }
+        //    var neighbor = TileUtility.GetAdjacentTileList(curLevel,this);
+        //    //foreach
+        //}
 
+
+        //TileReactionResult airResult = TileRuleProccessor.CheckRuleOnAir(damageInfo, this);
+        //if (airResult.isReacted)
+        //{
+
+        //}
     }
 }

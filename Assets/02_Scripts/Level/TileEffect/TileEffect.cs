@@ -7,6 +7,11 @@ public interface IGround
 
 }
 
+public interface IWater
+{
+
+}
+
 public interface IAir
 {
 
@@ -24,10 +29,11 @@ public abstract class TileEffect : MonoBehaviour, ITurnProcessor
     public Tile CurTile { get => curTile; set => curTile = value; }
     public abstract EnvironmentType EnvType { get;}
 
-    EnvironmentPrefab prefab;
+    public EnvironmentPrefab prefab;
     protected virtual void Awake()
     {
         prefab = GetComponent<EnvironmentPrefab>();
+        prefab.OnReturnEvent += OnReturn;
     }
 
     public virtual void Init()
@@ -57,6 +63,7 @@ public abstract class TileEffect : MonoBehaviour, ITurnProcessor
 
     public void OnReturn()
     {
+        prefab.OnReturnEvent -= OnReturn;
         Destroy(this);
     }
 }

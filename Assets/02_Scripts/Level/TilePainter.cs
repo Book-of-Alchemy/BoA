@@ -4,13 +4,14 @@ using UnityEngine;
 
 public static class TilePainter
 {
-    public static GameObject game;
+    
     public static void GenerateTileObject(Level level, TileDataBase tileDataBase)
     {
         Dictionary<Vector2Int, Tile> tiles = level.tiles;
         List<GroundTileSet> groundTileSets = level.biomeSet.groundTileSet;
         List<AutoWallTileSet> wallTileSets = level.biomeSet.wallAutoTileSet;
         List<EnvironmentalData> environmentalSets = level.tileDataBase.environmentalTileSet;
+        EnvironmentalDataBase environmentalDataBase = SODataManager.Instance.environmentalDataBase;
         GameObject groundPrefab = TileManger.Instance.groundPrefab;
         GameObject wallPrefab = TileManger.Instance.wallPrefab;
         GameObject environmentalPrefab = TileManger.Instance.environmentalPrefab;
@@ -169,7 +170,8 @@ public static class TilePainter
     }
     private static bool IsEnvironmentByTileEffct(Tile tile, EnvironmentType type)
     {
-
+        if (tile.groundEffect == null)
+            return false;
         EnvironmentType tileType = tile.groundEffect.EnvType;
         return tileType == type;
     }

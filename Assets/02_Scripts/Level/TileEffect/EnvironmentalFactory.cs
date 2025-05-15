@@ -11,17 +11,32 @@ public class EnvironmentalFactory : Singleton<EnvironmentalFactory>
     public void GetEnvironment(EnvironmentType type, Tile tile, Level level)
     {
         EnvironmentPrefab prefab = environmentalPool.GetFromPool(tile, level.transform);
-
+        prefab.Initiallize(datasByType[type], tile);
         System.Type effectType = GetEffectTypeByEnvironment(type);
-
         if (effectType != null && prefab.GetComponent(effectType) == null)
         {
-            prefab.gameObject.AddComponent(effectType);
+            var t = prefab.gameObject.AddComponent(effectType);
+
+            if (t is IGround and TileEffect groundEffect)
+            {
+                if (tile.groundEffect != null)
+                    ReturnTileEffect(tile.groundEffect);
+
+                tile.groundEffect = groundEffect;
+                if (groundEffect is IWater)
+                    prefab.AutoTileUpdate();
+
+                prefab.PlayAnimation();
+            }
+            else if (t is IAir and TileEffect airEffect)
+            {
+                if (tile.airEffect != null)
+                    ReturnTileEffect(tile.airEffect);
+
+                tile.airEffect = airEffect;
+                prefab.PlayAnimation();
+            }
         }
-
-        prefab.data = datasByType[type];
-
-
     }
 
     public System.Type GetEffectTypeByEnvironment(EnvironmentType type)
@@ -45,6 +60,6 @@ public class EnvironmentalFactory : Singleton<EnvironmentalFactory>
 
     public void ReturnTileEffect(TileEffect tileEffect)
     {
-
+        environmentalPool.ReturnToPool(tileEffect.prefab);
     }
 }
