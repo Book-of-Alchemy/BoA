@@ -8,12 +8,13 @@ using UnityEngine;
 
 public static class ArtifactFactory
 {
+    public static List<ArtifactData> copyArtifacts = new List<ArtifactData>(SODataManager.Instance.ArtifactDataBase.artifacts);
     public static Artifact EquipArtifact(int id)
     {
         Artifact artifact = CreateArtifact(id);
         GameManager.Instance.PlayerTransform.equipArtifacts.Add(artifact);
         artifact.Equip(GameManager.Instance.PlayerTransform);
-        SODataManager.Instance.ArtifactDataBase.artifacts.Remove(artifact.data);
+        copyArtifacts.Remove(artifact.data);
         return artifact;
     }
 
