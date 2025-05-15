@@ -9,26 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d34a23319a34f9e448169184c3713c39, type: 3}
+  m_Script: {fileID: 11500000, guid: fbdab923bef6ba04194bb987fdf3fbe7, type: 3}
   m_Name: WaterEnvironmentalSet
   m_EditorClassIdentifier: 
-  id: 0
+  Id: 0
   name_kr: 
-  environment_type: 4
-  environmentalSprites:
-  - {fileID: 4648355, guid: b6e2984ba936dca458973ebe13f7db80, type: 3}
-  - {fileID: 4648355, guid: b6e2984ba936dca458973ebe13f7db80, type: 3}
-  - {fileID: 4648355, guid: b6e2984ba936dca458973ebe13f7db80, type: 3}
-  - {fileID: 4648355, guid: b6e2984ba936dca458973ebe13f7db80, type: 3}
-  - {fileID: 4648355, guid: b6e2984ba936dca458973ebe13f7db80, type: 3}
-  - {fileID: 4648355, guid: b6e2984ba936dca458973ebe13f7db80, type: 3}
-  - {fileID: 4648355, guid: b6e2984ba936dca458973ebe13f7db80, type: 3}
-  - {fileID: 4648355, guid: b6e2984ba936dca458973ebe13f7db80, type: 3}
-  - {fileID: 4648355, guid: b6e2984ba936dca458973ebe13f7db80, type: 3}
-  - {fileID: 4648355, guid: b6e2984ba936dca458973ebe13f7db80, type: 3}
-  - {fileID: 4648355, guid: b6e2984ba936dca458973ebe13f7db80, type: 3}
-  - {fileID: 4648355, guid: b6e2984ba936dca458973ebe13f7db80, type: 3}
-  - {fileID: 4648355, guid: b6e2984ba936dca458973ebe13f7db80, type: 3}
-  - {fileID: 4648355, guid: b6e2984ba936dca458973ebe13f7db80, type: 3}
-  - {fileID: 4648355, guid: b6e2984ba936dca458973ebe13f7db80, type: 3}
-  - {fileID: 4648355, guid: b6e2984ba936dca458973ebe13f7db80, type: 3}
+  description: 
+  duration: 0
+  environment_type: 0
+  tileEnvironment: 0
+  material: {fileID: 0}
+  animationSprites: []
+  environmentalSprites: []

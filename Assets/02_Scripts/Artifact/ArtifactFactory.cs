@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using UnityEditorInternal.VR;
 using UnityEngine;
 
 public static class ArtifactFactory
@@ -11,7 +13,44 @@ public static class ArtifactFactory
         Artifact artifact = CreateArtifact(id);
         GameManager.Instance.PlayerTransform.equipArtifacts.Add(artifact);
         artifact.Equip(GameManager.Instance.PlayerTransform);
+        SODataManager.Instance.ArtifactDataBase.artifacts.Remove(artifact.data);
         return artifact;
+    }
+
+    public static ArtifactData[] RandomArtifacts()
+    {
+        List<ArtifactData> artifacts = SODataManager.Instance.ArtifactDataBase.artifacts;
+        List<ArtifactData> commonArtifacts = artifacts.Where(artifact => artifact.rarity == Rarity.Common).ToList();
+        List<ArtifactData> uncommonArtifacts = artifacts.Where(artifact => artifact.rarity == Rarity.Uncommon).ToList();
+        List<ArtifactData> rareArtifacts = artifacts.Where(artifact => artifact.rarity == Rarity.Rare).ToList();
+        List<List<ArtifactData>> artifactsList = new List<List<ArtifactData>>();
+        List<ArtifactData> selectArtifacts = new List<ArtifactData>();
+
+        artifactsList.Add(commonArtifacts);
+        artifactsList.Add(uncommonArtifacts);
+        artifactsList.Add(rareArtifacts);
+        int[] weight = { 60, 30, 10 }; // 확률 가중치
+        int total = weight.Sum(); // 확률 합(100)
+
+        for(int i = 0; i < 3; i++)
+        {
+            int rand = UnityEngine.Random.Range(1, total + 1);
+            int cumulative = 0;
+
+            for (int j = 0; j < weight.Length; j++)
+            {
+                cumulative += weight[j];
+                if (rand <= cumulative)
+                {
+                    int randItemIndex = UnityEngine.Random.Range(0, artifactsList[j].Count);
+                    selectArtifacts.Add(artifactsList[j][randItemIndex]);
+                    break;
+                }
+            }
+        }
+        Debug.Log($"아티팩트 리스트{selectArtifacts[0]},{selectArtifacts[1]},{selectArtifacts[2]}");
+        return selectArtifacts.ToArray();
+
     }
     public static Artifact CreateArtifact(int id)
     {
@@ -83,4 +122,6 @@ public static class ArtifactFactory
             default: throw new Exception("Unknown status ID: " + id);
         }
     }
+
+
 }
