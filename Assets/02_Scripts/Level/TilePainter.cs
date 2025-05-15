@@ -154,7 +154,7 @@ public static class TilePainter
         for (int i = 0; i < 4; i++)
         {
             Tile neighbor = TileUtility.GetAdjacentTile(level, tile, (FourDir)i);
-            if (IsEnvironmentByTileEffct(neighbor, type))
+            if (IsEnvironmentByType(neighbor, type))
                 bitmask |= 1 << i;
         }
 
@@ -167,12 +167,7 @@ public static class TilePainter
         EnvironmentType tileType = tile.environmentType;
         return tileType == type;
     }
-    private static bool IsEnvironmentByTileEffct(Tile tile, EnvironmentType type)
-    {
 
-        EnvironmentType tileType = tile.groundEffect.EnvType;
-        return tileType == type;
-    }
     private static void PlaceTrap(Level level, List<TrapData> trapData)
     {
         List<Tile> tiles = level.trapPoint;

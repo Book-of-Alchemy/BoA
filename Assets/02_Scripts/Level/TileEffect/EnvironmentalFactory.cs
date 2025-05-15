@@ -18,10 +18,6 @@ public class EnvironmentalFactory : Singleton<EnvironmentalFactory>
         {
             prefab.gameObject.AddComponent(effectType);
         }
-
-        prefab.data = datasByType[type];
-
-
     }
 
     public System.Type GetEffectTypeByEnvironment(EnvironmentType type)
@@ -41,10 +37,5 @@ public class EnvironmentalFactory : Singleton<EnvironmentalFactory>
             case EnvironmentType.Slimed_Field: return typeof(SlimedFieldTile);
             default: return null;
         }
-    }
-
-    public void ReturnTileEffect(TileEffect tileEffect)
-    {
-
     }
 }

@@ -22,12 +22,10 @@ public abstract class TileEffect : MonoBehaviour, ITurnProcessor
     public bool ActionInProgress { get; private set; }
     protected Tile curTile;
     public Tile CurTile { get => curTile; set => curTile = value; }
-    public abstract EnvironmentType EnvType { get;}
 
-    EnvironmentPrefab prefab;
     protected virtual void Awake()
     {
-        prefab = GetComponent<EnvironmentPrefab>();
+
     }
 
     public virtual void Init()
@@ -53,10 +51,5 @@ public abstract class TileEffect : MonoBehaviour, ITurnProcessor
     {
         if (ActionInProgress)
             ActionInProgress = false;
-    }
-
-    public void OnReturn()
-    {
-        Destroy(this);
     }
 }
