@@ -101,6 +101,10 @@ public class DungeonBehavior : PlayerBaseBehavior
         InputManager.OnMouseClick += HandleMouseClick;
     }
 
+    public void SSubscribeInput()//외부 호출용
+    {
+        SubscribeInput();
+    }
     protected override void UnsubscribeInput()
     {
         InputManager.OnMove -= HandleMove;
@@ -131,16 +135,6 @@ public class DungeonBehavior : PlayerBaseBehavior
         InputManager.OnMouseMove -= HandleMouseMove;
         InputManager.OnMouseClick -= HandleMouseClick;
     }
-
-    //{
-    //    if (!Controller.isPlayerTurn || _isMoving || _moveBuffer != null || !ctx.started) return;
-    //    if(!canMove)
-    //    {
-    //        Shake();
-    //        return;
-    //    }
-    //    _moveBuffer = StartCoroutine(BufferMove());
-    //}
 
     void Shake()
     {
