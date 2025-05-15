@@ -11,14 +11,20 @@ public class TownBehavior : PlayerBaseBehavior
 {
     [Header("Town Settings")]
     [SerializeField] private float baseMoveSpeed = 5f;
+    
     private Rigidbody2D _rb;
     private CharacterAnimator _animator;
     private SpriteRenderer _spriteRenderer;
-    private Tween _moveTween;
-    private bool _isDashing = false;
+    
     private FacilitySensor _facilitySensor;
     private InteractZone _interactZone;
+    
     private Vector2 _moveDir;
+    private bool _isDashing = false;
+
+    private Vector2 _clickTarget;
+    private bool _isAutoMoving = false;
+    private float _stopPoint = 0.1f;
     public override void Initialize(PlayerController controller)
     {
         base.Initialize(controller);
@@ -28,10 +34,28 @@ public class TownBehavior : PlayerBaseBehavior
         _rb = GetComponent<Rigidbody2D>();
         _interactZone = GetComponentInChildren<InteractZone>();
         _facilitySensor = GetComponentInChildren<FacilitySensor>();
+        InputManager.Instance.EnableMouseTracking = true;
         SubscribeInput();
     }
     private void FixedUpdate()
     {
+        // 자동 이동 로직
+        if (_isAutoMoving)
+        {
+            Vector2 currentPos = _rb.position;
+            Vector2 toTarget = _clickTarget - currentPos;
+            if (toTarget.magnitude <= _stopPoint)
+            {
+                _isAutoMoving = false;
+                _moveDir = Vector2.zero;
+                _animator.SetWalking(false);
+            }
+            else
+            {
+                _moveDir = toTarget.normalized;
+            }
+        }
+
         if (_moveDir != Vector2.zero)
         {
             float speed = _isDashing ? baseMoveSpeed * 2f : baseMoveSpeed;
@@ -53,6 +77,7 @@ public class TownBehavior : PlayerBaseBehavior
         im.OnDashStart += HandleDashStart;
         im.OnDashEnd += HandleDashEnd;
         im.OnInteract += HandleInteractInput;
+        im.OnMouseClick += HandleMouseClick;
     }
 
     protected override void UnsubscribeInput()
@@ -62,6 +87,7 @@ public class TownBehavior : PlayerBaseBehavior
         im.OnDashStart -= HandleDashStart;
         im.OnDashEnd -= HandleDashEnd;
         im.OnInteract -= HandleInteractInput;
+        im.OnMouseClick -= HandleMouseClick;
     }
 
     private void HandleDashStart()
@@ -74,7 +100,17 @@ public class TownBehavior : PlayerBaseBehavior
         _isDashing = false;
     }
 
-    private void HandleMoveInput(Vector2 raw) => _moveDir = raw.normalized;
+    private void HandleMoveInput(Vector2 raw)
+    {
+        _isAutoMoving = false;
+        _moveDir = raw.normalized;
+    }
+
+    private void HandleMouseClick(Vector3 worldPos)
+    {
+        _clickTarget = new Vector2(worldPos.x, worldPos.y);
+        _isAutoMoving = true;
+    }
 
     private void HandleInteractInput()
     {
