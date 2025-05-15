@@ -124,6 +124,10 @@ public class ItemFactory : Singleton<ItemFactory>
         BaseItem item = data.effect_type switch
         {
             Effect_Type.Damage => go.AddComponent<DamageItem>() as BaseItem,
+            Effect_Type.Heal => go.AddComponent<HealItem>() as BaseItem,
+            Effect_Type.Place_Trap => go.AddComponent<TrapItem>() as BaseItem,
+            Effect_Type.Buff => go.AddComponent<BuffItem>() as BaseItem,
+            Effect_Type.Debuff => go.AddComponent<DeBuffItem>() as BaseItem,
             _ => go.AddComponent<MaterialItem>()
         };
         item.DropItem(data, quantity, targetTile);
@@ -146,6 +150,8 @@ public class ItemFactory : Singleton<ItemFactory>
             Effect_Type.Damage => go.AddComponent<DamageItem>() as BaseItem,
             Effect_Type.Heal => go.AddComponent<HealItem>() as BaseItem,
             Effect_Type.Place_Trap => go.AddComponent<TrapItem>() as BaseItem,
+            Effect_Type.Buff => go.AddComponent<BuffItem>() as BaseItem,
+            Effect_Type.Debuff => go.AddComponent<DeBuffItem>() as BaseItem,
             _ => go.AddComponent<MaterialItem>()
         };
         item.DropItem(data, quantity, targetTile);
@@ -169,6 +175,8 @@ public class ItemFactory : Singleton<ItemFactory>
             Effect_Type.Damage => go.AddComponent<DamageItem>() as BaseItem,
             Effect_Type.Heal => go.AddComponent<HealItem>() as BaseItem,
             Effect_Type.Place_Trap => go.AddComponent<TrapItem>() as BaseItem,
+            Effect_Type.Buff => go.AddComponent<BuffItem>() as BaseItem,
+            Effect_Type.Debuff => go.AddComponent<DeBuffItem>() as BaseItem,
             _ => go.AddComponent<MaterialItem>()
         };
         go.GetComponent<SpriteRenderer>().sortingOrder = -8000;

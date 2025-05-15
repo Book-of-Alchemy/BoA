@@ -150,7 +150,7 @@ public class DamageItem : BaseItem
                     if(data.mp_cost < _player.CurrentMana)
                     {
                         damageValue = data.effect_value + data.effect_value;
-                        _player.CurrentMana -= data.mp_cost;
+                        _player.ChangeMana(-data.mp_cost);
                     }
                 }   
                 ojTile.CharacterStatsOnTile.TakeDamage(new DamageInfo(damageValue, (DamageType)data.attribute,_player,ojTile.CharacterStatsOnTile,false));

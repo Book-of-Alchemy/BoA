@@ -282,6 +282,12 @@ public abstract class CharacterStats : MonoBehaviour
         Debug.Log($"{gameObject.name}는 {amount * multiplier}만큼 회복되었습니다.");
     }
 
+    public void ChangeMana(float amount)
+    {
+        CurrentMana += amount;
+        Debug.Log($"{gameObject.name}는 {amount}만큼 마나가 회복되었습니다.");
+    }
+
     public virtual void GetShield(float amount)
     {
         float multiplier = ShieldMultiplier / 100f;

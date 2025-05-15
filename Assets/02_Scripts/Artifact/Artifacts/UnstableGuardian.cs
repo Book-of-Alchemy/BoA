@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class UnstableGuardian : Artifact, ICooltime
 {
-    public int lefttime => Mathf.Max(0,availableTime - TurnManager.Instance.globalTime);
+    public int lefttime => Mathf.Max(0, availableTime - TurnManager.Instance.globalTime);
     public int coolTime { get; set; }
     public int availableTime { get ; set; }
 

@@ -15,7 +15,7 @@ public class HealItem : BaseItem
         }
         else if(data.tags.Contains(Tag.MP))
         {
-            GameManager.Instance.PlayerTransform.CurrentMana +=data.effect_value;
+            GameManager.Instance.PlayerTransform.ChangeMana(data.effect_value);
             FinishUse();
             Destroy(this.gameObject);
         }
