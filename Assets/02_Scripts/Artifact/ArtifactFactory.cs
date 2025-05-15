@@ -20,10 +20,9 @@ public static class ArtifactFactory
 
     public static ArtifactData[] RandomArtifacts()
     {
-        List<ArtifactData> artifacts = SODataManager.Instance.ArtifactDataBase.artifacts;
-        List<ArtifactData> commonArtifacts = artifacts.Where(artifact => artifact.rarity == Rarity.Common).ToList();
-        List<ArtifactData> uncommonArtifacts = artifacts.Where(artifact => artifact.rarity == Rarity.Uncommon).ToList();
-        List<ArtifactData> rareArtifacts = artifacts.Where(artifact => artifact.rarity == Rarity.Rare).ToList();
+        List<ArtifactData> commonArtifacts = copyArtifacts.Where(artifact => artifact.rarity == Rarity.Common).ToList();
+        List<ArtifactData> uncommonArtifacts = copyArtifacts.Where(artifact => artifact.rarity == Rarity.Uncommon).ToList();
+        List<ArtifactData> rareArtifacts = copyArtifacts.Where(artifact => artifact.rarity == Rarity.Rare).ToList();
         List<List<ArtifactData>> artifactsList = new List<List<ArtifactData>>();
         List<ArtifactData> selectArtifacts = new List<ArtifactData>();
 
@@ -110,11 +109,11 @@ public static class ArtifactFactory
             case 190124: return new RaiderintheDarkness(kvp[id]);
             case 190125: return new DarkAmplifier(kvp[id]);
             case 190126: return new UnstableGuardian(kvp[id]);
-            case 190128: return new MarkofRaider(kvp[id]);
-            case 190129: return new OverwhelmingOdds(kvp[id]);
-            case 190130: return new ShieldAmplifier(kvp[id]);
-            case 190131: return new AmuletofRestore(kvp[id]);
-            case 190132: return new TrapDetector(kvp[id]);
+            case 190127: return new MarkofRaider(kvp[id]);
+            case 190128: return new OverwhelmingOdds(kvp[id]);
+            case 190129: return new ShieldAmplifier(kvp[id]);
+            case 190130: return new AmuletofRestore(kvp[id]);
+            case 190131: return new TrapDetector(kvp[id]);
             case 190200: return new Marksman(kvp[id]);
             case 190201: return new Sharpeye(kvp[id]);
             case 190202: return new ManaOverload(kvp[id]);
