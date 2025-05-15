@@ -19,7 +19,6 @@ public class TestLevelGenerator : MonoBehaviour
                 {
                     gridPosition = new Vector2Int(i,j) +offSet,
                     tileType = TileType.wall,
-                    canSeeThrough = false,
                 };
 
                 level.tiles[tile.gridPosition] = tile;
@@ -36,7 +35,6 @@ public class TestLevelGenerator : MonoBehaviour
                 {
                     gridPosition = new Vector2Int(i, j) + offSet,
                     tileType = TileType.ground,
-                    canSeeThrough = true,
                 };
 
                 level.tiles[tile.gridPosition] = tile;
@@ -51,7 +49,6 @@ public class TestLevelGenerator : MonoBehaviour
             {
                 gridPosition = new Vector2Int(0, i),
                 tileType = TileType.wall,
-                canSeeThrough = false,
             };
 
             level.tiles[tile.gridPosition] = tile;

@@ -237,9 +237,9 @@ public abstract class CharacterStats : MonoBehaviour
     }
     public virtual void TakeDamage(DamageInfo damageInfo)
     {
-        if(damageInfo.source != null && damageInfo.source is PlayerStats player)
+        if(damageInfo.source != null )
         {
-            player.OnAttackDamage(damageInfo);
+            damageInfo.source.OnAttackDamage(damageInfo);
         }
         OnPreTakeDamage?.Invoke(damageInfo);
         float value = DamageCalculator.CalculateDamage(damageInfo);

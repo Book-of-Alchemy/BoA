@@ -23,13 +23,13 @@ public class Slowed : Debuff
         base.OnApply(target);
         if (!shouldRegister) return;
         unit = target.unitBase;
-        unit.nextActionTime += 5;
+        unit.NextActionTime += 5;
         modifier = new StatModifier("Slowed", - value, ModifierType.Flat);
-        unit.actionCostStat.AddModifier(modifier);
+        unit.ActionCostStat.AddModifier(modifier);
     }
 
     public override void OnExpire(CharacterStats target)
     {
-        unit.actionCostStat.RemoveModifier(modifier);
+        unit.ActionCostStat.RemoveModifier(modifier);
     }
 }

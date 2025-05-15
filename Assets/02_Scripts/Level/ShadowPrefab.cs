@@ -42,11 +42,11 @@ public class ShadowPrefab : MonoBehaviour
         if (!baseRenderer)
             return;
 
-        if (CurTile.isOnSight)
+        if (CurTile.IsOnSight)
         {
             baseRenderer.color = Color.white;
         }
-        else if (CurTile.isExplored)
+        else if (CurTile.IsExplored)
         {
             baseRenderer.color = new Color(0.4f, 0.4f, 0.4f);
         }
