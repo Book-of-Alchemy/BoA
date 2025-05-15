@@ -45,6 +45,21 @@ public class DungeonBehavior : PlayerBaseBehavior
     // 아이템 사용
     private BaseItem _currentItem;
 
+    // 마우스 경로 이동 시 시간 조절용 필드
+    private float _savedMouseTimeScale;
+    private float _savedMouseTurnSpeed;
+
+    //UI가 열려있는지 체크
+    private bool IsUIOpen()
+    {
+        // 필요한 UI 창 타입을 모두 체크
+        return UIManager.IsOpened<UI_Menu>()
+            || UIManager.IsOpened<UI_Inventory>()
+            || UIManager.IsOpened<UI_Craft>();
+    }
+
+    public event Action OnPlayerMoved;
+
     public override void Initialize(PlayerController controller)
     {
         base.Initialize(controller);
@@ -102,6 +117,20 @@ public class DungeonBehavior : PlayerBaseBehavior
         InputManager.OnMouseMove -= HandleMouseMove;
         InputManager.OnMouseClick -= HandleMouseClick;
     }
+    public void UnsubscribeConInput()
+    {
+        InputManager.OnMove -= HandleMove;
+        InputManager.OnAttack -= HandleAttack;
+        InputManager.OnDashStart -= HandleDashStart;
+        InputManager.OnDashEnd -= HandleDashEnd;
+        InputManager.OnCtrlStart -= HandleCtrlStart;
+        InputManager.OnCtrlEnd -= HandleCtrlEnd;
+        InputManager.OnInteract -= HandleInteract;
+        InputManager.OnRest -= HandleRest;
+
+        InputManager.OnMouseMove -= HandleMouseMove;
+        InputManager.OnMouseClick -= HandleMouseClick;
+    }
 
     //{
     //    if (!Controller.isPlayerTurn || _isMoving || _moveBuffer != null || !ctx.started) return;
@@ -130,6 +159,12 @@ public class DungeonBehavior : PlayerBaseBehavior
     //  마우스 이동(하이라이트) 처리
     private void HandleMouseMove(Vector3 worldPos)
     {
+        if (IsUIOpen() || _currentItem != null)
+        {
+            _highlightInstance.SetActive(false);
+            return;
+        }
+
         //아이템 사용중일땐 하이라이트타일 안뜸
         if (_currentItem != null)
         {
@@ -163,6 +198,10 @@ public class DungeonBehavior : PlayerBaseBehavior
     //  마우스 클릭으로 목적지 지정 후 경로 이동
     private void HandleMouseClick(Vector3 worldPos)
     {
+        //UI열려있으면 무시
+        if (IsUIOpen() || _currentItem != null || !Controller.isPlayerTurn || _isMoving || _mousePathCoroutine != null)
+            return;
+
         //아이템 사용중일 땐 이동 무시
         if (_currentItem != null)
         {
@@ -203,9 +242,15 @@ public class DungeonBehavior : PlayerBaseBehavior
         }
 
         // 이동 처리
-        List<Tile> path = AStarPathfinder.FindPath(_stats.CurTile, goalTile, _stats.curLevel);
+        List<Tile> path = AstarPlayerPathFinder.FindPath(_stats.CurTile, goalTile, _stats.curLevel);
         if (path == null || path.Count <= 1)
             return;
+
+        // 시간 스케일 5배 적용
+        _savedMouseTimeScale = Time.timeScale;
+        _savedMouseTurnSpeed = TurnManager.Instance.turnSpeed;
+        Time.timeScale = _savedMouseTimeScale * 5f;
+        TurnManager.Instance.turnSpeed = _savedMouseTurnSpeed * 5f;
 
         // 이동 중단 검사 초기화
         _startHp = _stats.CurrentHealth;
@@ -215,6 +260,9 @@ public class DungeonBehavior : PlayerBaseBehavior
     }
     private void ExecuteMouseAttack(Tile targetTile)
     {
+        //UI열려있으면 무시
+        if (IsUIOpen() || _currentItem != null || !Controller.isPlayerTurn || _isMoving || _mousePathCoroutine != null)
+            return;
         // 회전 및 애니메이터 설정 (기존 공격 방향 사용)
         Vector2Int dir = targetTile.gridPosition - _stats.CurTile.gridPosition;
         _lastMoveDir = dir;
@@ -253,6 +301,8 @@ public class DungeonBehavior : PlayerBaseBehavior
                 break;
             }
         }
+        TurnManager.Instance.turnSpeed = _savedMouseTurnSpeed;
+        Time.timeScale = _savedMouseTimeScale;
 
         _mousePathCoroutine = null;
     }
@@ -286,6 +336,9 @@ public class DungeonBehavior : PlayerBaseBehavior
     //  이동 처리
     private void HandleMove(Vector2 raw)
     {
+        //UI열려있으면 무시
+        if (IsUIOpen())
+            return;
         if (!Controller.isPlayerTurn ||
             _isMoving ||
             _moveBuffer != null ||
@@ -346,6 +399,7 @@ public class DungeonBehavior : PlayerBaseBehavior
                 // 애니메이션이 완전히 끝난 시점에 이동 플래그 해제 및 턴 소비
                 _isMoving = false;
                 Controller.onActionConfirmed?.Invoke();
+                CameraController.Instance.RestoreCameraState();
             });
     }
 
@@ -353,6 +407,9 @@ public class DungeonBehavior : PlayerBaseBehavior
     //  공격 처리
     private void HandleAttack()
     {
+        //UI열려있으면 무시
+        if (IsUIOpen())
+            return;
         if (!Controller.isPlayerTurn || _attackBuffer != null)
             return;
         
@@ -389,6 +446,9 @@ public class DungeonBehavior : PlayerBaseBehavior
     //  Shift 누름 시: 타임스케일 증가
     private void HandleDashStart()
     {
+        //UI열려있으면 무시
+        if (IsUIOpen())
+            return;
 
         if (_isDashHeld) return;
         _isDashHeld = true;
@@ -404,6 +464,10 @@ public class DungeonBehavior : PlayerBaseBehavior
     // Shift 해제 시: 원상 복구
     private void HandleDashEnd()
     {
+        //UI열려있으면 무시
+        if (IsUIOpen())
+            return;
+
         if (!_isDashHeld) return;
         _isDashHeld = false;
 
@@ -417,6 +481,10 @@ public class DungeonBehavior : PlayerBaseBehavior
     // Ctrl + 하이라이트
     private void HandleCtrlStart()
     {
+        //UI열려있으면 무시
+        if (IsUIOpen())
+            return;
+
         _isCtrlHeld = true;
 
         if (_highlightInstance == null)
@@ -429,6 +497,10 @@ public class DungeonBehavior : PlayerBaseBehavior
 
     private void HandleCtrlEnd()
     {
+        //UI열려있으면 무시
+        if (IsUIOpen())
+            return;
+
         _isCtrlHeld = false;
         if (_highlightBuffer != null)
             StopCoroutine(_highlightBuffer);
@@ -482,6 +554,10 @@ public class DungeonBehavior : PlayerBaseBehavior
     // 상호작용 & 아이템 사용
     private void HandleInteract()
     {
+        //UI열려있으면 무시
+        if (IsUIOpen())
+            return;
+
         if (!Controller.isPlayerTurn)
             return;
 
@@ -503,9 +579,12 @@ public class DungeonBehavior : PlayerBaseBehavior
 
     public void UseItem(ItemData data)
     {
+        UnsubscribeConInput();
         _currentItem = ItemFactory.Instance.CreateItem(data.id);
+        
         if (_currentItem == null) return;
-
+        
+        _highlightInstance.SetActive(false);
         _currentItem.ItemUseDone += HandleItemUseDone;
         _currentItem.UseItem(data);
     }
@@ -518,7 +597,7 @@ public class DungeonBehavior : PlayerBaseBehavior
         Controller.onActionConfirmed?.Invoke();
         _currentItem = null;
         InputManager.Instance.EnableMouseTracking = true;
-        _highlightInstance.SetActive(false);
+        SubscribeInput();
     }
     // ──────────── 취소 키(X / ESC) ────────────
     private void HandleCancel()
@@ -526,8 +605,10 @@ public class DungeonBehavior : PlayerBaseBehavior
         // 아이템 사용 중이면 취소
         if (_currentItem != null)
         {
-            //_currentItem.CancelUse();  // CancelUse 메서드 구현 필요
-            _currentItem = null;
+            InputManager.Instance.EnableMouseTracking = true;
+            _highlightInstance.SetActive(true);
+            _currentItem.CancelUse();
+            SubscribeInput();
             return;
         }
 
@@ -601,6 +682,9 @@ public class DungeonBehavior : PlayerBaseBehavior
             StopCoroutine(_mousePathCoroutine);
             _mousePathCoroutine = null;
         }
+
+        TurnManager.Instance.turnSpeed = _savedMouseTurnSpeed;
+        Time.timeScale = _savedMouseTimeScale;
         // 이동 플래그 초기화
         _isMoving = false;
     }

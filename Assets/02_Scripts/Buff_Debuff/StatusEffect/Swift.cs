@@ -22,14 +22,14 @@ public class Swift : StatBuff
         if (!shouldRegister) return;
         unit = target.unitBase;
         modifier = new StatModifier("Swift", -value/2, ModifierType.Precent);
-        int fastFoward = unit.actionCost;//action cost가 줄어든만큼 nextActionTime을 줄여줘야함
-        unit.actionCostStat.AddModifier(modifier);
-        fastFoward -= unit.actionCost;
-        unit.nextActionTime -= fastFoward;
+        int fastFoward = unit.ActionCost;//action cost가 줄어든만큼 nextActionTime을 줄여줘야함
+        unit.ActionCostStat.AddModifier(modifier);
+        fastFoward -= unit.ActionCost;
+        unit.NextActionTime -= fastFoward;
     }
 
     public override void OnExpire(CharacterStats target)
     {
-        unit.actionCostStat.RemoveModifier(modifier);
+        unit.ActionCostStat.RemoveModifier(modifier);
     }
 }

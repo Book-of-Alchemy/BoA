@@ -237,9 +237,9 @@ public abstract class CharacterStats : MonoBehaviour
     }
     public virtual void TakeDamage(DamageInfo damageInfo)
     {
-        if(damageInfo.source != null && damageInfo.source is PlayerStats player)
+        if(damageInfo.source != null )
         {
-            player.OnAttackDamage(damageInfo);
+            damageInfo.source.OnAttackDamage(damageInfo);
         }
         OnPreTakeDamage?.Invoke(damageInfo);
         float value = DamageCalculator.CalculateDamage(damageInfo);
@@ -280,6 +280,12 @@ public abstract class CharacterStats : MonoBehaviour
         float multiplier = RegenerationMultiplier / 100f;
         CurrentHealth += amount * multiplier;
         Debug.Log($"{gameObject.name}는 {amount * multiplier}만큼 회복되었습니다.");
+    }
+
+    public void ChangeMana(float amount)
+    {
+        CurrentMana += amount;
+        Debug.Log($"{gameObject.name}는 {amount}만큼 마나가 회복되었습니다.");
     }
 
     public virtual void GetShield(float amount)

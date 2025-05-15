@@ -73,6 +73,8 @@ public enum Tag
     Glove,
     Shoes,
     Special,
+    HP,
+    MP,
 }
 
 [CreateAssetMenu(fileName = "New Item", menuName = "Item")]
@@ -96,7 +98,9 @@ public class ItemData : ScriptableObject
     public int max_stack;
     public string iteminfo_kr;
     public string icon_sprite;
-    public Sprite Sprite;
+    public Sprite sprite;
+    public Sprite itemRangeSprite;
+    public Sprite itemEffectRangeSprite;
 
     [Header("드랍생성용 프리팹")]
     public GameObject itemPrefab;    // 새로 추가됨(04.29 이성재)

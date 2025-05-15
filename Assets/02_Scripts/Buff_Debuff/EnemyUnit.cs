@@ -38,6 +38,6 @@ public class EnemyUnit : UnitBase
 
     public override int GetModifiedActionCost()
     {
-        return Mathf.RoundToInt(actionCost * _controller.GetCurrentActionCostMultiplier());
+        return Mathf.RoundToInt(ActionCost * _controller.GetCurrentActionCostMultiplier());
     }
 }

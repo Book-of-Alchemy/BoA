@@ -30,5 +30,7 @@ MonoBehaviour:
   max_stack: 9999
   iteminfo_kr: "\uD3EC\uC158 \uAE30\uBCF8 \uC7AC\uB8CC"
   icon_sprite: Image/Item/Fresh Water
-  Sprite: {fileID: 21300000, guid: ca951385ec8bcbf4088c4d7ac8fca7dc, type: 3}
+  sprite: {fileID: 21300000, guid: ca951385ec8bcbf4088c4d7ac8fca7dc, type: 3}
+  itemRangeSprite: {fileID: 0}
+  itemEffectRangeSprite: {fileID: 0}
   itemPrefab: {fileID: 0}

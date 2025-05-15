@@ -9,10 +9,18 @@ public class EnemyStats : CharacterStats, IPoolableId
     [Tooltip("드랍할 아이템 수량")]
     public int dropAmount = 1;
 
+    [Header("경험치 보상")]
+    [Tooltip("기본 경험치")]
+    public int baseExpReward = 10;
+
+    [Tooltip("레벨당 추가 경험치")]
+    public int expPerLevel = 5;
+
     [SerializeField]
     private int id;
     public int Id { get => id; set => id = value; }
 
+    private bool isDead = false;
     protected override void Awake()
     {
         base.Awake();
@@ -25,16 +33,54 @@ public class EnemyStats : CharacterStats, IPoolableId
         if (GameManager.Instance != null)
             GameManager.Instance.UnregisterEnemy(this);
     }
+    void OnEnable()
+    {
+        // 풀에서 재사용될 때 상태 초기화
+        isDead = false;
+        currentHealth = MaxHealth; 
+    }
     public override void Die()
     {
-        Debug.Log("적이 사망했습니다.");
+        // 이미 사망 처리되었으면 중복 실행 방지
+        if (isDead)
+        {
+            return;
+        }
+        isDead = true; // 사망 처리 시작
+
+        Debug.Log($"{gameObject.name}이(가) 사망했습니다.");
         TryDropItem();
+        GiveExpToPlayer();
 
-        TurnManager.Instance.RemoveUnit(unitBase);
+        if (CurTile != null)
+        {
+            CurTile.CharacterStatsOnTile = null;
+        }
 
-        StopAllCoroutines();
+        if (unitBase != null && TurnManager.Instance != null)
+        {
+            TurnManager.Instance.RemoveUnit(unitBase);
+        }
+        
+        StopAllCoroutines(); // 모든 코루틴 중지
 
-        Invoke(nameof(DelayDestroy), 0.1f);
+        
+        var pool = EnemyFactory.Instance.enemyPool;
+        if (pool != null)
+        {
+            pool.ReturnToPool(this);
+        }
+    }
+    private void GiveExpToPlayer()
+    {
+        var player = GameManager.Instance.PlayerTransform;
+        if (player != null)
+        {
+            // 몬스터 레벨에 따른 경험치 계산
+            int finalExp = baseExpReward + (level * expPerLevel);
+
+            player.GainExperience(finalExp);
+        }
     }
 
     private void TryDropItem()
@@ -57,9 +103,5 @@ public class EnemyStats : CharacterStats, IPoolableId
             if (baseItem != null)
                 baseItem.DropItem(dropItemData, 1, this.CurTile);
         }
-    }
-    private void DelayDestroy()
-    {
-        Destroy(gameObject);
     }
 }

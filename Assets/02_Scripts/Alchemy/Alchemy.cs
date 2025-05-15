@@ -85,11 +85,11 @@ public class Alchemy : MonoBehaviour
             Debug.Log($"제작 성공 {resultRecipe.recipe_name_kr} : {resultRecipe.output_amount} ");
             //ItemData item = ResourceManager.Instance.dicItemData[resultRecipe.output_item_id];
             //return (isReady, item, amount); 
-
+            
             //반환용 레시피와 수량
             int amount = resultRecipe.output_amount;
             RecipeData recipe = resultRecipe;
-
+            GameManager.Instance.PlayerTransform.ChangeMana(-recipe.mp_cost);
 
             return (isReady, recipe, amount); 
         }

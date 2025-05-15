@@ -31,5 +31,7 @@ MonoBehaviour:
   iteminfo_kr: "\uB2E8\uAC80\uC744 \uD22C\uCC99\uD558\uC5EC \uB300\uC0C1\uC5D0\uAC8C
     \uD53C\uD574\uB97C \uC90D\uB2C8\uB2E4."
   icon_sprite: Image/Item/Throwing Dagger
-  Sprite: {fileID: 21300000, guid: 18e012e1bb8c485448f3cd4278dbbfde, type: 3}
-  itemPrefab: {fileID: 2681953792684955272, guid: fd65ad8c084950f499c26379bcb067f4, type: 3}
+  sprite: {fileID: 21300000, guid: 18e012e1bb8c485448f3cd4278dbbfde, type: 3}
+  itemRangeSprite: {fileID: 21300000, guid: f8938b9904c33a64f9ccff8970b7a111, type: 3}
+  itemEffectRangeSprite: {fileID: 21300000, guid: 545ca318c5a6dfc468a07d3e066eb690, type: 3}
+  itemPrefab: {fileID: 0}

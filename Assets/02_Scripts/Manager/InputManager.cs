@@ -6,6 +6,8 @@ using UnityEngine.EventSystems;
 public class InputManager : Singleton<InputManager>
 {
     public PlayerInputActions _input;
+    private bool _rightClickHeld = false;
+    public bool _rrightClickHeld => _rightClickHeld;
 
     public Vector2 MoveInput { get; private set; }
     public Vector2 MouseScreenPosition { get; private set; }
@@ -19,12 +21,18 @@ public class InputManager : Singleton<InputManager>
     public event Action OnDashEnd;                // 대시 종료
     public event Action OnCtrlStart;              // Ctrl(하이라이트) 누름
     public event Action OnCtrlEnd;                // Ctrl(하이라이트) 뗌
-    public event Action<Vector3> OnMouseClick;    // 마우스 클릭
-    public event Action<Vector3> OnMouseMove;     // 마우스 이동
     public event Action OnCancel;
     public event Action OnMenu;
     public event Action OnRest;
 
+    public event Action<Vector3> OnMouseClick;    // 마우스 클릭
+    public event Action<Vector3> OnMouseMove;     // 마우스 이동
+    public event Action<float> OnZoom;            // 휠 스크롤 (y축)
+    public event Action<Vector2> OnPan;           // 우클릭 드래그 중 커서 위치
+    public event Action OnRightClickStart;        // 우클릭 눌림
+    public event Action OnRightClickEnd;          // 우클릭 뗌
+    
+    
     public bool EnableMouseTracking { get; set; } = false;
 
     private Camera _mainCam;
@@ -63,9 +71,21 @@ public class InputManager : Singleton<InputManager>
         _input.PC.MousePosition.performed += ctx =>
         {
             if (!EnableMouseTracking) return;
-            MouseScreenPosition = ctx.ReadValue<Vector2>();
-            MouseWorldPosition = _mainCam.ScreenToWorldPoint(MouseScreenPosition);
-            OnMouseMove?.Invoke(MouseWorldPosition);
+
+            // 우클릭 중일 때만 팬(pan) 이벤트 발생
+            if (_rightClickHeld)
+            {
+                Vector2 screenPos = ctx.ReadValue<Vector2>();
+                OnPan?.Invoke(screenPos);
+            }
+            else
+            {
+                // 우클릭이 아니면 그냥 마우스 무브 이벤트만
+                Vector2 screenPos = ctx.ReadValue<Vector2>();
+                MouseScreenPosition = screenPos;
+                MouseWorldPosition = Camera.main.ScreenToWorldPoint(screenPos);
+                OnMouseMove?.Invoke(MouseWorldPosition);
+            }
         };
         _input.PC.MouseClick.performed += _ =>
         {
@@ -83,6 +103,26 @@ public class InputManager : Singleton<InputManager>
 
         //한턴 쉬기
         _input.PC.Space.performed += _ => OnRest?.Invoke();
+
+        // Zoom
+        _input.PC.Zoom.performed += ctx =>
+        {
+            float deltaY = ctx.ReadValue<float>();
+            OnZoom?.Invoke(deltaY);
+        };
+
+        //우클릭시작
+        _input.PC.RightClick.started += ctx =>
+        {
+            _rightClickHeld = true;
+            OnRightClickStart?.Invoke();
+        };
+        //우클릭종료
+        _input.PC.RightClick.canceled += ctx =>
+        {
+            _rightClickHeld = false;
+            OnRightClickEnd?.Invoke();
+        };
     }
 
     public void OnEnable() => _input.PC.Enable();
