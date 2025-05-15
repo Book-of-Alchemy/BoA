@@ -607,7 +607,9 @@ public class DungeonBehavior : PlayerBaseBehavior
         {
             InputManager.Instance.EnableMouseTracking = true;
             _highlightInstance.SetActive(true);
+
             _currentItem.CancelUse();
+            _currentItem = null;
             SubscribeInput();
             return;
         }
