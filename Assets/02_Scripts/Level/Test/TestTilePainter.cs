@@ -11,7 +11,7 @@ public static class TestTilePainter
         Dictionary<Vector2Int, Tile> tiles = level.tiles;
         List<GroundTileSet> groundTileSets = level.biomeSet.groundTileSet;
         List<AutoWallTileSet> wallTileSets = level.biomeSet.wallAutoTileSet;
-        List<AutoEnvironmentalSet> environmentalSets = level.tileDataBase.environmentalTileSet;
+        List<EnvironmentalData> environmentalSets = level.tileDataBase.environmentalTileSet;
         GameObject groundPrefab = TestTileManger.Instance.groundPrefab;
         GameObject wallPrefab = TestTileManger.Instance.wallPrefab;
         GameObject environmentalPrefab = TestTileManger.Instance.environmentalPrefab;
@@ -103,7 +103,7 @@ public static class TestTilePainter
         return tileType == TileType.wall || tileType == TileType.secretWall || tileType == TileType.empty;
     }
 
-    private static void SetEnvironmentTile(Tile tile, Level level, List<AutoEnvironmentalSet> environmentalSets, GameObject environmentalPrefab)
+    private static void SetEnvironmentTile(Tile tile, Level level, List<EnvironmentalData> environmentalSets, GameObject environmentalPrefab)
     {
         GameObject TileGO = UnityEngine.Object.Instantiate(environmentalPrefab, new Vector3Int(tile.gridPosition.x, tile.gridPosition.y, 0), Quaternion.identity);
         EnvironmentPrefab tilePrefab = TileGO.GetComponent<EnvironmentPrefab>();

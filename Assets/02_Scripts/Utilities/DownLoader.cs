@@ -148,7 +148,7 @@ public class DownLoader : EditorWindow
             so.max_stack = data.max_stack;
             so.icon_sprite = data.icon_sprite;
             so.iteminfo_kr = data.iteminfo_kr;
-            so.Sprite = Resources.Load<Sprite>(data.icon_sprite);
+            so.sprite = Resources.Load<Sprite>(data.icon_sprite);
             if (data.tag != null)
             {
                 so.tags = data.tag.Split(',')
@@ -158,6 +158,9 @@ public class DownLoader : EditorWindow
             }
             else
                 return;
+            so.itemRangeSprite = Resources.Load<Sprite>($"Image/RangeIcon/range_{data.target_range}");
+            so.itemEffectRangeSprite = Resources.Load<Sprite>($"Image/RangeIcon/range_{data.effect_range}");
+
 
             string assetPath = $"{saveItemSOPath}/{data.name_en}.asset";
             AssetDatabase.CreateAsset(so, assetPath);

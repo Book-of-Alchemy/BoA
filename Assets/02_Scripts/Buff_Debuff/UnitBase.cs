@@ -1,20 +1,41 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class UnitBase : MonoBehaviour
+public interface ITurnProcessor
 {
+    public int CurrentTime { get; set; }
+    public int NextActionTime {  get; set; }
+    int ActionCost { get; }
+    public bool ActionInProgress { get; }
+    public Tile CurTile { get; }
+    public void PerformAction();
 
-    public int currentTime = 0;
-    public int nextActionTime = 0;
-    public StatEntry actionCostStat = new StatEntry() { baseValue = 10 };
-    public int actionCost => actionCostStat.Value;
-    public float actionCostMultiplier = 1f;
+    public void StartTurn();
+
+    public void AdvanceTime(int cost);
+
+    public void OnTurnEnd();
+
+}
+
+public abstract class UnitBase : MonoBehaviour, ITurnProcessor
+{
+    protected int currentTime = 0;
+    public int CurrentTime { get =>  currentTime; set => currentTime = value; }
+    protected int nextActionTime = 0;
+    public int NextActionTime { get => nextActionTime; set => nextActionTime = value; }
+    protected StatEntry actionCostStat = new StatEntry() { baseValue = 10 };
+    public StatEntry ActionCostStat { get => actionCostStat; set => actionCostStat = value; }
+    public int ActionCost => ActionCostStat.Value;
+    protected float actionCostMultiplier = 1f;
+    public float ActionCostMultiplier { get => actionCostMultiplier; set => actionCostMultiplier = value; }
     public bool ActionInProgress { get; private set; }
     public Tile CurTile => Stats?.CurTile;
     
 
     public CharacterStats Stats;
-    private int? _totalCost = null;
+    protected int? totalCost = null;
+    public int? TotalCost { get=> totalCost; set => totalCost = value; }
 
     protected virtual void Awake()
     {
@@ -23,23 +44,23 @@ public abstract class UnitBase : MonoBehaviour
 
     public virtual void Init()
     {
-        currentTime = TurnManager.Instance.globalTime;
-        nextActionTime = currentTime + actionCost;
+        CurrentTime = TurnManager.Instance.globalTime;
+        NextActionTime = CurrentTime + ActionCost;
     }
     public abstract void PerformAction();
     public void SetNextActionCost(int cost)
     {
-        _totalCost = cost;
+        TotalCost = cost;
     }
     public virtual int GetModifiedActionCost()
     {
-        if (_totalCost.HasValue)
+        if (TotalCost.HasValue)
         {
-            int cost = _totalCost.Value;
-            _totalCost = null;            // 한 번 쓰고 자동 초기화
+            int cost = TotalCost.Value;
+            TotalCost = null;            // 한 번 쓰고 자동 초기화
             return cost;
         }
-        return Mathf.Max(1, Mathf.RoundToInt(actionCost * actionCostMultiplier));
+        return Mathf.Max(1, Mathf.RoundToInt(ActionCost * ActionCostMultiplier));
     }
 
     public void StartTurn()
@@ -50,8 +71,8 @@ public abstract class UnitBase : MonoBehaviour
 
     public void AdvanceTime(int cost)
     {
-        currentTime = nextActionTime;
-        nextActionTime += cost;
+        CurrentTime = NextActionTime;
+        NextActionTime += cost;
     }
 
     public void OnTurnEnd()

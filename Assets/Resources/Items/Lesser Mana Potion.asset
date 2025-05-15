@@ -21,7 +21,7 @@ MonoBehaviour:
   effect_range: 0
   effect_type: 1
   tag: 
-  tags: 030000000e00000013000000
+  tags: 030000000e0000001300000020000000
   effect_value: 20
   effect_id: -1
   effect_duration: -1
@@ -30,5 +30,7 @@ MonoBehaviour:
   max_stack: 99
   iteminfo_kr: "\uC0AC\uC6A9\uC790\uC758 MP\uB97C \uD68C\uBCF5\uD569\uB2C8\uB2E4."
   icon_sprite: Image/Item/Lesser Mana Potion
-  Sprite: {fileID: 21300000, guid: f8879892cd948624a84c65924390f16f, type: 3}
+  sprite: {fileID: 21300000, guid: f8879892cd948624a84c65924390f16f, type: 3}
+  itemRangeSprite: {fileID: 21300000, guid: 545ca318c5a6dfc468a07d3e066eb690, type: 3}
+  itemEffectRangeSprite: {fileID: 21300000, guid: 545ca318c5a6dfc468a07d3e066eb690, type: 3}
   itemPrefab: {fileID: 0}

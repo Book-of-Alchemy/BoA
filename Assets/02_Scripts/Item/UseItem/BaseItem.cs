@@ -86,7 +86,7 @@ public abstract class BaseItem : MonoBehaviour
 
     protected void SetType(ItemData data)
     {
-        spriteRenderer.sprite = data.Sprite;
+        spriteRenderer.sprite = data.sprite;
     }
     /// <summary>
     /// 시야에 따른 이미지 처리

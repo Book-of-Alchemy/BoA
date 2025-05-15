@@ -10,7 +10,7 @@ public static class TilePainter
         Dictionary<Vector2Int, Tile> tiles = level.tiles;
         List<GroundTileSet> groundTileSets = level.biomeSet.groundTileSet;
         List<AutoWallTileSet> wallTileSets = level.biomeSet.wallAutoTileSet;
-        List<AutoEnvironmentalSet> environmentalSets = level.tileDataBase.environmentalTileSet;
+        List<EnvironmentalData> environmentalSets = level.tileDataBase.environmentalTileSet;
         GameObject groundPrefab = TileManger.Instance.groundPrefab;
         GameObject wallPrefab = TileManger.Instance.wallPrefab;
         GameObject environmentalPrefab = TileManger.Instance.environmentalPrefab;
@@ -110,7 +110,7 @@ public static class TilePainter
         return tileType == TileType.wall || tileType == TileType.secretWall || tileType == TileType.empty;
     }
 
-    private static void SetEnvironmentTile(Tile tile, Level level, List<AutoEnvironmentalSet> environmentalSets, GameObject environmentalPrefab)
+    private static void SetEnvironmentTile(Tile tile, Level level, List<EnvironmentalData> environmentalSets, GameObject environmentalPrefab)
     {
         GameObject TileGO = UnityEngine.Object.Instantiate
             (
@@ -124,6 +124,7 @@ public static class TilePainter
         int bitask = CalculateEnvironmentBitmask(tile, level, tile.environmentType);
         tilePrefab.baseRenderer.sprite = environmentalSets[0].GetSprite(bitask);
         tilePrefab.baseRenderer.sortingOrder = -9000;
+        tilePrefab.CurTile = tile;
         TileGO.transform.SetParent(level.transform);
     }
 
@@ -143,6 +144,23 @@ public static class TilePainter
 
         return bitmask;
     }
+    public static int CalculateEnvironmentBitmaskByTileEffect(Tile tile, Level level, EnvironmentType type)
+    {
+        int bitmask = 0;
+
+        // 순서: 상 우 하 좌 
+
+
+        for (int i = 0; i < 4; i++)
+        {
+            Tile neighbor = TileUtility.GetAdjacentTile(level, tile, (FourDir)i);
+            if (IsEnvironmentByType(neighbor, type))
+                bitmask |= 1 << i;
+        }
+
+        return bitmask;
+    }
+
     private static bool IsEnvironmentByType(Tile tile, EnvironmentType type)
     {
 

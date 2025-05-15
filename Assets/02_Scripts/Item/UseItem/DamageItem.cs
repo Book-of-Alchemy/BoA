@@ -2,6 +2,7 @@ using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem.XR;
 using static UnityEditor.Experimental.GraphView.GraphView;
@@ -103,6 +104,8 @@ public class DamageItem : BaseItem
     /// <param name="data"></param>
     private void AttackBehavior(ItemData data, Tile targetTile)
     {
+        int damageValue = data.effect_value;
+        int monsterCount;
         List<Tile> tiles = new List<Tile>();
         if (data.target_range == 0)
         {
@@ -126,6 +129,14 @@ public class DamageItem : BaseItem
                 tiles = TileUtility.GetItemRangedTile(_player.curLevel, targetTile, data.effect_range, true);
             }
         }
+        // 마법 정밀 조준 아티팩트 적용부분
+        monsterCount = tiles.Count(x => x.CharacterStatsOnTile != null);
+        
+        if (monsterCount >= 3 && data.tags.Contains(Tag.Scroll)&&_player.isPrecisionAim)
+        {
+            _player.statBlock.AddModifier(StatType.FinalDmg,new StatModifier("PrecisionAimforMagic",70,ModifierType.Precent));
+        }
+
         foreach (Tile ojTile in tiles)
         {
             if (data.attribute == Attribute.Fire)
@@ -134,10 +145,22 @@ public class DamageItem : BaseItem
             {
                 if(data.attribute == Attribute.None)
                     EffectProjectileManager.Instance.PlayEffect(ojTile.gridPosition, 30013);
-                ojTile.CharacterStatsOnTile.TakeDamage(new DamageInfo(data.effect_value,(DamageType)data.attribute,_player,ojTile.CharacterStatsOnTile,false));
+                if (data.tags.Contains(Tag.Scroll) && _player.isManaOverload) // 마나오버로드 아티팩트 확인하는 부분
+                {
+                    if(data.mp_cost < _player.CurrentMana)
+                    {
+                        damageValue = data.effect_value + data.effect_value;
+                        _player.ChangeMana(-data.mp_cost);
+                    }
+                }   
+                ojTile.CharacterStatsOnTile.TakeDamage(new DamageInfo(damageValue, (DamageType)data.attribute,_player,ojTile.CharacterStatsOnTile,false));
             }
         }
         Debug.Log(data.name_en);
+        if (monsterCount >= 3 && data.tags.Contains(Tag.Scroll) && _player.isPrecisionAim)
+        {
+            _player.statBlock.RemoveModifier(StatType.FinalDmg, "PrecisionAimforMagic");
+        }
         InputManager.Instance.OnMouseClick -= OnClick;
         FinishUse();
         Destroy(this.gameObject,0.1f);
@@ -174,13 +197,22 @@ public class DamageItem : BaseItem
     public List<Tile> CheckRange(ItemData data)
     {
         ItemManager.Instance.DestroyRange();
+
+        int targetRange;
+        if (_player.isMarksman && data.tags.Contains(Tag.Throw))
+        {
+            targetRange = data.target_range + 1;
+        }
+        else
+            targetRange = data.target_range;
+
         List<Tile> checkRangeTiles = new List<Tile>();
-        if (data.target_range == 0)
-            checkRangeTiles = TileUtility.GetItemRangedTile(_player.curLevel, _player.CurTile, data.target_range,true);
-        else if (data.target_range == 1)
+        if (targetRange == 0)
+            checkRangeTiles = TileUtility.GetItemRangedTile(_player.curLevel, _player.CurTile, targetRange, true);
+        else if (targetRange == 1)
             checkRangeTiles = TileUtility.GetNineTileList(_player.curLevel, _player.CurTile);
-        else if (data.target_range >= 2)
-            checkRangeTiles = TileUtility.GetItemRangedTile(_player.curLevel, _player.CurTile, data.target_range, true);
+        else if (targetRange >= 2)
+            checkRangeTiles = TileUtility.GetItemRangedTile(_player.curLevel, _player.CurTile, targetRange, true);
 
         ItemManager.Instance.CreateRange(checkRangeTiles);
 

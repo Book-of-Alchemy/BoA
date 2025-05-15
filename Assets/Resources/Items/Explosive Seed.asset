@@ -30,5 +30,7 @@ MonoBehaviour:
   max_stack: 9999
   iteminfo_kr: "\uD3ED\uBC1C \uC544\uC774\uD15C \uC7AC\uB8CC"
   icon_sprite: Image/Item/Explosive Seed
-  Sprite: {fileID: 21300000, guid: 88844f912fa252f4cb38cbeab22575ad, type: 3}
+  sprite: {fileID: 21300000, guid: 88844f912fa252f4cb38cbeab22575ad, type: 3}
+  itemRangeSprite: {fileID: 0}
+  itemEffectRangeSprite: {fileID: 0}
   itemPrefab: {fileID: 0}

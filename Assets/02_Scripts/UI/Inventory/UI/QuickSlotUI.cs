@@ -22,7 +22,7 @@ public class QuickSlotUI : MonoBehaviour , IDropHandler
     public void SetItem(InventoryItem item)
     {
         _item = item;
-        _icon.sprite = item.itemData.Sprite;
+        _icon.sprite = item.itemData.sprite;
         _amountText.text = item.Amount.ToString();
         _icon.enabled = true;
     }
