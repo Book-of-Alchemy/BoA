@@ -6,6 +6,6 @@ public class GuildFacility : MonoBehaviour, IFacilityUI
 {
     public void ShowUI()
     {
-        //UIManager.Instance.OpenGuildUI(this);
+        UIManager.Show<UI_SelectQuest>();
     }
 }
