@@ -50,7 +50,15 @@ public class TileManger : Singleton<TileManger>
     {
         return levelGenerator.GenerateLevel();
     }
-
+    public Level GenerateLevel(QuestData questData)
+    {
+        return levelGenerator.GenerateLevel(7,questData);
+    }
+    public List< Level> GenerateLevels(QuestData questData)
+    {
+        
+        return levels;
+    }
     public void PaintLevel(Level level)
     {
         if (level.isPainted == true) return;

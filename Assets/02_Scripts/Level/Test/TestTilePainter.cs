@@ -11,7 +11,6 @@ public static class TestTilePainter
         Dictionary<Vector2Int, Tile> tiles = level.tiles;
         List<GroundTileSet> groundTileSets = level.biomeSet.groundTileSet;
         List<AutoWallTileSet> wallTileSets = level.biomeSet.wallAutoTileSet;
-        List<EnvironmentalData> environmentalSets = level.tileDataBase.environmentalTileSet;
         GameObject groundPrefab = TestTileManger.Instance.groundPrefab;
         GameObject wallPrefab = TestTileManger.Instance.wallPrefab;
         GameObject environmentalPrefab = TestTileManger.Instance.environmentalPrefab;
@@ -37,7 +36,7 @@ public static class TestTilePainter
             if (tile.Value.environmentType == EnvironmentType.none)
                 continue;
 
-            SetEnvironmentTile(tile.Value, level, environmentalSets, environmentalPrefab);
+            SetEnvironmentTile(tile.Value, level);
         }
     }
 
@@ -103,16 +102,9 @@ public static class TestTilePainter
         return tileType == TileType.wall || tileType == TileType.secretWall || tileType == TileType.empty;
     }
 
-    private static void SetEnvironmentTile(Tile tile, Level level, List<EnvironmentalData> environmentalSets, GameObject environmentalPrefab)
+    private static void SetEnvironmentTile(Tile tile, Level level)
     {
-        GameObject TileGO = UnityEngine.Object.Instantiate(environmentalPrefab, new Vector3Int(tile.gridPosition.x, tile.gridPosition.y, 0), Quaternion.identity);
-        EnvironmentPrefab tilePrefab = TileGO.GetComponent<EnvironmentPrefab>();
-        if (tilePrefab.baseRenderer == null) return;
-
-        int bitask = CalculateEnvironmentBitmask(tile, level, tile.environmentType);
-        tilePrefab.baseRenderer.sprite = environmentalSets[0].GetSprite(bitask);
-        tilePrefab.baseRenderer.sortingOrder = -900;
-        TileGO.transform.SetParent(level.transform);
+        EnvironmentalFactory.Instance.GetEnvironment(tile.environmentType, tile, level);
     }
 
     public static int CalculateEnvironmentBitmask(Tile tile, Level level, EnvironmentType type)

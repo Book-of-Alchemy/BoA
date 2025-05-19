@@ -10,7 +10,6 @@ public static class TilePainter
         Dictionary<Vector2Int, Tile> tiles = level.tiles;
         List<GroundTileSet> groundTileSets = level.biomeSet.groundTileSet;
         List<AutoWallTileSet> wallTileSets = level.biomeSet.wallAutoTileSet;
-        List<EnvironmentalData> environmentalSets = level.tileDataBase.environmentalTileSet;
         EnvironmentalDataBase environmentalDataBase = SODataManager.Instance.environmentalDataBase;
         GameObject groundPrefab = TileManger.Instance.groundPrefab;
         GameObject wallPrefab = TileManger.Instance.wallPrefab;

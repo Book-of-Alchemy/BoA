@@ -24,6 +24,27 @@ public class LevelGenerator : MonoBehaviour
         curBiomeSet = biomeSet;
     }
 
+    public List<Level> GenerateLevels(int minSize =7, QuestData questData = null)
+    {
+        if (questData == null) return null;
+        List<Level> levels = new List<Level>();
+        BiomeSet biomeSet = SODataManager.Instance.tileDataBase.biomsetByID[questData.biome_id];
+        int floorCount = questData.dungeon_floor_count;
+        SetLevelGenerator(biomeSet, 8, 40, 40);
+        for (int i = 0; i < floorCount; i++)
+        {
+            Level level = GenerateLevel(7, questData);
+            level.curDepth = i;
+            levels.Add(level);
+        }
+
+
+
+        GenerateLevel(7, questData);
+        TileManger.Instance.curLevel = levels[0];
+        return levels;
+    }
+
     public Level GenerateLevel(int minSize = 7, QuestData questData =null)
     {
         Level level = new GameObject("Level").AddComponent<Level>();

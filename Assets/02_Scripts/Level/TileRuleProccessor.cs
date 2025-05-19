@@ -35,8 +35,10 @@ public static class TileRuleProccessor
 
         foreach (var tile in targetTiles)
         {
-            CollectCluster(tile, tile.airEffect.EnvType, airClusters, isAir: true);
-            CollectCluster(tile, tile.groundEffect.EnvType, groundClusters, isAir: false);
+            if (tile.airEffect != null)
+                CollectCluster(tile, tile.airEffect.EnvType, airClusters, isAir: true);
+            if (tile.groundEffect != null)
+                CollectCluster(tile, tile.groundEffect.EnvType, groundClusters, isAir: false);
         }
 
         // Air 일괄 처리
@@ -52,8 +54,10 @@ public static class TileRuleProccessor
         Dictionary<EnvironmentType, HashSet<Tile>> groundClusters = new();
 
 
-        CollectCluster(targetTile, targetTile.airEffect.EnvType, airClusters, isAir: true);
-        CollectCluster(targetTile, targetTile.groundEffect.EnvType, groundClusters, isAir: false);
+        if (targetTile.airEffect != null)
+            CollectCluster(targetTile, targetTile.airEffect.EnvType, airClusters, isAir: true);
+        if (targetTile.groundEffect != null)
+            CollectCluster(targetTile, targetTile.groundEffect.EnvType, groundClusters, isAir: false);
 
 
         // Air 일괄 처리
@@ -94,8 +98,9 @@ public static class TileRuleProccessor
             {
                 if (visited.Contains(neighbor))
                     continue;
-
-                var neighborEnvType = isAir ? neighbor.airEffect.EnvType : neighbor.groundEffect.EnvType;
+                var neighborEffect = isAir ? neighbor.airEffect : neighbor.groundEffect;
+                if (neighborEffect == null) continue;
+                var neighborEnvType = neighborEffect.EnvType;
                 if (neighborEnvType == envType)
                 {
                     queue.Enqueue(neighbor);
@@ -112,7 +117,7 @@ public static class TileRuleProccessor
         {
             foreach (var tile in cluster)
             {
-                var result = CheckRule(damageInfo, tile,isAir);
+                var result = CheckRule(damageInfo, tile, isAir);
 
                 if (result.isReacted)
                 {
@@ -127,7 +132,7 @@ public static class TileRuleProccessor
 
 
 
-    public static TileReactionResult CheckRule(DamageInfo damageInfo, Tile tile ,bool isAir)
+    public static TileReactionResult CheckRule(DamageInfo damageInfo, Tile tile, bool isAir)
     {
         var env = isAir ? tile.airEffect : tile.groundEffect;
         if (!ruleDic.ContainsKey((damageInfo.damageType, env.EnvType)))
