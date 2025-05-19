@@ -25,15 +25,15 @@ public class UI_Quest : UIBase
 
     private void SetList(QuestData quest)
     {
-        _titleText.text = quest.name_kr;
+        _titleText.text = quest.quest_name_kr;
         _biomeText.text = $"바이옴 이름 (ID: {quest.biome_id})";
         _descText.text = GenerateDescription(quest);
     }
 
     private string GenerateDescription(QuestData quest)
     {
-        return $"퀘스트 설명\n몬스터 레벨: {quest.base_monster_level} ~ (층당 +{quest.level_per_floor})\n" +
-               $"맵 크기 비율: 소({quest.map_size_prob_small}), 중({quest.map_size_prob_medium}), 대({quest.map_size_prob_large})\n";
+        return $"퀘스트 설명\n몬스터 레벨: {quest.base_monster_level} ~ (층당 +{quest.level_per_floor})\n" ;
+               //$"맵 크기 비율: 소({quest.map_size_prob_small}), 중({quest.map_size_prob_medium}), 대({quest.map_size_prob_large})\n";
     }
     private void ClearList()
     {

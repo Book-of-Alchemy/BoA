@@ -19,7 +19,7 @@ public class QuestDetail : MonoBehaviour
     {
         _currentQuest = quest;
 
-        _questName.text = quest.name_kr;
+        _questName.text = quest.quest_name_kr;
         _mainObjective.text = $"주 목표 : {quest.dungeon_floor_count} 층 도달하기";
         //QuestData 필요
         //_rewardGold.text = $"골드 : {quest.level_per_floor} G";

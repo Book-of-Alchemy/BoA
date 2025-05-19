@@ -126,7 +126,7 @@ public class DamageItem : BaseItem
             }
             else if (data.effect_range >= 2)
             {
-                tiles = TileUtility.GetItemRangedTile(_player.curLevel, targetTile, data.effect_range, false);
+                tiles = TileUtility.GetItemRangedTile(_player.curLevel, targetTile, data.effect_range, true);
             }
         }
         else if (data.target_range > 0)

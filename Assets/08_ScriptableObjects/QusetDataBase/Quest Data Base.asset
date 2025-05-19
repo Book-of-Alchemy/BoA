@@ -13,4 +13,8 @@ MonoBehaviour:
   m_Name: Quest Data Base
   m_EditorClassIdentifier: 
   questData:
-  - {fileID: 11400000, guid: 92506c9680376a84392ae55b89767250, type: 2}
+  - {fileID: 11400000, guid: 009a45051a7102b469690b6a619c4848, type: 2}
+  - {fileID: 11400000, guid: d3b84e9a792ae364b8e751fbb0bf253b, type: 2}
+  - {fileID: 11400000, guid: 7296753e158045f499664e617e5f4d3e, type: 2}
+  - {fileID: 11400000, guid: 34010d41ba9882d4ab914b08f49f4d87, type: 2}
+  - {fileID: 11400000, guid: 592c30ac2fc04b64f98051d6399953d8, type: 2}

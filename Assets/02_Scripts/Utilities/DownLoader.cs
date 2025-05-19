@@ -22,11 +22,15 @@ public class DownLoader : EditorWindow
     string statusEffectJsonSavePath = "Assets/Resources/Json/StatusEffect.json";
     string artifactDBUrl = "https://opensheet.elk.sh/16BPAGJg1d_g6m4tCxN9aJWzjWwzPmHyOaTcqg1uclhI/Artifact_DB";
     string artifactJsonSavePath = "Assets/Resources/Json/Artifact.json";
+    string questDBUrl = "https://opensheet.elk.sh/1udhK2PAP126vzsQycyXA_tEmNqTA3VlwmfU--CHqHd0/Quest_DB";
+    string questJsonSavePath = "Assets/Resources/Json/Quest.json";
+
 
     string saveItemSOPath = "Assets/Resources/Items";
     string saveRecipeSOPath = "Assets/Resources/Recipes";
     string saveStatusEffectSOPath = "Assets/08_ScriptableObjects/StatusEffect";
     string saveArtifactSOPath = "Assets/08_ScriptableObjects/Artifact";
+    string saveQuestSOPath = "Assets/08_ScriptableObjects/Quest";
 
 #if UNITY_EDITOR
     [MenuItem("Window/DownLoader")]
@@ -43,6 +47,7 @@ public class DownLoader : EditorWindow
         recipeDBUrl = EditorGUILayout.TextField("RecipeURL", recipeDBUrl);
         statusEffectDBUrl = EditorGUILayout.TextField("StatusEffectURL", statusEffectDBUrl);
         artifactDBUrl = EditorGUILayout.TextField("ArtifactDBUrl", artifactDBUrl);
+        questDBUrl = EditorGUILayout.TextField("QuestDBUrl", questDBUrl);
 
 
         // 저장 경로 입력 필드
@@ -50,6 +55,7 @@ public class DownLoader : EditorWindow
         recipeJsonSavePath = EditorGUILayout.TextField("Recipe Json Save Path", recipeJsonSavePath);
         statusEffectJsonSavePath = EditorGUILayout.TextField("StatusEffect Json Save Path", statusEffectJsonSavePath);
         artifactJsonSavePath = EditorGUILayout.TextField("Artifact Json Save Path", artifactJsonSavePath);
+        questJsonSavePath = EditorGUILayout.TextField("Quest Json Save Path", questJsonSavePath);
 
 
         // 다운로드 버튼
@@ -59,6 +65,7 @@ public class DownLoader : EditorWindow
             DownloadAndSaveJson(recipeDBUrl, recipeJsonSavePath);
             DownloadAndSaveJson(statusEffectDBUrl, statusEffectJsonSavePath);
             DownloadAndSaveJson(artifactDBUrl, artifactJsonSavePath);
+            DownloadAndSaveJson(questDBUrl, questJsonSavePath);
         }
 
         GUILayout.Label("Json To SO", EditorStyles.boldLabel);
@@ -67,6 +74,7 @@ public class DownLoader : EditorWindow
         saveRecipeSOPath = EditorGUILayout.TextField("SaveRecipeSOPath", saveRecipeSOPath);
         saveStatusEffectSOPath = EditorGUILayout.TextField("SaveStatusEffectSOPath", saveStatusEffectSOPath);
         saveArtifactSOPath = EditorGUILayout.TextField("SaveArtifactSOPath", saveArtifactSOPath);
+        saveQuestSOPath = EditorGUILayout.TextField("SaveQuestSOPath", saveQuestSOPath);
 
         if (GUILayout.Button("ItemConvert"))
         {
@@ -83,6 +91,10 @@ public class DownLoader : EditorWindow
         if (GUILayout.Button("ArtifactConvert"))
         {
             ArtifactConvertJsonToSO();
+        }
+        if(GUILayout.Button("QuestConvert"))
+        {
+            QuestConvertJsonToSO();
         }
     }
 
@@ -301,6 +313,59 @@ public class DownLoader : EditorWindow
         AssetDatabase.Refresh();
         Debug.Log("Json변환 완료");
     }
+
+    void QuestConvertJsonToSO()
+    {
+        string jsonText = File.ReadAllText(questJsonSavePath);
+        List<QuestData> dataList = JsonConvert.DeserializeObject<List<QuestData>>(jsonText);
+
+        if (AssetDatabase.IsValidFolder(saveQuestSOPath))
+        {
+            FileUtil.DeleteFileOrDirectory(saveQuestSOPath);
+            AssetDatabase.Refresh();
+        }
+
+        if (!Directory.Exists(saveQuestSOPath))
+        {
+            Directory.CreateDirectory(saveQuestSOPath);
+        }
+
+        foreach (var data in dataList)
+        {
+            if (data == null)
+            {
+                Debug.LogError("data가 null입니다!");
+                continue;
+            }
+            QuestData so = ScriptableObject.CreateInstance<QuestData>();
+            so.id = data.id;
+            so.quest_name_kr = data.quest_name_kr;
+            so.quest_name_en = data.quest_name_en;
+            so.biome_id = data.biome_id;
+            so.base_monster_level = data.base_monster_level;
+            so.level_per_floor = data.level_per_floor;
+            so.is_fixed_map = data.is_fixed_map;
+            so.dungeon_floor_count = data.dungeon_floor_count;
+            so.quest_Type = data.quest_Type;
+            so.main_object_type = data.main_object_type;
+            so.main_object_text_kr = data.main_object_text_kr;
+            so.reward1 = data.reward1;
+            so.reward2 = data.reward2;
+            so.reward3 = data.reward3;
+            so.reward_gold_amount = data.reward_gold_amount;
+            so.client = data.client;
+            so.descriptiontxt = data.descriptiontxt;
+
+            string assetPath = $"{saveQuestSOPath}/{data.quest_name_en}.asset";
+            AssetDatabase.CreateAsset(so, assetPath);
+
+        }
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+        Debug.Log("Json변환 완료");
+    }
+
+
 
 }
 #endif
