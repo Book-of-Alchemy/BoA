@@ -19,15 +19,14 @@ public class QuestDetail : MonoBehaviour
     {
         _currentQuest = quest;
 
-        _questName.text = quest.name_kr;
-        _mainObjective.text = $"주 목표 : {quest.dungeon_floor_count} 층 도달하기";
-        //QuestData 필요
-        //_rewardGold.text = $"골드 : {quest.level_per_floor} G";
-        //_reward1.text = quest.reward1 > 0 ? $"보상1 : {quest.reward1} " : "";
-        //_reward2.text = quest.reward2 > 0 ? $"보상2 : {quest.reward1} " : "";
-        //_reward3.text = quest.reward3 > 0 ? $"보상3 : {quest.reward1} " : "";
-        _client.text = "의뢰인 : ";
-        _description.text = "설명";
+        _questName.text = quest.quest_name_kr;
+        _mainObjective.text = $"주 목표 : {quest.main_object_text_kr} ";
+        _rewardGold.text = $"골드 보상 : {quest.reward_gold_amount} G";
+        _reward1.text = quest.reward1 != Reward.none ? $"보상1 : {quest.reward1} " : "";
+        _reward2.text = quest.reward2 != Reward.none ? $"보상2 : {quest.reward1} " : "";
+        _reward3.text = quest.reward3 != Reward.none ? $"보상3 : {quest.reward1} " : "";
+        _client.text = $"의뢰인 : {quest.client}";
+        _description.text = $"내용 : {quest.descriptiontxt}";
     }
 
     public void OnAccept()

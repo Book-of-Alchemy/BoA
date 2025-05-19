@@ -80,7 +80,8 @@ public class UI_SelectQuest : UIBase
         //선택된 바이옴과 같은 바이옴 id를 가진 퀘스트를 배열저장
         var matched = _questDataBase.questData
             .Where(q => q.biome_id == biomeId)
-            .Where(q => !QuestManager.Instance.GetAcceptedQuest())
+            //.Where(q => !QuestManager.Instance.GetAcceptedQuest().Data)
+            .Where(q => !QuestManager.Instance.GetClearedQuestIds().Contains(q.id)) //클리어 되지않은 퀘스트만
             .ToList();
 
         //바이옴 퀘스트 중 main 퀘스트 오름차순으로 가장 낮은 번호 반환저장

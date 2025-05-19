@@ -9,8 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4792ae5747c8aa418879e6fc86698ac, type: 3}
-  m_Name: Quest Data Base
+  m_Script: {fileID: 11500000, guid: c338827a68bb2314ba7843ffa85ee9c1, type: 3}
+  m_Name: 00 8
   m_EditorClassIdentifier: 
-  questData:
-  - {fileID: 11400000, guid: 92506c9680376a84392ae55b89767250, type: 2}
+  Id: 0
+  sourceTileType: 1
+  reactionDamageType: 4
+  effect_ID: -1
+  resultTileType: 6
+  damageMultiplier: 0.3
+  emittedDamageType: 4

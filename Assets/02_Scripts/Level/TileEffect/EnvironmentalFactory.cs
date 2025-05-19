@@ -10,13 +10,35 @@ public class EnvironmentalFactory : Singleton<EnvironmentalFactory>
     Dictionary<EnvironmentType, EnvironmentalData> datasByType => environmentalDataBase.datasByType;
     public void GetEnvironment(EnvironmentType type, Tile tile, Level level)
     {
+        if (type == EnvironmentType.none) return;
         EnvironmentPrefab prefab = environmentalPool.GetFromPool(tile, level.transform);
-
+        prefab.Initiallize(datasByType[type], tile);
         System.Type effectType = GetEffectTypeByEnvironment(type);
-
         if (effectType != null && prefab.GetComponent(effectType) == null)
         {
-            prefab.gameObject.AddComponent(effectType);
+            var t = prefab.gameObject.AddComponent(effectType);
+
+            if (t is IGround and TileEffect groundEffect)
+            {
+                if (tile.groundEffect != null)
+                    ReturnTileEffect(tile.groundEffect);
+
+                tile.groundEffect = groundEffect;
+                if (groundEffect is IWater)
+                    prefab.AutoTileUpdate();
+
+                prefab.PlayAnimation();
+                groundEffect.Init(tile);
+            }
+            else if (t is IAir and TileEffect airEffect)
+            {
+                if (tile.airEffect != null)
+                    ReturnTileEffect(tile.airEffect);
+
+                tile.airEffect = airEffect;
+                prefab.PlayAnimation();
+                airEffect.Init(tile);
+            }
         }
     }
 
@@ -37,5 +59,10 @@ public class EnvironmentalFactory : Singleton<EnvironmentalFactory>
             case EnvironmentType.Slimed_Field: return typeof(SlimedFieldTile);
             default: return null;
         }
+    }
+
+    public void ReturnTileEffect(TileEffect tileEffect)
+    {
+        environmentalPool.ReturnToPool(tileEffect.prefab);
     }
 }

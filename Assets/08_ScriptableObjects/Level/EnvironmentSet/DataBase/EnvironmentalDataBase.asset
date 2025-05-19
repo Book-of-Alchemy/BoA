@@ -12,5 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19a20597b4b4fbe47bf368627cc2e18b, type: 3}
   m_Name: EnvironmentalDataBase
   m_EditorClassIdentifier: 
-  environmentalDatas: []
+  environmentalDatas:
+  - {fileID: 11400000, guid: 9908abe78d42a2d46ae423912e550191, type: 2}
+  - {fileID: 11400000, guid: 3d98cafc6ac26bf4eaa0ccc47baa2cfb, type: 2}
+  - {fileID: 11400000, guid: 578ac8998902ca74e821fc7c6bea2fa0, type: 2}
+  - {fileID: 11400000, guid: 8919903d4abee864dab288a9c65704c9, type: 2}
+  - {fileID: 11400000, guid: d5e014ea5d6c87c40a3edb9330289a2f, type: 2}
+  - {fileID: 11400000, guid: b83a82cf2d02be9468f6b0874c8f4758, type: 2}
+  - {fileID: 11400000, guid: f6ccf00c1b0d3174a8b5814fba60046f, type: 2}
+  - {fileID: 11400000, guid: 4c9e6bad084a65c4ab841ca6a9aa61c3, type: 2}
+  - {fileID: 11400000, guid: a6f4f9e0ae8b6ab45b59230013421153, type: 2}
+  - {fileID: 11400000, guid: e277586f588df3440ad15241c347a536, type: 2}
+  - {fileID: 11400000, guid: bc58428b87d2ea24b8567f5da9267955, type: 2}
   environmentalPrefab: {fileID: 3532026686995825580, guid: 75869107911947d4b9d63400e1cc915b, type: 3}

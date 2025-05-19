@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbdab923bef6ba04194bb987fdf3fbe7, type: 3}
+  m_Name: Flame
+  m_EditorClassIdentifier: 
+  Id: 140007
+  name_kr: "\uD654\uC5FC \uC9C0\uB300"
+  name_en: Flame
+  description: "\uD654\uC5FC\uC73C\uB85C \uBD88\uD0C0\uB294 \uD0C0\uC77C"
+  duration: 50
+  environment_type: 7
+  tileEnvironment: 0
+  material: {fileID: 0}
+  animationSprites:
+  - {fileID: 21300000, guid: 75d956c4fe42c804082c2da029d53a90, type: 3}
+  - {fileID: 21300000, guid: 031e349d3cdb372459fe39b16b583105, type: 3}
+  - {fileID: 21300000, guid: 241e3d6536f44a141bd24d2a68ff3be8, type: 3}
+  - {fileID: 21300000, guid: 040137e73b55caf4292d0c2d2841c421, type: 3}
+  - {fileID: 21300000, guid: ee00c852e70dc744588ff4cf65b5631e, type: 3}
+  - {fileID: 21300000, guid: 42b9c0047644c8445b78725bdbd3965e, type: 3}
+  environmentalSprites: []

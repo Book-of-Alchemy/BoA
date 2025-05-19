@@ -1,18 +1,39 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public class ElectrofiedWaterTile : MonoBehaviour
+public class ElectrofiedWaterTile : TileEffect, IGround, IWater,IExpirable
 {
-    // Start is called before the first frame update
-    void Start()
+    public override EnvironmentType EnvType => EnvironmentType.Electrofied_Water;
+
+    private int leftTime = 50;
+    public int LeftTime { get => leftTime; set => leftTime = value; }
+    public override void PerformAction()
     {
-        
+        if (LeftTime <= 0)
+        {
+            Expire();
+            return;
+        }
+
+        StatusEffectFactory.CreateEffect(220012, CurTile.CharacterStatsOnTile);
+        Burn burn = null;
+        if (CurTile.CharacterStatsOnTile != null)
+        {
+            burn = CurTile.CharacterStatsOnTile.activeEffects
+                .OfType<Burn>()
+                .FirstOrDefault();
+        }
+
+        if (burn != null)
+        {
+            burn.Cleanse();
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Expire()
     {
-        
+        EnvironmentalFactory.Instance.ReturnTileEffect(this);
     }
 }

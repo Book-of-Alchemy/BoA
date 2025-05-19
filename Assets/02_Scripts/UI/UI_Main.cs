@@ -8,7 +8,8 @@ public class UI_Main : UIBase
 {
     [Header("Buttons")]
     [SerializeField] private Button[] _menuBtn;
-    
+
+    public override bool IsClosable => false;
 
     private void Start()
     {

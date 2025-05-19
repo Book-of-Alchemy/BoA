@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class EnvironmentalPool : MonoBehaviour
 {
+    /// <summary>
+    /// 환경 프리팹을 가져오고 되돌리는 역할만함
+    /// </summary>
     public Queue<EnvironmentPrefab> environmentPrefabs = new Queue<EnvironmentPrefab>();
     public GameObject prefab;
     public int initialSize = 5;
@@ -42,6 +45,7 @@ public class EnvironmentalPool : MonoBehaviour
         Vector2Int gridPosition = tile.gridPosition;
         Vector3 spawnPosition = new Vector3(gridPosition.x, gridPosition.y, 0);
         obj.transform.position = spawnPosition;
+        obj.baseRenderer.sortingOrder = -9000;
         obj.CurTile = tile;
         obj.gameObject.SetActive(true);
 

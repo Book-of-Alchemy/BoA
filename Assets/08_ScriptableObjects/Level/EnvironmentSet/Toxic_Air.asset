@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbdab923bef6ba04194bb987fdf3fbe7, type: 3}
+  m_Name: Toxic_Air
+  m_EditorClassIdentifier: 
+  Id: 140005
+  name_kr: "\uB3C5\uC131 \uB300\uAE30"
+  name_en: Toxic_Air
+  description: "\uD1B5\uD589 \uC2DC \uC911\uB3C5\uC744 \uAC00\uD558\uB294 \uD0C0\uC77C"
+  duration: 50
+  environment_type: 5
+  tileEnvironment: 1
+  material: {fileID: 2100000, guid: 9cb58b215bb856a498e5a029780dd7dc, type: 2}
+  animationSprites:
+  - {fileID: 231023917, guid: 37d21ca3fa6c90d4aaa4890348609c80, type: 3}
+  - {fileID: 1160117458, guid: 37d21ca3fa6c90d4aaa4890348609c80, type: 3}
+  - {fileID: -796720211, guid: 37d21ca3fa6c90d4aaa4890348609c80, type: 3}
+  - {fileID: -936458346, guid: 37d21ca3fa6c90d4aaa4890348609c80, type: 3}
+  - {fileID: -189285435, guid: 37d21ca3fa6c90d4aaa4890348609c80, type: 3}
+  - {fileID: -682667004, guid: 37d21ca3fa6c90d4aaa4890348609c80, type: 3}
+  - {fileID: -1855259554, guid: 37d21ca3fa6c90d4aaa4890348609c80, type: 3}
+  - {fileID: 2002356566, guid: 37d21ca3fa6c90d4aaa4890348609c80, type: 3}
+  - {fileID: 1834115787, guid: 37d21ca3fa6c90d4aaa4890348609c80, type: 3}
+  - {fileID: 330668050, guid: 37d21ca3fa6c90d4aaa4890348609c80, type: 3}
+  - {fileID: 234620216, guid: 37d21ca3fa6c90d4aaa4890348609c80, type: 3}
+  - {fileID: 348588878, guid: 37d21ca3fa6c90d4aaa4890348609c80, type: 3}
+  - {fileID: -2010813538, guid: 37d21ca3fa6c90d4aaa4890348609c80, type: 3}
+  - {fileID: 325335977, guid: 37d21ca3fa6c90d4aaa4890348609c80, type: 3}
+  - {fileID: -105802896, guid: 37d21ca3fa6c90d4aaa4890348609c80, type: 3}
+  - {fileID: 565876363, guid: 37d21ca3fa6c90d4aaa4890348609c80, type: 3}
+  - {fileID: 2119459031, guid: 37d21ca3fa6c90d4aaa4890348609c80, type: 3}
+  - {fileID: -1845468017, guid: 37d21ca3fa6c90d4aaa4890348609c80, type: 3}
+  - {fileID: -1337450873, guid: 37d21ca3fa6c90d4aaa4890348609c80, type: 3}
+  - {fileID: -699045920, guid: 37d21ca3fa6c90d4aaa4890348609c80, type: 3}
+  - {fileID: -1453356592, guid: 37d21ca3fa6c90d4aaa4890348609c80, type: 3}
+  - {fileID: 1634697640, guid: 37d21ca3fa6c90d4aaa4890348609c80, type: 3}
+  - {fileID: -751175653, guid: 37d21ca3fa6c90d4aaa4890348609c80, type: 3}
+  - {fileID: 1968616933, guid: 37d21ca3fa6c90d4aaa4890348609c80, type: 3}
+  - {fileID: -2129913902, guid: 37d21ca3fa6c90d4aaa4890348609c80, type: 3}
+  - {fileID: 1776709305, guid: 37d21ca3fa6c90d4aaa4890348609c80, type: 3}
+  - {fileID: -1407228150, guid: 37d21ca3fa6c90d4aaa4890348609c80, type: 3}
+  - {fileID: -1439669324, guid: 37d21ca3fa6c90d4aaa4890348609c80, type: 3}
+  - {fileID: -2061977822, guid: 37d21ca3fa6c90d4aaa4890348609c80, type: 3}
+  - {fileID: -1800785376, guid: 37d21ca3fa6c90d4aaa4890348609c80, type: 3}
+  environmentalSprites: []

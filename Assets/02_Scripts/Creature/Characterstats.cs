@@ -85,10 +85,10 @@ public abstract class CharacterStats : MonoBehaviour
     //쉴드 체력 재생
     public int RegenerationMultiplier => statBlock.Get(StatType.RegenerationMultiplier);
     public int ShieldMultiplier => statBlock.Get(StatType.ShieldMultiplier);
-    
+
 
     //공격력
-    public int AttackDamage => statBlock.Get(StatType.Attack);
+    public int AttackDamage => Mathf.Max(0, statBlock.Get(StatType.Attack));
     public int AttackMin => Mathf.RoundToInt(AttackDamage * 0.9f);
     public int AttackMax => Mathf.RoundToInt(AttackDamage * 1.1f);
     public int CritChance => statBlock.Get(StatType.CritChance);
