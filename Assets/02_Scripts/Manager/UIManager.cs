@@ -7,22 +7,7 @@ public class UIManager : Singleton<UIManager>
 
     [Tooltip("한번 출력되는 UI의 생명기간")]
     [SerializeField] static private float _fadeOutDuration = 1.4f;
-    protected override void Awake()
-    {
-        base.Awake();
-        GameSceneManager.Instance.OnSceneTypeChanged += ClearUIList;
-    }
-
-    private void OnDestroy()
-    {
-        if (GameSceneManager.HasInstance)
-            GameSceneManager.Instance.OnSceneTypeChanged -= ClearUIList;
-    }
-
-    private void ClearUIList(SceneType sceneType)
-    {
-        uiList.Clear();
-    }
+    
     private void Start()
     {
 
