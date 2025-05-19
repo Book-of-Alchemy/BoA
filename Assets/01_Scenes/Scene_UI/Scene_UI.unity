@@ -421,11 +421,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96320c6276fe1b043be3c6036ace1d14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentTime: 0
-  nextActionTime: 0
-  actionCostStat:
-    baseValue: 10
-  actionCostMultiplier: 1
   Stats: {fileID: 0}
 --- !u!1 &522490726
 GameObject:
@@ -660,11 +655,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b958394a0a1d504780d789eb42afa21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentTime: 0
-  nextActionTime: 0
-  actionCostStat:
-    baseValue: 10
-  actionCostMultiplier: 1
   Stats: {fileID: 0}
 --- !u!1 &916698578
 GameObject:
@@ -978,6 +968,60 @@ Sprite:
   m_PhysicsShape: []
   m_Bones: []
   m_SpriteID: 
+--- !u!1 &1509586584
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1509586585}
+  - component: {fileID: 1509586586}
+  m_Layer: 0
+  m_Name: DataManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1509586585
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1509586584}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1215.1243, y: 454.07895, z: -11.324818}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1509586586
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1509586584}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17e11bd76f18ae143b709603224d230d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tileDataBase: {fileID: 11400000, guid: 3b38638883768d946bcf1f6695507f0d, type: 2}
+  enemyDataBase: {fileID: 11400000, guid: fe5112d6adcb6364bba839c0b620c889, type: 2}
+  questDataBase: {fileID: 11400000, guid: 69f36144dd01d7640a6860674d752327, type: 2}
+  projectileDataBase: {fileID: 11400000, guid: 0e7a19d9e26daaa4e87559533a2df0a2, type: 2}
+  effectDataBase: {fileID: 11400000, guid: 0e1d3de297452ea4baccf6d60ce92783, type: 2}
+  itemDataBase: {fileID: 11400000, guid: cd8bd01065132854094ebeead4b9e911, type: 2}
+  StatusEffectDataBase: {fileID: 11400000, guid: 4a63df85c3a103a438b42495e80af951, type: 2}
+  ArtifactDataBase: {fileID: 11400000, guid: 86d17cc3ee7572d48a168afc70fb0c7d, type: 2}
+  environmentalDataBase: {fileID: 11400000, guid: add19ce1a70d3244dbb0b89406e31ed9, type: 2}
+  playerPrefab: {fileID: 6804339739346013789, guid: 3999d0f34cbe9ef418c5a85ae2944482, type: 3}
 --- !u!1 &1533619445
 GameObject:
   m_ObjectHideFlags: 0
@@ -3316,7 +3360,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -7.182129, y: 0.9050293}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &2115139512
@@ -3392,3 +3436,4 @@ SceneRoots:
   - {fileID: 100099831}
   - {fileID: 350949113}
   - {fileID: 36620241}
+  - {fileID: 1509586585}
