@@ -17,12 +17,13 @@ public class UI_Main : UIBase
 
     public void OnClickNewGame()
     {
-        UIManager.Show<UI_HUD>();
+        //UIManager.Show<UI_HUD>();
+       GameSceneManager.Instance.ChangeScene(SceneType.Town);
     }
 
     public void OnClickLoadGame()
     {
-        
+        GameSceneManager.Instance.ChangeScene(SceneType.Dungeon);
     }
 
     public void OnClickSetting()

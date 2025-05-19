@@ -1,6 +1,6 @@
-public class DungeonScene : SceneBase
+public class MainMenuScene : SceneBase
 {
-    public override SceneType SceneType => SceneType.Dungeon;
+    public override SceneType SceneType => SceneType.MainMenu;
 
     protected override void Initialize()
     {
@@ -9,7 +9,7 @@ public class DungeonScene : SceneBase
 
     public override void OnEnter()
     {
-        UIManager.Show<UI_HUD>();
+        UIManager.Show<UI_Main>();
     }
 
     public override void OnExit()

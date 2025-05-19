@@ -151,14 +151,5 @@ public class TownBehavior : PlayerBaseBehavior
                Debug.LogWarning("NPC 컴포넌트가 없습니다.");
         }
     }
-    //Shop예시
-    //public class ShopFacility : MonoBehaviour, IFacilityUI
-    //{
-    //    public void ShowUI()
-    //    {
-    //        // UIManager 쪽에선 이 메서드를 통해 상점 UI를 띄움
-    //        UIManager.Instance.OpenShopUI(this);
-    //    }
-    //}
 }
 
