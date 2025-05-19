@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.UI.CanvasScaler;
 
 public class TurnManager : Singleton<TurnManager>
 {
@@ -45,6 +46,16 @@ public class TurnManager : Singleton<TurnManager>
                 unit.Stats?.TickEffects(globalTime);
                 if (unit is EnemyUnit enemyUnit)
                     enemyUnit.UpdateVisual();
+            }
+
+            foreach(var effect in allTileEffects.ToArray())
+            {
+                if (effect.NextActionTime <= globalTime)
+                {
+                    effect.StartTurn();
+                    effect.NextActionTime += effect.ActionCost;
+                    effect.OnTurnEnd();
+                }
             }
 
             // 실제 턴 처리
@@ -127,7 +138,6 @@ public class TurnManager : Singleton<TurnManager>
         if (!unitIds.Add(tileEffect.GetInstanceID()))
             return;
         allTileEffects.Add(tileEffect);
-        tileEffect.Init();
     }
 
     public void RemoveTileEffectt(TileEffect tileEffect)

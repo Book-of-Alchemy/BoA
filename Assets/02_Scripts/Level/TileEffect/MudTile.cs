@@ -2,17 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MudTile : MonoBehaviour
+public class MudTile : TileEffect, IGround, IWater
 {
-    // Start is called before the first frame update
-    void Start()
+    public override EnvironmentType EnvType => EnvironmentType.Mud;
+    public override void PerformAction()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        StatusEffectFactory.CreateEffect(220006, CurTile.CharacterStatsOnTile);
     }
 }

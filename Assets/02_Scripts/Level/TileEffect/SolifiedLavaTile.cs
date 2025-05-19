@@ -2,17 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SolifiedLavaTile : MonoBehaviour
+public class SolifiedLavaTile : TileEffect, IGround, IWater
 {
-    // Start is called before the first frame update
-    void Start()
+    public override EnvironmentType EnvType => EnvironmentType.Solidfied_Lava;
+    public override void PerformAction()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
+

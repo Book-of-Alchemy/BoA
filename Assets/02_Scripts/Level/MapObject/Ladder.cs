@@ -7,6 +7,7 @@ public class Ladder : MapObject
 
     public override void Init()
     {
+        base.Init();
         CurTile.onCharacterChanged += Interact;
     }
     public override void Interact()
@@ -15,8 +16,9 @@ public class Ladder : MapObject
             TileManger.Instance.GetDownToNextLevel();
     }
 
-    private void OnDisable()
+    protected override void OnDisable()
     {
+        base.OnDisable();
         CurTile.onCharacterChanged -= Interact;
     }
 }

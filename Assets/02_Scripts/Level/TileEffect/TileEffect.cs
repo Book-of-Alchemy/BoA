@@ -7,9 +7,20 @@ public interface IGround
 
 }
 
+public interface IWater
+{
+
+}
+
 public interface IAir
 {
 
+}
+
+public interface IExpirable
+{
+    public int LeftTime {  get; set; }
+    public void Expire();
 }
 
 public abstract class TileEffect : MonoBehaviour, ITurnProcessor
@@ -22,16 +33,21 @@ public abstract class TileEffect : MonoBehaviour, ITurnProcessor
     public bool ActionInProgress { get; private set; }
     protected Tile curTile;
     public Tile CurTile { get => curTile; set => curTile = value; }
+    public abstract EnvironmentType EnvType { get;}
 
+    public EnvironmentPrefab prefab;
     protected virtual void Awake()
     {
-
+        prefab = GetComponent<EnvironmentPrefab>();
+        prefab.OnReturnEvent += OnReturn;
     }
 
-    public virtual void Init()
+    public virtual void Init(Tile tile)
     {
         CurrentTime = TurnManager.Instance.globalTime;
         NextActionTime = CurrentTime + ActionCost;
+        CurTile = tile;
+        TurnManager.Instance.AddTileEffect(this);
     }
     public abstract void PerformAction();
 
@@ -51,5 +67,12 @@ public abstract class TileEffect : MonoBehaviour, ITurnProcessor
     {
         if (ActionInProgress)
             ActionInProgress = false;
+    }
+
+    public void OnReturn()
+    {
+        prefab.OnReturnEvent -= OnReturn;
+        TurnManager.Instance.RemoveTileEffectt(this);
+        Destroy(this);
     }
 }
