@@ -25,6 +25,8 @@ public class TownBehavior : PlayerBaseBehavior
     private Vector2 _clickTarget;
     private bool _isAutoMoving = false;
     private float _stopPoint = 0.1f;
+
+
     public override void Initialize(PlayerController controller)
     {
         base.Initialize(controller);
@@ -73,6 +75,7 @@ public class TownBehavior : PlayerBaseBehavior
             _animator.SetWalking(false);
         }
     }
+  
     protected override void SubscribeInput()
     {
         var im = InputManager;
@@ -124,7 +127,6 @@ public class TownBehavior : PlayerBaseBehavior
             var uiHandler = construct.GetComponent<IFacilityUI>();
             if (uiHandler != null)
             {
-                UnsubscribeInput();
                 uiHandler.ShowUI();
                 return;
             }

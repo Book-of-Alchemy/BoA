@@ -944,6 +944,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: DataManager
       objectReference: {fileID: 0}
+    - target: {fileID: 3107400911350595328, guid: 2e3d548e3203bc64c897c17cd763b7e9, type: 3}
+      propertyPath: ArtifactDataBase
+      value: 
+      objectReference: {fileID: 11400000, guid: 86d17cc3ee7572d48a168afc70fb0c7d, type: 2}
+    - target: {fileID: 3107400911350595328, guid: 2e3d548e3203bc64c897c17cd763b7e9, type: 3}
+      propertyPath: facilityDataBase
+      value: 
+      objectReference: {fileID: 11400000, guid: fd9dec103ed1ddf429fa7b2193380602, type: 2}
+    - target: {fileID: 3107400911350595328, guid: 2e3d548e3203bc64c897c17cd763b7e9, type: 3}
+      propertyPath: StatusEffectDataBase
+      value: 
+      objectReference: {fileID: 11400000, guid: 4a63df85c3a103a438b42495e80af951, type: 2}
+    - target: {fileID: 3107400911350595328, guid: 2e3d548e3203bc64c897c17cd763b7e9, type: 3}
+      propertyPath: environmentalDataBase
+      value: 
+      objectReference: {fileID: 11400000, guid: add19ce1a70d3244dbb0b89406e31ed9, type: 2}
     - target: {fileID: 4393161730607427208, guid: 2e3d548e3203bc64c897c17cd763b7e9, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

@@ -333,7 +333,7 @@ public class DungeonBehavior : PlayerBaseBehavior
         //UI열려있으면 무시
         if (IsUIOpen())
             return;
-        if (!Controller.isPlayerTurn ||
+        if (!Controller.isPlayerTurn||
             _isMoving ||
             _moveBuffer != null ||
             raw == Vector2.zero)
@@ -700,5 +700,4 @@ public class DungeonBehavior : PlayerBaseBehavior
 
         Controller.onActionConfirmed?.Invoke();
     }
-
 }
