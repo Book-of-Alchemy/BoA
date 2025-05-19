@@ -28,4 +28,4 @@ MonoBehaviour:
   trap_spawn_max_count: 0
   trap_difficulty_level: 0
   enable_first_room_boost: 0
-  quest_Type: 0
+  quest_Type: 1

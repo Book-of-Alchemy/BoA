@@ -1,14 +1,11 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
-using TMPro;
 using UnityEngine.UI;
 using System;
 using System.Collections.Generic;
 
-public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler, IDraggableSlot
+public class InventorySlotUI : SlotUIBase<InventoryItem>, ISelectHandler, IDeselectHandler, IDraggableSlot
 {
-    [SerializeField] protected Image _itemSprite;
-    [SerializeField] protected TextMeshProUGUI _countTxt;
     [SerializeField] protected Button _btn;
     [SerializeField] protected RectTransform _rectTransform;
     [SerializeField] protected UI_Inventory _uiInventory;
@@ -16,11 +13,6 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler, 
 
     protected GameObject _imageObject;
     protected GameObject _textObject;
-    protected InventoryItem _item;
-    public InventoryItem Item => _item;
-
-    public int Index { get; set; }
-    public bool HasItem => _item != null; //있다면 True
 
     private Color _normalBorderColor = new Color(1f, 1f, 1f, 0f); // 기본(투명)
     private Color _opaqueColor = new Color(1f, 1f, 1f, 1f); // 기본(투명)
@@ -40,14 +32,13 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler, 
 
     private void Awake()
     {
-        _imageObject = _itemSprite.gameObject;
+        _imageObject = _icon.gameObject;
         _textObject = _countTxt.gameObject;
 
         HideIcon();
         HideText();
 
-        if (_borderImage != null)
-            _borderImage.color = _normalBorderColor;
+        if (_borderImage != null) _borderImage.color = _normalBorderColor;
     }
 
     public void Initialize(UI_Inventory uiInventory)
@@ -59,13 +50,36 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler, 
         _OnClickActions[EInventoryType.Equipment] = OnEquipmentClick;
     }
 
-    public virtual void OnClickItem() // Call at OnClick Event
+    protected override void UpdateUI(InventoryItem data)
     {
-        //아이템이 없다면 리턴
-        if (!HasItem)
-            return;
+        if (_btn != null) _btn?.onClick.AddListener(OnClick);
+        if (_countTxt != null) _countTxt.text = data.Amount.ToString();
+        if (_icon != null) _icon.sprite = data.GetSprite();
+        _icon.enabled = data != null;
+        _imageObject = _icon.gameObject;
+        _textObject = _countTxt.gameObject;
+        ShowIcon();
+        ShowText();
+    }
 
-        _uiInventory.SetSelectIndex(Index);
+    protected override void ClearUI()
+    {
+        _icon.sprite = null;
+        _countTxt.text = "";
+        _icon.enabled = false;
+
+        if (_btn != null) _btn.onClick.RemoveAllListeners();
+
+        _data = null;
+
+        if (_imageObject != null) HideIcon();
+        if (_textObject != null) HideText();
+    }
+
+
+    public override void OnClick()
+    {
+        if (!HasData) return;
 
         //인벤토리타입(키)에 맞는 액션(Value) 찾기
         if (_OnClickActions.TryGetValue(_uiInventory.CurType, out var action))
@@ -77,55 +91,23 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler, 
         {
             Debug.LogWarning($"{_uiInventory.CurType}에 대한 버튼 액션이 없음.");
         }
+        //UIManager.Show<UI_Action>((int)_uiInventory.CurType, transform as RectTransform, _data, Index);
     }
+
     private void OnInventoryClick()
     {
-        UIManager.Show<UI_Action>((int)_uiInventory.CurType, _rectTransform, _item, Index);
+        UIManager.Show<UI_Action>((int)_uiInventory.CurType, _rectTransform, _data, Index);
     }
 
     private void OnCraftClick()
     {
-        Inventory.Instance.Craft(_item);
+        Inventory.Instance.Craft(_data);
     }
 
     private void OnEquipmentClick()
     {
         // 예를 들면 장비 착용창 열기
-        UIManager.Show<UI_Action>((int)_uiInventory.CurType, _rectTransform, _item, Index);
-    }
-    public void SetItem(InventoryItem item) // 슬롯에 아이템 등록
-    {
-        if (item == null)
-        {
-           RemoveItem();
-           return;
-        }
-
-        _item = item;
-        _btn?.onClick.AddListener(OnClickItem);
-
-        if (_countTxt != null) _countTxt.text = _item.Amount.ToString();
-        if (_itemSprite != null) _itemSprite.sprite = _item.GetSprite();
-
-        _imageObject = _itemSprite.gameObject;
-        _textObject = _countTxt.gameObject;
-        ShowIcon();
-        ShowText();
-    }
-
-    public void RemoveItem() // 슬롯에서 아이템제거
-    {
-        if (!HasItem) return;
-        
-        if (_btn != null)
-                _btn.onClick.RemoveAllListeners();
-        
-        _item = null;
-        if (_itemSprite != null) _itemSprite.sprite = null;
-        if (_countTxt != null) _countTxt.text = string.Empty;
-    
-        if (_imageObject != null) HideIcon();
-        if (_textObject != null) HideText();
+        UIManager.Show<UI_Action>((int)_uiInventory.CurType, _rectTransform, _data, Index);
     }
 
     public void ReduceItem(int amount = 1) // 아이템 수량감소
@@ -153,15 +135,18 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler, 
     }
     public void SetItemBlurColor()
     {
-        _itemSprite.color = _blurColor; 
+        //_itemSprite.color = _blurColor; 
+        _icon.color = _blurColor; 
     }
     public void SetItemNormalColor()
     {
-        _itemSprite.color = _normalBorderColor;
+        //_itemSprite.color = _normalBorderColor;
+        _icon.color = _normalBorderColor;
     }
     public void SetItemopaque()
     {
-        _itemSprite.color = _opaqueColor;
+        //_itemSprite.color = _opaqueColor;
+        _icon.color = _opaqueColor;
     }
 
     public void SetHighlight(bool isOn)
@@ -184,6 +169,6 @@ public class InventorySlotUI : MonoBehaviour, ISelectHandler, IDeselectHandler, 
 
     public InventoryItem GetItem()
     {
-        return _item;
+        return _data;
     }
 }

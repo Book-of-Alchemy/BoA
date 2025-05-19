@@ -57,6 +57,10 @@ public class PlayerStats : CharacterStats
         statBlock.SetBaseValue(StatType.Attack, 10 + 1 * level);
         OnExperienceChanged?.Invoke();
         Debug.Log("레벨업 " + level);
+        if(level < 62)
+            UIManager.Show<UI_LvSelect>();
+        else
+            UIManager.Show<UI_Text>("유물을 획득하지 못할 것 같다...");
     }
 
 

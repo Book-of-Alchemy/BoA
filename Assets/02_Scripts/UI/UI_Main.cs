@@ -19,6 +19,9 @@ public class UI_Main : UIBase
     {
         //UIManager.Show<UI_HUD>();
        GameSceneManager.Instance.ChangeScene(SceneType.Town);
+
+        //UIManager.Show<UI_HUD>();
+        //HideDirect();
     }
 
     public void OnClickLoadGame()
@@ -29,6 +32,7 @@ public class UI_Main : UIBase
     public void OnClickSetting()
     {
         UIManager.Show<UI_Setting>();
+        HideDirect();
     }
 
     public void OnClickQuitGame()
