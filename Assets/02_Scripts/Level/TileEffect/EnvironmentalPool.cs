@@ -45,6 +45,7 @@ public class EnvironmentalPool : MonoBehaviour
         Vector2Int gridPosition = tile.gridPosition;
         Vector3 spawnPosition = new Vector3(gridPosition.x, gridPosition.y, 0);
         obj.transform.position = spawnPosition;
+        obj.baseRenderer.sortingOrder = -9000;
         obj.CurTile = tile;
         obj.gameObject.SetActive(true);
 

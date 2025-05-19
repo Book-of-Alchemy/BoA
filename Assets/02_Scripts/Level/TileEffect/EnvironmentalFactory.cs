@@ -27,6 +27,7 @@ public class EnvironmentalFactory : Singleton<EnvironmentalFactory>
                     prefab.AutoTileUpdate();
 
                 prefab.PlayAnimation();
+                groundEffect.Init(tile);
             }
             else if (t is IAir and TileEffect airEffect)
             {
@@ -35,6 +36,7 @@ public class EnvironmentalFactory : Singleton<EnvironmentalFactory>
 
                 tile.airEffect = airEffect;
                 prefab.PlayAnimation();
+                airEffect.Init(tile);
             }
         }
     }

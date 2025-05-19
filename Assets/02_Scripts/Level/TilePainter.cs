@@ -38,7 +38,7 @@ public static class TilePainter
             if (tile.Value.environmentType == EnvironmentType.none)
                 continue;
 
-            SetEnvironmentTile(tile.Value, level, environmentalSets, environmentalPrefab);
+            SetEnvironmentTile(tile.Value, level);
         }
 
         PlaceTrap(level, trapData);
@@ -111,14 +111,16 @@ public static class TilePainter
         return tileType == TileType.wall || tileType == TileType.secretWall || tileType == TileType.empty;
     }
 
-    private static void SetEnvironmentTile(Tile tile, Level level, List<EnvironmentalData> environmentalSets, GameObject environmentalPrefab)
+    private static void SetEnvironmentTile(Tile tile, Level level)
     {
-        GameObject TileGO = UnityEngine.Object.Instantiate
+        EnvironmentalFactory.Instance.GetEnvironment(tile.environmentType, tile, level);
+        /*GameObject TileGO = UnityEngine.Object.Instantiate
             (
             environmentalPrefab,
             new Vector3Int(tile.gridPosition.x, tile.gridPosition.y, 0),
             Quaternion.identity
             );
+        
         EnvironmentPrefab tilePrefab = TileGO.GetComponent<EnvironmentPrefab>();
         if (tilePrefab.baseRenderer == null) return;
 
@@ -126,7 +128,7 @@ public static class TilePainter
         tilePrefab.baseRenderer.sprite = environmentalSets[0].GetSprite(bitask);
         tilePrefab.baseRenderer.sortingOrder = -9000;
         tilePrefab.CurTile = tile;
-        TileGO.transform.SetParent(level.transform);
+        TileGO.transform.SetParent(level.transform);*/
     }
 
     public static int CalculateEnvironmentBitmask(Tile tile, Level level, EnvironmentType type)

@@ -42,10 +42,11 @@ public abstract class TileEffect : MonoBehaviour, ITurnProcessor
         prefab.OnReturnEvent += OnReturn;
     }
 
-    public virtual void Init()
+    public virtual void Init(Tile tile)
     {
         CurrentTime = TurnManager.Instance.globalTime;
         NextActionTime = CurrentTime + ActionCost;
+        CurTile = tile;
         TurnManager.Instance.AddTileEffect(this);
     }
     public abstract void PerformAction();

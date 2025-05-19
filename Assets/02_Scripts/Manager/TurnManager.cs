@@ -138,7 +138,6 @@ public class TurnManager : Singleton<TurnManager>
         if (!unitIds.Add(tileEffect.GetInstanceID()))
             return;
         allTileEffects.Add(tileEffect);
-        tileEffect.Init();
     }
 
     public void RemoveTileEffectt(TileEffect tileEffect)
