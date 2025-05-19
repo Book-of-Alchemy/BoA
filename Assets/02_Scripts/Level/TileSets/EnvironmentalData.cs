@@ -8,11 +8,12 @@ public enum TileEnvironment
     Air,
 }
 
-[CreateAssetMenu(menuName = "Tile/AutoEnvironmentalSet")]
+[CreateAssetMenu(menuName = "Tile/EnvironmentalData")]
 public class EnvironmentalData : ScriptableObject
 {
     public int Id;
     public string name_kr;
+    public string name_en;
     public string description;
     public int duration;
     public EnvironmentType environment_type;

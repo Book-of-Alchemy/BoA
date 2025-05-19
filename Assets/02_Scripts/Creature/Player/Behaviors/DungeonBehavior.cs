@@ -608,19 +608,8 @@ public class DungeonBehavior : PlayerBaseBehavior
             return;
         }
 
-        // 인벤 닫기
-        if (UIManager.IsOpened<UI_Inventory>())
-        {
-            UIManager.Hide<UI_Inventory>();
-            return;
-        }
-
-        //제작 닫기
-        if (UIManager.IsOpened<UI_Craft>())
-        {
-            UIManager.Hide<UI_Craft>();
-            return;
-        }
+        //마지막 열린 UI 닫기
+        UIManager.CloseLastOpenedUI();
 
         //메뉴 닫기
         if (UIManager.IsOpened<UI_Menu>())
@@ -644,7 +633,7 @@ public class DungeonBehavior : PlayerBaseBehavior
         Debug.Log("HandleMenu 호출됨");
         if (UIManager.IsOpened<UI_Menu>())
         {
-            UIManager.Hide<UI_Menu>();
+            UIManager.Get<UI_Menu>().HideDirect();
         }
         else
         {

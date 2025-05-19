@@ -11,6 +11,8 @@ public class UI_LvSelect : UIBase
     [Header("ArtifactPanel")]
     [SerializeField] private List<ArtifactPanelUI> _panels;
 
+    public override bool IsClosable => false;
+
     public override void HideDirect()
     {
         _uiAnimator.FadeOut(OnFadeOut);

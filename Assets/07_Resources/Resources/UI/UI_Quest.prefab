@@ -970,6 +970,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11feb918b8d383242b284f73b730cd31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _questNameTxt: {fileID: 0}
+  _mainGoalTxt: {fileID: 0}
+  _reward01Txt: {fileID: 0}
+  _reward02Txt: {fileID: 0}
+  _reward03Txt: {fileID: 0}
+  _biomeTxt: {fileID: 0}
+  _descTxt: {fileID: 0}
 --- !u!95 &6911672030252645366
 Animator:
   serializedVersion: 5
@@ -2645,7 +2652,7 @@ GameObject:
   - component: {fileID: 8741551454406058769}
   - component: {fileID: 1658653477831593583}
   m_Layer: 5
-  m_Name: QuestName
+  m_Name: BiomeName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -2,17 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SlimedFieldTile : MonoBehaviour
+public class SlimedFieldTile : TileEffect, IGround, IWater
 {
-    // Start is called before the first frame update
-    void Start()
+    public override EnvironmentType EnvType => EnvironmentType.Slimed_Field;
+    public override void PerformAction()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        StatusEffectFactory.CreateEffect(220006, CurTile.CharacterStatsOnTile);
+        StatusEffectFactory.CreateEffect(220010, CurTile.CharacterStatsOnTile);
     }
 }
+
