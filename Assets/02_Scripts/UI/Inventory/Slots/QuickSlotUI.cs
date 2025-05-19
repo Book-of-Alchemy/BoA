@@ -16,7 +16,7 @@ public class QuickSlotUI : SlotUIBase<InventoryItem>, IDropHandler
     protected override void UpdateUI(InventoryItem data)
     {
         _data = data;
-        _icon.sprite = data.itemData.Sprite;
+        _icon.sprite = data.itemData.sprite;
         _countTxt.text = data.Amount.ToString();
         _icon.enabled = true;
     }

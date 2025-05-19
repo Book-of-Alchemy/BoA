@@ -453,8 +453,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 176.03, y: 71}
-  m_SizeDelta: {x: -352.05, y: 45}
+  m_AnchoredPosition: {x: 155.8, y: 71}
+  m_SizeDelta: {x: -311.6, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5509359376639188057
 CanvasRenderer:
@@ -517,7 +517,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -12409,7 +12409,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5470981201047866894
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12478,22 +12478,11 @@ MonoBehaviour:
   - {fileID: 9207358342708659346}
   - {fileID: 103350648547866497}
   - {fileID: 7407626364723291303}
+  slideDuration: 0.75
   _artifactImage: {fileID: 459436116068196938}
   _artifactName: {fileID: 7533223625534119297}
   _artifactDesc: {fileID: 2271206922103269526}
   _artifactRarity: {fileID: 4160834620542380468}
-  _soDatas:
-  - {fileID: 11400000, guid: 6cd963a6292ffc94c87573231cb22a80, type: 2}
-  - {fileID: 11400000, guid: 74562c0c436ffc24ead53b213560bdd6, type: 2}
-  - {fileID: 11400000, guid: e3c084b2856a25b40ba4741299547a4a, type: 2}
-  - {fileID: 11400000, guid: f3b9ce8705aea1244b5a04e9b06d622a, type: 2}
-  - {fileID: 11400000, guid: bea4c75e22ab0a845b49b5d8fa3a0139, type: 2}
-  - {fileID: 11400000, guid: 6c4b9a8d66940184fa1d4dc2f6d0a683, type: 2}
-  - {fileID: 11400000, guid: 52b5b22546ce63b45828bd7a0912f0db, type: 2}
-  - {fileID: 11400000, guid: 7c89fb15fe462cd4e8b29b7b7e73e055, type: 2}
-  - {fileID: 11400000, guid: 913be5e4bdfca954e81f15518bd43aaa, type: 2}
-  - {fileID: 11400000, guid: 3d85fe1caf9808449979521c5db51b54, type: 2}
-  - {fileID: 11400000, guid: eee7465a62a9ca146a14b08c8b692c57, type: 2}
 --- !u!225 &4672984400188171686
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -15513,8 +15502,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -91.57291, y: 71}
-  m_SizeDelta: {x: -183.1458, y: 45}
+  m_AnchoredPosition: {x: -115, y: 71}
+  m_SizeDelta: {x: -230, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7846707393391345810
 CanvasRenderer:
@@ -16484,7 +16473,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 81.252014, y: 71}
+  m_AnchoredPosition: {x: 40.802002, y: 71}
   m_SizeDelta: {x: -435.496, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1572344736145166143

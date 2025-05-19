@@ -56,5 +56,6 @@ public class UI_HUD : UIBase
     public void OnLevelUpBtn() // Call At OnClick Event
     {
         UIManager.Show<UI_LvSelect>();
+        UIManager.Show<UI_SelectQuest>();
     }
 }

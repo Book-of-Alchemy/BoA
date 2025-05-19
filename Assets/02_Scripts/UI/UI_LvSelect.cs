@@ -11,9 +11,6 @@ public class UI_LvSelect : UIBase
     [Header("ArtifactPanel")]
     [SerializeField] private List<ArtifactPanelUI> _panels;
 
-    [Header("TestSO")]
-    [SerializeField] private List<ArtifactData> _soDatas;
-
     public override void HideDirect()
     {
         _uiAnimator.FadeOut(OnFadeOut);
@@ -21,13 +18,11 @@ public class UI_LvSelect : UIBase
 
     public override void Opened(params object[] param)
     {
-
+        ArtifactData[] data = ArtifactFactory.RandomArtifacts();
         for (int i = 0; i < 3; i++)
         {
-            int rand = Random.Range(0, _soDatas.Count);
-            _panels[i].SetData(_soDatas[rand], OnArtifactSelected);
+            _panels[i].SetData(data[i], OnArtifactSelected);
             _panels[i].OnBtnSelected += MoveSelectorTo;
-            _soDatas.RemoveAt(rand);
         }
 
         _uiAnimator.SlideFromY(()=> _panels[0]._btn.Select());
@@ -40,7 +35,8 @@ public class UI_LvSelect : UIBase
 
     private void OnArtifactSelected(ArtifactData data) //아티팩트가 선택되면 호출
     {
-        //아티팩트 data 획득 함수 추가 필요
+        //아티팩트 획득 및 UI FadeOut
+        ArtifactFactory.EquipArtifact(data.id);
         _uiAnimator.FadeOut(OnFadeOut);
     }
 

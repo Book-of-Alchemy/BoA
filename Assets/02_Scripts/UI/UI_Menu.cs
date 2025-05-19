@@ -7,7 +7,6 @@ public class UI_Menu : UIBase
 
     public override void HideDirect()
     {
-        Debug.Log("Hide Menu");
         _uiAnimator.SlideTo(OnHide);
     }
     private void OnHide()
