@@ -7,7 +7,7 @@ public class EnvRuleDataBase : ScriptableObject
 {
     public List<EnvRuleData> envRuleDatas;
 
-    public Dictionary<(DamageType, EnvironmentType), EnvRuleData> ruleDic;
+    public Dictionary<(DamageType, EnvironmentType), EnvRuleData> ruleDic = new Dictionary<(DamageType, EnvironmentType), EnvRuleData>();
 
     private void OnValidate()
     {

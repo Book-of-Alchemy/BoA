@@ -185,7 +185,7 @@ public class Tile
         if (reactionResult.effect_ID != -1)
             EffectProjectileManager.Instance.PlayEffect(gridPosition, reactionResult.effect_ID);
 
-        if (characterStatsOnTile != null)
+        if (characterStatsOnTile != null && reactionResult.damage > 0)
         {
             DamageInfo damage = new DamageInfo(reactionResult.damage, reactionResult.damageType, null, characterStatsOnTile);
             characterStatsOnTile.TakeDamage(damage);

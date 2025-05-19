@@ -10,6 +10,7 @@ public class EnvironmentalFactory : Singleton<EnvironmentalFactory>
     Dictionary<EnvironmentType, EnvironmentalData> datasByType => environmentalDataBase.datasByType;
     public void GetEnvironment(EnvironmentType type, Tile tile, Level level)
     {
+        if (type == EnvironmentType.none) return;
         EnvironmentPrefab prefab = environmentalPool.GetFromPool(tile, level.transform);
         prefab.Initiallize(datasByType[type], tile);
         System.Type effectType = GetEffectTypeByEnvironment(type);
