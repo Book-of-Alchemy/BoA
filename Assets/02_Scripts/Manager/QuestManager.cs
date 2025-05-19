@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 public class QuestProgress
@@ -34,38 +35,51 @@ public class QuestProgress
 public class QuestManager : Singleton<QuestManager>
 {
     private QuestProgress _acceptedQuest;
+
+    public QuestProgress AcceptedQuest { get { return _acceptedQuest; }
+        set
+        {
+            _acceptedQuest = value;
+            OnQuestAccepted?.Invoke();
+        }
+    }
+
     private List<QuestData> _clearedQuests = new List<QuestData>();
     public QuestProgress GetAcceptedQuest() => _acceptedQuest;
 
+    public event Action OnQuestAccepted;
+
     public bool CanAcceptQuest()
     {
-        bool result = _acceptedQuest == null ? true : false;
+        bool result = AcceptedQuest == null ? true : false;
         return result;
     }
 
     public void AcceptQuest(QuestData quest)
     {
-        if (_acceptedQuest.Data == null)
-                _acceptedQuest = new QuestProgress(quest);
+        if (AcceptedQuest == null)
+            AcceptedQuest = new QuestProgress(quest);
     }
 
     public void UpdateProgress(int value)
     {
-        if (_acceptedQuest == null) return;
+        if (AcceptedQuest == null) return;
 
-        _acceptedQuest.UpdateProgress(value);
+        AcceptedQuest.UpdateProgress(value);
 
-        if (_acceptedQuest.ProgressVal > _acceptedQuest.CompleteVal)
+        if (AcceptedQuest.ProgressVal > AcceptedQuest.CompleteVal)
             QuestCleared();
     }
 
     private void QuestCleared()
     {
-        if (_acceptedQuest == null) return;
+        //퀘스트 클리어시 초기화
+        if (AcceptedQuest == null) return;
 
-        _acceptedQuest.ClearQuest();
-        _clearedQuests.Add(_acceptedQuest.Data);
-        _acceptedQuest = null;
+        AcceptedQuest.ClearQuest();
+        _clearedQuests.Add(AcceptedQuest.Data);
+        AcceptedQuest = null;
+        OnQuestAccepted = null;
     }
 
     public List<int> GetClearedQuestIds()

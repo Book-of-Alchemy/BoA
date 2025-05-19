@@ -44,6 +44,8 @@ public class UI_Menu : UIBase
 
     public void OnClickMainMenu() 
     {
+        //씬전환필요?
+        UIManager.Hide<UI_HUD>();
         UIManager.Show<UI_Main>();
         HideDirect();
     }

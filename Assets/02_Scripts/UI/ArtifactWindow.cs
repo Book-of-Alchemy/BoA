@@ -11,7 +11,6 @@ public class ArtifactWindow : MonoBehaviour
     [SerializeField] private RectTransform _selector;
     [SerializeField] private Button _nextBtn;
     [SerializeField] private Button _prevBtn;
-    [SerializeField] private UIAnimator _animator;
     [SerializeField] private List<RectTransform> _artifactBorder;
     [SerializeField][Range(0.1f,2f)]private float slideDuration = 1f;
 

@@ -16,7 +16,8 @@ public class PlayerStats : CharacterStats
     //다음레벨까지 필요한 경험치(읽기 전용)
     public int nextLevelExp => _nextLevelExp;
 
-    public event Action OnExperienceChanged;
+    public event Action OnExperienceChanged; 
+    public event Action<int> OnLevelChanged;
 
     public override Tile CurTile
     {
@@ -56,6 +57,7 @@ public class PlayerStats : CharacterStats
         CurrentMana = MaxMana;
         statBlock.SetBaseValue(StatType.Attack, 10 + 1 * level);
         OnExperienceChanged?.Invoke();
+        OnLevelChanged?.Invoke(level);
         Debug.Log("레벨업 " + level);
         if(level < 62)
             UIManager.Show<UI_LvSelect>();
