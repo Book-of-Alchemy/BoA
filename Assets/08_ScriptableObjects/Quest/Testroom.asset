@@ -10,22 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d8051a1180897974893b7323ca5fa5e2, type: 3}
-  m_Name: Test Quest Data
+  m_Name: Testroom
   m_EditorClassIdentifier: 
-  id: 0
-  name_kr: test
+  id: 110000
+  quest_name_kr: "\uD14C\uC2A4\uD2B8"
+  quest_name_en: Testroom
   biome_id: 120001
-  base_monster_level: 10
-  level_per_floor: 0
-  map_size_prob_small: 0
-  map_size_prob_medium: 0
-  map_size_prob_large: 0
-  is_fixed_map: 0
-  dungeon_floor_count: 0
-  trap_spawn_rate_small: 0
-  trap_spawn_rate_medium: 0
-  trap_spawn_rate_large: 0
-  trap_spawn_max_count: 0
-  trap_difficulty_level: 0
-  enable_first_room_boost: 0
-  quest_Type: 0
+  base_monster_level: 1
+  level_per_floor: 1
+  is_fixed_map: 1
+  dungeon_floor_count: 1
+  quest_Type: 1
+  main_object_type: 0
+  main_object_text_kr: "\uD14C\uC2A4\uD2B8"
+  reward1: 3
+  reward2: 3
+  reward3: 3
+  reward_gold_amount: 0
+  client: dev
+  descriptiontxt: "\uD14C\uC2A4\uD2B8\uB8F8"

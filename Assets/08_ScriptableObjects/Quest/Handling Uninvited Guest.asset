@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8051a1180897974893b7323ca5fa5e2, type: 3}
+  m_Name: Handling Uninvited Guest
+  m_EditorClassIdentifier: 
+  id: 110004
+  quest_name_kr: "\uBD88\uCCAD\uAC1D \uCC98\uB9AC"
+  quest_name_en: Handling Uninvited Guest
+  biome_id: 120001
+  base_monster_level: 3
+  level_per_floor: 2
+  is_fixed_map: 0
+  dungeon_floor_count: 8
+  quest_Type: 0
+  main_object_type: 0
+  main_object_text_kr: "\uC564\uD2B8 \uC4F0\uB7EC\uD2B8\uB9AC\uAE30"
+  reward1: 3
+  reward2: 3
+  reward3: 3
+  reward_gold_amount: 500
+  client: "\uC655\uB9BD \uD559\uD68C"
+  descriptiontxt: " '\uBCF4\uB0B4\uC8FC\uC2E0 \uBCF4\uACE0\uC11C\uB294 \uC798 \uC218\uC2E0\uD588\uC2B5\uB2C8\uB2E4.\n\uC774\uB7EC\uD55C
+    \uC0C1\uD669\uC5D0 \uD638\uC704\uB3C4 \uC5C6\uC774 \uC232\uC758 \uC911\uC2EC\uBD80\uB97C
+    \uC870\uC0AC\uD558\uB7EC \uAC00\uC2E0\uB2E4\uB294 \uAC83\uC740 \uC815\uB9D0 \uC704\uD5D8\uD569\uB2C8\uB2E4.\n\uC0C1\uD669
+    \uC870\uC0AC\uB97C \uC704\uD55C \uC9C0\uC6D0 \uC2B9\uC778\uC744 \uBC1B\uC544\uB0B4\uC5B4
+    \uC9C0\uC6D0 \uBB3C\uC790\uC640 \uC18C\uADDC\uBAA8 \uBD80\uB300\uAC00 \uBCA8\uB8E8\uC544\uB85C
+    \uC774\uB3D9\uC911\uC774\uB2C8\n\uBD80\uB514 \uAE30\uB2E4\uB824\uC8FC\uC168\uC73C\uBA74
+    \uD569\uB2C8\uB2E4.'\n\n\uAE30\uB2E4\uB9AC\uB77C\uACE0\uB294 \uD558\uC9C0\uB9CC..."

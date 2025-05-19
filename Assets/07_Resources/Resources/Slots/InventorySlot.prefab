@@ -208,8 +208,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 633a0995adec80043a4a3db389033329, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _itemSprite: {fileID: 3130647454858476052}
+  _icon: {fileID: 3130647454858476052}
   _countTxt: {fileID: 488488366470211065}
+  _itemSprite: {fileID: 3130647454858476052}
   _btn: {fileID: 3738049831247307785}
   _rectTransform: {fileID: 7418909959037402002}
   _uiInventory: {fileID: 0}

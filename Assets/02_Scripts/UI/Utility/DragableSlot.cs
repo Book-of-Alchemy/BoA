@@ -4,10 +4,8 @@ using UnityEngine.UI;
 public interface IDraggableSlot
 {
     int Index { get; }
-    bool HasItem { get; }
+    bool HasData { get; }
     InventoryItem GetItem(); // 드래그 시 참조할 데이터
-    void SetItem(InventoryItem item);
-    void RemoveItem();
 }
 
 [RequireComponent(typeof(RectTransform))]
@@ -26,13 +24,13 @@ public class DragableSlot : MonoBehaviour, IPointerDownHandler, IBeginDragHandle
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (!_slot.HasItem) return;
+        if (!_slot.HasData) return;
         _pointerDownPos = eventData.position;
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (_slot == null || !_slot.HasItem)
+        if (_slot == null || !_slot.HasData)
             return;
 
         if (Vector2.Distance(eventData.position, _pointerDownPos) < DragThreshold)

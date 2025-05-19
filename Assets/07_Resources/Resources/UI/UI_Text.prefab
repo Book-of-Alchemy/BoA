@@ -59,7 +59,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -197,6 +197,7 @@ MonoBehaviour:
   uiPosition: 1
   _text: {fileID: 3140574398429417702}
   _uiAnimator: {fileID: 6134837342373099840}
+  _rect: {fileID: 8608055060386154436}
 --- !u!225 &4547709720101094483
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -207,7 +208,7 @@ CanvasGroup:
   m_Enabled: 1
   m_Alpha: 1
   m_Interactable: 1
-  m_BlocksRaycasts: 1
+  m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
 --- !u!114 &6134837342373099840
 MonoBehaviour:
@@ -222,7 +223,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fadeDuration: 2
-  slideOffset: 300
+  slideOffsetX: 300
+  slideOffsetY: 300
   slideDuration: 1
   popupScale: 1.3
   popupDuration: 0.7

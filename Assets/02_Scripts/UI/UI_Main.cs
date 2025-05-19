@@ -18,6 +18,7 @@ public class UI_Main : UIBase
     public void OnClickNewGame()
     {
         UIManager.Show<UI_HUD>();
+        HideDirect();
     }
 
     public void OnClickLoadGame()
@@ -28,6 +29,7 @@ public class UI_Main : UIBase
     public void OnClickSetting()
     {
         UIManager.Show<UI_Setting>();
+        HideDirect();
     }
 
     public void OnClickQuitGame()
