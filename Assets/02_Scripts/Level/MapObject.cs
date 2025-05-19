@@ -17,7 +17,10 @@ public abstract class MapObject : MonoBehaviour
         }
     }
 
-
+    protected void Awake()
+    {
+        spriteRenderer.GetComponent<SpriteRenderer>();
+    }
 
     public virtual void Init()
     {

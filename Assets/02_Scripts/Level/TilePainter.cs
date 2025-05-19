@@ -195,6 +195,8 @@ public static class TilePainter
                 new Vector3Int(level.endTile.gridPosition.x, level.endTile.gridPosition.y, 0),
                 Quaternion.identity
                 ).GetComponent<MapObject>();
+
         level.endTile.mapObject.CurTile = level.endTile;
+        level.endTile.mapObject.spriteRenderer.sortingOrder = -level.endTile.gridPosition.y * 10;
     }
 }
