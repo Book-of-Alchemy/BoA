@@ -153,7 +153,7 @@ public class Tile
 
         return isWalkable;
     }
-    
+
     private bool CalculateCanSeeThrough()
     {
         bool isCanSeeThrough;
@@ -165,30 +165,33 @@ public class Tile
             TileType.door => !isOccupied,
             _ => true,
         };
+        if (airEffect != null && (airEffect is FogTile || airEffect is ToxicAirTile))
+        {
+            isCanSeeThrough = false;
+        }
 
         return isCanSeeThrough;
     }
 
-    public void AffectOnTile(DamageInfo damageInfo)
+    public void AffectOnTile(TileReactionResult reactionResult, bool isAir)
     {
-        //TileReactionResult groundResult = TileRuleProccessor.CheckRuleOnGround(damageInfo,this);
-        //if(groundResult.isReacted)
-        //{
-        //    EffectProjectileManager.Instance.PlayEffect(gridPosition, groundResult.effect_ID);
-        //    if(CharacterStatsOnTile != null)
-        //    {
-        //        DamageInfo damage = new DamageInfo(groundResult.damage, groundResult.damageType, damageInfo.source, CharacterStatsOnTile, damageInfo.isCritical, damageInfo.tags);
-        //        CharacterStatsOnTile.TakeDamage(damage);
-        //    }
-        //    var neighbor = TileUtility.GetAdjacentTileList(curLevel,this);
-        //    //foreach
-        //}
+        var env = isAir ? airEffect : groundEffect;
+        if (env == null) return;
 
+        if (env.EnvType != reactionResult.sourceTileType) return;
 
-        //TileReactionResult airResult = TileRuleProccessor.CheckRuleOnAir(damageInfo, this);
-        //if (airResult.isReacted)
-        //{
+        EnvironmentalFactory.Instance.ReturnTileEffect(env);
 
-        //}
+        if (reactionResult.effect_ID != -1)
+            EffectProjectileManager.Instance.PlayEffect(gridPosition, reactionResult.effect_ID);
+
+        if (characterStatsOnTile != null)
+        {
+            DamageInfo damage = new DamageInfo(reactionResult.damage, reactionResult.damageType, null, characterStatsOnTile);
+            characterStatsOnTile.TakeDamage(damage);
+        }
+
+        EnvironmentalFactory.Instance.GetEnvironment(reactionResult.resultTileType, this, curLevel);
     }
+
 }

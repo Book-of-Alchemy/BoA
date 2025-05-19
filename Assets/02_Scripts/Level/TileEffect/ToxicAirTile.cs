@@ -2,17 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ToxicAirTile : MonoBehaviour
+public class ToxicAirTile : TileEffect, IAir, IExpirable
 {
-    // Start is called before the first frame update
-    void Start()
+    public override EnvironmentType EnvType => EnvironmentType.Fog;
+    private int leftTime = 50;
+    public int LeftTime { get => leftTime; set => leftTime = value; }
+    public override void PerformAction()
     {
-        
+        if (LeftTime <= 0)
+        {
+            Expire();
+            return;
+        }
+
+        StatusEffectFactory.CreateEffect(220010, CurTile.CharacterStatsOnTile);
+        LeftTime -= ActionCost;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Expire()
     {
-        
+        EnvironmentalFactory.Instance.ReturnTileEffect(this);
     }
 }
+

@@ -17,6 +17,12 @@ public interface IAir
 
 }
 
+public interface IExpirable
+{
+    public int LeftTime {  get; set; }
+    public void Expire();
+}
+
 public abstract class TileEffect : MonoBehaviour, ITurnProcessor
 {
     protected int currentTime = 0;
@@ -40,6 +46,7 @@ public abstract class TileEffect : MonoBehaviour, ITurnProcessor
     {
         CurrentTime = TurnManager.Instance.globalTime;
         NextActionTime = CurrentTime + ActionCost;
+        TurnManager.Instance.AddTileEffect(this);
     }
     public abstract void PerformAction();
 
@@ -64,6 +71,7 @@ public abstract class TileEffect : MonoBehaviour, ITurnProcessor
     public void OnReturn()
     {
         prefab.OnReturnEvent -= OnReturn;
+        TurnManager.Instance.RemoveTileEffectt(this);
         Destroy(this);
     }
 }

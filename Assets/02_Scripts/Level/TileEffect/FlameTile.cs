@@ -1,18 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public class FlameTile : MonoBehaviour
+public class FlameTile : TileEffect, IGround,IExpirable
 {
-    // Start is called before the first frame update
-    void Start()
+    public override EnvironmentType EnvType => EnvironmentType.Flame;
+    private int leftTime = 50;
+    public int LeftTime {  get => leftTime; set => leftTime = value; }
+    public override void PerformAction()
     {
-        
+        if(LeftTime <= 0)
+        {
+            Expire();
+            return;
+        }
+
+        StatusEffectFactory.CreateEffect(220009, CurTile.CharacterStatsOnTile);
+        LeftTime -= ActionCost;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Expire()
     {
-        
+        EnvironmentalFactory.Instance.ReturnTileEffect(this);
     }
 }
+
