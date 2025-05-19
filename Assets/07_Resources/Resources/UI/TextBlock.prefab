@@ -212,7 +212,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6440b8ef88d8c24a85440b3729acf69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiPosition: 0
+  uiPosition: 1
   _typeWriter: {fileID: 5453377172096057020}
   _uIAnimator: {fileID: 2615934849008588617}
   TestText:
