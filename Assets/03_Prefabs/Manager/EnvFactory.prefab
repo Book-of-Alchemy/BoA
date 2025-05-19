@@ -91,4 +91,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b2e062da38eb2044905615e76d36225, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  environmentalPool: {fileID: 6848323578770837656}
+  environmentalPool: {fileID: 0}
