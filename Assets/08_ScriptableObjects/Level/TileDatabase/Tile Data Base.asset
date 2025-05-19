@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   biomeSet:
   - {fileID: 11400000, guid: 466089e6a3b0c8c499acbe68af28e12e, type: 2}
+  environmentalTileSet:
+  - {fileID: 11400000, guid: 9d2177e74d9bebe4aa48b2730a9cfe62, type: 2}
   trapData:
   - {fileID: 11400000, guid: 0526ce63601d424498dd72cd81bd23eb, type: 2}
   mapObjectData: []

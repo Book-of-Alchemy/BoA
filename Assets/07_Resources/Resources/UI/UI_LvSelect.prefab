@@ -138,13 +138,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e309551dac35cd04888fe89946c40b1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiPosition: 0
+  uiPosition: 1
   _uiAnimator: {fileID: 3473887782451483086}
   _selector: {fileID: 2788996457883957068}
   _panels:
   - {fileID: 6575957135674786696}
   - {fileID: 3713404902218828157}
   - {fileID: 5197717407219871531}
+  _soDatas:
+  - {fileID: 11400000, guid: 6cd963a6292ffc94c87573231cb22a80, type: 2}
+  - {fileID: 11400000, guid: 74562c0c436ffc24ead53b213560bdd6, type: 2}
+  - {fileID: 11400000, guid: e3c084b2856a25b40ba4741299547a4a, type: 2}
+  - {fileID: 11400000, guid: f3b9ce8705aea1244b5a04e9b06d622a, type: 2}
+  - {fileID: 11400000, guid: bea4c75e22ab0a845b49b5d8fa3a0139, type: 2}
+  - {fileID: 11400000, guid: 6c4b9a8d66940184fa1d4dc2f6d0a683, type: 2}
+  - {fileID: 11400000, guid: 52b5b22546ce63b45828bd7a0912f0db, type: 2}
+  - {fileID: 11400000, guid: 7c89fb15fe462cd4e8b29b7b7e73e055, type: 2}
+  - {fileID: 11400000, guid: 913be5e4bdfca954e81f15518bd43aaa, type: 2}
+  - {fileID: 11400000, guid: 3d85fe1caf9808449979521c5db51b54, type: 2}
+  - {fileID: 11400000, guid: eee7465a62a9ca146a14b08c8b692c57, type: 2}
 --- !u!225 &2119260220772842127
 CanvasGroup:
   m_ObjectHideFlags: 0

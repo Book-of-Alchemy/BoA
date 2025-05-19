@@ -17,7 +17,6 @@ public class HUDPresenter
         _playerStats.OnManaChanged += UpdateMana;
         // 경험치 변경 이벤트 구독
         _playerStats.OnExperienceChanged += UpdateExp;
-        _playerStats.OnLevelChanged += UpdateLevelTxt;
 
         // 초기 UI 업데이트
         UpdateHealth();
@@ -40,11 +39,6 @@ public class HUDPresenter
     {
         float expRatio = (float)_playerStats.experience / _playerStats.nextLevelExp;
         _hud.UpdateExp(expRatio);
-    }
-
-    private void UpdateLevelTxt(int level)
-    {
-        _hud.UpdateLevelTxt(level);
     }
 
     //public void UpdateUIBar()

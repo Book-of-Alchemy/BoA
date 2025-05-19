@@ -197,6 +197,7 @@ MonoBehaviour:
   uiPosition: 1
   _text: {fileID: 3140574398429417702}
   _uiAnimator: {fileID: 6134837342373099840}
+  _rect: {fileID: 8608055060386154436}
 --- !u!225 &4547709720101094483
 CanvasGroup:
   m_ObjectHideFlags: 0

@@ -4,13 +4,13 @@ using UnityEngine;
 
 public static class TilePainter
 {
-    
+    public static GameObject game;
     public static void GenerateTileObject(Level level, TileDataBase tileDataBase)
     {
         Dictionary<Vector2Int, Tile> tiles = level.tiles;
         List<GroundTileSet> groundTileSets = level.biomeSet.groundTileSet;
         List<AutoWallTileSet> wallTileSets = level.biomeSet.wallAutoTileSet;
-        EnvironmentalDataBase environmentalDataBase = SODataManager.Instance.environmentalDataBase;
+        List<EnvironmentalData> environmentalSets = level.tileDataBase.environmentalTileSet;
         GameObject groundPrefab = TileManger.Instance.groundPrefab;
         GameObject wallPrefab = TileManger.Instance.wallPrefab;
         GameObject environmentalPrefab = TileManger.Instance.environmentalPrefab;
@@ -37,7 +37,7 @@ public static class TilePainter
             if (tile.Value.environmentType == EnvironmentType.none)
                 continue;
 
-            SetEnvironmentTile(tile.Value, level);
+            SetEnvironmentTile(tile.Value, level, environmentalSets, environmentalPrefab);
         }
 
         PlaceTrap(level, trapData);
@@ -110,16 +110,14 @@ public static class TilePainter
         return tileType == TileType.wall || tileType == TileType.secretWall || tileType == TileType.empty;
     }
 
-    private static void SetEnvironmentTile(Tile tile, Level level)
+    private static void SetEnvironmentTile(Tile tile, Level level, List<EnvironmentalData> environmentalSets, GameObject environmentalPrefab)
     {
-        EnvironmentalFactory.Instance.GetEnvironment(tile.environmentType, tile, level);
-        /*GameObject TileGO = UnityEngine.Object.Instantiate
+        GameObject TileGO = UnityEngine.Object.Instantiate
             (
             environmentalPrefab,
             new Vector3Int(tile.gridPosition.x, tile.gridPosition.y, 0),
             Quaternion.identity
             );
-        
         EnvironmentPrefab tilePrefab = TileGO.GetComponent<EnvironmentPrefab>();
         if (tilePrefab.baseRenderer == null) return;
 
@@ -127,7 +125,7 @@ public static class TilePainter
         tilePrefab.baseRenderer.sprite = environmentalSets[0].GetSprite(bitask);
         tilePrefab.baseRenderer.sortingOrder = -9000;
         tilePrefab.CurTile = tile;
-        TileGO.transform.SetParent(level.transform);*/
+        TileGO.transform.SetParent(level.transform);
     }
 
     public static int CalculateEnvironmentBitmask(Tile tile, Level level, EnvironmentType type)
@@ -169,13 +167,7 @@ public static class TilePainter
         EnvironmentType tileType = tile.environmentType;
         return tileType == type;
     }
-    private static bool IsEnvironmentByTileEffct(Tile tile, EnvironmentType type)
-    {
-        if (tile.groundEffect == null)
-            return false;
-        EnvironmentType tileType = tile.groundEffect.EnvType;
-        return tileType == type;
-    }
+
     private static void PlaceTrap(Level level, List<TrapData> trapData)
     {
         List<Tile> tiles = level.trapPoint;
@@ -195,8 +187,6 @@ public static class TilePainter
                 new Vector3Int(level.endTile.gridPosition.x, level.endTile.gridPosition.y, 0),
                 Quaternion.identity
                 ).GetComponent<MapObject>();
-
         level.endTile.mapObject.CurTile = level.endTile;
-        //level.endTile.mapObject.spriteRenderer.sortingOrder = -level.endTile.gridPosition.y * 10;
     }
 }

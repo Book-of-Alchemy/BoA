@@ -23,8 +23,8 @@ public class Slowed : Debuff
         base.OnApply(target);
         if (!shouldRegister) return;
         unit = target.unitBase;
-        unit.NextActionTime += value;
-        modifier = new StatModifier("Slowed", value, ModifierType.Flat);
+        unit.NextActionTime += 5;
+        modifier = new StatModifier("Slowed", - value, ModifierType.Flat);
         unit.ActionCostStat.AddModifier(modifier);
     }
 

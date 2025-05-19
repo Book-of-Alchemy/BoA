@@ -2,25 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FogTile : TileEffect, IAir, IExpirable
+public class FogTile : MonoBehaviour
 {
-    public override EnvironmentType EnvType => EnvironmentType.Fog;
-    private int leftTime = 50;
-    public int LeftTime { get => leftTime; set => leftTime = value; }
-    public override void PerformAction()
+    // Start is called before the first frame update
+    void Start()
     {
-        if (LeftTime <= 0)
-        {
-            Expire();
-            return;
-        }
-
-        LeftTime -= ActionCost;
+        
     }
 
-    public void Expire()
+    // Update is called once per frame
+    void Update()
     {
-        EnvironmentalFactory.Instance.ReturnTileEffect(this);
+        
     }
 }
-

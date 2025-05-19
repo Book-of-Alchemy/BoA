@@ -15,6 +15,7 @@ public class NormalTrap : TrapBase
                 continue;
             DamageInfo damageInfo = new DamageInfo(trapData.damage, damageType, creatorStats, effect.CharacterStatsOnTile, false, new Tag[] { Tag.Trap });
             //버프 디버프 적용 추가
+            effect.AffectOnTile(damageInfo);
             if (effect.CharacterStatsOnTile == null)
                 continue;
             effect.CharacterStatsOnTile.TakeDamage(damageInfo);

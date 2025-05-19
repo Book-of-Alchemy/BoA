@@ -395,12 +395,4 @@ public static class TileUtility
 
         return positions;
     }
-
-    public static HashSet<Tile> GetAffectedTiles(List<Tile> tiles)
-    {
-        HashSet<Tile> result = new HashSet<Tile>();
-
-
-        return result;
-    }
 }

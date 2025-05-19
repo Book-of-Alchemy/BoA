@@ -1,13 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
-public class IcedWaterTile : TileEffect, IGround, IWater
+public class IcedWaterTile : MonoBehaviour
 {
-    public override EnvironmentType EnvType => EnvironmentType.Iced_Water;
-    public override void PerformAction()
+    // Start is called before the first frame update
+    void Start()
     {
-        StatusEffectFactory.CreateEffect(220006, CurTile.CharacterStatsOnTile);
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
     }
 }

@@ -18,32 +18,18 @@ public interface ITurnProcessor
 
 }
 
-[System.Serializable]
 public abstract class UnitBase : MonoBehaviour, ITurnProcessor
 {
     protected int currentTime = 0;
     public int CurrentTime { get =>  currentTime; set => currentTime = value; }
-    [SerializeField] protected int nextActionTime = 0;
+    protected int nextActionTime = 0;
     public int NextActionTime { get => nextActionTime; set => nextActionTime = value; }
     protected StatEntry actionCostStat = new StatEntry() { baseValue = 10 };
     public StatEntry ActionCostStat { get => actionCostStat; set => actionCostStat = value; }
     public int ActionCost => ActionCostStat.Value;
     protected float actionCostMultiplier = 1f;
     public float ActionCostMultiplier { get => actionCostMultiplier; set => actionCostMultiplier = value; }
-    protected bool actionInProgress = false;
-    public bool ActionInProgress 
-    {
-        get
-        {
-            if (Stats == null|| Stats.CurrentHealth <= 0 )
-                return false;
-            return actionInProgress;
-        }
-        protected set
-        {
-            actionInProgress = value;
-        }
-    }
+    public bool ActionInProgress { get; private set; }
     public Tile CurTile => Stats?.CurTile;
     
 

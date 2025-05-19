@@ -41,18 +41,9 @@ public class ItemManager : Singleton<ItemManager>
 
     public void CreateRange(List<Tile> tiles)
     {
-        if(tiles.Count > rangeTilePrefabs.Count)
+        foreach (Tile tile in tiles)
         {
-            int count = rangeTilePrefabs.Count;
-            for(int i = 0; i < tiles.Count - count; i++)
-            {
-                rangeTilePrefabs.Add(Instantiate(rangeTilePrefab, rangeTiles.transform));
-            }
-        }
-        for (int i = 0; i < tiles.Count; i++)
-        {
-            rangeTilePrefabs[i].transform.position = new Vector3(tiles[i].gridPosition.x, tiles[i].gridPosition.y,0);
-            rangeTilePrefabs[i].SetActive(true);
+            rangeTilePrefabs.Add(Instantiate(rangeTilePrefab, new Vector3(tile.gridPosition.x, tile.gridPosition.y, 0), Quaternion.identity, rangeTiles.transform));
         }
     }
 
@@ -60,24 +51,16 @@ public class ItemManager : Singleton<ItemManager>
     { 
         foreach(GameObject rangeObject in rangeTilePrefabs)
         {
-            rangeObject.SetActive(false);
+            Destroy(rangeObject);
         }
+        rangeTilePrefabs.Clear();
     }
 
     public void CreateItemRange(List<Tile> tiles)
     {
-        if (tiles.Count > itemRangeTilePrefabs.Count)
+        foreach(Tile tile in tiles)
         {
-            int count = itemRangeTilePrefabs.Count;
-            for (int i = 0; i < tiles.Count - count; i++)
-            {
-                itemRangeTilePrefabs.Add(Instantiate(itemRangeTilePrefab, itemRangeTiles.transform));
-            }
-        }
-        for (int i = 0; i < tiles.Count; i++)
-        {
-            itemRangeTilePrefabs[i].transform.position = new Vector3(tiles[i].gridPosition.x, tiles[i].gridPosition.y, 0);
-            itemRangeTilePrefabs[i].SetActive(true);
+            itemRangeTilePrefabs.Add(Instantiate(itemRangeTilePrefab, new Vector3(tile.gridPosition.x, tile.gridPosition.y, 0), Quaternion.identity, itemRangeTiles.transform));
         }
     }
 
@@ -85,9 +68,25 @@ public class ItemManager : Singleton<ItemManager>
     {
         foreach (GameObject itemRangeObject in itemRangeTilePrefabs)
         {
-            itemRangeObject.SetActive(false);
+            Destroy(itemRangeObject);
         }
+        itemRangeTilePrefabs.Clear();
     }
 
 
+
+    //public void CreateProjectileItem(ItemData data)
+    //{
+    //    GameObject Prefa = Instantiate(projectileItemprefab);
+    //    projectileItem = Prefa.GetComponent<ProjectileItem>();
+    //    if (TestTileManger.Instance.curLevel.tiles.TryGetValue(new Vector2Int(2, 0), out Tile tile))
+    //        projectileItem.Init(data, tile);
+    //}
+
+    //public void CreateDropItem(ItemData data, BaseItem itemType)
+    //{
+    //    GameObject DropPre = Instantiate(dropPrefab);
+    //    dropItem = DropPre.GetComponent<DropItem>();
+    //    dropItem.Init(data, itemType);
+    //}
 }

@@ -29,14 +29,6 @@ public class TilePrefab : MonoBehaviour
     }
     public SpriteRenderer baseRenderer;
     public SpriteRenderer upperRenderer;
-    private void OnDisable()
-    {
-        if (curTile != null)
-        {
-            curTile.onIsExploredChanged -= UpdateTileVisual;
-            curTile.onIsOnSightChanged -= UpdateTileVisual;
-        }
-    }
     private void OnDestroy()
     {
         if (curTile != null)

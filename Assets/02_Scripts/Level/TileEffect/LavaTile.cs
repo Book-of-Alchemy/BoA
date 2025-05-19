@@ -2,19 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LavaTile : TileEffect, IGround,IWater
+public class LavaTile : MonoBehaviour
 {
-    public override EnvironmentType EnvType => EnvironmentType.Lava;
-    public override void PerformAction()
+    // Start is called before the first frame update
+    void Start()
     {
-        if(CurTile.CharacterStatsOnTile != null)
-        {
-            var target = CurTile.CharacterStatsOnTile;
-            DamageInfo damage = new DamageInfo(target.MaxHealth * 0.1f,DamageType.Fire ,null, target);
-            TileRuleProccessor.ProcessTileReactions(damage, CurTile);
-        }
-
-        StatusEffectFactory.CreateEffect(220009, CurTile.CharacterStatsOnTile);
+        
     }
 
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
 }

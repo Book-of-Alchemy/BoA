@@ -95,7 +95,6 @@ public class EnemyFactory : Singleton<EnemyFactory>
 
     int GetRandomEnemyId(List<EnemyData> enemies)
     {
-        if(enemies == null || enemies.Count <= 0) return -1;
         return enemies[UnityEngine.Random.Range(0, enemies.Count - 1)].id;
     }
 

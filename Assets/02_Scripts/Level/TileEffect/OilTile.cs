@@ -1,25 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
-public class OilTile : TileEffect, IGround, IWater
+public class OilTile : MonoBehaviour
 {
-    public override EnvironmentType EnvType => EnvironmentType.Oil;
-    public override void PerformAction()
+    // Start is called before the first frame update
+    void Start()
     {
-        Burn burn = null;
-        if (CurTile.CharacterStatsOnTile != null)
-        {
-            burn = CurTile.CharacterStatsOnTile.activeEffects
-                .OfType<Burn>()
-                .FirstOrDefault();
-        }
+        
+    }
 
-        if (burn != null)
-        {
-            var damage = new DamageInfo(burn.value,DamageType.Fire,null,null);
-            TileRuleProccessor.ProcessTileReactions(damage, CurTile);
-        }
+    // Update is called once per frame
+    void Update()
+    {
+        
     }
 }

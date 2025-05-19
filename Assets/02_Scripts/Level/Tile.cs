@@ -152,7 +152,7 @@ public class Tile
 
         return isWalkable;
     }
-
+    
     private bool CalculateCanSeeThrough()
     {
         bool isCanSeeThrough;
@@ -164,33 +164,12 @@ public class Tile
             TileType.door => !isOccupied,
             _ => true,
         };
-        if (airEffect != null && (airEffect is FogTile || airEffect is ToxicAirTile))
-        {
-            isCanSeeThrough = false;
-        }
 
         return isCanSeeThrough;
     }
 
-    public void AffectOnTile(TileReactionResult reactionResult, bool isAir)
+    public void AffectOnTile(DamageInfo damageInfo)
     {
-        var env = isAir ? airEffect : groundEffect;
-        if (env == null) return;
 
-        if (env.EnvType != reactionResult.sourceTileType) return;
-
-        EnvironmentalFactory.Instance.ReturnTileEffect(env);
-
-        if (reactionResult.effect_ID != -1)
-            EffectProjectileManager.Instance.PlayEffect(gridPosition, reactionResult.effect_ID);
-
-        if (characterStatsOnTile != null && reactionResult.damage > 0)
-        {
-            DamageInfo damage = new DamageInfo(reactionResult.damage, reactionResult.damageType, null, characterStatsOnTile);
-            characterStatsOnTile.TakeDamage(damage);
-        }
-
-        EnvironmentalFactory.Instance.GetEnvironment(reactionResult.resultTileType, this, curLevel);
     }
-
 }

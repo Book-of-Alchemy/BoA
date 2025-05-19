@@ -92,28 +92,6 @@ public class UIManager : Singleton<UIManager>
         }
     }
 
-    public static void CloseLastOpenedUI()
-    {
-        //마지막에 열린 PopUp UI를 찾음.
-        var lastPopUp = Instance.uiList.FindLast(ui => ui.uiPosition == eUIType.Popup && ui.IsClosable);
-
-        if (lastPopUp != null)
-        {
-            // PopUp이면 제거
-            lastPopUp.HideDirect();
-            return;
-        }
-
-        // PopUp이 없다면 마지막 UI 타입 찾기
-        var lastUI = Instance.uiList.FindLast(ui => ui.uiPosition == eUIType.UI && ui.IsClosable);
-
-        if (lastUI != null)
-        {
-            // UI라면 HideDirect 호출 후 비활성화
-            lastUI.HideDirect();
-        }
-    }
-
     public static T Get<T>() where T : UIBase
     {
         //열려있는 UI접근
