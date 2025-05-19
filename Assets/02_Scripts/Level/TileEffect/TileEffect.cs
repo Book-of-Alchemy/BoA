@@ -19,7 +19,7 @@ public interface IAir
 
 public interface IExpirable
 {
-    public int LeftTime {  get; set; }
+    public int LeftTime { get; set; }
     public void Expire();
 }
 
@@ -33,6 +33,8 @@ public abstract class TileEffect : MonoBehaviour, ITurnProcessor
     public bool ActionInProgress { get; private set; }
     protected Tile curTile;
     public Tile CurTile { get => curTile; set => curTile = value; }
+    public abstract EnvironmentType EnvType { get; }
+
     public EnvironmentPrefab prefab;
     protected virtual void Awake()
     {
