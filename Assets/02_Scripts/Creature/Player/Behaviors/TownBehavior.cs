@@ -39,22 +39,22 @@ public class TownBehavior : PlayerBaseBehavior
     }
     private void FixedUpdate()
     {
-        // 자동 이동 로직
-        if (_isAutoMoving)
-        {
-            Vector2 currentPos = _rb.position;
-            Vector2 toTarget = _clickTarget - currentPos;
-            if (toTarget.magnitude <= _stopPoint)
-            {
-                _isAutoMoving = false;
-                _moveDir = Vector2.zero;
-                _animator.SetWalking(false);
-            }
-            else
-            {
-                _moveDir = toTarget.normalized;
-            }
-        }
+        //// 자동 이동 로직
+        //if (_isAutoMoving)
+        //{
+        //    Vector2 currentPos = _rb.position;
+        //    Vector2 toTarget = _clickTarget - currentPos;
+        //    if (toTarget.magnitude <= _stopPoint)
+        //    {
+        //        _isAutoMoving = false;
+        //        _moveDir = Vector2.zero;
+        //        _animator.SetWalking(false);
+        //    }
+        //    else
+        //    {
+        //        _moveDir = toTarget.normalized;
+        //    }
+        //}
 
         if (_moveDir != Vector2.zero)
         {
@@ -64,6 +64,9 @@ public class TownBehavior : PlayerBaseBehavior
 
             if (Mathf.Abs(_moveDir.x) > 0.01f)
                 _spriteRenderer.flipX = _moveDir.x < 0;
+
+            if(Mathf.Abs(_moveDir.x)>0.01f|| Mathf.Abs(_moveDir.y) > 0.01f)
+                CameraController.Instance.RestoreCameraState();
         }
         else
         {
