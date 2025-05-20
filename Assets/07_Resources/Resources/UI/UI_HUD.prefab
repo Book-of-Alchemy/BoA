@@ -2518,6 +2518,7 @@ RectTransform:
   - {fileID: 4314974271739873844}
   - {fileID: 4001021047287631663}
   - {fileID: 2889414283972894848}
+  - {fileID: 2265562566449433146}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2554,6 +2555,8 @@ MonoBehaviour:
   _floorTxt: {fileID: 3218001339406270776}
   _questTxt: {fileID: 3071708560048560801}
   _quickSlots: []
+  statusEffectDisplayPrefab: {fileID: 72971231450980854, guid: 5843630a4671a21459702b426c595e88, type: 3}
+  statusEffectContainer: {fileID: 8760298420080056021}
 --- !u!1 &8847570634127057281
 GameObject:
   m_ObjectHideFlags: 0
@@ -2834,6 +2837,121 @@ MonoBehaviour:
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6396392392033758313, guid: a379d9f0e9c0262449e04714d715881a, type: 3}
   m_PrefabInstance: {fileID: 2539977042639375448}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &3541738623060933440
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1441600404166028396}
+    m_Modifications:
+    - target: {fileID: 72971231450980854, guid: 5843630a4671a21459702b426c595e88, type: 3}
+      propertyPath: m_Name
+      value: UI_StatusEffectDisplay
+      objectReference: {fileID: 0}
+    - target: {fileID: 3338906364049617274, guid: 5843630a4671a21459702b426c595e88, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3338906364049617274, guid: 5843630a4671a21459702b426c595e88, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3338906364049617274, guid: 5843630a4671a21459702b426c595e88, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3338906364049617274, guid: 5843630a4671a21459702b426c595e88, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3338906364049617274, guid: 5843630a4671a21459702b426c595e88, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3338906364049617274, guid: 5843630a4671a21459702b426c595e88, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3338906364049617274, guid: 5843630a4671a21459702b426c595e88, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 3338906364049617274, guid: 5843630a4671a21459702b426c595e88, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 3338906364049617274, guid: 5843630a4671a21459702b426c595e88, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3338906364049617274, guid: 5843630a4671a21459702b426c595e88, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3338906364049617274, guid: 5843630a4671a21459702b426c595e88, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3338906364049617274, guid: 5843630a4671a21459702b426c595e88, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3338906364049617274, guid: 5843630a4671a21459702b426c595e88, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3338906364049617274, guid: 5843630a4671a21459702b426c595e88, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3338906364049617274, guid: 5843630a4671a21459702b426c595e88, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3338906364049617274, guid: 5843630a4671a21459702b426c595e88, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -903.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3338906364049617274, guid: 5843630a4671a21459702b426c595e88, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -260.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3338906364049617274, guid: 5843630a4671a21459702b426c595e88, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3338906364049617274, guid: 5843630a4671a21459702b426c595e88, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3338906364049617274, guid: 5843630a4671a21459702b426c595e88, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5238843589695008149, guid: 5843630a4671a21459702b426c595e88, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 47.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8572141617091707844, guid: 5843630a4671a21459702b426c595e88, type: 3}
+      propertyPath: m_Constraint
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 5843630a4671a21459702b426c595e88, type: 3}
+--- !u!224 &2265562566449433146 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 3338906364049617274, guid: 5843630a4671a21459702b426c595e88, type: 3}
+  m_PrefabInstance: {fileID: 3541738623060933440}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &8760298420080056021 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5238843589695008149, guid: 5843630a4671a21459702b426c595e88, type: 3}
+  m_PrefabInstance: {fileID: 3541738623060933440}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4734227761482823299
 PrefabInstance:

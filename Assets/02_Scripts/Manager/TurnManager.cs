@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using System;
 using static UnityEngine.UI.CanvasScaler;
 
 public class TurnManager : Singleton<TurnManager>
@@ -9,7 +10,21 @@ public class TurnManager : Singleton<TurnManager>
     public List<UnitBase> allUnits = new List<UnitBase>();
     public List<TileEffect> allTileEffects = new List<TileEffect>();
     HashSet<int> unitIds = new HashSet<int>();
-    public int globalTime = 0;
+    
+    // 글로벌 시간 변경 이벤트 추가
+    public event Action OnGlobalTimeChanged;
+    
+    private int _globalTime = 0;
+    public int globalTime 
+    { 
+        get => _globalTime;
+        private set
+        {
+            _globalTime = value;
+            OnGlobalTimeChanged?.Invoke();
+        }
+    }
+    
     public float turnSpeed = 10;//나눈 값을 기준으로 정함 5 = 0.2초 10 = 0.1초 향후 이걸 기준으로 가속 + 도트윈 + 애니메이션에도 적용
 
     private void Start()//테스트용 임시코드
@@ -93,8 +108,6 @@ public class TurnManager : Singleton<TurnManager>
                     }
                 }
             }
-
-
 
             globalTime++;
             yield return null;
