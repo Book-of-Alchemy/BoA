@@ -38,6 +38,7 @@ public class UI_DungeonResult : UIBase
         //획득 아이템 텍스트 출력
         _itemTxt.text = string.Empty;
         List<InventoryItem> obtainedItems = Inventory.Instance.GetAllItems();
+        
         foreach (var item in obtainedItems)
         {
             if (!item.IsEmpty)
