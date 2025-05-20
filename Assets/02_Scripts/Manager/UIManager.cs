@@ -7,10 +7,10 @@ public class UIManager : Singleton<UIManager>
 
     [Tooltip("한번 출력되는 UI의 생명기간")]
     [SerializeField] static private float _fadeOutDuration = 1.4f;
-
+    
     private void Start()
     {
-        Show<UI_Main>();
+
     }
 
     public static void SetParents(List<Transform> parents)
@@ -19,11 +19,11 @@ public class UIManager : Singleton<UIManager>
         Instance.uiList.Clear();
     }
 
-    public static T Show<T>(params object[] param) where T : UIBase 
+    public static T Show<T>(params object[] param) where T : UIBase
     {
         var ui = Instance.uiList.Find(obj => obj.name == typeof(T).ToString());
 
-        if(IsOpened<T>()) // 이미 열려있는데 Show를 호출시 UI를 숨기고 리턴
+        if (IsOpened<T>()) // 이미 열려있는데 Show를 호출시 UI를 숨기고 리턴
         {
             Hide<T>();
             return (T)ui;
@@ -35,7 +35,7 @@ public class UIManager : Singleton<UIManager>
             //UI 생성 , (Clone) 제거
             var prefab = UIResourceManager.Instance.LoadUIToKey<T>("UI/" + typeof(T).ToString());
             ui = Instantiate(prefab, Instance.parents[(int)prefab.uiPosition]);
-            ui.name = ui.name.Replace("(Clone)", ""); 
+            ui.name = ui.name.Replace("(Clone)", "");
             Instance.uiList.Add(ui);
         }
         if (ui.uiPosition == eUIType.UI) //Show한게 UI라면
@@ -66,7 +66,7 @@ public class UIManager : Singleton<UIManager>
         }
 
         var ui = Instantiate(prefab, Instance.parents[(int)prefab.uiPosition]);
-        ui.name = typeof(T).ToString(); 
+        ui.name = typeof(T).ToString();
         ui.Opened(param);
 
         Destroy(ui.gameObject, _fadeOutDuration);
@@ -85,10 +85,32 @@ public class UIManager : Singleton<UIManager>
             {
                 //전에 열려있던 UI를 찾아서 열어줌
                 var prevUI = Instance.uiList.FindLast(obj => obj.uiPosition == eUIType.UI);
-                if(prevUI != null)
+                if (prevUI != null)
                     prevUI.gameObject.SetActive(true);
             }
             Destroy(ui.gameObject);
+        }
+    }
+
+    public static void CloseLastOpenedUI()
+    {
+        //마지막에 열린 PopUp UI를 찾음.
+        var lastPopUp = Instance.uiList.FindLast(ui => ui.uiPosition == eUIType.Popup && ui.IsClosable);
+
+        if (lastPopUp != null)
+        {
+            // PopUp이면 제거
+            lastPopUp.HideDirect();
+            return;
+        }
+
+        // PopUp이 없다면 마지막 UI 타입 찾기
+        var lastUI = Instance.uiList.FindLast(ui => ui.uiPosition == eUIType.UI && ui.IsClosable);
+
+        if (lastUI != null)
+        {
+            // UI라면 HideDirect 호출 후 비활성화
+            lastUI.HideDirect();
         }
     }
 

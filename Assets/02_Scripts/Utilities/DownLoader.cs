@@ -22,8 +22,10 @@ public class DownLoader : EditorWindow
     string statusEffectJsonSavePath = "Assets/Resources/Json/StatusEffect.json";
     string artifactDBUrl = "https://opensheet.elk.sh/16BPAGJg1d_g6m4tCxN9aJWzjWwzPmHyOaTcqg1uclhI/Artifact_DB";
     string artifactJsonSavePath = "Assets/Resources/Json/Artifact.json";
-    string questDBUrl = "https://opensheet.elk.sh/1udhK2PAP126vzsQycyXA_tEmNqTA3VlwmfU--CHqHd0/Quest_DB";
+    string questDBUrl = "https://opensheet.elk.sh/1udhK2PAP126vzsQycyXA_tEmNqTA3VlwmfU--CHqHd0/Quest_DB.csv";
     string questJsonSavePath = "Assets/Resources/Json/Quest.json";
+    string researchDBUrl = "https://opensheet.elk.sh/18J2rdxLQUZwBIhTPIzRW7roD1Vwwt9L14FHOvudFGno/HOK_DB";
+    string researchJsonSavePath = "Assets/Resources/Json/Research.json";
 
 
     string saveItemSOPath = "Assets/Resources/Items";
@@ -31,6 +33,7 @@ public class DownLoader : EditorWindow
     string saveStatusEffectSOPath = "Assets/08_ScriptableObjects/StatusEffect";
     string saveArtifactSOPath = "Assets/08_ScriptableObjects/Artifact";
     string saveQuestSOPath = "Assets/08_ScriptableObjects/Quest";
+    string saveResearchSOPath = "Assets/08_ScriptableObjects/Research";
 
 #if UNITY_EDITOR
     [MenuItem("Window/DownLoader")]
@@ -48,6 +51,7 @@ public class DownLoader : EditorWindow
         statusEffectDBUrl = EditorGUILayout.TextField("StatusEffectURL", statusEffectDBUrl);
         artifactDBUrl = EditorGUILayout.TextField("ArtifactDBUrl", artifactDBUrl);
         questDBUrl = EditorGUILayout.TextField("QuestDBUrl", questDBUrl);
+        researchDBUrl =EditorGUILayout.TextField("ResearchDBUrl", researchDBUrl);
 
 
         // 저장 경로 입력 필드
@@ -56,6 +60,7 @@ public class DownLoader : EditorWindow
         statusEffectJsonSavePath = EditorGUILayout.TextField("StatusEffect Json Save Path", statusEffectJsonSavePath);
         artifactJsonSavePath = EditorGUILayout.TextField("Artifact Json Save Path", artifactJsonSavePath);
         questJsonSavePath = EditorGUILayout.TextField("Quest Json Save Path", questJsonSavePath);
+        researchJsonSavePath = EditorGUILayout.TextField("Research Json Save Path", researchJsonSavePath);
 
 
         // 다운로드 버튼
@@ -66,6 +71,7 @@ public class DownLoader : EditorWindow
             DownloadAndSaveJson(statusEffectDBUrl, statusEffectJsonSavePath);
             DownloadAndSaveJson(artifactDBUrl, artifactJsonSavePath);
             DownloadAndSaveJson(questDBUrl, questJsonSavePath);
+            DownloadAndSaveJson(researchDBUrl, researchJsonSavePath);
         }
 
         GUILayout.Label("Json To SO", EditorStyles.boldLabel);
@@ -75,6 +81,7 @@ public class DownLoader : EditorWindow
         saveStatusEffectSOPath = EditorGUILayout.TextField("SaveStatusEffectSOPath", saveStatusEffectSOPath);
         saveArtifactSOPath = EditorGUILayout.TextField("SaveArtifactSOPath", saveArtifactSOPath);
         saveQuestSOPath = EditorGUILayout.TextField("SaveQuestSOPath", saveQuestSOPath);
+        saveResearchSOPath = EditorGUILayout.TextField("SaveResearchSoPath", saveResearchSOPath);
 
         if (GUILayout.Button("ItemConvert"))
         {
@@ -96,6 +103,11 @@ public class DownLoader : EditorWindow
         {
             QuestConvertJsonToSO();
         }
+        if(GUILayout.Button("ResearchConvert"))
+        {
+            ResearchConvertJsonToSO();
+        }
+
     }
 
     private System.Collections.IEnumerator DownloadJsonCoroutine(string url, string savePath)
@@ -365,6 +377,49 @@ public class DownLoader : EditorWindow
         Debug.Log("Json변환 완료");
     }
 
+    void ResearchConvertJsonToSO()
+    {
+        string jsonText = File.ReadAllText(researchJsonSavePath);
+        List<ResearchData> dataList = JsonConvert.DeserializeObject<List<ResearchData>>(jsonText);
+
+        if (AssetDatabase.IsValidFolder(saveResearchSOPath))
+        {
+            FileUtil.DeleteFileOrDirectory(saveResearchSOPath);
+            AssetDatabase.Refresh();
+        }
+
+        if (!Directory.Exists(saveResearchSOPath))
+        {
+            Directory.CreateDirectory(saveResearchSOPath);
+        }
+
+        foreach (var data in dataList)
+        {
+            if (data == null)
+            {
+                Debug.LogError("data가 null입니다!");
+                continue;
+            }
+            ResearchData so = ScriptableObject.CreateInstance<ResearchData>();
+            so.id = data.id;
+            so.name_kr = data.name;
+            so.name_en = data.name_en;
+            so.description_kr = data.description_kr;
+            so.stat_type = data.stat_type;
+            so.stat_value = data.stat_value;
+            so.required_research_id = data.required_research_id;
+            so.research_cost = data.research_cost;
+            so.max_level = data.max_level;
+            so.icon_sprite = Resources.Load<Sprite>(data.icon_sprite_id);
+
+            string assetPath = $"{saveResearchSOPath}/{data.name_en}.asset";
+            AssetDatabase.CreateAsset(so, assetPath);
+
+        }
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+        Debug.Log("Json변환 완료");
+    }
 
 
 }

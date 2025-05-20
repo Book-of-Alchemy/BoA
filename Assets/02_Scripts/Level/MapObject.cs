@@ -5,7 +5,8 @@ using UnityEngine;
 public abstract class MapObject : MonoBehaviour
 {
     public MapObjectData data;
-    public SpriteRenderer spriteRenderer;
+    protected SpriteRenderer[] spriteRenderers;
+
     protected Tile curTile;
     public Tile CurTile
     {
@@ -19,23 +20,26 @@ public abstract class MapObject : MonoBehaviour
 
     protected void Awake()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
     }
-
 
     public virtual void Init()
     {
+        if (CurTile == null) return;
         CurTile.onIsOnSightChanged += UpdateTileVisual;
+        UpdateTileVisual();
+        //spriteRenderer.sortingOrder = -10 * CurTile.gridPosition.y;
     }
     public abstract void Interact();
 
     protected virtual void OnDisable()
     {
+        if (CurTile == null) return;
         CurTile.onIsOnSightChanged -= UpdateTileVisual;
     }
     public virtual void UpdateTileVisual()
     {
-        if (!spriteRenderer) return;
+        if (spriteRenderers == null) return;
 
         Color color;
         bool shouldEnable = true;
@@ -54,7 +58,11 @@ public abstract class MapObject : MonoBehaviour
             color = Color.clear;
         }
 
-        spriteRenderer.enabled = shouldEnable;
-        spriteRenderer.color = color;
+        foreach (var renderer in spriteRenderers)
+        {
+            renderer.enabled = shouldEnable;
+            renderer.color = color;
+        }
+        
     }
 }

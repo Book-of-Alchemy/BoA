@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62340fd9b245d8940ba9d9d1dfef456b, type: 3}
+  m_Name: Enhanced Throwing Item
+  m_EditorClassIdentifier: 
+  id: 260003
+  name_kr: "\uD22C\uCC99 \uC544\uC774\uD15C \uD6A8\uACFC \uC99D\uAC00"
+  name_en: Enhanced Throwing Item
+  description_kr: "\uD22C\uCC99 \uC544\uC774\uD15C\uC758 \uC704\uB825\uC744 \uC99D\uAC00\uC2DC\uD0B5\uB2C8\uB2E4"
+  stat_type: 26
+  stat_value: 10
+  required_research_id: 260002
+  research_cost: 300
+  max_level: 9999
+  icon_sprite_id: 
+  icon_sprite: {fileID: 0}

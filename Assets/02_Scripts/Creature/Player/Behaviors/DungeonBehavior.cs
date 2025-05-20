@@ -101,6 +101,10 @@ public class DungeonBehavior : PlayerBaseBehavior
         InputManager.OnMouseClick += HandleMouseClick;
     }
 
+    public void SSubscribeInput()//외부 호출용
+    {
+        SubscribeInput();
+    }
     protected override void UnsubscribeInput()
     {
         InputManager.OnMove -= HandleMove;
@@ -131,16 +135,6 @@ public class DungeonBehavior : PlayerBaseBehavior
         InputManager.OnMouseMove -= HandleMouseMove;
         InputManager.OnMouseClick -= HandleMouseClick;
     }
-
-    //{
-    //    if (!Controller.isPlayerTurn || _isMoving || _moveBuffer != null || !ctx.started) return;
-    //    if(!canMove)
-    //    {
-    //        Shake();
-    //        return;
-    //    }
-    //    _moveBuffer = StartCoroutine(BufferMove());
-    //}
 
     void Shake()
     {
@@ -339,7 +333,7 @@ public class DungeonBehavior : PlayerBaseBehavior
         //UI열려있으면 무시
         if (IsUIOpen())
             return;
-        if (!Controller.isPlayerTurn ||
+        if (!Controller.isPlayerTurn||
             _isMoving ||
             _moveBuffer != null ||
             raw == Vector2.zero)
@@ -607,22 +601,20 @@ public class DungeonBehavior : PlayerBaseBehavior
         {
             InputManager.Instance.EnableMouseTracking = true;
             _highlightInstance.SetActive(true);
+
             _currentItem.CancelUse();
+            _currentItem = null;
             SubscribeInput();
             return;
         }
 
-        // 인벤 닫기
-        if (UIManager.IsOpened<UI_Inventory>())
-        {
-            UIManager.Hide<UI_Inventory>();
-            return;
-        }
+        //마지막 열린 UI 닫기
+        UIManager.CloseLastOpenedUI();
 
-        //제작 닫기
-        if (UIManager.IsOpened<UI_Craft>())
+        //메뉴 닫기
+        if (UIManager.IsOpened<UI_Menu>())
         {
-            UIManager.Hide<UI_Craft>();
+            UIManager.Hide<UI_Menu>();
             return;
         }
 
@@ -641,7 +633,7 @@ public class DungeonBehavior : PlayerBaseBehavior
         Debug.Log("HandleMenu 호출됨");
         if (UIManager.IsOpened<UI_Menu>())
         {
-            UIManager.Hide<UI_Menu>();
+            UIManager.Get<UI_Menu>().HideDirect();
         }
         else
         {
@@ -697,5 +689,4 @@ public class DungeonBehavior : PlayerBaseBehavior
 
         Controller.onActionConfirmed?.Invoke();
     }
-
 }

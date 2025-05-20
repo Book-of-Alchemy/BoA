@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d7a24f79642941438ee2eb10c8a4a26, type: 3}
+  m_Name: "01_\uAE38\uB4DC"
+  m_EditorClassIdentifier: 
+  id: 270001
+  name_kr: "\uBAA8\uD5D8\uAC00 \uAE38\uB4DC"
+  current_level: 1
+  unlocked: 1
+  description: "\uD018\uC2A4\uD2B8\uB97C \uC218\uC8FC\uD558\uB294\uACF3"
+  icon: {fileID: 0}
+  prefab: {fileID: 0}
+  upgrade_cost_base: 100
+  upgrade_cost_multiplier: 150
+  max_level: 3

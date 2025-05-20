@@ -25,7 +25,7 @@ public class GameSceneManager : Singleton<GameSceneManager>
     {
         base.Awake();
 
-        // RegisterSceneBase(new MainMenuScene());
+        RegisterSceneBase(new MainMenuScene());
         RegisterSceneBase(new DungeonScene());
         RegisterSceneBase(new TownScene());
 

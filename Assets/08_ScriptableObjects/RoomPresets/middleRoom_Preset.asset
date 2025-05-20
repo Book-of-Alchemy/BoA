@@ -125,7 +125,7 @@ MonoBehaviour:
     isDoorPoint: 0
   - position: {x: 2, y: 6}
     tileType: 1
-    environmentType: 0
+    environmentType: 2
     isDoorPoint: 0
   - position: {x: 3, y: 6}
     tileType: 1

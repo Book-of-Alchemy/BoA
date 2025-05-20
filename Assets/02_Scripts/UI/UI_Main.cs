@@ -8,7 +8,8 @@ public class UI_Main : UIBase
 {
     [Header("Buttons")]
     [SerializeField] private Button[] _menuBtn;
-    
+
+    public override bool IsClosable => false;
 
     private void Start()
     {
@@ -17,13 +18,16 @@ public class UI_Main : UIBase
 
     public void OnClickNewGame()
     {
-        UIManager.Show<UI_HUD>();
-        HideDirect();
+        //UIManager.Show<UI_HUD>();
+       GameSceneManager.Instance.ChangeScene(SceneType.Town);
+
+        //UIManager.Show<UI_HUD>();
+        //HideDirect();
     }
 
     public void OnClickLoadGame()
     {
-        
+        GameSceneManager.Instance.ChangeScene(SceneType.Dungeon);
     }
 
     public void OnClickSetting()
