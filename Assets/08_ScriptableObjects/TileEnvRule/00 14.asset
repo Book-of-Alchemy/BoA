@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: 00 14
   m_EditorClassIdentifier: 
   Id: 0
-  sourceTileType: 1
-  reactionDamageType: 4
+  sourceTileType: 11
+  reactionDamageType: 3
   effect_ID: -1
-  resultTileType: 6
+  resultTileType: 10
   damageMultiplier: 0.3
-  emittedDamageType: 4
+  emittedDamageType: 3
