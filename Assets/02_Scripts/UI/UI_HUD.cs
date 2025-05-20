@@ -18,6 +18,11 @@ public class UI_HUD : UIBase
     [SerializeField] private TextMeshProUGUI _questTxt;
 
     [SerializeField] private List<QuickSlot> _quickSlots;
+    
+    [Header("상태 효과 표시")]
+    [SerializeField] private GameObject statusEffectDisplayPrefab;
+    [SerializeField] private Transform statusEffectContainer;
+    private UI_StatusEffectDisplay _statusEffectDisplay;
 
     private HUDPresenter _presenter;
     public override bool IsClosable => false;
@@ -32,6 +37,35 @@ public class UI_HUD : UIBase
     {
         _presenter = new HUDPresenter(this);
         QuestManager.Instance.OnQuestAccepted += UpdateQuestTxt;
+        
+        // 상태 효과 디스플레이 초기화
+        InitStatusEffectDisplay();
+    }
+    
+    private void InitStatusEffectDisplay()
+    {
+        if (statusEffectContainer != null && statusEffectDisplayPrefab != null)
+        {
+            // 기존에 있다면 제거
+            if (_statusEffectDisplay != null)
+            {
+                Destroy(_statusEffectDisplay.gameObject);
+            }
+            
+            // 새로 생성
+            GameObject statusDisplayObj = Instantiate(statusEffectDisplayPrefab, statusEffectContainer);
+            _statusEffectDisplay = statusDisplayObj.GetComponent<UI_StatusEffectDisplay>();
+            
+            // 플레이어 연결 (이미 내부에서 자동으로 찾지만 명시적으로도 설정 가능)
+            if (GameManager.Instance != null && GameManager.Instance.PlayerTransform != null)
+            {
+                PlayerStats playerStats = GameManager.Instance.PlayerTransform.GetComponent<PlayerStats>();
+                if (_statusEffectDisplay && playerStats != null)
+                {
+                    _statusEffectDisplay.TargetStats = playerStats;
+                }
+            }
+        }
     }
 
     public void UpdateHp(float per)
@@ -73,13 +107,22 @@ public class UI_HUD : UIBase
     public void OnLevelUpBtn() // Call At OnClick Event
     {
         UIManager.Show<UI_LvSelect>();
+        
+    }
+
+    public void OnSelectQuest()
+    {
         UIManager.Show<UI_SelectQuest>();
+    }
+
+    public void OnDungeonResult()
+    {
+        UIManager.Show<UI_DungeonResult>();
     }
 
     private void OnDisable()
     {
-        var player = GameManager.Instance.PlayerTransform.GetComponent<PlayerStats>();
-        if (player != null)
+        if(GameManager.Instance.PlayerTransform.TryGetComponent<PlayerStats>(out var player))
             player.OnLevelChanged -= UpdateLevelTxt;
     }
 }

@@ -28,6 +28,8 @@ MonoBehaviour:
   effect_strength: -1
   mp_cost: 10
   max_stack: 99
+  price: -1
+  tier: 1
   iteminfo_kr: "\uD654\uC5FC \uD3ED\uBC1C\uB85C \uC8FC\uBCC0 \uC801\uC5D0\uAC8C \uD53C\uD574\uB97C
     \uC90D\uB2C8\uB2E4."
   icon_sprite: Image/Item/Fireburst Scroll

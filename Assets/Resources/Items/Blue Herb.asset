@@ -28,6 +28,8 @@ MonoBehaviour:
   effect_strength: -1
   mp_cost: -1
   max_stack: 9999
+  price: 25
+  tier: 1
   iteminfo_kr: "\uB9C8\uB098 \uD68C\uBCF5 \uAE30\uBCF8 \uC7AC\uB8CC"
   icon_sprite: Image/Item/Blue Herb
   sprite: {fileID: 21300000, guid: bc7b28aa6bd8d774287d8ae1d2ca96dd, type: 3}

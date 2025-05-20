@@ -28,6 +28,8 @@ MonoBehaviour:
   effect_strength: -1
   mp_cost: -1
   max_stack: 9999
+  price: 10
+  tier: 1
   iteminfo_kr: "\uC2A4\uD06C\uB864 \uC7AC\uB8CC"
   icon_sprite: Image/Item/Ink
   sprite: {fileID: 21300000, guid: 9c11b651785b93c4eb8994c6dc9b0c37, type: 3}
