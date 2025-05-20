@@ -28,6 +28,8 @@ MonoBehaviour:
   effect_strength: -1
   mp_cost: -1
   max_stack: 9999
+  price: 15
+  tier: 1
   iteminfo_kr: "\uD589\uB3D9 \uC81C\uC57D \uAE30\uBCF8 \uC7AC\uB8CC"
   icon_sprite: Image/Item/Paralyzing Spores
   sprite: {fileID: 21300000, guid: 49d156d28b4c7db4fb6b9f29f334a0d5, type: 3}

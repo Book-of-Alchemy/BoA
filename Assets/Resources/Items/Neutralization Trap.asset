@@ -28,6 +28,8 @@ MonoBehaviour:
   effect_strength: -1
   mp_cost: -1
   max_stack: 99
+  price: -1
+  tier: 1
   iteminfo_kr: "\uBC1F\uC73C\uBA74 \uAE30\uC808\uC2DC\uD0A4\uB294 \uAC04\uC774 \uD568\uC815\uC744
     \uC124\uCE58\uD569\uB2C8\uB2E4"
   icon_sprite: Image/Item/Neutralization Trap

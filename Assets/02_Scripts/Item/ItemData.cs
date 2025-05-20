@@ -96,6 +96,8 @@ public class ItemData : ScriptableObject
     public int effect_strength;
     public int mp_cost;
     public int max_stack;
+    public int price;
+    public int tier;
     public string iteminfo_kr;
     public string icon_sprite;
     public Sprite sprite;

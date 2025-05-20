@@ -28,6 +28,8 @@ MonoBehaviour:
   effect_strength: -1
   mp_cost: -1
   max_stack: 9999
+  price: -1
+  tier: 1
   iteminfo_kr: "\uC232 \uD2B8\uB864\uC758 \uD53C"
   icon_sprite: Image/Item/Troll's Blood
   sprite: {fileID: 0}
