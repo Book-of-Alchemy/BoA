@@ -1,0 +1,19 @@
+{
+    "facilities": [
+        {
+            "facility_id": 270001,
+            "current_level": 1,
+            "unlocked": true
+        },
+        {
+            "facility_id": 270002,
+            "current_level": 1,
+            "unlocked": true
+        },
+        {
+            "facility_id": 270003,
+            "current_level": 0,
+            "unlocked": false
+        }
+    ]
+}
