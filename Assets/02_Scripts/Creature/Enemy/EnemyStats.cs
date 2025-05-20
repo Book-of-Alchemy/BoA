@@ -17,18 +17,18 @@ public class EnemyStats : CharacterStats, IPoolableId
     public int Id { get => id; set => id = value; }
 
     private bool isDead = false;
-    protected override void Awake()
-    {
-        base.Awake();
-        // GameManager에 적 등록
-        GameManager.Instance.RegisterEnemy(this);
-    }
+    //protected override void Awake()
+    //{
+    //    base.Awake();
+    //    // GameManager에 적 등록
+    //    GameManager.Instance.RegisterEnemy(this);
+    //}
 
-    void OnDestroy()
-    {
-        if (GameManager.Instance != null)
-            GameManager.Instance.UnregisterEnemy(this);
-    }
+    //void OnDestroy()
+    //{
+    //    if (GameManager.Instance != null)
+    //        GameManager.Instance.UnregisterEnemy(this);
+    //}
     void OnEnable()
     {
         // 풀에서 재사용될 때 상태 초기화
@@ -43,7 +43,7 @@ public class EnemyStats : CharacterStats, IPoolableId
             return;
         }
         isDead = true; // 사망 처리 시작
-
+        MonsterEvents.RaiseKill(id);
         Debug.Log($"{gameObject.name}이(가) 사망했습니다.");
         TryDropItem();
         GiveExpToPlayer();

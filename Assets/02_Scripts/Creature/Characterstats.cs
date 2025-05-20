@@ -199,7 +199,12 @@ public abstract class CharacterStats : MonoBehaviour
         statBlock.GetEntry(StatType.MaxHealth).onStatChanged -= OnManaChanged;
     }
 
-
+    public void PlaceOnTile(Level level,Tile tile)
+    {
+        curLevel = level;
+        CurTile = tile;
+        transform.position = new Vector3(CurTile.gridPosition.x, CurTile.gridPosition.y, 0);
+    }
     /// <summary>
     /// 일반 공격의 경우
     /// </summary>

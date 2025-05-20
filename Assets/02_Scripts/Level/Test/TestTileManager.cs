@@ -16,18 +16,18 @@ public class TestTileManger : Singleton<TestTileManger>
         curLevel = GenerateLevel();
         PaintLevel(curLevel);
         GameManager.Instance.PlayerTransform.GetComponent<CharacterStats>().curLevel = curLevel;
-        foreach (var enemy in GameManager.Instance.Enemies)
-        {
-            if (enemy == null) continue;
+        //foreach (var enemy in GameManager.Instance.Enemies)
+        //{
+        //    if (enemy == null) continue;
 
-            enemy.curLevel = curLevel;
+        //    enemy.curLevel = curLevel;
 
-            if (curLevel.tiles.TryGetValue(new Vector2Int(Mathf.RoundToInt(enemy.transform.position.x), Mathf.RoundToInt(enemy.transform.position.y)), out Tile targerTile))
-            {
-                targerTile.CharacterStatsOnTile = enemy;
-                enemy.CurTile = targerTile;
-            }
-        }
+        //    if (curLevel.tiles.TryGetValue(new Vector2Int(Mathf.RoundToInt(enemy.transform.position.x), Mathf.RoundToInt(enemy.transform.position.y)), out Tile targerTile))
+        //    {
+        //        targerTile.CharacterStatsOnTile = enemy;
+        //        enemy.CurTile = targerTile;
+        //    }
+        //}
 
 
     }

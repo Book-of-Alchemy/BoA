@@ -172,7 +172,7 @@ public class DungeonBehavior : PlayerBaseBehavior
         );
         
 
-        if (!_stats.curLevel.tiles.ContainsKey(gridPos))
+        if (_stats.curLevel != null && !_stats.curLevel.tiles.ContainsKey(gridPos))
         {
             _highlightInstance.SetActive(false);
             return;
@@ -369,9 +369,9 @@ public class DungeonBehavior : PlayerBaseBehavior
         }
 
         _isMoving = true;
-        _stats.CurTile.CharacterStatsOnTile = null;
-        _stats.CurTile = tile;
-        tile.CharacterStatsOnTile = _stats;
+        //_stats.CurTile.CharacterStatsOnTile = null;
+        //_stats.CurTile = tile;
+        //tile.CharacterStatsOnTile = _stats;
 
         _spriteRenderer.sortingOrder = -nxt.y * 10 + 1;
         _animator.PlayMove();
@@ -392,6 +392,7 @@ public class DungeonBehavior : PlayerBaseBehavior
             {
                 // 애니메이션이 완전히 끝난 시점에 이동 플래그 해제 및 턴 소비
                 _isMoving = false;
+                _stats.MoveToTile(tile);
                 Controller.onActionConfirmed?.Invoke();
                 CameraController.Instance.RestoreCameraState();
             });

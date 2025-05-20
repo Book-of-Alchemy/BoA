@@ -43,6 +43,11 @@ public class TurnManager : Singleton<TurnManager>
             foreach (var unit in allUnits.ToArray())
             {
                 if (unit == null) continue;// null 체크
+                if (!unit.gameObject.activeSelf)
+                {
+                    RemoveUnit(unit);
+                    continue;
+                }
                 unit.Stats?.TickEffects(globalTime);
                 if (unit is EnemyUnit enemyUnit)
                     enemyUnit.UpdateVisual();
@@ -50,6 +55,11 @@ public class TurnManager : Singleton<TurnManager>
 
             foreach(var effect in allTileEffects.ToArray())
             {
+                if (!effect.gameObject.activeSelf)
+                {
+                    RemoveTileEffectt(effect);
+                    continue;
+                }
                 if (effect.NextActionTime <= globalTime)
                 {
                     effect.StartTurn();
@@ -61,8 +71,12 @@ public class TurnManager : Singleton<TurnManager>
             // 실제 턴 처리
             foreach (var unit in allUnits.ToArray())
             {
-                if (unit == null) continue; 
-
+                if (unit == null) continue;
+                if (!unit.gameObject.activeSelf)
+                {
+                    RemoveUnit(unit);
+                    continue;
+                }
                 if (unit.NextActionTime <= globalTime)
                 {
                     float originSpeed = turnSpeed;

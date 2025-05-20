@@ -36,7 +36,9 @@ public class QuestManager : Singleton<QuestManager>
 {
     private QuestProgress _acceptedQuest;
 
-    public QuestProgress AcceptedQuest { get { return _acceptedQuest; }
+    public QuestProgress AcceptedQuest
+    {
+        get { return _acceptedQuest; }
         set
         {
             _acceptedQuest = value;
@@ -59,6 +61,17 @@ public class QuestManager : Singleton<QuestManager>
     {
         if (AcceptedQuest == null)
             AcceptedQuest = new QuestProgress(quest);
+        switch (quest.main_object_type)
+        {
+            case ObjectType.DefeatBoss:
+                MonsterEvents.OnMonsterKilled += CheckBoss;
+                break;
+            case ObjectType.ReachLastEscape:
+                TileManger.OnGetDown += UpdateProgress;
+                break;
+            default:
+                break;
+        }
     }
 
     public void UpdateProgress(int value)
@@ -80,6 +93,8 @@ public class QuestManager : Singleton<QuestManager>
         _clearedQuests.Add(AcceptedQuest.Data);
         AcceptedQuest = null;
         OnQuestAccepted = null;
+        MonsterEvents.OnMonsterKilled -= CheckBoss;
+        TileManger.OnGetDown -= UpdateProgress;
     }
 
     public List<int> GetClearedQuestIds()
@@ -92,5 +107,14 @@ public class QuestManager : Singleton<QuestManager>
         }
 
         return clearedIds;
+    }
+
+    public void CheckBoss(int ID)
+    {
+        EnemyData enemy = SODataManager.Instance.enemyDataBase.GetEnemyById(ID);
+        if (enemy.isBoss)
+        {
+            UpdateProgress(1);
+        }
     }
 }

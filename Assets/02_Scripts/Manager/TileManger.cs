@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -14,32 +15,46 @@ public class TileManger : Singleton<TileManger>
     public GameObject groundPrefab;
     public GameObject wallPrefab;
     public GameObject environmentalPrefab;
-    PlayerStats player;
+    public static event Action<int> OnGetDown;
+    PlayerStats player => GameManager.Instance.PlayerTransform;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        GameSceneManager.Instance.OnSceneTypeChanged += GenerateDungeon;
+    }
 
     private void Start()//임시코드
     {
-        SetLevelGenerator(tileData.biomeSet[0], 8, 40, 40);
-        curLevel = GenerateLevel();
-        PaintLevel(curLevel);
-        GameManager.Instance.PlayerTransform.GetComponent<CharacterStats>().curLevel = curLevel;
-        foreach (var enemy in GameManager.Instance.Enemies)
-        {
-            if (enemy == null) continue;
-
-            enemy.curLevel = curLevel;
-
-            if (curLevel.tiles.TryGetValue(new Vector2Int(Mathf.RoundToInt(enemy.transform.position.x), Mathf.RoundToInt(enemy.transform.position.y)), out Tile targerTile))
-            {
-                targerTile.CharacterStatsOnTile = enemy;
-                enemy.CurTile = targerTile;
-            }
-        }
-        GameManager.Instance.PlayerTransform.curLevel = curLevel;
-        GameManager.Instance.PlayerTransform.CurTile = curLevel.startTile;
-        GameManager.Instance.PlayerTransform.transform.position = new Vector3(curLevel.startTile.gridPosition.x, curLevel.startTile.gridPosition.y,0);
-        SpawnEnemy(curLevel);
-        SpawnItem(curLevel);
+        //SetLevelGenerator(tileData.biomeSet[0], 8, 40, 40);
+        //curLevel = GenerateLevel();
+        //GenerateDungeon(SceneType.Dungeon);
     }
+
+    private void OnDestroy()
+    {
+        GameSceneManager.Instance.OnSceneTypeChanged -= GenerateDungeon;
+    }
+
+    public void GenerateDungeon(SceneType sceneType)
+    {
+        if (sceneType != SceneType.Dungeon) return;
+        curLevelIndex = 0;
+        QuestProgress quest = null;
+        if (QuestManager.Instance.AcceptedQuest == null)// 향후 수정 임시코드
+        {
+            quest = new QuestProgress(SODataManager.Instance.questDataBase.questData[0]);
+        }
+        else
+        {
+            quest = QuestManager.Instance.AcceptedQuest;
+        }
+        levels = levelGenerator.GenerateLevels(7, quest.Data);
+        curLevel = levels[curLevelIndex];
+        OnGetDown?.Invoke(curLevelIndex);
+        SetLevel(curLevel);
+    }
+
 
     public void SetLevelGenerator(BiomeSet biomeSet, int roomCnt, int rootWidth, int rootHeight)
     {
@@ -52,12 +67,14 @@ public class TileManger : Singleton<TileManger>
     }
     public Level GenerateLevel(QuestData questData)
     {
-        return levelGenerator.GenerateLevel(7,questData);
+        return levelGenerator.GenerateLevel(7, questData);
     }
-    public List< Level> GenerateLevels(QuestData questData)
+    public void SetLevel(Level level)
     {
-        
-        return levels;
+        PaintLevel(level);
+        SpawnEnemy(level);
+        SpawnItem(level);
+        SpawnPlayer(level);
     }
     public void PaintLevel(Level level)
     {
@@ -68,27 +85,32 @@ public class TileManger : Singleton<TileManger>
 
     public void GetDownToNextLevel()
     {
-        curLevel.gameObject.SetActive(false);
-        if (curLevelIndex < levels.Count - 1)
+        Level prevLevel = curLevel;
+        curLevelIndex++;
+        OnGetDown?.Invoke(curLevelIndex);
+        if (curLevelIndex < levels.Count)
         {
-            curLevelIndex++;
             curLevel = levels[curLevelIndex];
             curLevel.gameObject.SetActive(true);
-            SpawnPlayer();
+            SetLevel(curLevel);
+            prevLevel.gameObject.SetActive(false);
         }
+
+        
     }
 
-    public void SpawnPlayer()
+    public void SpawnPlayer(Level level)
     {
-        Vector3 spawnPosition = new Vector3(curLevel.startTile.gridPosition.x, curLevel.startTile.gridPosition.y, 0);
+        Vector3 spawnPosition = new Vector3(level.startTile.gridPosition.x, level.startTile.gridPosition.y, 0);
 
-        if (player == null)
-            player = Instantiate(SODataManager.Instance.playerPrefab, spawnPosition, Quaternion.identity).GetComponent<PlayerStats>();
-        else
-            player.transform.position = spawnPosition;
+        //if (player == null)
+        //    player = Instantiate(SODataManager.Instance.playerPrefab, spawnPosition, Quaternion.identity).GetComponent<PlayerStats>();
+        //else
+            
 
-        player.curLevel = curLevel;
-        player.CurTile = curLevel.startTile;
+        player.curLevel = level;
+        player.MoveToTile(level.startTile);
+        player.transform.position = spawnPosition;
     }
 
     public void SpawnEnemy(Level level)
