@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Text;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class UI_DungeonResult : UIBase
 {
@@ -18,6 +17,7 @@ public class UI_DungeonResult : UIBase
     private int _finalGold = 0;
     private int _currentGold = 0;
     private bool _itemLoaded = false;
+    private bool _endGainGold= false;
 
     private Coroutine _goldCoroutine;
     public override bool IsClosable => false;
@@ -29,6 +29,7 @@ public class UI_DungeonResult : UIBase
 
     private void InitResult()
     {
+        SetResultText();
         _currentGold = Inventory.Instance.Gold;
 
         //텍스트 초기화
@@ -42,28 +43,28 @@ public class UI_DungeonResult : UIBase
             if (!item.IsEmpty)
             {
                 _itemTxt.text += $"{item.itemData.name_kr} x {item.Amount}\n";
-                //_finalGold += item.itemData.price;
+                _finalGold += item.itemData.price * item.Amount;
             }
         }
 
-        SetResultText();
-
-        _goldTxt.text = "0G";
-        //임의 골드
-        _finalGold = 65; 
+        _goldTxt.text = $"{_currentGold}G";
 
         _itemLoaded = true;
+        _endGainGold = false;
     }
 
     private void SetResultText()
     {
         StringBuilder sb = new StringBuilder();
 
+        QuestProgress quest = QuestManager.Instance.GetAcceptedQuest();
+        int artifactCnt = GameManager.Instance.PlayerTransform.equipArtifacts.Count;
+
         //결과 이벤트 변경시 추가
-        sb.AppendLine("- 퀘스트 성공");
-        sb.AppendLine("- 몬스터 12마리 처치");
-        sb.AppendLine("- 제작 3회 성공");
-        sb.AppendLine("- 아티팩트 2개 획득");
+        if (quest != null)
+            sb.AppendLine(quest.IsClear ? $"{quest.Data.quest_name_kr} 클리어 " : $"{quest.Data.quest_name_kr} 실패");
+        if(artifactCnt > 0)
+            sb.AppendLine($"아티팩트 {artifactCnt}개 획득");
 
         _resultTxt.text = sb.ToString();
     }
@@ -73,16 +74,19 @@ public class UI_DungeonResult : UIBase
         //아이템 로드가 된 후 입력을 통해 아이템을 골드로 환산
         if (!_itemLoaded) return;
 
-        if (Input.GetKeyDown(KeyCode.Return))
+        if (Input.GetKeyDown(KeyCode.Return) && _goldCoroutine == null)
         {
+            if (_endGainGold == true)
+                HideDirect();
+
             //인벤토리에서 아이템제거
-            _itemTxt.text = "";
-            //Inventory.Instance.ClearInventory();
+            _itemTxt.text = string.Empty;
+            Inventory.Instance.ClearInventory();
 
-            if (_goldCoroutine != null)
-                StopCoroutine(_goldCoroutine);
-
-            _goldCoroutine = StartCoroutine(AnimateGoldGain());
+            if(_finalGold >0)
+                _goldCoroutine = StartCoroutine(AnimateGoldGain());
+            else
+                _endGainGold = true;
         }
     }
 
@@ -97,7 +101,10 @@ public class UI_DungeonResult : UIBase
 
         yield return new WaitForSeconds(_goldIncreaseDuration);
 
-        _goldTxt.text = $"{_finalGold}G"; 
+        _goldTxt.text = $"{_finalGold}G";
+        Inventory.Instance.IncreaseGold(_finalGold);
+        _endGainGold = true;
+        _goldCoroutine = null;
         yield break;
     }
 
