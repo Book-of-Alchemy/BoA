@@ -170,6 +170,8 @@ public class DownLoader : EditorWindow
             so.effect_strength = data.effect_strength;
             so.mp_cost = data.mp_cost;
             so.max_stack = data.max_stack;
+            so.price = data.price;
+            so.tier = data.tier;
             so.icon_sprite = data.icon_sprite;
             so.iteminfo_kr = data.iteminfo_kr;
             so.sprite = Resources.Load<Sprite>(data.icon_sprite);
