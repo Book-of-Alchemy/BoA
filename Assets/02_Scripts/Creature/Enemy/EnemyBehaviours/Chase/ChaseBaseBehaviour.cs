@@ -34,6 +34,8 @@ public class ChaseBaseBehaviour : BaseBehaviour
         {
             if (tile.CharacterStatsOnTile is PlayerStats player)
             {
+                if (player.IsHidden)
+                    continue;
                 controller.LastCheckedTile = tile;
                 break;
             }

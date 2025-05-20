@@ -148,7 +148,7 @@ public class EnemyController : MonoBehaviour
         }
 
         Vector3 position = new Vector3(targetPosition.x, targetPosition.y, 0);
-        _spriteRenderer.sortingOrder = -targetPosition.y * 10;
+        _spriteRenderer.sortingOrder = -targetPosition.y * 10+1;
         if (moveStrategy != null)
             moveStrategy.Move(this.transform, position, characterAnimator, onComplete);
         else

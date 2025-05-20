@@ -20,11 +20,13 @@ public class PlayerUnit : UnitBase
             return;
         controller.onActionConfirmed += OnActionConfirmed;
         //controller.onActionPerformed += OnTurnEnd;
+        controller.onActionConfirmed += OnTurnEnd;
     }
     private void OnDisable()
     {
         controller.onActionConfirmed -= OnActionConfirmed;
         //controller.onActionPerformed -= OnTurnEnd;
+        controller.onActionConfirmed -= OnTurnEnd;
     }
 
     public override void PerformAction()

@@ -35,7 +35,7 @@ public abstract class UnitBase : MonoBehaviour, ITurnProcessor
     {
         get
         {
-            if (Stats == null|| Stats.CurrentHealth <= 0 )
+            if (Stats == null|| Stats.CurrentHealth <= 0 || !gameObject.activeInHierarchy)
                 return false;
             return actionInProgress;
         }

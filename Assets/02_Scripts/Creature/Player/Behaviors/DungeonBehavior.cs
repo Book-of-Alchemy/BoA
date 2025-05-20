@@ -378,7 +378,7 @@ public class DungeonBehavior : PlayerBaseBehavior
         _animator.PlayMove();
 
         transform
-            .DOMove(new Vector3(nxt.x, nxt.y, 0),1/(Controller.moveSpeed*2))
+            .DOMove(new Vector3(nxt.x, nxt.y, 0),1/(Controller.moveSpeed*3))
             .SetEase(Ease.Linear)
             .OnUpdate(() =>
             {

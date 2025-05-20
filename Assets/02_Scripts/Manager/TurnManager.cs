@@ -14,7 +14,7 @@ public class TurnManager : Singleton<TurnManager>
     // 글로벌 시간 변경 이벤트 추가
     public event Action OnGlobalTimeChanged;
     
-    private int _globalTime = 0;
+    [SerializeField]private int _globalTime = 0;
     public int globalTime 
     { 
         get => _globalTime;
@@ -26,7 +26,9 @@ public class TurnManager : Singleton<TurnManager>
     }
     
     public float turnSpeed = 10;//나눈 값을 기준으로 정함 5 = 0.2초 10 = 0.1초 향후 이걸 기준으로 가속 + 도트윈 + 애니메이션에도 적용
+    [SerializeField]private float originSpeed = 10;
 
+    [SerializeField] private UnitBase curUnit;
     private void Start()//테스트용 임시코드
     {
         foreach (var unit in FindObjectsOfType<UnitBase>())
@@ -47,7 +49,7 @@ public class TurnManager : Singleton<TurnManager>
         while (allUnits.Count > 0)
         {
             // 매 턴 시작할 때마다 파괴된유닛 모두 제거
-            allUnits.RemoveAll(u => u == null);
+            allUnits.RemoveAll(u => u == null || !u.gameObject.activeInHierarchy);
 
             if (allUnits.Count == 0)
                 yield break;
@@ -86,19 +88,17 @@ public class TurnManager : Singleton<TurnManager>
             // 실제 턴 처리
             foreach (var unit in allUnits.ToArray())
             {
-                if (unit == null) continue;
-                if (!unit.gameObject.activeSelf)
-                {
-                    RemoveUnit(unit);
+                if (unit == null || !unit.gameObject.activeSelf)
                     continue;
-                }
+
+                
                 if (unit.NextActionTime <= globalTime)
                 {
-                    float originSpeed = turnSpeed;
+                    curUnit = unit;
                     if (!unit.IsPlayer && unit.CurTile != null)// 시야에 없는적 애니메이션 속도 가속
                     {
                         if (!unit.CurTile.IsOnSight)//null check 책임 분리
-                            turnSpeed = 50;
+                            turnSpeed = 200;
                     }
 
                     unit.StartTurn();
@@ -113,13 +113,13 @@ public class TurnManager : Singleton<TurnManager>
 
                     turnSpeed = originSpeed;
                     //yield return wait;
-                    if (!unit.IsPlayer)//일단 enemy만 로직적으로 대기처리 향후 player역시 0.1f대기가 아닌 로직적 대기 현재 player 턴처리문제로 enemy가 인접해있을때 못따라오는 현상 종종발생
-                        yield return new WaitUntil(() => !unit.ActionInProgress || unit == null);
-                    else
-                    {
+                    //if (!unit.IsPlayer)//일단 enemy만 로직적으로 대기처리 향후 player역시 0.1f대기가 아닌 로직적 대기 현재 player 턴처리문제로 enemy가 인접해있을때 못따라오는 현상 종종발생
+                        yield return new WaitUntil(() => !unit.ActionInProgress || unit == null || !unit.gameObject.activeSelf);
+                    //else
+                    //{
                         UpdateAllUnitVisual();
                         yield return null;
-                    }
+                    //}
                 }
             }
 
@@ -159,6 +159,16 @@ public class TurnManager : Singleton<TurnManager>
 
         unitIds.Remove(unit.GetInstanceID());
         allUnits.Remove(unit);
+    }
+
+    public void RemoveAllEnemy()
+    {
+        foreach(var unit in allUnits.ToArray())
+        {
+            if (unit.IsPlayer) continue;
+            unitIds.Remove(unit.GetInstanceID());
+            allUnits.Remove(unit);
+        }
     }
     public void AddTileEffect(TileEffect tileEffect)
     {
