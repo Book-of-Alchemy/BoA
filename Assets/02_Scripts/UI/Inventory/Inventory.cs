@@ -22,7 +22,7 @@ public class Inventory : Singleton<Inventory>
     //인벤토리 아이템 유무 bool변수
     public bool HasItem => items != null && items.Any(item => item != null);
 
-    private int _gold;
+    private int _gold = 0;
     public int Gold => _gold;
 
     public event Action<int> OnGoldChanged;
@@ -220,6 +220,22 @@ public class Inventory : Singleton<Inventory>
                 _uiInventory.ReduceItem(index,amount);
 
         }
+    }
+    public void ClearInventory()//인벤토리 아이템 전부삭제
+    {
+        if (items == null || items.Length == 0)
+            return;
+
+        for (int i = 0; i < items.Length; i++)
+        {
+            if (items[i] != null)
+            {
+                items[i] = null;
+                if(_uiInventory != null)
+                    _uiInventory.RemoveItem(i); 
+            }
+        }
+        _highlightItemIds.Clear(); 
     }
 
     public void DecreaseUseItem(InventoryItem item)// 임시 코드
