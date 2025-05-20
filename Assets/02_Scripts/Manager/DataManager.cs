@@ -44,6 +44,13 @@ public class DataManager : Singleton<DataManager>
             string jsonData = File.ReadAllText(savePath);
             playerData = JsonConvert.DeserializeObject<PlayerData>(jsonData);
             Debug.Log($"데이터 로드 완료: {savePath}");
+            
+            // Inventory가 이미 초기화되어 있다면 골드 값을 Inventory에 적용
+            if (Inventory.HasInstance && Inventory.Instance != null)
+            {
+                Inventory.Instance.SetGold(playerData.Gold);
+                Debug.Log($"인벤토리에 골드 정보 적용: {playerData.Gold}");
+            }
         }
         else
         {
@@ -57,6 +64,14 @@ public class DataManager : Singleton<DataManager>
     {
         GetPlayerData().Gold += amount;
         SaveData();
+        
+        // Inventory에도 반영
+        if (Inventory.HasInstance && Inventory.Instance != null)
+        {
+            // 동기화를 위해 직접 SetGold 사용 (IncreaseGold를 사용하면 중복 저장됨)
+            Inventory.Instance.SetGold(GetPlayerData().Gold);
+            Debug.Log($"DataManager: {amount} 골드 추가, 현재 골드: {GetPlayerData().Gold}");
+        }
     }
 
     public bool SpendGold(int amount)
@@ -65,6 +80,15 @@ public class DataManager : Singleton<DataManager>
         {
             GetPlayerData().Gold -= amount;
             SaveData();
+            
+            // Inventory에도 반영
+            if (Inventory.HasInstance && Inventory.Instance != null)
+            {
+                // 동기화를 위해 직접 SetGold 사용 (DecreaseGold를 사용하면 중복 저장됨)
+                Inventory.Instance.SetGold(GetPlayerData().Gold);
+                Debug.Log($"DataManager: {amount} 골드 사용, 현재 골드: {GetPlayerData().Gold}");
+            }
+            
             return true;
         }
         return false;

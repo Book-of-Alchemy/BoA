@@ -27,10 +27,16 @@ public class Inventory : Singleton<Inventory>
 
     public event Action<int> OnGoldChanged;
 
+    protected override void Awake()
+    {
+        base.Awake();
+        // 시작 시 저장된 골드 데이터 로드
+        LoadGoldFromDataManager();
+    }
+
     private void Start()
     {
         //초기화 시 불러올 데이터 추가해야함.
-
         items = new InventoryItem[_capacity]; // 인벤토리 용량만큼 Data상 용량을 맞춰줌.
     }
 
@@ -50,16 +56,54 @@ public class Inventory : Singleton<Inventory>
         }
     }
 
+    // DataManager로부터 골드 데이터 로드
+    private void LoadGoldFromDataManager()
+    {
+        if (DataManager.Instance != null)
+        {
+            // DataManager에서 골드 가져오기
+            _gold = DataManager.Instance.GetPlayerData().Gold;
+            OnGoldChanged?.Invoke(_gold);
+            Debug.Log($"DataManager에서 골드를 로드했습니다: {_gold}");
+        }
+    }
+
+    // DataManager에 골드 데이터 저장
+    private void SaveGoldToDataManager()
+    {
+        if (DataManager.Instance != null)
+        {
+            // DataManager의 PlayerData에 골드 설정 및 저장
+            DataManager.Instance.GetPlayerData().Gold = _gold;
+            DataManager.Instance.SaveData();
+            Debug.Log($"골드 {_gold}를 DataManager에 저장했습니다.");
+        }
+    }
+
     public void IncreaseGold(int amount)
     {
         _gold += amount;
         OnGoldChanged?.Invoke(_gold); //골드 변화시 UI에서 갱신
+        // 변경된 골드 저장
+        SaveGoldToDataManager();
+        Debug.Log($"골드 {amount}를 획득했습니다. 현재 골드: {_gold}");
     }
 
     public void DecreaseGold(int amount)
     {
         _gold = Mathf.Max(0, _gold - amount);
         OnGoldChanged?.Invoke(_gold);
+        // 변경된 골드 저장
+        SaveGoldToDataManager();
+        Debug.Log($"골드 {amount}를 사용했습니다. 현재 골드: {_gold}");
+    }
+
+    // 다른 클래스(예: DataManager)에서 골드를 직접 설정할 수 있는 메서드
+    public void SetGold(int amount)
+    {
+        _gold = Mathf.Max(0, amount);
+        OnGoldChanged?.Invoke(_gold);
+        Debug.Log($"골드가 {_gold}로 설정되었습니다.");
     }
 
     public void OnClickAddItem() //Call at OnClick Event 
