@@ -12,4 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0645a141a29985f4784a61d6d6dd4f08, type: 3}
   m_Name: EnvRuleDataBase
   m_EditorClassIdentifier: 
-  envRuleDatas: []
+  envRuleDatas:
+  - {fileID: 11400000, guid: 00908a589cc37884cbbd77e82fdb394d, type: 2}
+  - {fileID: 11400000, guid: da0d8f7445031474d8481298eca4dfda, type: 2}
+  - {fileID: 11400000, guid: 98501667cdaa052409ae37115b7de4d7, type: 2}
+  - {fileID: 11400000, guid: 8b9b9ac2d67035747976d6d82a55621f, type: 2}
+  - {fileID: 11400000, guid: 38dc4e466c10b1e469b30516b54e239d, type: 2}
+  - {fileID: 11400000, guid: b1c69d100a14a224083fb4766ad05514, type: 2}
+  - {fileID: 11400000, guid: d9a2271017813354f96c7eb9c8341811, type: 2}
+  - {fileID: 11400000, guid: 701afd3c03000bc42855ea32b351b3c0, type: 2}
+  - {fileID: 11400000, guid: 959d09d8f1292444aa5479b5128a3821, type: 2}
+  - {fileID: 11400000, guid: 68b1ffbc6f011fb4a949dad783ee5231, type: 2}
+  - {fileID: 11400000, guid: 8d11ebc3afac13d4f8251fca83e89cb3, type: 2}
+  - {fileID: 11400000, guid: 2a79dea7c200b6746a75c1d055f0d11c, type: 2}
+  - {fileID: 11400000, guid: 118ff451bb0562d42b7e24553236cc97, type: 2}
+  - {fileID: 11400000, guid: 2ea208c9ae5d34349a0c95bc37e8e4fd, type: 2}
+  - {fileID: 11400000, guid: c94d36b77b6c62d4d8453a3fcd63e759, type: 2}
+  - {fileID: 11400000, guid: 58ccfd19ec8cb2945a729c94bb7d9606, type: 2}
