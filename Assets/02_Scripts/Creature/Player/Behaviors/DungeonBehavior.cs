@@ -173,7 +173,7 @@ public class DungeonBehavior : PlayerBaseBehavior
         );
         
 
-        if (!_stats.curLevel.tiles.ContainsKey(gridPos))
+        if (_stats.curLevel != null && !_stats.curLevel.tiles.ContainsKey(gridPos))
         {
             _highlightInstance.SetActive(false);
             return;
@@ -242,10 +242,10 @@ public class DungeonBehavior : PlayerBaseBehavior
             return;
 
         // 시간 스케일 5배 적용
-        _savedMouseTimeScale = Time.timeScale;
-        _savedMouseTurnSpeed = TurnManager.Instance.turnSpeed;
-        Time.timeScale = _savedMouseTimeScale * 5f;
-        TurnManager.Instance.turnSpeed = _savedMouseTurnSpeed * 5f;
+        //_savedMouseTimeScale = Time.timeScale;
+        //_savedMouseTurnSpeed = TurnManager.Instance.turnSpeed;
+        //Time.timeScale = _savedMouseTimeScale * 5f;
+        //TurnManager.Instance.turnSpeed = _savedMouseTurnSpeed * 5f;
 
         // 이동 중단 검사 초기화
         _startHp = _stats.CurrentHealth;
@@ -296,8 +296,8 @@ public class DungeonBehavior : PlayerBaseBehavior
                 break;
             }
         }
-        TurnManager.Instance.turnSpeed = _savedMouseTurnSpeed;
-        Time.timeScale = _savedMouseTimeScale;
+        //TurnManager.Instance.turnSpeed = _savedMouseTurnSpeed;
+        //Time.timeScale = _savedMouseTimeScale;
 
         _mousePathCoroutine = null;
     }
@@ -370,15 +370,15 @@ public class DungeonBehavior : PlayerBaseBehavior
         }
 
         _isMoving = true;
-        _stats.CurTile.CharacterStatsOnTile = null;
-        _stats.CurTile = tile;
-        tile.CharacterStatsOnTile = _stats;
+        //_stats.CurTile.CharacterStatsOnTile = null;
+        //_stats.CurTile = tile;
+        //tile.CharacterStatsOnTile = _stats;
 
         _spriteRenderer.sortingOrder = -nxt.y * 10 + 1;
         _animator.PlayMove();
 
         transform
-            .DOMove(new Vector3(nxt.x, nxt.y, 0), 0.1f)
+            .DOMove(new Vector3(nxt.x, nxt.y, 0),1/(Controller.moveSpeed*3))
             .SetEase(Ease.Linear)
             .OnUpdate(() =>
             {
@@ -393,6 +393,7 @@ public class DungeonBehavior : PlayerBaseBehavior
             {
                 // 애니메이션이 완전히 끝난 시점에 이동 플래그 해제 및 턴 소비
                 _isMoving = false;
+                _stats.MoveToTile(tile);
                 Controller.onActionConfirmed?.Invoke();
                 CameraController.Instance.RestoreCameraState();
             });
@@ -452,7 +453,7 @@ public class DungeonBehavior : PlayerBaseBehavior
         _savedTurnSpeed = tm.turnSpeed;
         tm.turnSpeed *= 10;
         Controller.moveSpeed *= 10;
-        Time.timeScale *= 10;
+        //Time.timeScale *= 10;
     }
 
     // ────────────────────────────────────────────────────────
@@ -469,7 +470,7 @@ public class DungeonBehavior : PlayerBaseBehavior
         var tm = TurnManager.Instance;
         tm.turnSpeed = _savedTurnSpeed;
         Controller.moveSpeed /= 10;
-        Time.timeScale /= 10;
+        //Time.timeScale /= 10;
     }
 
     // ────────────────────────────────────────────────────────

@@ -28,7 +28,11 @@ public abstract class MapObject : MonoBehaviour
         if (CurTile == null) return;
         CurTile.onIsOnSightChanged += UpdateTileVisual;
         UpdateTileVisual();
-        //spriteRenderer.sortingOrder = -10 * CurTile.gridPosition.y;
+        foreach (var renderer in spriteRenderers)
+        {
+            renderer.sortingOrder = -10 * CurTile.gridPosition.y;
+        }
+        transform.SetParent(CurTile.curLevel.transform);
     }
     public abstract void Interact();
 

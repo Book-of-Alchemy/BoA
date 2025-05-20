@@ -12,7 +12,7 @@ public class LevelGenerator : MonoBehaviour
     public BiomeSet curBiomeSet;
     //향후 퀘스트 db를 받아서 퀘스트 관련하여 레벨 세팅
 
-    private void Start()
+    private void Awake()
     {
         TileManger.Instance.levelGenerator = this;
     }
@@ -30,18 +30,14 @@ public class LevelGenerator : MonoBehaviour
         List<Level> levels = new List<Level>();
         BiomeSet biomeSet = SODataManager.Instance.tileDataBase.biomsetByID[questData.biome_id];
         int floorCount = questData.dungeon_floor_count;
-        SetLevelGenerator(biomeSet, 8, 40, 40);
+        
         for (int i = 0; i < floorCount; i++)
         {
+            SetLevelGenerator(biomeSet, 8, 40, 40);
             Level level = GenerateLevel(7, questData);
             level.curDepth = i;
             levels.Add(level);
         }
-
-
-
-        GenerateLevel(7, questData);
-        TileManger.Instance.curLevel = levels[0];
         return levels;
     }
 

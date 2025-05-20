@@ -89,7 +89,7 @@ public class ItemFactory : Singleton<ItemFactory>
         {
             Tile targetTile = availableTiles[UnityEngine.Random.Range(0, availableTiles.Count)];
             availableTiles.Remove(targetTile);
-
+            availableTiles.Remove(TileManger.Instance.curLevel.startTile);
             int id = GetRandomItemId(itemDatas);
             ItemData itemData = itemdataById[id];
             BaseItem item = DropItem(itemData, targetTile);

@@ -25,4 +25,5 @@ public class EnemyData : PrefabWithId
     public int resist_earth;
     public int resist_light;
     public int resist_dark;
+    public bool isBoss;
 }
