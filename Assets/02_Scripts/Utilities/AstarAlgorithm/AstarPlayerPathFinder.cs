@@ -56,7 +56,7 @@ public static class AstarPlayerPathFinder
                     continue;
 
                 //적(또는 다른 캐릭터)이 있는 타일 건너뛰기
-                if (!neighbor.IsWalkable && neighbor != goalTile)
+                if (!neighbor.IsWalkable)
                     continue;
 
                 // gCost 계산

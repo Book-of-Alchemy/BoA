@@ -12,7 +12,7 @@ public class PlayerStats : CharacterStats
     public bool isPrecisionAim = false;
 
     //다음레벨까지 필요한 경험치(내부 계산용)
-    private int _nextLevelExp => Mathf.FloorToInt(20f * Mathf.Pow(level, 1.5f));
+    private int _nextLevelExp => Mathf.FloorToInt(1000f * Mathf.Pow(level, 1.5f));
     //다음레벨까지 필요한 경험치(읽기 전용)
     public int nextLevelExp => _nextLevelExp;
 
