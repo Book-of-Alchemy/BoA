@@ -22,8 +22,15 @@ public class Inventory : Singleton<Inventory>
     //인벤토리 아이템 유무 bool변수
     public bool HasItem => items != null && items.Any(item => item != null);
 
+    private int _gold;
+    public int Gold => _gold;
+
+    public event Action<int> OnGoldChanged;
+
     private void Start()
     {
+        //초기화 시 불러올 데이터 추가해야함.
+
         items = new InventoryItem[_capacity]; // 인벤토리 용량만큼 Data상 용량을 맞춰줌.
     }
 
@@ -41,6 +48,18 @@ public class Inventory : Singleton<Inventory>
                 UpdateUISlot(i);
             }
         }
+    }
+
+    public void IncreaseGold(int amount)
+    {
+        _gold += amount;
+        OnGoldChanged?.Invoke(_gold); //골드 변화시 UI에서 갱신
+    }
+
+    public void DecreaseGold(int amount)
+    {
+        _gold = Mathf.Max(0, _gold - amount);
+        OnGoldChanged?.Invoke(_gold);
     }
 
     public void OnClickAddItem() //Call at OnClick Event 
@@ -184,6 +203,22 @@ public class Inventory : Singleton<Inventory>
             for (int i = 0; i < filtered.Length; i++)
                 _uiInventory.SetInventorySlot(i, filtered[i]); // UI 슬롯에 재배치
         }
+    }
+    public List<InventoryItem> GetAllItems()
+    {
+        //Items 내부 아이템 리턴
+        List<InventoryItem> result = new List<InventoryItem>();
+
+        if (items == null)
+            return result;
+
+        foreach (var item in items)
+        {
+            if (item != null && !item.IsEmpty)
+                result.Add(item);
+        }
+
+        return result;
     }
 
     public void RestoreBeforeFilter()

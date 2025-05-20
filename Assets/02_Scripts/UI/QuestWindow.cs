@@ -28,7 +28,7 @@ public class UI_Quest : MonoBehaviour
         _reward01Txt.text = $" 보상 : {quest.reward1.ToString()}";
         _reward02Txt.text = $" 보상 : {quest.reward2.ToString()}";
         _reward03Txt.text = $" 보상 : {quest.reward3.ToString()}";
-        //바이옴 데이터 없음.
+        //바이옴 데이터 없음. 추가 시 변경
         _biomeTxt.text = $"수행 지역 : 숲";
         _descTxt.text = quest.descriptiontxt;
     }
