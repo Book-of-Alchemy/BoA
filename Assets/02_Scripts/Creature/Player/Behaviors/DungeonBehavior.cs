@@ -242,10 +242,10 @@ public class DungeonBehavior : PlayerBaseBehavior
             return;
 
         // 시간 스케일 5배 적용
-        _savedMouseTimeScale = Time.timeScale;
-        _savedMouseTurnSpeed = TurnManager.Instance.turnSpeed;
-        Time.timeScale = _savedMouseTimeScale * 5f;
-        TurnManager.Instance.turnSpeed = _savedMouseTurnSpeed * 5f;
+        //_savedMouseTimeScale = Time.timeScale;
+        //_savedMouseTurnSpeed = TurnManager.Instance.turnSpeed;
+        //Time.timeScale = _savedMouseTimeScale * 5f;
+        //TurnManager.Instance.turnSpeed = _savedMouseTurnSpeed * 5f;
 
         // 이동 중단 검사 초기화
         _startHp = _stats.CurrentHealth;
@@ -296,8 +296,8 @@ public class DungeonBehavior : PlayerBaseBehavior
                 break;
             }
         }
-        TurnManager.Instance.turnSpeed = _savedMouseTurnSpeed;
-        Time.timeScale = _savedMouseTimeScale;
+        //TurnManager.Instance.turnSpeed = _savedMouseTurnSpeed;
+        //Time.timeScale = _savedMouseTimeScale;
 
         _mousePathCoroutine = null;
     }
@@ -378,7 +378,7 @@ public class DungeonBehavior : PlayerBaseBehavior
         _animator.PlayMove();
 
         transform
-            .DOMove(new Vector3(nxt.x, nxt.y, 0), 0.1f)
+            .DOMove(new Vector3(nxt.x, nxt.y, 0),1/(Controller.moveSpeed*2))
             .SetEase(Ease.Linear)
             .OnUpdate(() =>
             {
@@ -453,7 +453,7 @@ public class DungeonBehavior : PlayerBaseBehavior
         _savedTurnSpeed = tm.turnSpeed;
         tm.turnSpeed *= 10;
         Controller.moveSpeed *= 10;
-        Time.timeScale *= 10;
+        //Time.timeScale *= 10;
     }
 
     // ────────────────────────────────────────────────────────
@@ -470,7 +470,7 @@ public class DungeonBehavior : PlayerBaseBehavior
         var tm = TurnManager.Instance;
         tm.turnSpeed = _savedTurnSpeed;
         Controller.moveSpeed /= 10;
-        Time.timeScale /= 10;
+        //Time.timeScale /= 10;
     }
 
     // ────────────────────────────────────────────────────────

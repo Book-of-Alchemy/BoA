@@ -317,13 +317,13 @@ public abstract class CharacterStats : MonoBehaviour
         // 이전 타일 점유 해제
         if (CurTile != null)
             CurTile.CharacterStatsOnTile = null;
+        CurTile = targetTile;
 
         // 새 타일 점유 설정
         targetTile.CharacterStatsOnTile = this;
 
         //curTile 갱신
-        CurTile = targetTile;
-
+        
         OnTileChanged?.Invoke();
     }
 

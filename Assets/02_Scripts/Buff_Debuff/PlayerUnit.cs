@@ -19,10 +19,12 @@ public class PlayerUnit : UnitBase
         if (controller == null)
             return;
         controller.onActionConfirmed += OnActionConfirmed;
+        //controller.onActionPerformed += OnTurnEnd;
     }
     private void OnDisable()
     {
         controller.onActionConfirmed -= OnActionConfirmed;
+        //controller.onActionPerformed -= OnTurnEnd;
     }
 
     public override void PerformAction()

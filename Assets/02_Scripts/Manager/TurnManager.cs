@@ -118,7 +118,7 @@ public class TurnManager : Singleton<TurnManager>
                     else
                     {
                         UpdateAllUnitVisual();
-                        yield return wait;
+                        yield return null;
                     }
                 }
             }
