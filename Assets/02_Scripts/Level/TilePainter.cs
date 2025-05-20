@@ -156,7 +156,7 @@ public static class TilePainter
         for (int i = 0; i < 4; i++)
         {
             Tile neighbor = TileUtility.GetAdjacentTile(level, tile, (FourDir)i);
-            if (IsEnvironmentByTileEffct(neighbor, type))
+            if (IsEnvironmentByType(neighbor, type))
                 bitmask |= 1 << i;
         }
 

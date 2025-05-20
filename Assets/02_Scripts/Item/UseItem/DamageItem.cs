@@ -104,8 +104,8 @@ public class DamageItem : BaseItem
         else
         {
             Debug.Log("거리범위에 해당하는 타일을 누르지 않았습니다.");
-            InputManager.Instance.OnMouseClick -= OnClick;
-            Destroy(this.gameObject);
+            CancelUse();
+            SubscribeInput();
         }
     }
 
@@ -253,5 +253,18 @@ public class DamageItem : BaseItem
                 _isObject = true;
             }
         }
+    }
+
+    public void SubscribeInput()
+    {
+        var player = GameManager.Instance.PlayerTransform;
+            if (player != null)
+            {
+                var dungeonBehavior = player.GetComponent<DungeonBehavior>();
+                if (dungeonBehavior != null)
+                {
+                    dungeonBehavior.SSubscribeInput();
+                }
+            }
     }
 }

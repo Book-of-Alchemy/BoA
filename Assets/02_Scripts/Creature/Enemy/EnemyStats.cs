@@ -9,10 +9,6 @@ public class EnemyStats : CharacterStats, IPoolableId
     [Tooltip("드랍할 아이템 수량")]
     public int dropAmount = 1;
 
-    [Header("경험치 보상")]
-    [Tooltip("기본 경험치")]
-    public int baseExpReward = 10;
-
     [Tooltip("레벨당 추가 경험치")]
     public int expPerLevel = 5;
 
@@ -65,10 +61,10 @@ public class EnemyStats : CharacterStats, IPoolableId
         StopAllCoroutines(); // 모든 코루틴 중지
 
         
-        var pool = EnemyFactory.Instance.enemyPool;
-        if (pool != null)
+        
+        if (EnemyFactory.Instance.enemyPool != null)
         {
-            pool.ReturnToPool(this);
+            EnemyFactory.Instance.enemyPool.ReturnToPool(this);
         }
     }
     private void GiveExpToPlayer()
@@ -77,7 +73,7 @@ public class EnemyStats : CharacterStats, IPoolableId
         if (player != null)
         {
             // 몬스터 레벨에 따른 경험치 계산
-            int finalExp = baseExpReward + (level * expPerLevel);
+            int finalExp = (level * expPerLevel);
 
             player.GainExperience(finalExp);
         }

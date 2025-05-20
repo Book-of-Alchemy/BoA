@@ -1,0 +1,33 @@
+상태 효과 아이콘 프리팹 구조:
+
+1. 루트 오브젝트: StatusEffectIcon
+   - 컴포넌트: RectTransform, UI_StatusEffectIcon 스크립트
+   - 크기: 40x40
+
+2. 자식 오브젝트: Icon
+   - 컴포넌트: RectTransform, Image
+   - 앵커: 모든 방향 Stretch (0,0,1,1)
+   - 이미지: 버프/디버프 아이콘 이미지 (Resources/Image/Bufficon 폴더에서 로드)
+
+3. 자식 오브젝트: Duration
+   - 컴포넌트: RectTransform, TextMeshProUGUI
+   - 앵커: 우측 하단 고정
+   - 크기: 20x20
+   - 폰트 스타일: Bold, 폰트 크기: 12, 정렬: 중앙
+   - 텍스트: 남은 턴 수
+
+구현 단계:
+1. UI_StatusEffectIcon 프리팹을 위 구조대로 생성
+2. UI_StatusEffectDisplay 프리팹도 생성:
+   - 컴포넌트: RectTransform, UI_StatusEffectDisplay 스크립트
+   - 인스펙터에서 targetStats, statusEffectIconPrefab, iconsContainer 설정
+   - iconsContainer는 자식 게임오브젝트로 "Container" 생성하고 할당
+   - Container에 GridLayoutGroup 컴포넌트 추가 (정렬 및 간격 자동화)
+
+3. UI_HUD 프리팹에 statusEffectDisplayPrefab과 statusEffectContainer 필드 설정
+   - statusEffectContainer는 체력바 바로 위에 위치하도록 배치
+
+주의사항:
+- 상태 효과 아이콘은 Resources 폴더의 "Image/Bufficon" 경로에서 로드합니다.
+- 아이콘 이미지가 설정되어 있지 않으면 기본 이미지를 대신 사용합니다.
+- 깜빡임 효과는 DOTween을 사용하여 구현합니다. 

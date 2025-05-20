@@ -9,7 +9,7 @@ public class DungeonScene : SceneBase
 
     public override void OnEnter()
     {
-        // 씬 진입 로직
+        UIManager.Show<UI_HUD>();
     }
 
     public override void OnExit()

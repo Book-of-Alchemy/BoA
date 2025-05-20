@@ -25,6 +25,8 @@ public class TownBehavior : PlayerBaseBehavior
     private Vector2 _clickTarget;
     private bool _isAutoMoving = false;
     private float _stopPoint = 0.1f;
+
+
     public override void Initialize(PlayerController controller)
     {
         base.Initialize(controller);
@@ -39,22 +41,22 @@ public class TownBehavior : PlayerBaseBehavior
     }
     private void FixedUpdate()
     {
-        // 자동 이동 로직
-        if (_isAutoMoving)
-        {
-            Vector2 currentPos = _rb.position;
-            Vector2 toTarget = _clickTarget - currentPos;
-            if (toTarget.magnitude <= _stopPoint)
-            {
-                _isAutoMoving = false;
-                _moveDir = Vector2.zero;
-                _animator.SetWalking(false);
-            }
-            else
-            {
-                _moveDir = toTarget.normalized;
-            }
-        }
+        //// 자동 이동 로직
+        //if (_isAutoMoving)
+        //{
+        //    Vector2 currentPos = _rb.position;
+        //    Vector2 toTarget = _clickTarget - currentPos;
+        //    if (toTarget.magnitude <= _stopPoint)
+        //    {
+        //        _isAutoMoving = false;
+        //        _moveDir = Vector2.zero;
+        //        _animator.SetWalking(false);
+        //    }
+        //    else
+        //    {
+        //        _moveDir = toTarget.normalized;
+        //    }
+        //}
 
         if (_moveDir != Vector2.zero)
         {
@@ -64,12 +66,16 @@ public class TownBehavior : PlayerBaseBehavior
 
             if (Mathf.Abs(_moveDir.x) > 0.01f)
                 _spriteRenderer.flipX = _moveDir.x < 0;
+
+            if(Mathf.Abs(_moveDir.x)>0.01f|| Mathf.Abs(_moveDir.y) > 0.01f)
+                CameraController.Instance.RestoreCameraState();
         }
         else
         {
             _animator.SetWalking(false);
         }
     }
+  
     protected override void SubscribeInput()
     {
         var im = InputManager;
@@ -121,7 +127,6 @@ public class TownBehavior : PlayerBaseBehavior
             var uiHandler = construct.GetComponent<IFacilityUI>();
             if (uiHandler != null)
             {
-                UnsubscribeInput();
                 uiHandler.ShowUI();
                 return;
             }
@@ -151,14 +156,5 @@ public class TownBehavior : PlayerBaseBehavior
                Debug.LogWarning("NPC 컴포넌트가 없습니다.");
         }
     }
-    //Shop예시
-    //public class ShopFacility : MonoBehaviour, IFacilityUI
-    //{
-    //    public void ShowUI()
-    //    {
-    //        // UIManager 쪽에선 이 메서드를 통해 상점 UI를 띄움
-    //        UIManager.Instance.OpenShopUI(this);
-    //    }
-    //}
 }
 
