@@ -106,6 +106,42 @@ public class Inventory : Singleton<Inventory>
         Debug.Log($"골드가 {_gold}로 설정되었습니다.");
     }
 
+    // DataManager에서 가져온 골드 관련 메서드
+    public void AddGold(int amount)
+    {
+        _gold += amount;
+        OnGoldChanged?.Invoke(_gold);
+        
+        // 골드 변경 저장
+        if (DataManager.Instance != null)
+        {
+            DataManager.Instance.GetPlayerData().Gold = _gold;
+            DataManager.Instance.SaveData();
+        }
+        
+        Debug.Log($"Inventory: {amount} 골드 추가, 현재 골드: {_gold}");
+    }
+
+    public bool SpendGold(int amount)
+    {
+        if (_gold >= amount)
+        {
+            _gold -= amount;
+            OnGoldChanged?.Invoke(_gold);
+            
+            // 골드 변경 저장
+            if (DataManager.Instance != null)
+            {
+                DataManager.Instance.GetPlayerData().Gold = _gold;
+                DataManager.Instance.SaveData();
+            }
+            
+            Debug.Log($"Inventory: {amount} 골드 사용, 현재 골드: {_gold}");
+            return true;
+        }
+        return false;
+    }
+
     public void OnClickAddItem() //Call at OnClick Event 
     {
         int rand = UnityEngine.Random.Range(0, itemDataArr.Length);
