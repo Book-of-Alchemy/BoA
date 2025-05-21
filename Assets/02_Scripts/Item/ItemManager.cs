@@ -6,38 +6,41 @@ using UnityEngine.InputSystem.XR;
 
 public class ItemManager : Singleton<ItemManager>
 {
-    public GameObject damageItemPrefab; // 데미지 아이템 프리팹
     public GameObject rangeTilePrefab; // 사거리 표시 프리팹
     public GameObject itemRangeTilePrefab; // 아이템 효과범위 프리팹
+    public GameObject bossRangeTilePrefab; // 보스 범위 프리팹
     public List<GameObject> rangeTilePrefabs = new List<GameObject> (); // 생성된 사거리 표시 프리팹들리스트
     public List<GameObject> itemRangeTilePrefabs = new List<GameObject> (); // 생성된 효과범위 프리팹들리스트
+    public List<GameObject> bossRangeTilePrefabs = new List<GameObject> () ; // 생성된 보스범위 프리팹리스트
     public GameObject rangeTiles; // 사거리 표시 오브젝트들을 넣기위해 만든 빈오브젝트
     public GameObject itemRangeTiles; // 효과범위 오브젝트들을 넣기 위해 만든 빈 오브젝트
+    public GameObject bossRangeTiles;
 
     private void Start()
     {
         rangeTiles = new GameObject("RangeTiles");
         itemRangeTiles = new GameObject("ItemRangeTiles");
+        bossRangeTiles = new GameObject("BossRangeTiles");
     }
 
-    public BaseItem CreateItem(ItemData data)
-    {
-        BaseItem item = null;
-        switch (data.effect_type)
-        {
-            case Effect_Type.Damage:
-               item =Instantiate(damageItemPrefab).GetComponent<DamageItem>(); break;
-            //case Effect_Type.Heal:
-            //    item = Instantiate(projectileItemprefab).GetComponent<HealItem>(); break;
-            //case Effect_Type.Buff:
-            //    item = Instantiate(projectileItemprefab).GetComponent<BuffItem>(); break;
-            //case Effect_Type.Debuff:
-            //    item = Instantiate(projectileItemprefab).GetComponent<DeBuffItem>(); break;
-            //case Effect_Type.Move:
-            //    item = Instantiate(projectileItemprefab).GetComponent<MoveItem>(); break;
-        }
-        return item;
-    }
+    //public BaseItem CreateItem(ItemData data)
+    //{
+    //    BaseItem item = null;
+    //    switch (data.effect_type)
+    //    {
+    //        case Effect_Type.Damage:
+    //           item =Instantiate(damageItemPrefab).GetComponent<DamageItem>(); break;
+    //        //case Effect_Type.Heal:
+    //        //    item = Instantiate(projectileItemprefab).GetComponent<HealItem>(); break;
+    //        //case Effect_Type.Buff:
+    //        //    item = Instantiate(projectileItemprefab).GetComponent<BuffItem>(); break;
+    //        //case Effect_Type.Debuff:
+    //        //    item = Instantiate(projectileItemprefab).GetComponent<DeBuffItem>(); break;
+    //        //case Effect_Type.Move:
+    //        //    item = Instantiate(projectileItemprefab).GetComponent<MoveItem>(); break;
+    //    }
+    //    return item;
+    //}
 
     public void CreateRange(List<Tile> tiles)
     {
@@ -86,6 +89,31 @@ public class ItemManager : Singleton<ItemManager>
         foreach (GameObject itemRangeObject in itemRangeTilePrefabs)
         {
             itemRangeObject.SetActive(false);
+        }
+    }
+
+    public void CreateBossRange(List<Tile> tiles)
+    {
+        if (tiles.Count > bossRangeTilePrefabs.Count)
+        {
+            int count = bossRangeTilePrefabs.Count;
+            for (int i = 0; i < tiles.Count - count; i++)
+            {
+                bossRangeTilePrefabs.Add(Instantiate(bossRangeTilePrefab, bossRangeTiles.transform));
+            }
+        }
+        for (int i = 0; i < tiles.Count; i++)
+        {
+            bossRangeTilePrefabs[i].transform.position = new Vector3(tiles[i].gridPosition.x, tiles[i].gridPosition.y, 0);
+            bossRangeTilePrefabs[i].SetActive(true);
+        }
+    }
+
+    public void DestroyBossRange()
+    {
+        foreach (GameObject BossRangeObject in bossRangeTilePrefabs)
+        {
+            BossRangeObject.SetActive(false);
         }
     }
 

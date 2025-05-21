@@ -65,7 +65,7 @@ public class InventorySlotUI : SlotUIBase<InventoryItem>, ISelectHandler, IDesel
     protected override void ClearUI()
     {
         _icon.sprite = null;
-        _countTxt.text = "";
+        _countTxt.text = string.Empty;
         _icon.enabled = false;
 
         if (_btn != null) _btn.onClick.RemoveAllListeners();
@@ -112,9 +112,11 @@ public class InventorySlotUI : SlotUIBase<InventoryItem>, ISelectHandler, IDesel
 
     public void ReduceItem(int amount = 1) // 아이템 수량감소
     {
-        int i = int.Parse(_countTxt.text);
-        i -= amount;
-        _countTxt.text = i.ToString();
+        if(int.TryParse(_countTxt.text, out int i))
+        {
+            i -= amount;
+            _countTxt.text = i.ToString();
+        }
     }
 
     void ISelectHandler.OnSelect(BaseEventData eventData)

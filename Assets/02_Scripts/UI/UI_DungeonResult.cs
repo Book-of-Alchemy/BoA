@@ -47,9 +47,11 @@ public class UI_DungeonResult : UIBase
                 _finalGold += item.itemData.price * item.Amount;
             }
         }
+        Inventory.Instance.IncreaseGold(_finalGold);
 
-        _goldTxt.text = $"{_currentGold}G";
+        _goldTxt.text = FormatGold(_currentGold);
 
+        
         _itemLoaded = true;
         _endGainGold = false;
     }
@@ -60,7 +62,7 @@ public class UI_DungeonResult : UIBase
 
         QuestProgress quest = QuestManager.Instance.GetAcceptedQuest();
         int artifactCnt = GameManager.Instance.PlayerTransform.equipArtifacts.Count;
-
+        
         //결과 이벤트 변경시 추가
         if (quest != null)
             sb.AppendLine(quest.IsClear ? $"{quest.Data.quest_name_kr} 클리어 " : $"{quest.Data.quest_name_kr} 실패");
@@ -83,9 +85,10 @@ public class UI_DungeonResult : UIBase
             //인벤토리에서 아이템제거
             _itemTxt.text = string.Empty;
             Inventory.Instance.ClearInventory();
-
-            if(_finalGold >0)
+            if (_finalGold > 0)
+            {
                 _goldCoroutine = StartCoroutine(AnimateGoldGain());
+            }
             else
                 _endGainGold = true;
         }
@@ -93,20 +96,25 @@ public class UI_DungeonResult : UIBase
 
     private IEnumerator AnimateGoldGain()
     {
+        _finalGold += _currentGold;
         //현재 골드를 아이템 가치 총 합산 골드로 증가시키는 애니메이션
         DOTween.To(() => _currentGold, x =>
         {
             _currentGold = x;
-            _goldTxt.text = $"{_currentGold}G";
+            _goldTxt.text = FormatGold(_currentGold);
         }, _finalGold, _goldIncreaseDuration).SetEase(Ease.OutCubic);
 
         yield return new WaitForSeconds(_goldIncreaseDuration);
 
-        _goldTxt.text = $"{_finalGold}G";
-        Inventory.Instance.IncreaseGold(_finalGold);
+        _goldTxt.text = FormatGold(_finalGold);
+        
         _endGainGold = true;
         _goldCoroutine = null;
         yield break;
+    }
+    private string FormatGold(int amount)
+    {
+        return $"{amount:N0}G";
     }
 
     public override void HideDirect()
