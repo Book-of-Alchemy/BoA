@@ -398,8 +398,7 @@ public class Inventory : Singleton<Inventory>
     {
         Debug.Log("DropAction");
         //현재 DropItem은 아이템 EffectType이 DamageType만 가능
-        BaseItem baseItem = ItemManager.Instance.CreateItem(item.itemData);
-        baseItem.DropItem(item.itemData,item.Amount);
+        ItemFactory.Instance.DropItem(item.itemData.id, GameManager.Instance.PlayerTransform.CurTile, item.Amount);
 
         RemoveItem(index, item.Amount);
         UIManager.Hide<UI_Action>();
