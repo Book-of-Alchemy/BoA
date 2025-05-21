@@ -44,10 +44,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7215d538fc6f6344bc950df1f7a84ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageItemPrefab: {fileID: 2681953792684955272, guid: fd65ad8c084950f499c26379bcb067f4, type: 3}
   rangeTilePrefab: {fileID: 4974690425692568545, guid: e4bd2a151d7e43a4eba7145b01357016, type: 3}
   itemRangeTilePrefab: {fileID: 4974690425692568545, guid: 8162ca2666b900d4b801b9274447fc26, type: 3}
+  bossRangeTilePrefab: {fileID: 4974690425692568545, guid: 8162ca2666b900d4b801b9274447fc26, type: 3}
   rangeTilePrefabs: []
   itemRangeTilePrefabs: []
   rangeTiles: {fileID: 0}
   itemRangeTiles: {fileID: 0}
+  bossRangeTiles: {fileID: 0}

@@ -22,6 +22,7 @@ public class EnemyFactory : Singleton<EnemyFactory>
 
     public EnemyStats SpawnEnemy(int ID, Tile tile)
     {
+        if (tile.CharacterStatsOnTile != null) return null;
         EnemyStats enemy = enemyPool.GetFromPool(ID, tile.gridPosition, tile.curLevel.transform);
         SetEnemyStat(GetCurEnemyLevel(tile.curLevel), enemy, enemyDataById[ID]);
         InitEnemy(enemy, tile);
@@ -45,7 +46,7 @@ public class EnemyFactory : Singleton<EnemyFactory>
             {
                 if (level.tiles.TryGetValue(pos, out Tile tile))
                 {
-                    if (tile.tileType == TileType.ground && !tile.IsOccupied)
+                    if (tile.tileType == TileType.ground && tile.CharacterStatsOnTile == null)
                     {
                         availableTiles.Add(tile);
                     }
@@ -166,10 +167,10 @@ public class EnemyFactory : Singleton<EnemyFactory>
 
     public void TrySpawnBoss(Level level,QuestData data)
     {
-        if(data.main_object_type != ObjectType.DefeatBoss || !level.isLastFloor) return;
+        //if(data.main_object_type != ObjectType.DefeatBoss || !level.isLastFloor) return;
 
-        int bossID = GetBossIDByQuestID(data.id);
-        if(bossID == -1) return;
+        int bossID = GetBossIDByQuestID(data.id); bossID = 230008;
+        if (bossID == -1) return;
         int spawnCount = 1;
         Leaf leaf = level.endLeaf;
 
@@ -179,7 +180,7 @@ public class EnemyFactory : Singleton<EnemyFactory>
         {
             if (level.tiles.TryGetValue(pos, out Tile tile))
             {
-                if (tile.tileType == TileType.ground && !tile.IsOccupied)
+                if (tile.tileType == TileType.ground && tile.CharacterStatsOnTile == null)
                 {
                     availableTiles.Add(tile);
                 }

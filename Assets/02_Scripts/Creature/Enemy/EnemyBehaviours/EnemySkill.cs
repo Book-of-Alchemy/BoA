@@ -14,6 +14,7 @@ public abstract class EnemySkill : MonoBehaviour
 {
     protected EnemyStats stats;
     protected AttackBaseBehaviour attackBaseBehaviour;
+    public virtual bool IsPreparing => false;
     protected virtual void Awake()
     {
         stats = GetComponent<EnemyStats>();

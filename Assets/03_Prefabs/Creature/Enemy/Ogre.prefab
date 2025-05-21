@@ -157,7 +157,7 @@ MonoBehaviour:
     tileType: 0
     environmentType: 0
     isDoorPoint: 0
-    isOccupied: 0
+    IsOccupied: 0
     trpaOnTile: {fileID: 0}
     mapObject: {fileID: 0}
     itemsOnTile: []

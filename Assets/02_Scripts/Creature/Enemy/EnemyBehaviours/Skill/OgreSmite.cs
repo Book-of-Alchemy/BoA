@@ -7,6 +7,7 @@ public class OgreSmite : EnemySkill, ICooltime
     List<Tile> neighbors => attackBaseBehaviour.adjacentiveTile;
     List<Tile> targetTiles = new List<Tile>();
     bool isPreparing = false;
+    public override bool IsPreparing => isPreparing;
     public int lefttime => Mathf.Max(0, availableTime - TurnManager.Instance.globalTime); // 남은 턴
     public int coolTime { get; set; } // 쿨타임 시간
     public int availableTime { get; set; }
@@ -22,7 +23,7 @@ public class OgreSmite : EnemySkill, ICooltime
         int currentTime = TurnManager.Instance.globalTime;
 
         // 발동
-        if (isPreparing)
+        if (IsPreparing)
         {
             availableTime = currentTime + coolTime;
             isPreparing = false;
@@ -31,7 +32,7 @@ public class OgreSmite : EnemySkill, ICooltime
         }
 
         // 준비 시작
-        if (!isPreparing && currentTime >= availableTime)
+        if (!IsPreparing && currentTime >= availableTime)
         {
             foreach (Tile tile in neighbors)
             {

@@ -111,7 +111,7 @@ public class LevelGenerator : MonoBehaviour
 
         level.seletedLeaves = seletedLeaves;
         level.startLeaf = startLeaf;
-
+        level.endLeaf = endLeaf;
         return level;
     }
 

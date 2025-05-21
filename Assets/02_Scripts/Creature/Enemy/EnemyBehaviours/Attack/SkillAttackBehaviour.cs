@@ -43,6 +43,35 @@ public class SkillAttackBehaviour : AttackBaseBehaviour
 
         controller.Attack(); // 스킬 준비도 못 했으면 일반 공격
     }
+
+    public override bool StateCheck()
+    {
+        foreach (Tile tile in attackRangeTile)
+        {
+            if (tile.CharacterStatsOnTile is PlayerStats player)
+            {
+                if (player.IsHidden)
+                    continue;
+
+                if (TileUtility.IsTileVisible(level, CurTile, tile))
+                {
+                    playetStats = player;
+                    return true;
+                }
+
+                break;
+            }
+        }
+
+        if ((skill_0 != null && skill_0.IsPreparing) || (skill_1 != null && skill_1.IsPreparing))
+        {
+            return true; 
+        }
+
+        playetStats = null;
+        controller.ChangeState(EnemyState.Chase);
+        return false;
+    }
     //public override void Action()
     //{
     //    if (skill_0 != null)
