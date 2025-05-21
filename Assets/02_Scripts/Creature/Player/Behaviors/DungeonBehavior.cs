@@ -677,8 +677,8 @@ public class DungeonBehavior : PlayerBaseBehavior
             _mousePathCoroutine = null;
         }
 
-        TurnManager.Instance.turnSpeed = _savedMouseTurnSpeed;
-        Time.timeScale = _savedMouseTimeScale;
+        //TurnManager.Instance.turnSpeed = _savedMouseTurnSpeed;
+        //Time.timeScale = _savedMouseTimeScale;
         // 이동 플래그 초기화
         _isMoving = false;
     }
