@@ -7,12 +7,30 @@ public class UIManager : Singleton<UIManager>
 
     [Tooltip("한번 출력되는 UI의 생명기간")]
     [SerializeField] static private float _fadeOutDuration = 1.4f;
-    
+
     private void Start()
     {
 
     }
+    private static void EnsureParents()
+    {
+        if (Instance.parents == null || Instance.parents.Count == 0 || Instance.parents.Exists(p => p == null))
+        {
+            var canvas = GameObject.Find("Canvas");
+            if (canvas == null)
+            {
+                Debug.LogError("Canvas를 찾을 수 없습니다.");
+                return;
+            }
 
+            Instance.parents = new List<Transform>
+            { 
+            canvas.transform.Find("UI"),
+            canvas.transform.Find("Popup"),
+            canvas.transform.Find("Top")
+            };
+        }
+    }
     public static void SetParents(List<Transform> parents)
     {
         Instance.parents = parents;
@@ -21,6 +39,7 @@ public class UIManager : Singleton<UIManager>
 
     public static T Show<T>(params object[] param) where T : UIBase
     {
+        EnsureParents();
         var ui = Instance.uiList.Find(obj => obj.name == typeof(T).ToString());
 
         if (IsOpened<T>()) // 이미 열려있는데 Show를 호출시 UI를 숨기고 리턴
@@ -58,6 +77,7 @@ public class UIManager : Singleton<UIManager>
     //현재 UI의 생명시간은 Manager에서 관리
     public static void ShowOnce<T>(params object[] param) where T : UIBase
     {
+        EnsureParents();
         var prefab = UIResourceManager.Instance.LoadUIToKey<T>("UI/" + typeof(T).ToString());
         if (prefab == null)
         {
