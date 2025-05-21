@@ -2035,7 +2035,7 @@ GameObject:
   - component: {fileID: 5704630264599271335}
   - component: {fileID: 3237816530269868081}
   m_Layer: 3
-  m_Name: GoblinArcher
+  m_Name: Ogre
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2303,7 +2303,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 100
-  m_Sprite: {fileID: 4723107735738678597, guid: 20c9fc2e2cbf6da498e588d2bb9276a0, type: 3}
+  m_Sprite: {fileID: 4723107735738678597, guid: 93e74c452c9e8eb469cf2b90dc8aac60, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -2365,7 +2365,7 @@ Animator:
   m_GameObject: {fileID: 1149109454306540430}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 22100000, guid: 47db2aec26c5a374b91f5d06859256fd, type: 2}
+  m_Controller: {fileID: 22100000, guid: 26e9d55f2ea44b14aaf1f4d92d567459, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

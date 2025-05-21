@@ -5,7 +5,7 @@ using UnityEngine;
 public class OgreSmite : EnemySkill, ICooltime
 {
     List<Tile> neighbors => attackBaseBehaviour.adjacentiveTile;
-    bool isReady = false;
+    bool isPreparing = false;
     public int lefttime => Mathf.Max(0, availableTime - TurnManager.Instance.globalTime); // 남은 턴
     public int coolTime { get; set; } // 쿨타임 시간
     public int availableTime { get; set; }
@@ -16,32 +16,40 @@ public class OgreSmite : EnemySkill, ICooltime
         coolTime = 80;
         availableTime = 0;
     }
-    public override bool CanUse()//캔유즈 실행후 enemy 애니메이션 실행 예정
+    public override SkillUseState CanUse()//캔유즈 실행후 enemy 애니메이션 실행 예정
     {
-        if (isReady)
+        int currentTime = TurnManager.Instance.globalTime;
+
+        // 발동
+        if (isPreparing )
         {
-            availableTime = TurnManager.Instance.globalTime + coolTime;
-            return true;
+            availableTime = currentTime + coolTime;
+            isPreparing = false;
+            return SkillUseState.ReadyToCast;
         }
 
-
-        foreach (Tile tile in neighbors)
+        // 준비 시작
+        if (!isPreparing && currentTime >= availableTime)
         {
-            if (tile.CharacterStatsOnTile is PlayerStats player)
+            foreach (Tile tile in neighbors)
             {
-                if (player.IsHidden)
-                    continue;
+                if (tile.CharacterStatsOnTile is PlayerStats player && !player.IsHidden)
+                {
+                    isPreparing = true;
+                    
 
-                //여기서 준비를 보여줘야함
-                isReady = true;
+                    // 시각 경고
+                    return SkillUseState.Preparing;
+                }
             }
         }
 
-        return false;
+        // 사용할 수 없음
+        return SkillUseState.CannotUse;
     }
     public override void Use() //스킬 애니메이션 중간에 실행 예정
     {
-
+        DealDamage();
     }
 
     /// <summary>
@@ -51,6 +59,6 @@ public class OgreSmite : EnemySkill, ICooltime
     /// </summary>
     public override void DealDamage()
     {
-
+        
     }
 }
