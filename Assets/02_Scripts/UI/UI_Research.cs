@@ -6,24 +6,22 @@ public class ResearchStat
 {
     public StatType statType;
     public int level; // 강화 횟수
+    public StatModifier modifier;
 }
 
 public class UI_Research : UIBase
 {
+    //연구 UI 패널 리스트
     [SerializeField] private List<ResearchPanel> _researchSlots;
     [SerializeField] private TextMeshProUGUI _goldText;
 
+    // 강화 데이터 저장
     private Dictionary<StatType, ResearchStat> _researchStats = new();
 
     public override void Opened(params object[] param)
     {
-        if (DataManager.Instance.GetPlayerData().ResearchProgress.Count == 0)
-        {
-            //테스트용 후에 삭제
-            DataManager.Instance.LoadData();
-        }
+        LoadResearchData();
 
-        LoadResearchProgress();
         foreach (var slot in _researchSlots)
         {
             var statType = slot.GetStatType();
@@ -39,10 +37,7 @@ public class UI_Research : UIBase
 
     public override void HideDirect()
     {
-        //닫히기전 데이터 저장
-        SaveResearchProgress();
         Inventory.Instance.OnGoldChanged -= UpdateGoldUI;
-        
         UIManager.Hide<UI_Research>();
     }
 
@@ -63,8 +58,9 @@ public class UI_Research : UIBase
         stat.level++;
         slot.UpdateUI();
         UpdateGoldUI(Inventory.Instance.Gold);
-        //실제 스탯 올려주어야함. 
-        
+
+        var player = GameManager.Instance.PlayerTransform.GetComponent<PlayerStats>();
+        ResearchSystem.Instance.UpdateStat(type, stat.level, player);
     }
 
     private void UpdateGoldUI(int amount)
@@ -72,7 +68,7 @@ public class UI_Research : UIBase
         _goldText.text = $"{amount :NO}";
     }
 
-    private void LoadResearchProgress()
+    private void LoadResearchData()
     {
         var savedList = DataManager.Instance.GetPlayerData().ResearchProgress;
         foreach (var saved in savedList)
@@ -83,21 +79,5 @@ public class UI_Research : UIBase
                 level = saved.level
             };
         }
-    }
-
-    private void SaveResearchProgress()
-    {
-        var saveList = new List<ResearchStat>();
-        foreach (var element in _researchStats)
-        {
-            saveList.Add(new ResearchStat
-            {
-                statType = element.Key,
-                level = element.Value.level
-            });
-        }
-
-        DataManager.Instance.GetPlayerData().ResearchProgress = saveList;
-        DataManager.Instance.SaveData();
     }
 }

@@ -1006,6 +1006,50 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d3168c0dca9b03542b68ec394282d218, type: 3}
+--- !u!1 &1489184912
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1489184913}
+  - component: {fileID: 1489184914}
+  m_Layer: 0
+  m_Name: ResearchSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1489184913
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1489184912}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3.6057067, y: -1.3871684, z: -3.5716853}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1489184914
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1489184912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d07f6852fbbb6a145b37d23ea3ead311, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1551207454
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1026,6 +1070,10 @@ PrefabInstance:
       propertyPath: facilityDataBase
       value: 
       objectReference: {fileID: 11400000, guid: fd9dec103ed1ddf429fa7b2193380602, type: 2}
+    - target: {fileID: 3107400911350595328, guid: 2e3d548e3203bc64c897c17cd763b7e9, type: 3}
+      propertyPath: researchDataBase
+      value: 
+      objectReference: {fileID: 11400000, guid: 2c29d62853e2ecf43bde07d3c2fc8864, type: 2}
     - target: {fileID: 3107400911350595328, guid: 2e3d548e3203bc64c897c17cd763b7e9, type: 3}
       propertyPath: StatusEffectDataBase
       value: 
@@ -1384,3 +1432,4 @@ SceneRoots:
   - {fileID: 1837043087}
   - {fileID: 641113208}
   - {fileID: 1003650866}
+  - {fileID: 1489184913}
