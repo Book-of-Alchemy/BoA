@@ -17,7 +17,7 @@ public class TileManger : Singleton<TileManger>
     public GameObject environmentalPrefab;
     public static event Action<int> OnGetDown;
     PlayerStats player => GameManager.Instance.PlayerTransform;
-
+    QuestProgress quest = null;
     protected override void Awake()
     {
         base.Awake();
@@ -40,7 +40,7 @@ public class TileManger : Singleton<TileManger>
     {
         if (sceneType != SceneType.Dungeon) return;
         curLevelIndex = 0;
-        QuestProgress quest = null;
+        quest = null;
         if (QuestManager.Instance.AcceptedQuest == null)// 향후 수정 임시코드
         {
             quest = new QuestProgress(SODataManager.Instance.questDataBase.questData[0]);
@@ -117,6 +117,7 @@ public class TileManger : Singleton<TileManger>
     public void SpawnEnemy(Level level)
     {
         EnemyFactory.Instance.EnemySpawnAtStart(level);
+        EnemyFactory.Instance.TrySpawnBoss(level, quest.Data);
     }
 
     public void SpawnItem(Level level)
@@ -125,7 +126,7 @@ public class TileManger : Singleton<TileManger>
     }
     public void CompleteQuest()
     {
-
+        
     }
 
     public void FailQuest()
