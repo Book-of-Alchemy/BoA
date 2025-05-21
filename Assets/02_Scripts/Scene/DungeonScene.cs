@@ -9,6 +9,7 @@ public class DungeonScene : SceneBase
 
     public override void OnEnter()
     {
+        var sodataManager = SODataManager.Instance;
         UIManager.Show<UI_HUD>();
     }
 
