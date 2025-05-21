@@ -130,8 +130,8 @@ public class QuestManager : Singleton<QuestManager>
             }
 
             // DataManager에 퀘스트 수락 정보 저장
-            DataManager.Instance.AcceptQuest(quest.id);
-            Debug.Log($"퀘스트 '{quest.quest_name_kr}' (ID: {quest.id})를 수락하고 DataManager에 저장했습니다.");
+            this.AcceptQuest(quest.id);
+            Debug.Log($"퀘스트 '{quest.quest_name_kr}' (ID: {quest.id})를 수락하고 저장했습니다.");
         }
     }
 
@@ -154,8 +154,8 @@ public class QuestManager : Singleton<QuestManager>
         _clearedQuests.Add(AcceptedQuest.Data);
         
         // DataManager에 퀘스트 완료 정보 저장
-        DataManager.Instance.CompleteQuest(AcceptedQuest.Data.id);
-        Debug.Log($"퀘스트 '{AcceptedQuest.Data.quest_name_kr}' (ID: {AcceptedQuest.Data.id})를 완료하고 DataManager에 저장했습니다.");
+        this.CompleteQuest(AcceptedQuest.Data.id);
+        Debug.Log($"퀘스트 '{AcceptedQuest.Data.quest_name_kr}' (ID: {AcceptedQuest.Data.id})를 완료하고 저장했습니다.");
         
         AcceptedQuest = null;
         OnQuestAccepted = null;
@@ -173,6 +173,35 @@ public class QuestManager : Singleton<QuestManager>
         }
 
         return clearedIds;
+    }
+
+    // DataManager에서 가져온 퀘스트 관련 메서드
+    public void AcceptQuest(int questId)
+    {
+        // PlayerData에 퀘스트 ID 저장
+        if (DataManager.Instance != null)
+        {
+            if (!DataManager.Instance.GetPlayerData().AcceptedQuests.Contains(questId) && 
+                !DataManager.Instance.GetPlayerData().ClearedQuests.Contains(questId))
+            {
+                DataManager.Instance.GetPlayerData().AcceptedQuests.Add(questId);
+                DataManager.Instance.SaveData();
+            }
+        }
+    }
+
+    public void CompleteQuest(int questId)
+    {
+        // PlayerData에서 수락한 퀘스트 목록에서 제거하고 완료한 퀘스트 목록에 추가
+        if (DataManager.Instance != null)
+        {
+            if (DataManager.Instance.GetPlayerData().AcceptedQuests.Contains(questId))
+            {
+                DataManager.Instance.GetPlayerData().AcceptedQuests.Remove(questId);
+                DataManager.Instance.GetPlayerData().ClearedQuests.Add(questId);
+                DataManager.Instance.SaveData();
+            }
+        }
     }
 
     public void CheckBoss(int ID)
