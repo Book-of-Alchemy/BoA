@@ -103,5 +103,14 @@ private List<Tile> rangeTiles = new List<Tile>();
     }
     public override void CancelUse()
     {
+        InputManager.Instance.OnMouseMove -= CheckEffectRange;
+        InputManager.Instance.OnMouseClick -= OnClick;
+
+        // 화면에 표시된 사거리 지우기
+        ItemManager.Instance.DestroyRange();
+        ItemManager.Instance.DestroyItemRange();
+
+        // 이 게임 오브젝트 파괴
+        Destroy(this.gameObject);
     }
 }

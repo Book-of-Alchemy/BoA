@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>
 {
@@ -38,7 +39,18 @@ public class GameManager : Singleton<GameManager>
     {
         PlayerTransform = player;
     }
+    void OnSceneLoaded()
+    {
+        var canvas = GameObject.Find("Canvas");
+        var parents = new List<Transform>
+        {
+            canvas.transform.Find("UI"),
+            canvas.transform.Find("Popup"),
+            canvas.transform.Find("Top")
+        };
 
+        UIManager.SetParents(parents);
+    }
     //public void RegisterEnemy(EnemyStats enemy)
     //{
     //    if (!Enemies.Contains(enemy))

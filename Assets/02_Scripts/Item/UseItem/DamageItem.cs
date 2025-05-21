@@ -122,18 +122,18 @@ public class DamageItem : BaseItem
         {
             if (data.effect_range == 1)
             {
-                tiles = TileUtility.GetAdjacentTileList(_player.curLevel, targetTile, true);
+                tiles = TileUtility.GetNineVisibleTileList(_player.curLevel, targetTile, false);
             }
             else if (data.effect_range >= 2)
             {
-                tiles = TileUtility.GetItemRangedTile(_player.curLevel, targetTile, data.effect_range, true);
+                tiles = TileUtility.GetItemRangedTile(_player.curLevel, targetTile, data.effect_range, false);
             }
         }
         else if (data.target_range > 0)
         {
             if (data.effect_range == 1)
             {
-                tiles = TileUtility.GetNineTileList(_player.curLevel, targetTile);
+                tiles = TileUtility.GetNineVisibleTileList(_player.curLevel, targetTile,true);
             }
             else
             {
@@ -150,8 +150,12 @@ public class DamageItem : BaseItem
 
         foreach (Tile ojTile in tiles)
         {
-            if (data.attribute == Attribute.Fire)
-                EffectProjectileManager.Instance.PlayEffect(ojTile.gridPosition, 30010);
+            switch (data.attribute)
+            {
+                case Attribute.Fire:
+                    EffectProjectileManager.Instance.PlayEffect(ojTile.gridPosition, 30010);
+                    break;
+            }
             if (ojTile.CharacterStatsOnTile != null)
             {
                 if(data.attribute == Attribute.None)
@@ -163,10 +167,13 @@ public class DamageItem : BaseItem
                         damageValue = data.effect_value + data.effect_value;
                         _player.ChangeMana(-data.mp_cost);
                     }
-                }   
-                ojTile.CharacterStatsOnTile.TakeDamage(new DamageInfo(damageValue, (DamageType)data.attribute,_player,ojTile.CharacterStatsOnTile,false));
+                }
+                ojTile.CharacterStatsOnTile.TakeDamage(new DamageInfo(damageValue, (DamageType)data.attribute, _player, ojTile.CharacterStatsOnTile, false, data.tags, data.effect_id));
             }
         }
+
+        TileRuleProccessor.ProcessTileReactions(new DamageInfo(damageValue, (DamageType)data.attribute, _player, null, false, data.tags, data.effect_id), tiles);
+
         Debug.Log(data.name_en);
         if (monsterCount >= 3 && data.tags.Contains(Tag.Scroll) && _player.isPrecisionAim)
         {

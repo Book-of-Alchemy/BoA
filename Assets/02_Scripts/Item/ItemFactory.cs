@@ -128,6 +128,7 @@ public class ItemFactory : Singleton<ItemFactory>
             Effect_Type.Place_Trap => go.AddComponent<TrapItem>() as BaseItem,
             Effect_Type.Buff => go.AddComponent<BuffItem>() as BaseItem,
             Effect_Type.Debuff => go.AddComponent<DeBuffItem>() as BaseItem,
+            Effect_Type.Place_Environment_Tile => go.AddComponent<EnvironmentItem>() as BaseItem,
             _ => go.AddComponent<MaterialItem>()
         };
         item.DropItem(data, quantity, targetTile);
@@ -152,6 +153,7 @@ public class ItemFactory : Singleton<ItemFactory>
             Effect_Type.Place_Trap => go.AddComponent<TrapItem>() as BaseItem,
             Effect_Type.Buff => go.AddComponent<BuffItem>() as BaseItem,
             Effect_Type.Debuff => go.AddComponent<DeBuffItem>() as BaseItem,
+            Effect_Type.Place_Environment_Tile => go.AddComponent<EnvironmentItem>() as BaseItem,
             _ => go.AddComponent<MaterialItem>()
         };
         item.DropItem(data, quantity, targetTile);
@@ -177,6 +179,7 @@ public class ItemFactory : Singleton<ItemFactory>
             Effect_Type.Place_Trap => go.AddComponent<TrapItem>() as BaseItem,
             Effect_Type.Buff => go.AddComponent<BuffItem>() as BaseItem,
             Effect_Type.Debuff => go.AddComponent<DeBuffItem>() as BaseItem,
+            Effect_Type.Place_Environment_Tile => go.AddComponent<EnvironmentItem>() as BaseItem,
             _ => go.AddComponent<MaterialItem>()
         };
         go.GetComponent<SpriteRenderer>().sortingOrder = -8000;

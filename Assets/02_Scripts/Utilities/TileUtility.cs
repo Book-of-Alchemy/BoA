@@ -109,6 +109,28 @@ public static class TileUtility
         return checkList;
     }
 
+    public static List<Tile> GetNineVisibleTileList(Level level, Tile tile, bool isIncludeSelf = false)
+    {
+        if (level == null || tile == null) return null;
+        List<Tile> visibleTiles = new List<Tile>();
+        List<Tile> checkList = new List<Tile>();
+        for (int i = 0; i < Enum.GetValues(typeof(EightDir)).Length; i++)
+        {
+            checkList.Add(GetAdjacentTile(level, tile, (EightDir)i));
+        }
+        if(isIncludeSelf)
+            checkList.Add(tile);
+
+        foreach (var t in checkList)
+        {
+            if (IsPathClear(level, tile, t))
+            {
+                visibleTiles.Add(t);
+            }
+        }
+        return visibleTiles;
+    }
+
     /// <summary>
     /// range반경의 타일리스트를 반환한다 indludeself true 시 자기자신까지 반환 ex_ 아이템 사용 범위 리스트 받을시 제외
     /// </summary>
