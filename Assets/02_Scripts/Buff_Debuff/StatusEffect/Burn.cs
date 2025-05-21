@@ -36,7 +36,7 @@ public class Burn : Debuff
 
     protected void TryCleanse(DamageInfo damageInfo)
     {
-        if (damageInfo.damageType == DamageType.Water || damageInfo.damageType == DamageType.Ice)
+        if (damageInfo.damageType == DamageType.Water || damageInfo.damageType == DamageType.Cold)
         {
             Cleanse();
         }

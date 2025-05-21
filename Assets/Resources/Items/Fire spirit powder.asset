@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9e179a6d497c3984fb6aa4845759d7a0, type: 3}
-  m_Name: Fire spirit powder
+  m_Name: Fire Spirit Powder
   m_EditorClassIdentifier: 
   id: 201007
-  name_en: Fire spirit powder
+  name_en: Fire Spirit Powder
   name_kr: "\uD654\uC5FC \uC815\uB839\uC758 \uAC00\uB8E8"
   item_type: 1
   attribute: 9

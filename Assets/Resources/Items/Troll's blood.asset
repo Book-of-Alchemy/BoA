@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e179a6d497c3984fb6aa4845759d7a0, type: 3}
   m_Name: Troll's Blood
   m_EditorClassIdentifier: 
-  id: 201018
+  id: 201918
   name_en: Troll's Blood
   name_kr: "\uD2B8\uB864\uC758 \uD53C"
   item_type: 2
@@ -28,7 +28,7 @@ MonoBehaviour:
   effect_strength: -1
   mp_cost: -1
   max_stack: 9999
-  price: -1
+  price: 50
   tier: 1
   iteminfo_kr: "\uC232 \uD2B8\uB864\uC758 \uD53C"
   icon_sprite: Image/Item/Troll's Blood
