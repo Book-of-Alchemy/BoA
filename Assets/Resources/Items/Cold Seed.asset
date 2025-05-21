@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e179a6d497c3984fb6aa4845759d7a0, type: 3}
+  m_Name: Cold Seed
+  m_EditorClassIdentifier: 
+  id: 201027
+  name_en: Cold Seed
+  name_kr: "\uCC28\uAC00\uC6B4 \uC528\uC557"
+  item_type: 1
+  attribute: 9
+  target_range: -1
+  effect_range: -1
+  effect_type: 6
+  tag: 
+  tags: 15000000
+  effect_value: -1
+  effect_id: -1
+  effect_duration: -1
+  effect_strength: -1
+  mp_cost: -1
+  max_stack: 9999
+  price: 25
+  tier: 1
+  iteminfo_kr: "\uB0C9\uAE30 \uAE30\uBCF8 \uC7AC\uB8CC"
+  icon_sprite: 
+  sprite: {fileID: 0}
+  itemRangeSprite: {fileID: 0}
+  itemEffectRangeSprite: {fileID: 0}
+  itemPrefab: {fileID: 0}

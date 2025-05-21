@@ -28,7 +28,7 @@ MonoBehaviour:
   effect_strength: 50
   mp_cost: -1
   max_stack: 99
-  price: -1
+  price: 26
   tier: 1
   iteminfo_kr: "\uD130\uC9C0\uBA74 \uAC70\uBBF8\uC904\uC744 \uC8FC\uBCC0\uC5D0 \uD769\uBFCC\uB9AC\uB294
     \uD3ED\uD0C4\uC744 \uB358\uC9D1\uB2C8\uB2E4."

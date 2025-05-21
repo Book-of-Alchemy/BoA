@@ -18,13 +18,14 @@ public enum Attribute
     Non_elemental,
     Fire,
     Water,
-    Ice,
+    Cold,
     Wind,
     Lightning,
     Earth,
     Light,
     Dark,
     None,
+    Oil,
 }
 
 [JsonConverter(typeof(StringEnumConverter))]
@@ -37,6 +38,7 @@ public enum Effect_Type
     Move,
     Place_Trap,
     None,
+    Place_Environment_Tile
 }
 
 [JsonConverter(typeof(StringEnumConverter))]
@@ -49,7 +51,7 @@ public enum Tag
     Non_elemental,
     Fire,
     Water,
-    Ice,
+    Cold,
     Wind,
     Lightning,
     Earth,
@@ -75,6 +77,7 @@ public enum Tag
     Special,
     HP,
     MP,
+    place_environment_tile,
 }
 
 [CreateAssetMenu(fileName = "New Item", menuName = "Item")]

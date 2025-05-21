@@ -8,7 +8,7 @@ public enum DamageType
     None,
     Fire,
     Water,
-    Ice,
+    Cold,
     Lightning,
     Earth,
     Wind,
@@ -56,7 +56,7 @@ public static class DamageCalculator
         {
             DamageType.Fire => target.FireResist,
             DamageType.Water => target.WaterResist,
-            DamageType.Ice => target.IceResist,
+            DamageType.Cold => target.IceResist,
             DamageType.Lightning => target.LightningResist,
             DamageType.Earth => target.EarthResist,
             DamageType.Wind => target.WindResist,
@@ -93,7 +93,7 @@ public static class DamageCalculator
             {
                 DamageType.Fire => source.FireDmg,
                 DamageType.Water => source.WaterDmg,
-                DamageType.Ice => source.IceDmg,
+                DamageType.Cold => source.IceDmg,
                 DamageType.Lightning => source.LightningDmg,
                 DamageType.Earth => source.EarthDmg,
                 DamageType.Wind => source.WindDmg,
@@ -132,7 +132,7 @@ public static class DamageCalculator
         {
             DamageType.Fire => target.FireResist,
             DamageType.Water => target.WaterResist,
-            DamageType.Ice => target.IceResist,
+            DamageType.Cold => target.IceResist,
             DamageType.Lightning => target.LightningResist,
             DamageType.Earth => target.EarthResist,
             DamageType.Wind => target.WindResist,
