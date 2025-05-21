@@ -56,6 +56,7 @@ public class UI_Inventory : UIBase
     private Dictionary<EInventoryType, Item_Type[]> _typeFilter= new() //인벤토리 타입에 따른 Item필터타입
     {
         { EInventoryType.Craft, new[] { Item_Type.Material, } },
+        { EInventoryType.Equipment, new[] { Item_Type.Special, } },
     };
     public bool IsOpened { get; private set; }
 
@@ -132,6 +133,20 @@ public class UI_Inventory : UIBase
         else
         {
             Debug.Log("Add Param EInventoryType");
+        }
+    }
+
+    public void CheckHighlight(List<int> ids)
+    {
+
+        for (int i = 0; i < _slotUIList.Count; i++)
+        {
+            if (!_slotUIList[i].HasData) continue;
+
+            if (ids.Contains(_slotUIList[i].Data.GetItemId()))
+            {
+                _slotUIList[i].SetHighlight(true);
+            }
         }
     }
 
@@ -225,6 +240,10 @@ public class UI_Inventory : UIBase
         else //기본 인벤토리는 필터링 없기때문에 
             _inventory.RestoreBeforeFilter();
 
+        foreach (var item in types)
+        {
+            Debug.Log(item);
+        }
         _isFirstTypeSet = false;
     }
 

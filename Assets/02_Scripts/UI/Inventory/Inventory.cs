@@ -6,7 +6,7 @@ using UnityEngine;
 public class Inventory : Singleton<Inventory>
 {
     //인스펙터창에서 초기화 시키도록 변경예정
-    private int _capacity = 30; 
+    private int _capacity = 28; 
 
     [SerializeField] private UI_Inventory _uiInventory; // 아래 배열을 UI 상에 보여주는 UI 인벤토리
     [SerializeField] private Alchemy _alchemy; // Inspector로 넣ㅇ는중
@@ -109,6 +109,7 @@ public class Inventory : Singleton<Inventory>
         {
             //빈 슬롯을 못찾았다.
             //가방이 다참.
+            Debug.Log("가방이 다참");
             return null;
         }
     }
@@ -414,21 +415,9 @@ public class Inventory : Singleton<Inventory>
         }
 
         //현재 _craftList에 올라간 craftItemIds 기준으로 제작 가능한 ID 리턴
-        List<int> requiredItemIds = _alchemy.GetCraftableIds(craftItemIds);
+        _highlightItemIds = _alchemy.GetCraftableIds(craftItemIds);
 
-        _highlightItemIds = requiredItemIds;
-
-        for (int i = 0; i < items.Length; i++)
-        {
-            if (items[i] == null)
-                continue;
-
-            //인벤토리에서 강조할 아이템 대조 검사
-            if (requiredItemIds.Contains(items[i].GetItemId()))
-            {
-                _uiInventory.HighlightSlot(i);
-            }
-        }
+        _uiInventory.CheckHighlight(_highlightItemIds);
     }
 
     public void ClearAllHighlights()
