@@ -132,7 +132,7 @@ public class DungeonBehavior : PlayerBaseBehavior
         InputManager.OnCtrlEnd -= HandleCtrlEnd;
         InputManager.OnInteract -= HandleInteract;
         InputManager.OnRest -= HandleRest;
-
+        InputManager.Instance.OnMenu -= HandleMenu;
         InputManager.OnMouseMove -= HandleMouseMove;
         InputManager.OnMouseClick -= HandleMouseClick;
     }
