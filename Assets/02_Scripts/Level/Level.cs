@@ -37,6 +37,7 @@ public class Level : MonoBehaviour
     public List<Leaf> seletedLeaves;
     public Leaf startLeaf;
     public Leaf endLeaf;
+    public bool isLastFloor = false;
     public bool isPainted = false;
 
 }

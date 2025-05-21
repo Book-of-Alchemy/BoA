@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class EnemyFactory : Singleton<EnemyFactory>
@@ -18,6 +19,15 @@ public class EnemyFactory : Singleton<EnemyFactory>
         enemyDataById = SODataManager.Instance.enemyDataBase.enemyDataById;
         enemyDataByBiome = SODataManager.Instance.enemyDataBase.enemyDataByBiome;
     }
+
+    public EnemyStats SpawnEnemy(int ID, Tile tile)
+    {
+        EnemyStats enemy = enemyPool.GetFromPool(ID, tile.gridPosition, tile.curLevel.transform);
+        SetEnemyStat(GetCurEnemyLevel(tile.curLevel), enemy, enemyDataById[ID]);
+        InitEnemy(enemy, tile);
+        return enemy;
+    }
+
     public void EnemySpawnAtStart(Level level)
     {
         List<Leaf> leavesWithoutStart = new List<Leaf>(level.seletedLeaves);
@@ -35,7 +45,7 @@ public class EnemyFactory : Singleton<EnemyFactory>
             {
                 if (level.tiles.TryGetValue(pos, out Tile tile))
                 {
-                    if (tile.tileType == TileType.ground && !tile.isOccupied)
+                    if (tile.tileType == TileType.ground && !tile.IsOccupied)
                     {
                         availableTiles.Add(tile);
                     }
@@ -55,6 +65,8 @@ public class EnemyFactory : Singleton<EnemyFactory>
             }
         }
     }
+
+
 
     int GetRandomEnemyQuntity()
     {
@@ -84,6 +96,7 @@ public class EnemyFactory : Singleton<EnemyFactory>
         int curEnemyLevel = GetCurEnemyLevel(level);
         enemyDatas.RemoveAll(enemy => curEnemyLevel > enemy.max_level);
         enemyDatas.RemoveAll(enemy => curEnemyLevel < enemy.min_level);
+        enemyDatas.RemoveAll(enemy => enemy.isBoss);
 
         return enemyDatas;
     }
@@ -151,5 +164,46 @@ public class EnemyFactory : Singleton<EnemyFactory>
         TurnManager.Instance.AddUnit(enemy.unitBase);
     }
 
+    public void TrySpawnBoss(Level level,QuestData data)
+    {
+        if(data.main_object_type != ObjectType.DefeatBoss || !level.isLastFloor) return;
 
+        int bossID = GetBossIDByQuestID(data.id);
+        if(bossID == -1) return;
+        int spawnCount = 1;
+        Leaf leaf = level.endLeaf;
+
+        List<Tile> availableTiles = new List<Tile>();
+
+        foreach (var pos in TileUtility.GetPositionsInRect(leaf.rect))
+        {
+            if (level.tiles.TryGetValue(pos, out Tile tile))
+            {
+                if (tile.tileType == TileType.ground && !tile.IsOccupied)
+                {
+                    availableTiles.Add(tile);
+                }
+            }
+        }
+
+        for (int i = 0; i < spawnCount && availableTiles.Count > 0; i++)
+        {
+            Tile targetTile = availableTiles[UnityEngine.Random.Range(0, availableTiles.Count)];
+            availableTiles.Remove(targetTile);
+
+            EnemyStats enemy = enemyPool.GetFromPool(bossID, targetTile.gridPosition, level.transform);
+
+            SetEnemyStat(GetCurEnemyLevel(level), enemy, enemyDataById[bossID]);
+            InitEnemy(enemy, targetTile);
+        }
+    }
+
+    public int GetBossIDByQuestID(int QuestID)
+    {
+        return QuestID switch
+        {
+            110004 => 230008,
+            _ => -1
+        };
+    }
 }

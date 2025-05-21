@@ -36,6 +36,8 @@ public class LevelGenerator : MonoBehaviour
             SetLevelGenerator(biomeSet, 8, 40, 40);
             Level level = GenerateLevel(7, questData);
             level.curDepth = i;
+            if(i == floorCount -1)
+                level.isLastFloor = true;
             levels.Add(level);
         }
         return levels;
@@ -429,7 +431,7 @@ public class LevelGenerator : MonoBehaviour
                     tileType = info.tileType,
                     environmentType = info.environmentType,
                     isDoorPoint = info.isDoorPoint,
-                    isOccupied = (info.tileType == TileType.wall ? true : false),
+                    
                     IsExplored = false,
                     IsOnSight = false
                 };
@@ -458,7 +460,7 @@ public class LevelGenerator : MonoBehaviour
                         tileType = TileType.empty,
                         environmentType = EnvironmentType.none,
                         isDoorPoint = false,
-                        isOccupied = false,
+                        
                         IsExplored = false,
                         IsOnSight = false
                     };
@@ -490,7 +492,7 @@ public class LevelGenerator : MonoBehaviour
 
         foreach (var kvp in tiles)
         {
-            if (!kvp.Value.isOccupied)
+            if (!kvp.Value.IsOccupied)
                 candidates.Add(kvp.Value);
         }
 
@@ -572,7 +574,7 @@ public class LevelGenerator : MonoBehaviour
         if (tile == null) return;
 
         tile.tileType = TileType.ground;
-        tile.isOccupied = false;
+        
     }
 
     Tile FindClosestDoorPoint(Leaf leaf, Vector2Int target)
@@ -673,7 +675,7 @@ public class LevelGenerator : MonoBehaviour
             tileType = TileType.wall,
             environmentType = EnvironmentType.none,
             isDoorPoint = false,
-            isOccupied = false,
+            
             IsExplored = false,
             IsOnSight = false
         };

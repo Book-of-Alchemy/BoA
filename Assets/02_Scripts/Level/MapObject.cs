@@ -6,7 +6,7 @@ public abstract class MapObject : MonoBehaviour
 {
     public MapObjectData data;
     protected SpriteRenderer[] spriteRenderers;
-
+    public virtual bool IsOccuPying => false;
     protected Tile curTile;
     public Tile CurTile
     {

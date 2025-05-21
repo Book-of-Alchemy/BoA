@@ -5,6 +5,7 @@ using UnityEngine;
 public class OgreSmite : EnemySkill, ICooltime
 {
     List<Tile> neighbors => attackBaseBehaviour.adjacentiveTile;
+    List<Tile> targetTiles = new List<Tile>();
     bool isPreparing = false;
     public int lefttime => Mathf.Max(0, availableTime - TurnManager.Instance.globalTime); // 남은 턴
     public int coolTime { get; set; } // 쿨타임 시간
@@ -21,10 +22,11 @@ public class OgreSmite : EnemySkill, ICooltime
         int currentTime = TurnManager.Instance.globalTime;
 
         // 발동
-        if (isPreparing )
+        if (isPreparing)
         {
             availableTime = currentTime + coolTime;
             isPreparing = false;
+            ItemManager.Instance.DestroyBossRange(gameObject.name);
             return SkillUseState.ReadyToCast;
         }
 
@@ -36,9 +38,13 @@ public class OgreSmite : EnemySkill, ICooltime
                 if (tile.CharacterStatsOnTile is PlayerStats player && !player.IsHidden)
                 {
                     isPreparing = true;
-                    
-
-                    // 시각 경고
+                    targetTiles = new List<Tile>();
+                    foreach (Tile target in neighbors)
+                    {
+                        if (target.tileType == TileType.ground)
+                            targetTiles.Add(target);
+                    }
+                    ItemManager.Instance.CreateBossRange(targetTiles, gameObject.name);// 시각 경고
                     return SkillUseState.Preparing;
                 }
             }
@@ -60,5 +66,15 @@ public class OgreSmite : EnemySkill, ICooltime
     public override void DealDamage()
     {
         
+        foreach(Tile tile in targetTiles)
+        {
+            EffectProjectileManager.Instance.PlayEffect(tile.gridPosition, 30012);
+            if (tile.CharacterStatsOnTile != null)
+            {
+                DamageInfo damageInfo = new DamageInfo(stats.AttackDamage,DamageType.None,stats, tile.CharacterStatsOnTile);
+                tile.CharacterStatsOnTile.TakeDamage(damageInfo);
+            }
+        }
+        attackBaseBehaviour.EndTurn();
     }
 }
