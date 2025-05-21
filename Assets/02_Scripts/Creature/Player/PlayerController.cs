@@ -5,10 +5,12 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [Header("Settings")]
-    public float moveSpeed = 5f;
+    public float moveSpeed = 10f;
 
     /// <summary>행동이 확정되면 호출됩니다.</summary>
     public Action onActionConfirmed;
+    /// <summary>행동이 종료되면 호출됩니다.</summary>
+    //public Action onActionPerformed;
     /// <summary>현재 플레이어 차례 여부</summary>
     public bool isPlayerTurn;
 

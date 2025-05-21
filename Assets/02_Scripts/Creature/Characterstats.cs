@@ -199,7 +199,12 @@ public abstract class CharacterStats : MonoBehaviour
         statBlock.GetEntry(StatType.MaxHealth).onStatChanged -= OnManaChanged;
     }
 
-
+    public void PlaceOnTile(Level level,Tile tile)
+    {
+        curLevel = level;
+        CurTile = tile;
+        transform.position = new Vector3(CurTile.gridPosition.x, CurTile.gridPosition.y, 0);
+    }
     /// <summary>
     /// 일반 공격의 경우
     /// </summary>
@@ -262,8 +267,8 @@ public abstract class CharacterStats : MonoBehaviour
             }
         }
 
-        CurrentHealth -= value;
         UIManager.ShowOnce<DamageText>(value, transform.position);
+        CurrentHealth -= value;
         Debug.Log($"{gameObject.name}는 {value}의 피해를 받았습니다.");
         OnTakeDamage?.Invoke(damageInfo);
         _anim.PlayKnockBack();
@@ -312,13 +317,13 @@ public abstract class CharacterStats : MonoBehaviour
         // 이전 타일 점유 해제
         if (CurTile != null)
             CurTile.CharacterStatsOnTile = null;
+        CurTile = targetTile;
 
         // 새 타일 점유 설정
         targetTile.CharacterStatsOnTile = this;
 
         //curTile 갱신
-        CurTile = targetTile;
-
+        
         OnTileChanged?.Invoke();
     }
 

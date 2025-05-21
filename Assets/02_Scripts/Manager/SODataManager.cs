@@ -17,4 +17,8 @@ public class SODataManager : Singleton<SODataManager>
     public EnvRuleDataBase envRuleDataBase;
     public GameObject playerPrefab;
 
+    public QuestDataBase GetQuestDataBase()
+    {
+        return questDataBase;
+    }
 }
