@@ -74,7 +74,6 @@ public class GameSceneManager : Singleton<GameSceneManager>
         AsyncOperation loadOperation = SceneManager.LoadSceneAsync(_targetSceneType.ToString());
         loadOperation.allowSceneActivation = false;
 
-        // 시간 기반 로딩 구현
         float minLoadTime = 2.0f; // 최소 로딩 시간(초)
         float timer = 0f;
         
@@ -82,19 +81,18 @@ public class GameSceneManager : Singleton<GameSceneManager>
         {
             timer += Time.deltaTime;
             
-            // 시간 기반 진행률 계산 (0-1 사이 값)
             float timeProgress = Mathf.Clamp01(timer / minLoadTime);
             
             // 실제 로딩 진행률
             float realProgress = Mathf.Clamp01(loadOperation.progress / 0.9f);
             
-            // 두 진행률 중 더 큰 값을 사용 (실제 로딩이 느린 경우 대비)
+            // 두 진행률 중 더 큰 값을 사용
             float finalProgress = Mathf.Max(timeProgress, realProgress);
             
             // UI 업데이트
             LoadingUI.Instance?.UpdateProgress(finalProgress);
             
-            // 로딩이 90% 이상이고 타이머가 최소 시간의 80%를 넘었다면
+            // 로딩이 90 이상이고 타이머가 최소 시간의 80를 넘었다면
             if (loadOperation.progress >= 0.9f && timer >= minLoadTime * 0.8f)
             {
                 // 남은 시간 계산
