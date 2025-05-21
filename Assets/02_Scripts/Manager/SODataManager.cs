@@ -15,6 +15,7 @@ public class SODataManager : Singleton<SODataManager>
     public EnvironmentalDataBase environmentalDataBase;
     public FacilityDataBase facilityDataBase;
     public EnvRuleDataBase envRuleDataBase;
+    public ResearchDataBase researchDataBase;
     public GameObject playerPrefab;
 
     public QuestDataBase GetQuestDataBase()

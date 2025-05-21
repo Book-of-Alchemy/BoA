@@ -129,6 +129,10 @@ public class UI_HUD : UIBase
     {
         UIManager.Show<UI_DungeonResult>();
     }
+    public void OnReserach()
+    {
+        UIManager.Show<UI_Research>();
+    }
 
     private void OnDisable()
     {

@@ -9,6 +9,7 @@ public class PlayerData
     public List<int> AcceptedQuests { get; set; } = new List<int>();
     public List<int> ClearedQuests { get; set; } = new List<int>();
 
+    public List<ResearchStat> ResearchProgress { get; set; } = new List<ResearchStat>();
     public PlayerData()
     {
         Gold = 0;
