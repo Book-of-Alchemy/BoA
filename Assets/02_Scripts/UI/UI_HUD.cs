@@ -16,6 +16,7 @@ public class UI_HUD : UIBase
 
     [SerializeField] private TextMeshProUGUI _floorTxt;
     [SerializeField] private TextMeshProUGUI _questTxt;
+    [SerializeField] private TextMeshProUGUI _goldTxt;
 
     [SerializeField] private List<QuickSlot> _quickSlots;
     
@@ -37,7 +38,11 @@ public class UI_HUD : UIBase
     {
         _presenter = new HUDPresenter(this);
         QuestManager.Instance.OnQuestAccepted += UpdateQuestTxt;
-        
+
+        //Gold 변화 구독
+        Inventory.Instance.OnGoldChanged += UpdateGoldUI;
+        UpdateGoldUI(Inventory.Instance.Gold);
+
         // 상태 효과 디스플레이 초기화
         InitStatusEffectDisplay();
     }
@@ -66,6 +71,11 @@ public class UI_HUD : UIBase
                 }
             }
         }
+    }
+
+    private void UpdateGoldUI(int amount)
+    {
+        _goldTxt.text = $"{amount:N0}G";
     }
 
     public void UpdateHp(float per)
