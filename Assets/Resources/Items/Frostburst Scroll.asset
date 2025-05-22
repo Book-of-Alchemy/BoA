@@ -16,7 +16,7 @@ MonoBehaviour:
   name_en: Frostburst Scroll
   name_kr: "\uB0C9\uAE30 \uD3ED\uBC1C \uC2A4\uD06C\uB864"
   item_type: 0
-  attribute: 3
+  attribute: 0
   target_range: 0
   effect_range: 2
   effect_type: 0
@@ -32,8 +32,8 @@ MonoBehaviour:
   tier: 1
   iteminfo_kr: "\uB0C9\uAE30 \uD3ED\uBC1C\uB85C \uC8FC\uBCC0 \uC801\uC5D0\uAC8C \uD53C\uD574\uB97C
     \uC90D\uB2C8\uB2E4."
-  icon_sprite: 
-  sprite: {fileID: 0}
+  icon_sprite: Image/Item/Frostburst Scroll
+  sprite: {fileID: 21300000, guid: 9903ead8f405d9f44b8b9aaeddf94632, type: 3}
   itemRangeSprite: {fileID: 21300000, guid: 545ca318c5a6dfc468a07d3e066eb690, type: 3}
   itemEffectRangeSprite: {fileID: 21300000, guid: 3118db4ab2c968c4ab4f15ddbe31247a, type: 3}
   itemPrefab: {fileID: 0}

@@ -16,10 +16,10 @@ MonoBehaviour:
   name_en: Neutralization Trap
   name_kr: "\uBB34\uB825\uD654 \uD568\uC815"
   item_type: 0
-  attribute: 9
+  attribute: 0
   target_range: 1
   effect_range: 0
-  effect_type: 5
+  effect_type: 0
   tag: 
   tags: 020000000e0000000400000011000000
   effect_value: 180003

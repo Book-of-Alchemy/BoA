@@ -15,11 +15,11 @@ MonoBehaviour:
   id: 201004
   name_en: Empty Bottle
   name_kr: "\uBE48 \uBCD1"
-  item_type: 1
-  attribute: 9
+  item_type: 0
+  attribute: 0
   target_range: -1
   effect_range: -1
-  effect_type: 6
+  effect_type: 0
   tag: 
   tags: 15000000
   effect_value: -1

@@ -15,11 +15,11 @@ MonoBehaviour:
   id: 201918
   name_en: Troll's Blood
   name_kr: "\uD2B8\uB864\uC758 \uD53C"
-  item_type: 2
-  attribute: 9
+  item_type: 0
+  attribute: 0
   target_range: -1
   effect_range: -1
-  effect_type: 6
+  effect_type: 0
   tag: 
   tags: 1e000000
   effect_value: -1
@@ -32,7 +32,7 @@ MonoBehaviour:
   tier: 1
   iteminfo_kr: "\uC232 \uD2B8\uB864\uC758 \uD53C"
   icon_sprite: Image/Item/Troll's Blood
-  sprite: {fileID: 0}
+  sprite: {fileID: 21300000, guid: 674967624c56b6d40ad398ef716c82b7, type: 3}
   itemRangeSprite: {fileID: 0}
   itemEffectRangeSprite: {fileID: 0}
   itemPrefab: {fileID: 0}
