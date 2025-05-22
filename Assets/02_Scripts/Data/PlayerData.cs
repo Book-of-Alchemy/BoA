@@ -10,10 +10,12 @@ public class PlayerData
     public List<int> ClearedQuests { get; set; } = new List<int>();
 
     public List<ResearchStat> ResearchProgress { get; set; } = new List<ResearchStat>();
+    public KillTracker KillTracker { get; set; }
     public PlayerData()
     {
         Gold = 0;
         AcceptedQuests = new List<int>();
         ClearedQuests = new List<int>();
+        KillTracker = new KillTracker();
     }
 } 

@@ -86,7 +86,7 @@ public class TileManger : Singleton<TileManger>
     {
         Level prevLevel = curLevel;
         curLevelIndex++;
-        OnGetDown?.Invoke(curLevelIndex);
+        OnGetDown?.Invoke(curLevelIndex+1);
         if (curLevelIndex < levels.Count)
         {
             TurnManager.Instance.RemoveAllEnemy();

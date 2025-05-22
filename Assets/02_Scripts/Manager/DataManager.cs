@@ -51,6 +51,7 @@ public class DataManager : Singleton<DataManager>
                 Inventory.Instance.SetGold(playerData.Gold);
                 Debug.Log($"인벤토리에 골드 정보 적용: {playerData.Gold}");
             }
+            GameManager.Instance.killTracker = playerData.KillTracker;//임시로 추가해봄
         }
         else
         {
