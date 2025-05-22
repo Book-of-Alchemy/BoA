@@ -43,6 +43,11 @@ public class EnvironmentalFactory : Singleton<EnvironmentalFactory>
                 airEffect.Init(tile);
             }
         }
+        else
+        {
+            Debug.Log($"factory debug{prefab.GetComponent(effectType)}");
+        }
+
         prefab.baseRenderer.sortingOrder = -10 * tile.gridPosition.y + offset;
     }
 
@@ -67,7 +72,9 @@ public class EnvironmentalFactory : Singleton<EnvironmentalFactory>
 
     public void ReturnTileEffect(TileEffect tileEffect)
     {
-        environmentalPool.ReturnToPool(tileEffect.prefab);
-        GameObject.Destroy(tileEffect);
+        EnvironmentPrefab prefab = tileEffect.prefab;
+        environmentalPool.ReturnToPool(prefab);
+
     }
+
 }

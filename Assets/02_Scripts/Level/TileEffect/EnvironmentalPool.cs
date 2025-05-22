@@ -8,6 +8,7 @@ public class EnvironmentalPool : MonoBehaviour
     /// 환경 프리팹을 가져오고 되돌리는 역할만함
     /// </summary>
     public Queue<EnvironmentPrefab> environmentPrefabs = new Queue<EnvironmentPrefab>();
+    
     public GameObject prefab;
     public int initialSize = 20;
 
@@ -16,6 +17,10 @@ public class EnvironmentalPool : MonoBehaviour
         InitObjectPool();
     }
 
+    private void Update()
+    {
+        Debug.Log($"{environmentPrefabs.Count}");
+    }
     private void InitObjectPool()
     {
         EnvironmentalFactory.Instance.environmentalPool = this;
@@ -35,6 +40,13 @@ public class EnvironmentalPool : MonoBehaviour
         if (environmentPrefabs.Count > 0)
         {
             obj = environmentPrefabs.Dequeue();
+            TileEffect tileEffect = obj.GetComponent<TileEffect>();
+            if(tileEffect == null)
+            {
+                Debug.Log("getfrompool check");
+            }
+            DestroyImmediate(tileEffect);
+            //Destroy(tileEffect);
         }
         else // 풀에 남은 오브젝트가 없으면 새로 생성
         {
@@ -57,6 +69,6 @@ public class EnvironmentalPool : MonoBehaviour
         obj.transform.SetParent(this.transform);
         obj.transform.localPosition = Vector3.zero;
         obj.gameObject.SetActive(false);
-        environmentPrefabs.Enqueue(obj.GetComponent<EnvironmentPrefab>());
+        environmentPrefabs.Enqueue(obj);
     }
 }
