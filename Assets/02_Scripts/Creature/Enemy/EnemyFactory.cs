@@ -162,13 +162,15 @@ public class EnemyFactory : Singleton<EnemyFactory>
         enemy.curLevel = tile.curLevel;
         enemy.isDead = false;
         tile.CharacterStatsOnTile = enemy;
+        var sr = enemy.GetComponent<SpriteRenderer>();
+        sr.sortingOrder = -10 * tile.gridPosition.y;
         //tile.isOccupied = true;
         TurnManager.Instance.AddUnit(enemy.unitBase);
     }
 
     public void TrySpawnBoss(Level level,QuestData data)
     {
-        //if(data.main_object_type != ObjectType.DefeatBoss || !level.isLastFloor) return;
+        if(data.main_object_type != ObjectType.DefeatBoss || !level.isLastFloor) return;
 
         int bossID = GetBossIDByQuestID(data.id); bossID = 230008;
         if (bossID == -1) return;

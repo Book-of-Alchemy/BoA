@@ -30,7 +30,7 @@ public abstract class MapObject : MonoBehaviour
         UpdateTileVisual();
         foreach (var renderer in spriteRenderers)
         {
-            renderer.sortingOrder = -10 * CurTile.gridPosition.y;
+            renderer.sortingOrder = -10 * CurTile.gridPosition.y - 1;
         }
         transform.SetParent(CurTile.curLevel.transform);
     }

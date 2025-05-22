@@ -87,6 +87,8 @@ public class EnvironmentItem : BaseItem
         InputManager.Instance.OnMouseMove -= CheckEffectRange; // 마우스 위치에따라 보여주는 매서드 구독해제
         ItemManager.Instance.DestroyItemRange(); // 아이템 사거리 삭제
         ItemManager.Instance.DestroyRange(); // 아이템 효과 범위 삭제
+        InputManager.Instance.OnMouseClick -= OnClick;
+
         Vector2Int mouseWorldPos = Vector2Int.RoundToInt(mouseClickPos);
         _player.curLevel.tiles.TryGetValue(mouseWorldPos, out Tile mouseTile);
 
@@ -168,7 +170,7 @@ public class EnvironmentItem : BaseItem
         }
 
         Debug.Log(data.name_en);
-        InputManager.Instance.OnMouseClick -= OnClick;
+
         FinishUse();
         Destroy(this.gameObject, 0.1f);
     }

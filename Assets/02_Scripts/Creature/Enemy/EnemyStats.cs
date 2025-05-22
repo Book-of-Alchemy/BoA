@@ -1,3 +1,5 @@
+using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyStats : CharacterStats, IPoolableId
@@ -17,6 +19,7 @@ public class EnemyStats : CharacterStats, IPoolableId
     public int Id { get => id; set => id = value; }
 
     public bool isDead = false;
+    public event Action OnDead;
     //protected override void Awake()
     //{
     //    base.Awake();
@@ -43,6 +46,7 @@ public class EnemyStats : CharacterStats, IPoolableId
             return;
         }
         isDead = true; // 사망 처리 시작
+        OnDead?.Invoke();
         MonsterEvents.RaiseKill(id);
         Debug.Log($"{gameObject.name}이(가) 사망했습니다.");
         TryDropItem();
