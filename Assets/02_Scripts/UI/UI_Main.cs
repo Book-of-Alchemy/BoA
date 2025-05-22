@@ -43,7 +43,7 @@ public class UI_Main : UIBase
     public void OnClickSetting()
     {
         UIManager.Show<UI_Setting>();
-        HideDirect();
+        //HideDirect();
     }
 
     public void OnClickQuitGame()

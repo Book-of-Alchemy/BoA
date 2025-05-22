@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8608055060386154436}
   - component: {fileID: 5434910809250071685}
   - component: {fileID: 7951281513117960351}
+  - component: {fileID: 3056398023497325284}
   m_Layer: 5
   m_Name: UI_ItemTooltip
   m_TagString: Untagged
@@ -58,9 +59,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c2df176ea9aea14da728a191334e44a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiPosition: 1
+  uiPosition: 2
   _itemName: {fileID: 4149041049839571663}
   _description: {fileID: 1942038021057143598}
+  _tooltipRect: {fileID: 8608055060386154436}
+  _canvasGroup: {fileID: 3056398023497325284}
+--- !u!225 &3056398023497325284
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4691457770329667418}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &7074895658923338431
 GameObject:
   m_ObjectHideFlags: 0
