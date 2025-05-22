@@ -24,7 +24,14 @@ public class CraftTool : MonoBehaviour
     {
         foreach (var slot in _slotCraft)
         {
-            slot.RemoveData();
+            if (slot != null)
+            {
+                slot.RemoveData();
+            }
+            else
+            {
+                Debug.LogWarning("슬롯이  null ");
+            }
         }
 
     }
