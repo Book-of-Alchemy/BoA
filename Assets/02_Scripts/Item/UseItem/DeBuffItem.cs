@@ -27,7 +27,7 @@ private List<Tile> rangeTiles = new List<Tile>();
         if (targetRange == 0)
             checkRangeTiles = TileUtility.GetItemRangedTile(_player.curLevel, _player.CurTile, targetRange, true);
         else if (targetRange == 1)
-            checkRangeTiles = TileUtility.GetNineTileList(_player.curLevel, _player.CurTile);
+            checkRangeTiles = TileUtility.GetNineVisibleTileList(_player.curLevel, _player.CurTile,true);
         else if (targetRange >= 2)
             checkRangeTiles = TileUtility.GetItemRangedTile(_player.curLevel, _player.CurTile, targetRange, true);
         ItemManager.Instance.CreateRange(checkRangeTiles);
@@ -40,17 +40,25 @@ private List<Tile> rangeTiles = new List<Tile>();
 
         Vector2Int mouseWorldPos = Vector2Int.RoundToInt(mousePos);
 
-        _player.curLevel.tiles.TryGetValue(mouseWorldPos, out Tile mouseTile);
+        GameManager.Instance.PlayerTransform.curLevel.tiles.TryGetValue(mouseWorldPos, out Tile mouseTile);
         if (rangeTiles.Contains(mouseTile))
         {
             List<Tile> checkItemRangeTiles = new List<Tile>();
-            if (itemData.effect_range == 0)
-                checkItemRangeTiles = TileUtility.GetItemRangedTile(_player.curLevel, mouseTile, itemData.effect_range, true);
-            else if (itemData.effect_range == 1)
-                checkItemRangeTiles = TileUtility.GetNineTileList(_player.curLevel, mouseTile);
-            else if (itemData.effect_range >= 2)
-                checkItemRangeTiles = TileUtility.GetItemRangedTile(_player.curLevel, mouseTile, itemData.effect_range);
 
+            if (itemData.target_range == 0)
+            {
+                if (itemData.effect_range == 1)
+                    checkItemRangeTiles = TileUtility.GetNineVisibleTileList(_player.curLevel, mouseTile, false);
+                else
+                    checkItemRangeTiles = TileUtility.GetItemRangedTile(_player.curLevel, mouseTile, itemData.effect_range, false);
+            }
+            else
+            {
+                if (itemData.effect_range == 1)
+                    checkItemRangeTiles = TileUtility.GetNineVisibleTileList(_player.curLevel, mouseTile, true);
+                else
+                    checkItemRangeTiles = TileUtility.GetItemRangedTile(_player.curLevel, mouseTile, itemData.effect_range, true);
+            }
             ItemManager.Instance.CreateItemRange(checkItemRangeTiles);
         }
     }
@@ -70,7 +78,7 @@ private List<Tile> rangeTiles = new List<Tile>();
             {
                 if (itemData.effect_range == 1)
                 {
-                    tiles = TileUtility.GetAdjacentTileList(_player.curLevel, mouseTile, true);
+                    tiles = TileUtility.GetNineVisibleTileList(_player.curLevel, mouseTile, false);
                 }
                 else if (itemData.effect_range >= 2)
                 {
@@ -81,7 +89,7 @@ private List<Tile> rangeTiles = new List<Tile>();
             {
                 if (itemData.effect_range == 1)
                 {
-                    tiles = TileUtility.GetNineTileList(_player.curLevel, mouseTile);
+                    tiles = TileUtility.GetNineVisibleTileList(_player.curLevel, mouseTile,true);
                 }
                 else
                 {

@@ -66,7 +66,7 @@ public class TrapItem : BaseItem
             else if (itemData.effect_range == 1)
                 checkItemRangeTiles = TileUtility.GetNineTileList(_player.curLevel, mouseTile);
             else if (itemData.effect_range >= 2)
-                checkItemRangeTiles = TileUtility.GetItemRangedTile(_player.curLevel, mouseTile, itemData.effect_range);
+                checkItemRangeTiles = TileUtility.GetItemRangedTile(_player.curLevel, mouseTile, itemData.effect_range,true);
 
             ItemManager.Instance.CreateItemRange(checkItemRangeTiles);
         }
