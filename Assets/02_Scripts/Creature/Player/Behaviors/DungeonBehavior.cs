@@ -274,8 +274,6 @@ public class DungeonBehavior : PlayerBaseBehavior
 
         // 공격 애니메이션 재생
         _animator.PlayAttack();
-
-        Controller.onActionConfirmed?.Invoke();
     }
     private IEnumerator MoveAlongPath(List<Tile> path)
     {
