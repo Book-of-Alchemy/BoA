@@ -16,7 +16,7 @@ public class EnemyStats : CharacterStats, IPoolableId
     private int id;
     public int Id { get => id; set => id = value; }
 
-    private bool isDead = false;
+    public bool isDead = false;
     //protected override void Awake()
     //{
     //    base.Awake();

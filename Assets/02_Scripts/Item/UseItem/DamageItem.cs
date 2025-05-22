@@ -3,9 +3,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.InputSystem.XR;
 using static UnityEditor.Experimental.GraphView.GraphView;
+using static UnityEngine.InputManagerEntry;
 
 [System.Serializable]
 public class DamageItem : BaseItem
@@ -82,6 +84,8 @@ public class DamageItem : BaseItem
                     break;
                 }
             }
+
+            SoundManager.Instance.Play(DamageCalculator.GetIntroSoundID(itemData.tags));
             float distance = Vector2Int.Distance(_player.CurTile.gridPosition, targetTile.gridPosition);
             float duration = distance / moveSpeed;
             Sequence seq = DOTween.Sequence();
@@ -107,6 +111,8 @@ public class DamageItem : BaseItem
             SubscribeInput();
         }
     }
+
+
 
     /// <summary>
     /// 공격 로직
@@ -179,6 +185,7 @@ public class DamageItem : BaseItem
             _player.statBlock.RemoveModifier(StatType.FinalDmg, "PrecisionAimforMagic");
         }
         InputManager.Instance.OnMouseClick -= OnClick;
+        SoundManager.Instance.Play(DamageCalculator.GetImpactSoundID(data.attribute));
         FinishUse();
         Destroy(this.gameObject, 0.1f);
     }
