@@ -17,5 +17,5 @@ MonoBehaviour:
   name_en: Essence of Dark
   description: "\uC5B4\uB460 \uC18D\uC131 \uC800\uD56D\uB825\uC774 20% \uC99D\uAC00\uD55C\uB2E4."
   icon_sprite_id: 
-  icon_sprite: {fileID: 0}
+  icon_sprite: {fileID: 21300000, guid: 322455daefeac0446a7244cc0db58ec3, type: 3}
   rarity: 0

@@ -19,5 +19,5 @@ MonoBehaviour:
     30\uAE00\uB85C\uBC8C\uD0C0\uC784\uAC04 \uD22C\uBA85\uD654 \uC0C1\uD0DC\uAC00
     \uB429\uB2C8\uB2E4(\uCFE8\uD0C0\uC784 300 \uAE00\uB85C\uBC8C\uD0C0\uC784)."
   icon_sprite_id: 
-  icon_sprite: {fileID: 0}
+  icon_sprite: {fileID: 21300000, guid: f2a23eac5d27eaa4dadd74feb235467e, type: 3}
   rarity: 1

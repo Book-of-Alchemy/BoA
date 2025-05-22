@@ -17,5 +17,5 @@ MonoBehaviour:
   name_en: Fresh Water
   description: "\uCD5C\uB300 MP\uAC00 30% \uC99D\uAC00\uD55C\uB2E4."
   icon_sprite_id: 
-  icon_sprite: {fileID: 0}
+  icon_sprite: {fileID: 21300000, guid: 79d7a1e3d27faa44fa97468363a4cd7e, type: 3}
   rarity: 0

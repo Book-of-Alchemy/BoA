@@ -17,5 +17,5 @@ MonoBehaviour:
   name_en: Bless of Water
   description: "\uBB3C \uC18D\uC131 \uD53C\uD574\uB7C9\uC774 20% \uC99D\uAC00\uD55C\uB2E4."
   icon_sprite_id: 
-  icon_sprite: {fileID: 0}
+  icon_sprite: {fileID: 21300000, guid: 037c26304578ab44ca3f99fdab047de4, type: 3}
   rarity: 0
