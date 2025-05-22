@@ -58,4 +58,24 @@ public class DataManager : Singleton<DataManager>
             Debug.Log("저장된 데이터가 없어 새로운 데이터를 생성합니다.");
         }
     }
+    
+    public void ResetData()
+    {
+        if (File.Exists(savePath))
+        {
+            File.Delete(savePath);
+            Debug.Log($"기존 데이터 파일을 삭제했습니다: {savePath}");
+        }
+        
+        playerData = new PlayerData();
+        
+        SaveData();
+        
+        if (Inventory.HasInstance && Inventory.Instance != null)
+        {
+            Inventory.Instance.SetGold(0);
+        }
+        
+        Debug.Log("게임 데이터를 초기화했습니다.");
+    }
 }

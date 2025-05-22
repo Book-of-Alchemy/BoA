@@ -26,7 +26,8 @@ public class DownLoader : EditorWindow
     string questJsonSavePath = "Assets/Resources/Json/Quest.json";
     string researchDBUrl = "https://opensheet.elk.sh/18J2rdxLQUZwBIhTPIzRW7roD1Vwwt9L14FHOvudFGno/HOK_DB";
     string researchJsonSavePath = "Assets/Resources/Json/Research.json";
-
+    string soundDBUrl = "https://opensheet.elk.sh/1opKr37fwkgj0liXqkWhx_pYQEsf97agKquDpO236kgk/Audio_DB";
+    string soundJsonSavePath = "Assets/Resources/Json/Sound.json";
 
     string saveItemSOPath = "Assets/Resources/Items";
     string saveRecipeSOPath = "Assets/Resources/Recipes";
@@ -34,6 +35,7 @@ public class DownLoader : EditorWindow
     string saveArtifactSOPath = "Assets/08_ScriptableObjects/Artifact";
     string saveQuestSOPath = "Assets/08_ScriptableObjects/Quest";
     string saveResearchSOPath = "Assets/08_ScriptableObjects/Research";
+    string saveSoundSOPath = "Assets/08_ScriptableObjects/Sound";
 
 #if UNITY_EDITOR
     [MenuItem("Window/DownLoader")]
@@ -52,6 +54,7 @@ public class DownLoader : EditorWindow
         artifactDBUrl = EditorGUILayout.TextField("ArtifactDBUrl", artifactDBUrl);
         questDBUrl = EditorGUILayout.TextField("QuestDBUrl", questDBUrl);
         researchDBUrl =EditorGUILayout.TextField("ResearchDBUrl", researchDBUrl);
+        soundDBUrl = EditorGUILayout.TextField("SoundDBUrl", soundDBUrl);
 
 
         // 저장 경로 입력 필드
@@ -61,6 +64,7 @@ public class DownLoader : EditorWindow
         artifactJsonSavePath = EditorGUILayout.TextField("Artifact Json Save Path", artifactJsonSavePath);
         questJsonSavePath = EditorGUILayout.TextField("Quest Json Save Path", questJsonSavePath);
         researchJsonSavePath = EditorGUILayout.TextField("Research Json Save Path", researchJsonSavePath);
+        soundJsonSavePath = EditorGUILayout.TextField("Sound Json Save Path", soundJsonSavePath);
 
 
         // 다운로드 버튼
@@ -72,6 +76,7 @@ public class DownLoader : EditorWindow
             DownloadAndSaveJson(artifactDBUrl, artifactJsonSavePath);
             DownloadAndSaveJson(questDBUrl, questJsonSavePath);
             DownloadAndSaveJson(researchDBUrl, researchJsonSavePath);
+            DownloadAndSaveJson(soundDBUrl, soundJsonSavePath);
         }
 
         GUILayout.Label("Json To SO", EditorStyles.boldLabel);
@@ -82,6 +87,7 @@ public class DownLoader : EditorWindow
         saveArtifactSOPath = EditorGUILayout.TextField("SaveArtifactSOPath", saveArtifactSOPath);
         saveQuestSOPath = EditorGUILayout.TextField("SaveQuestSOPath", saveQuestSOPath);
         saveResearchSOPath = EditorGUILayout.TextField("SaveResearchSoPath", saveResearchSOPath);
+        saveSoundSOPath = EditorGUILayout.TextField("SaveSoundSOPath", saveSoundSOPath);
 
         if (GUILayout.Button("ItemConvert"))
         {
@@ -106,6 +112,10 @@ public class DownLoader : EditorWindow
         if(GUILayout.Button("ResearchConvert"))
         {
             ResearchConvertJsonToSO();
+        }
+        if(GUILayout.Button("SoundConvert"))
+        {
+            SoundConvertJsonToSO();
         }
 
     }
@@ -132,6 +142,10 @@ public class DownLoader : EditorWindow
         EditorCoroutineUtility.StartCoroutineOwnerless(DownloadJsonCoroutine(url,savePath));
     }
 
+    /// <summary>
+    /// 아이템json => SO변환
+    /// </summary>
+    /// <exception cref="Exception"></exception>
     void ItemConvertJsonToSO()
     {
         string jsonText = File.ReadAllText(itemJsonSavePath);
@@ -196,6 +210,9 @@ public class DownLoader : EditorWindow
         Debug.Log("Json변환 완료");
     }
 
+    /// <summary>
+    /// 레시피 json => SO변환
+    /// </summary>
     void RecipeConvertJsonToSO()
     {
         string jsonText = File.ReadAllText(recipeJsonSavePath);
@@ -244,6 +261,9 @@ public class DownLoader : EditorWindow
         Debug.Log("Json변환 완료");
     }
 
+    /// <summary>
+    /// 버프디버프 json => SO변환
+    /// </summary>
     void StatusEffectConvertJsonToSO()
     {
         string jsonText = File.ReadAllText(statusEffectJsonSavePath);
@@ -288,6 +308,9 @@ public class DownLoader : EditorWindow
         Debug.Log("Json변환 완료");
     }
 
+    /// <summary>
+    /// 아티팩트 json => SO변환
+    /// </summary>
     void ArtifactConvertJsonToSO()
     {
         string jsonText = File.ReadAllText(artifactJsonSavePath);
@@ -328,6 +351,10 @@ public class DownLoader : EditorWindow
         Debug.Log("Json변환 완료");
     }
 
+
+    /// <summary>
+    /// 퀘스트json => SO변환
+    /// </summary>
     void QuestConvertJsonToSO()
     {
         string jsonText = File.ReadAllText(questJsonSavePath);
@@ -379,6 +406,9 @@ public class DownLoader : EditorWindow
         Debug.Log("Json변환 완료");
     }
 
+    /// <summary>
+    /// 연구json => SO변환
+    /// </summary>
     void ResearchConvertJsonToSO()
     {
         string jsonText = File.ReadAllText(researchJsonSavePath);
@@ -415,6 +445,43 @@ public class DownLoader : EditorWindow
             so.icon_sprite = Resources.Load<Sprite>(data.icon_sprite_id);
 
             string assetPath = $"{saveResearchSOPath}/{data.name_en}.asset";
+            AssetDatabase.CreateAsset(so, assetPath);
+
+        }
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+        Debug.Log("Json변환 완료");
+    }
+
+    void SoundConvertJsonToSO()
+    {
+        string jsonText = File.ReadAllText(soundJsonSavePath);
+        List<SoundData> dataList = JsonConvert.DeserializeObject<List<SoundData>>(jsonText);
+
+        if (AssetDatabase.IsValidFolder(saveSoundSOPath))
+        {
+            FileUtil.DeleteFileOrDirectory(saveSoundSOPath);
+            AssetDatabase.Refresh();
+        }
+
+        if (!Directory.Exists(saveSoundSOPath))
+        {
+            Directory.CreateDirectory(saveSoundSOPath);
+        }
+
+        foreach (var data in dataList)
+        {
+            if (data == null)
+            {
+                Debug.LogError("data가 null입니다!");
+                continue;
+            }
+            SoundData so = ScriptableObject.CreateInstance<SoundData>();
+            so.id = data.id;
+            so.type = data.type;
+            so.clip = Resources.Load<AudioClip>(data.audioClipPath);
+
+            string assetPath = $"{saveSoundSOPath}/{data.id}.asset";
             AssetDatabase.CreateAsset(so, assetPath);
 
         }

@@ -9,6 +9,7 @@ public class ItemDataBase : ScriptableObject
     public List<RecipeData> recipeDatas;
     public GameObject typeObjectPrefab;
     public Dictionary<int, ItemData> dicItemData = new Dictionary<int, ItemData>();
+    public Dictionary<Item_Type,List<ItemData>> dicItemByType = new Dictionary<Item_Type, List<ItemData>>();
     public Dictionary<int, RecipeData> recipeById = new Dictionary<int, RecipeData>();
     private int intNullvalue = -1;
 
@@ -21,6 +22,7 @@ public class ItemDataBase : ScriptableObject
     private void ArrangeItemData()
     {
         dicItemData.Clear();
+        dicItemByType.Clear();
         foreach (var data in itemDatas)
         {
             if (data == null) continue;
@@ -33,8 +35,18 @@ public class ItemDataBase : ScriptableObject
             {
                 Debug.LogWarning($"Duplicate Enemy ID detected: {data.id} in {data.name}");
             }
+
+            if (!dicItemByType.ContainsKey(data.item_type))
+            {
+                dicItemByType[data.item_type] = new List<ItemData> { data };
+            }
+            else
+            {
+                dicItemByType[data.item_type].Add(data);
+            }
         }
     }
+
     private void ArrangeRecipeData()
     {
         recipeById.Clear();

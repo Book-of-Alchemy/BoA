@@ -5,7 +5,7 @@ using UnityEngine;
 public static class TrapFactory
 {
     private static List<TrapData> TrapData => SODataManager.Instance.tileDataBase.trapData;
-    public static TrapBase CreateTrap(int id, Level level, Tile tile)
+    public static TrapBase CreateTrap(int id, Level level, Tile tile, bool isCreatedByPlayer = false)
     {
         
         int trapID = id;

@@ -16,7 +16,7 @@ MonoBehaviour:
   name_en: Makeshift Bomb
   name_kr: "\uAC04\uC774 \uD3ED\uD0C4"
   item_type: 0
-  attribute: 0
+  attribute: 1
   target_range: 5
   effect_range: 1
   effect_type: 0

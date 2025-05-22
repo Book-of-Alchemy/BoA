@@ -14,12 +14,19 @@ public class UI_Setting : UIBase
 
     public override void Opened(params object[] param)
     {
-        masterSlider.value = SoundManager.Instance.initialMasterVolume;
-        bgmslider.value = SoundManager.Instance.initialBGMVolume;
-        sfxSlider.value = SoundManager.Instance.initialSFXVolume;
+        masterSlider.onValueChanged.RemoveAllListeners();
+        bgmslider.onValueChanged.RemoveAllListeners();
+        sfxSlider.onValueChanged.RemoveAllListeners();
+
+        masterSlider.SetValueWithoutNotify(SoundManager.Instance.masterVolume);
+        bgmslider.SetValueWithoutNotify(SoundManager.Instance.bgmVolume);
+        sfxSlider.SetValueWithoutNotify(SoundManager.Instance.sfxVolume);
+
         masterSlider.onValueChanged.AddListener(SoundManager.Instance.SetMasterVolume);
         bgmslider.onValueChanged.AddListener(SoundManager.Instance.SetBGMVolume);
         sfxSlider.onValueChanged.AddListener(SoundManager.Instance.SetSFXVolume);
+
+
     }
 
 }

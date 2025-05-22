@@ -10,8 +10,10 @@ public class DungeonScene : SceneBase
 
     public override void OnEnter()
     {
-        if(!UIManager.IsOpened<UI_HUD>())
+        if (!UIManager.IsOpened<UI_HUD>())
+        {
             UIManager.Show<UI_HUD>();
+        }
     }
 
     public override void OnExit()

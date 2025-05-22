@@ -10,13 +10,22 @@ public class SoundManager : MonoBehaviour
     public static SoundManager Instance { get; private set; }
 
     [SerializeField] AudioMixer mixer;  // MasterMixer 에셋 할당
+    [SerializeField] private AudioMixerGroup masterGroup;
+    [SerializeField] private AudioMixerGroup bgmGroup;
+    [SerializeField] private AudioMixerGroup sfxGroup;
+
     [Header("사운드 리스트")]
     public List<SoundData> SoundDatas = new List<SoundData>();
     Dictionary<string, SoundData> map;
 
-    [Range(0f, 1f)] public float initialMasterVolume = 1f;
-    [Range(0f, 1f)] public float initialBGMVolume = 1f;
-    [Range(0f, 1f)] public float initialSFXVolume = 1f;
+    [Range(0f, 1f)] public float masterVolume;
+    [Range(0f, 1f)] public float bgmVolume;
+    [Range(0f, 1f)] public float sfxVolume;
+
+    //고정 사운드
+    [Range(0f, 1f)] private float fixedBGMVolume = 0.5f;
+    [Range(0f, 1f)] private float fixedSFXVolume = 0.5f;
+
 
     AudioSource[] BGMSources = new AudioSource[2];
     int activeMusic = 0;
@@ -31,7 +40,8 @@ public class SoundManager : MonoBehaviour
 
             map = SoundDatas.ToDictionary(d => d.id, d => d);
 
-            for(int i = 0; i < 2; i++)
+
+            for (int i = 0; i < 2; i++)
             {
                 var go = new GameObject($"BGM_Source_{i}");
                 go.transform.SetParent(transform);
@@ -51,10 +61,14 @@ public class SoundManager : MonoBehaviour
         switch(data.type)
         {
             case SoundType.SFX:
-                AudioPool.Instance.PlayeOneShot(data.clip, data.volume, data.mixerGroup);
+                AudioPool.Instance.PlayeOneShot(data.clip, fixedSFXVolume, GetGroup(data.type));
+                SetMasterVolume(masterVolume);
+                SetBGMVolume(sfxVolume);
                 break;
             case SoundType.BGM:
                 PlayBGM(data);
+                SetMasterVolume(masterVolume);
+                SetBGMVolume(bgmVolume);
                 break;
         }
     }
@@ -66,18 +80,19 @@ public class SoundManager : MonoBehaviour
         var to = BGMSources[next];
 
         to.clip = data.clip;
-        to.outputAudioMixerGroup = data.mixerGroup;
-        to.loop = data.loop;
-        to.volume = data.volume;
-        to.pitch = data.pitch;
+        to.outputAudioMixerGroup = GetGroup(data.type);
+        to.loop = true;
+        to.volume = fixedBGMVolume;
         to.Play();
 
-        if (data.crossfadeOnChange && from.isPlaying)
+
+
+        if (from.isPlaying)
             StartCoroutine(Crossfade(from, to));
         else
         {
             from.Stop();
-            to.volume = data.volume;
+            to.volume = fixedBGMVolume;
         }
 
         activeMusic = next;
@@ -99,22 +114,32 @@ public class SoundManager : MonoBehaviour
         from.Stop();
     }
 
+    private AudioMixerGroup GetGroup(SoundType type)
+    {
+        return type switch
+        {
+            SoundType.BGM => bgmGroup,
+            SoundType.SFX => sfxGroup,
+            _ => masterGroup,
+        };
+    }
+
     public void SetMasterVolume(float linear)
     {
         mixer.SetFloat("MasterVolume", linear <= 0.0001f ? -80f : Mathf.Log10(linear) * 20f);
-        initialMasterVolume = linear;
+        masterVolume = linear;
     }
 
     public void SetBGMVolume(float linear)
     {
         mixer.SetFloat("BGMVolume", linear <= 0.0001f ? -80f : Mathf.Log10(linear) * 20f);
-        initialBGMVolume = linear;
+        bgmVolume = linear;
     }
 
     public void SetSFXVolume(float linear)
     {
         mixer.SetFloat("SFXVolume", linear <= 0.0001f ? -80f : Mathf.Log10(linear) * 20f);
-        initialSFXVolume = linear;
+        sfxVolume = linear;
     }
 
 }

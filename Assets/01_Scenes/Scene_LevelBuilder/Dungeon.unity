@@ -913,6 +913,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 2c9d7fde858345741b9de5992a016aa8, type: 2}
   - {fileID: 11400000, guid: 96e6c6ad5eab6e442ab7c6beb77ef83c, type: 2}
   - {fileID: 11400000, guid: 1f39403927c38f54fb1e079b1cbea152, type: 2}
+  - {fileID: 11400000, guid: 4ae5eedc77d22dd4f8a93ed95becd2be, type: 2}
 --- !u!114 &916698581
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1378,10 +1379,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: DataManager
       objectReference: {fileID: 0}
-    - target: {fileID: 3107400911350595328, guid: 2e3d548e3203bc64c897c17cd763b7e9, type: 3}
-      propertyPath: environmentalDataBase
-      value: 
-      objectReference: {fileID: 11400000, guid: add19ce1a70d3244dbb0b89406e31ed9, type: 2}
     - target: {fileID: 4393161730607427208, guid: 2e3d548e3203bc64c897c17cd763b7e9, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
