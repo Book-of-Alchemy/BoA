@@ -56,7 +56,10 @@ public class DungeonBehavior : PlayerBaseBehavior
         return UIManager.IsOpened<UI_Menu>()
             || UIManager.IsOpened<UI_Inventory>()
             || UIManager.IsOpened<UI_Craft>()
-            || UIManager.IsOpened<UI_DungeonResult>();
+            || UIManager.IsOpened<UI_DungeonResult>()
+            || UIManager.IsOpened<UI_Equipment>()
+            || UIManager.IsOpened<UI_LvSelect>()
+            || UIManager.IsOpened<UI_Setting>();
     }
 
     public event Action OnPlayerMoved;

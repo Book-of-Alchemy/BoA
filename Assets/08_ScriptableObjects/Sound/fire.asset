@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: fire
   m_EditorClassIdentifier: 
   id: fire
-  type: 1
+  type: 0
   clip: {fileID: 8300000, guid: 91663255dc7b3a74c9d8fe80abfd3cce, type: 3}
   audioClipPath: 

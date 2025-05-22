@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Explosion
   m_EditorClassIdentifier: 
   id: Explosion
-  type: 1
+  type: 0
   clip: {fileID: 8300000, guid: 69dc8d641489d6f4b86aa9557a0aa1a3, type: 3}
   audioClipPath: 

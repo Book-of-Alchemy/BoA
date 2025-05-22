@@ -26,6 +26,11 @@ public class TownBehavior : PlayerBaseBehavior
     private bool _isAutoMoving = false;
     private float _stopPoint = 0.1f;
 
+    private bool IsUIOpen()
+    {
+        return UIManager.IsOpened<UI_Research>()
+            || UIManager.IsOpened<UI_SelectQuest>();
+    }
 
     public override void Initialize(PlayerController controller)
     {
@@ -105,6 +110,9 @@ public class TownBehavior : PlayerBaseBehavior
 
     private void HandleDashStart()
     {
+        if (IsUIOpen())
+            return;
+            
         _isDashing = true;
     }
 
@@ -115,18 +123,27 @@ public class TownBehavior : PlayerBaseBehavior
 
     private void HandleMoveInput(Vector2 raw)
     {
+        if (IsUIOpen())
+            return;
+            
         _isAutoMoving = false;
         _moveDir = raw.normalized;
     }
 
     private void HandleMouseClick(Vector3 worldPos)
     {
+        if (IsUIOpen())
+            return;
+            
         _clickTarget = new Vector2(worldPos.x, worldPos.y);
         _isAutoMoving = true;
     }
 
     private void HandleInteractInput()
     {
+        if (IsUIOpen())
+            return;
+            
         //시설 체크
         var construct = _facilitySensor?.CurrentFacility;
         if (construct != null)

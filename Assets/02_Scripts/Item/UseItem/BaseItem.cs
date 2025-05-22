@@ -87,6 +87,7 @@ public abstract class BaseItem : MonoBehaviour
     protected void SetType(ItemData data)
     {
         spriteRenderer.sprite = data.sprite;
+        spriteRenderer.sortingOrder = 1000;
     }
     /// <summary>
     /// 시야에 따른 이미지 처리
