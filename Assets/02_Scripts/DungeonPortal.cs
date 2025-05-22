@@ -10,7 +10,7 @@ public class DungeonPortal : MonoBehaviour
         }
         else if (other.CompareTag("Player") && !HasAcceptedQuest())
         {
-            UIManager.Show<UI_Text>("먼저 퀘스트를 수락해야 합니다");
+            UIManager.ShowOnce<UI_Text>("먼저 퀘스트를 수락해야 합니다");
         }
     }
 
