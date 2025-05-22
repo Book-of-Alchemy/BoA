@@ -69,6 +69,7 @@ public class ObjectByIdPool<T, U> : MonoBehaviour where T : MonoBehaviour,IPoola
             GameObject newObj = Instantiate(prefab, transform);
             newObj.SetActive(false);
             obj = newObj.GetComponent<T>();
+            obj.Id = id;
         }
         else
         {

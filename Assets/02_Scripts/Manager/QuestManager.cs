@@ -207,10 +207,9 @@ public class QuestManager : Singleton<QuestManager>
     public void CheckBoss(int ID)
     {
         EnemyData enemy = SODataManager.Instance.enemyDataBase.GetEnemyById(ID);
+        if (enemy == null) return;
         if (enemy.isBoss)
-        {
             UpdateProgress(1);
-        }
     }
 
     void Unsubscribe()
