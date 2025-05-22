@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public interface IGround
@@ -41,6 +42,10 @@ public abstract class TileEffect : MonoBehaviour, ITurnProcessor
         prefab = GetComponent<EnvironmentPrefab>();
         prefab.OnReturnEvent += OnReturn;
     }
+    protected void OnDestroy()
+    {
+        prefab.OnReturnEvent -= OnReturn;
+    }
 
     public virtual void Init(Tile tile)
     {
@@ -72,7 +77,14 @@ public abstract class TileEffect : MonoBehaviour, ITurnProcessor
     public void OnReturn()
     {
         prefab.OnReturnEvent -= OnReturn;
+        if (this is IAir && CurTile.airEffect != null)
+        {
+            CurTile.airEffect = null;
+        }
+        else if (this is IGround && CurTile.groundEffect != null)
+        {
+            CurTile.groundEffect = null;
+        }
         TurnManager.Instance.RemoveTileEffectt(this);
-        Destroy(this);
     }
 }

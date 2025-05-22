@@ -6,6 +6,7 @@ public class ItemFactory : Singleton<ItemFactory>
 {
     public List<ItemData> itemDatas;
     public Dictionary<int, ItemData> itemdataById;
+    public Dictionary<Item_Type, List<ItemData>> dicItemByType;
     public GameObject itemPrefab;
 
     protected override void Awake()
@@ -14,6 +15,7 @@ public class ItemFactory : Singleton<ItemFactory>
         itemDatas = SODataManager.Instance.itemDataBase.itemDatas;
         itemdataById = SODataManager.Instance.itemDataBase.dicItemData;
         itemPrefab = SODataManager.Instance.itemDataBase.typeObjectPrefab;
+        dicItemByType = SODataManager.Instance.itemDataBase.dicItemByType;
     }
     public void ItemSpawnAtStart(Level level)
     {
@@ -32,7 +34,7 @@ public class ItemFactory : Singleton<ItemFactory>
                 Tile targetTile = availableTiles[UnityEngine.Random.Range(0, availableTiles.Count)];
                 availableTiles.Remove(targetTile);
 
-                int id = GetRandomItemId(itemDatas);
+                int id = GetRandomItemId(dicItemByType[Item_Type.Material]);
                 ItemData itemData = itemdataById[id];
                 BaseItem item = DropItem(itemData, targetTile);
                 
@@ -85,12 +87,12 @@ public class ItemFactory : Singleton<ItemFactory>
 
     void SpawnItemOnTile(List<Tile> availableTiles, int spawnCount)
     {
+        availableTiles.Remove(TileManger.Instance.curLevel.startTile);
         for (int i = 0; i < spawnCount && availableTiles.Count > 0; i++)
         {
             Tile targetTile = availableTiles[UnityEngine.Random.Range(0, availableTiles.Count)];
             availableTiles.Remove(targetTile);
-            availableTiles.Remove(TileManger.Instance.curLevel.startTile);
-            int id = GetRandomItemId(itemDatas);
+            int id = GetRandomItemId(dicItemByType[Item_Type.Material]);
             ItemData itemData = itemdataById[id];
             BaseItem item = DropItem(itemData, targetTile);
 

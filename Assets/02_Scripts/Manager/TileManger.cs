@@ -96,8 +96,10 @@ public class TileManger : Singleton<TileManger>
             SetLevel(curLevel);
             prevLevel.gameObject.SetActive(false);
         }
-
-        
+        else
+        {
+            EndQuest();
+        }
     }
 
     public void SpawnPlayer(Level level)
@@ -124,9 +126,9 @@ public class TileManger : Singleton<TileManger>
     {
         ItemFactory.Instance.ItemSpawnAtStart(level);
     }
-    public void CompleteQuest()
+    public void EndQuest()
     {
-        
+        UIManager.Show<UI_HUD>().OnDungeonResult();
     }
 
     public void FailQuest()

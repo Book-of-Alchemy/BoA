@@ -146,6 +146,6 @@ public static class TileRuleProccessor
         DamageType damageType = damageInfo.damageType;
 
         TileReactionResult result = new TileReactionResult(isReacted, env.EnvType, resultTileType, effect_ID, damage, damageType);
-        return TileReactionResult.NoReaction;
+        return result;
     }
 }
