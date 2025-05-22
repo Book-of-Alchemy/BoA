@@ -11,9 +11,20 @@ public class DungeonScene : SceneBase
     public override void OnEnter()
     {
         UIManager.Instance.RefreshUIList();
-        if (!UIManager.IsOpened<UI_HUD>())
+        // UI 확인 전에 UIManager가 준비되었는지 확인
+        if (UIManager.Instance != null)
         {
-            UIManager.Show<UI_HUD>();
+            try
+            {
+                if (!UIManager.IsOpened<UI_HUD>())
+                {
+                    UIManager.Show<UI_HUD>();
+                }
+            }
+            catch (System.Exception e)
+            {
+             
+            }
         }
     }
 

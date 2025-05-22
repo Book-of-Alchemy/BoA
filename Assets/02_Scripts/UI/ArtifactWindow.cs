@@ -163,6 +163,7 @@ public class ArtifactWindow : MonoBehaviour
     private void UpdateInfo(ArtifactData data)
     {
         _artifactImage.sprite = data.icon_sprite;
+        _artifactImage.gameObject.SetActive(true);
         _artifactName.text = data.name_kr;
         _artifactDesc.text = data.description;
         _artifactRarity.text = data.rarity.ToString();
@@ -179,6 +180,7 @@ public class ArtifactWindow : MonoBehaviour
     private void ClearInfo()
     {
         _artifactImage.sprite = null;
+        _artifactImage.gameObject.SetActive(false);
         _artifactName.text = string.Empty;
         _artifactDesc.text = string.Empty;
         _artifactRarity.text = string.Empty;

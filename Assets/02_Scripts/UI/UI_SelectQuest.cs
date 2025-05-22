@@ -111,7 +111,7 @@ public class UI_SelectQuest : UIBase
         GameObject go = Instantiate(_questButtonPrefab, _questListParent);
         //퀘스트에 맞는 Text로 변경
         var text = go.GetComponentsInChildren<TextMeshProUGUI>();
-        text[0].text = quest.name;  
+        text[0].text = quest.quest_name_kr;  
         text[1].text = quest.quest_Type.ToString();  
 
         //버튼 이벤트 등록

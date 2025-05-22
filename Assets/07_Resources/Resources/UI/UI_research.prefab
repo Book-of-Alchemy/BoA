@@ -232,6 +232,7 @@ MonoBehaviour:
   _data: {fileID: 11400000, guid: 543436fef1159cd409bad93426ee1b40, type: 2}
   _researchVal: {fileID: 6766409264758875836}
   _researchCnt: {fileID: 6939261545314606635}
+  _researchGold: {fileID: 913705104560494972}
   _upgradeBtn: {fileID: 3572602792973398595}
 --- !u!1 &974811044281203732
 GameObject:
@@ -331,6 +332,7 @@ MonoBehaviour:
   _data: {fileID: 11400000, guid: d86e6217fecc3724eb18ff0ad275d3c2, type: 2}
   _researchVal: {fileID: 5311722408214263524}
   _researchCnt: {fileID: 5959501148426673500}
+  _researchGold: {fileID: 8795760724456820981}
   _upgradeBtn: {fileID: 1495430603957278504}
 --- !u!1 &1875115884947958223
 GameObject:
@@ -818,6 +820,7 @@ MonoBehaviour:
   _data: {fileID: 11400000, guid: 145b9f29c9452d549a2260c85f6f2f0a, type: 2}
   _researchVal: {fileID: 6583991435040293089}
   _researchCnt: {fileID: 4614452312291682647}
+  _researchGold: {fileID: 7259028918902897797}
   _upgradeBtn: {fileID: 637953192946788780}
 --- !u!1 &2831072822159717910
 GameObject:
@@ -2639,6 +2642,7 @@ MonoBehaviour:
   _data: {fileID: 11400000, guid: c64c0381ab5d5e54598f2ec6fb4d2225, type: 2}
   _researchVal: {fileID: 6999250883067544533}
   _researchCnt: {fileID: 3205122180336954537}
+  _researchGold: {fileID: 784614737629288685}
   _upgradeBtn: {fileID: 8736701755375706803}
 --- !u!1 &5415640726830270975
 GameObject:
@@ -2977,6 +2981,7 @@ MonoBehaviour:
   _data: {fileID: 11400000, guid: d3dea361d073b7741adb4f7983bb59dc, type: 2}
   _researchVal: {fileID: 6178883321992507865}
   _researchCnt: {fileID: 6851041827374596088}
+  _researchGold: {fileID: 6451716009908425821}
   _upgradeBtn: {fileID: 8173326193617021316}
 --- !u!1 &5818907883883275527
 GameObject:
@@ -3012,8 +3017,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 550, y: 250}
-  m_SizeDelta: {x: 160, y: 50}
+  m_AnchoredPosition: {x: 560, y: 250}
+  m_SizeDelta: {x: 180, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6988847093777363810
 CanvasRenderer:
@@ -5178,6 +5183,7 @@ MonoBehaviour:
   _data: {fileID: 11400000, guid: 0f2dd7a5b5b46624f84a91c98a4c9eaa, type: 2}
   _researchVal: {fileID: 1674480991746629513}
   _researchCnt: {fileID: 6171011630369463851}
+  _researchGold: {fileID: 3937514427954442196}
   _upgradeBtn: {fileID: 4652619063083178423}
 --- !u!1 &8509470266996188428
 GameObject:
