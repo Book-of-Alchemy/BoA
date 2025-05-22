@@ -20,6 +20,9 @@ public class GameSceneManager : Singleton<GameSceneManager>
     private SceneBase _currentSceneBase;
     private readonly Dictionary<SceneType, SceneBase> _sceneMap = new();
     private SceneType _targetSceneType; // 로딩 후 전환될 씬 타입
+    
+    // 씬 로딩 처리 중인지 확인하는 플래그
+    private bool _isProcessingSceneLoad = false;
 
     public SceneType CurrentSceneType => _currentScene;
 
@@ -120,9 +123,20 @@ public class GameSceneManager : Singleton<GameSceneManager>
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        Debug.LogWarning("Called");
+        
+        // 이미 처리 중이면 중복 호출 방지
+        if (_isProcessingSceneLoad) 
+        {
+            return;
+        }
+        
+        _isProcessingSceneLoad = true;
+        
         if (!Enum.TryParse(scene.name, out SceneType parsedType))// 씬이름을 통해 정의해둔 타입으로 파싱
         {
             Debug.LogWarning($"Cannot parse scene name: {scene.name}");
+            _isProcessingSceneLoad = false;
             return;
         }
 
@@ -139,6 +153,8 @@ public class GameSceneManager : Singleton<GameSceneManager>
         {
             Debug.LogWarning($"다음씬은 매핑되지 않았습니다. {_currentScene}");
         }
+        
+        _isProcessingSceneLoad = false;
     }
 
     private void OnDestroy()// 이벤트 구독해제
