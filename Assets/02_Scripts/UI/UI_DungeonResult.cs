@@ -82,6 +82,14 @@ public class UI_DungeonResult : UIBase
             if (_endGainGold == true)
             {
                 HideDirect();
+                if (QuestManager.Instance != null && QuestManager.Instance.AcceptedQuest != null)
+                {
+                    int questId = QuestManager.Instance.AcceptedQuest.Data.id;
+                    DataManager.Instance.GetPlayerData().AcceptedQuests.Clear();
+                    QuestManager.Instance.AcceptedQuest = null;
+                    Debug.Log($"죽었습니다. 수락한 퀘스트 ID: {questId}가 취소되었습니다.");
+                    DataManager.Instance.SaveData();
+                }
                 GameSceneManager.Instance.ChangeScene(SceneType.Town);
             }
                 

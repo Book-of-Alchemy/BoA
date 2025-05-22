@@ -16,7 +16,7 @@ public class PlayerStats : CharacterStats
     //다음레벨까지 필요한 경험치(읽기 전용)
     public int nextLevelExp => _nextLevelExp;
 
-    public event Action OnExperienceChanged; 
+    public event Action OnExperienceChanged;
     public event Action<int> OnLevelChanged;
 
     public override Tile CurTile
@@ -59,7 +59,7 @@ public class PlayerStats : CharacterStats
         OnExperienceChanged?.Invoke();
         OnLevelChanged?.Invoke(level);
         Debug.Log("레벨업 " + level);
-        if(level < 62)
+        if (level < 62)
             UIManager.Show<UI_LvSelect>();
         else
             UIManager.Show<UI_Text>("유물을 획득하지 못할 것 같다...");
@@ -76,6 +76,7 @@ public class PlayerStats : CharacterStats
     {
         base.Die();
         UIManager.Show<UI_DungeonResult>();
+        
         _player.OnDisable();
     }
 
