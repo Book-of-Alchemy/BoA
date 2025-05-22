@@ -16,10 +16,10 @@ MonoBehaviour:
   name_en: Web Bomb
   name_kr: "\uAC70\uBBF8\uC904 \uD3ED\uD0C4"
   item_type: 0
-  attribute: 9
+  attribute: 0
   target_range: 5
   effect_range: 1
-  effect_type: 3
+  effect_type: 0
   tag: 
   tags: 000000000d00000011000000
   effect_value: 0

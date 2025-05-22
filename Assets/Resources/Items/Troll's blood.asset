@@ -15,11 +15,11 @@ MonoBehaviour:
   id: 201918
   name_en: Troll's Blood
   name_kr: "\uD2B8\uB864\uC758 \uD53C"
-  item_type: 2
-  attribute: 9
+  item_type: 0
+  attribute: 0
   target_range: -1
   effect_range: -1
-  effect_type: 6
+  effect_type: 0
   tag: 
   tags: 1e000000
   effect_value: -1

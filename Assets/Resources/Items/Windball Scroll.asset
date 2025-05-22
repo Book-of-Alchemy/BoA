@@ -16,7 +16,7 @@ MonoBehaviour:
   name_en: Windball Scroll
   name_kr: "\uBC14\uB78C \uAD6C\uCCB4 \uC2A4\uD06C\uB864"
   item_type: 0
-  attribute: 4
+  attribute: 0
   target_range: 4
   effect_range: 0
   effect_type: 0

@@ -16,7 +16,7 @@ MonoBehaviour:
   name_en: Earthquake Scroll
   name_kr: "\uC9C0\uC9C4 \uC2A4\uD06C\uB864"
   item_type: 0
-  attribute: 6
+  attribute: 0
   target_range: 0
   effect_range: 2
   effect_type: 0

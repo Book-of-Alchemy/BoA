@@ -16,7 +16,7 @@ MonoBehaviour:
   name_en: Fireburst Scroll
   name_kr: "\uD654\uC5FC \uD3ED\uBC1C \uC2A4\uD06C\uB864"
   item_type: 0
-  attribute: 1
+  attribute: 0
   target_range: 0
   effect_range: 2
   effect_type: 0

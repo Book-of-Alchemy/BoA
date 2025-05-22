@@ -16,7 +16,7 @@ MonoBehaviour:
   name_en: Release Light Scroll
   name_kr: "\uBE5B \uBC29\uCD9C \uC2A4\uD06C\uB864"
   item_type: 0
-  attribute: 7
+  attribute: 0
   target_range: 0
   effect_range: 2
   effect_type: 0

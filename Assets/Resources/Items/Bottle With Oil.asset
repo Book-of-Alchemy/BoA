@@ -16,10 +16,10 @@ MonoBehaviour:
   name_en: Bottle With Oil
   name_kr: "\uAE30\uB984\uBCD1"
   item_type: 0
-  attribute: 10
+  attribute: 0
   target_range: 5
   effect_range: 3
-  effect_type: 7
+  effect_type: 0
   tag: 
   tags: 000000000d00000021000000
   effect_value: 140002

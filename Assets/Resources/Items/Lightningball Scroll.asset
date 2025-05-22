@@ -16,7 +16,7 @@ MonoBehaviour:
   name_en: Lightningball Scroll
   name_kr: "\uBC88\uAC1C \uAD6C\uCCB4 \uC2A4\uD06C\uB864"
   item_type: 0
-  attribute: 5
+  attribute: 0
   target_range: 4
   effect_range: 0
   effect_type: 0
