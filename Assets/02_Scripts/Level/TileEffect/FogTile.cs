@@ -9,6 +9,7 @@ public class FogTile : TileEffect, IAir, IExpirable
     public int LeftTime { get => leftTime; set => leftTime = value; }
     public override void PerformAction()
     {
+        CurTile.IsOnSight = false;
         if (LeftTime <= 0)
         {
             Expire();

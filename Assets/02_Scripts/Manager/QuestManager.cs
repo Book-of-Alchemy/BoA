@@ -114,6 +114,7 @@ public class QuestManager : Singleton<QuestManager>
 
     public void AcceptQuest(QuestData quest)
     {
+        Unsubscribe();
         if (AcceptedQuest == null)
         {
             AcceptedQuest = new QuestProgress(quest);
@@ -157,10 +158,8 @@ public class QuestManager : Singleton<QuestManager>
         this.CompleteQuest(AcceptedQuest.Data.id);
         Debug.Log($"퀘스트 '{AcceptedQuest.Data.quest_name_kr}' (ID: {AcceptedQuest.Data.id})를 완료하고 저장했습니다.");
         
-        AcceptedQuest = null;
         OnQuestAccepted = null;
-        MonsterEvents.OnMonsterKilled -= CheckBoss;
-        TileManger.OnGetDown -= UpdateProgress;
+        Unsubscribe();
     }
 
     public List<int> GetClearedQuestIds()
@@ -207,9 +206,14 @@ public class QuestManager : Singleton<QuestManager>
     public void CheckBoss(int ID)
     {
         EnemyData enemy = SODataManager.Instance.enemyDataBase.GetEnemyById(ID);
+        if (enemy == null) return;
         if (enemy.isBoss)
-        {
             UpdateProgress(1);
-        }
+    }
+
+    void Unsubscribe()
+    {
+        MonsterEvents.OnMonsterKilled -= CheckBoss;
+        TileManger.OnGetDown -= UpdateProgress;
     }
 }
