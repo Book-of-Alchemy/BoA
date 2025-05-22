@@ -48,29 +48,29 @@ public class DragManager : MonoBehaviour
         if (_dragIcon != null)
             Destroy(_dragIcon);
 
-        if (_draggedItem == null || _dragIcon == null)
+        if (_draggedItem == null)
         {
             ResetState();
             return;
         }
 
-
         if (eventData.pointerEnter != null)
         {
             var dropTarget = eventData.pointerEnter.GetComponentInParent<IDraggableSlot>();
 
-            // 오직 InventorySlotUI 또는 QuickSlotUI 끼리만 드래그 허용
-            bool validSource = _originSlot is InventorySlotUI || _originSlot is QuickSlotUI;
-            bool validTarget = dropTarget is InventorySlotUI || dropTarget is QuickSlotUI;
-
-            if (validSource && validTarget && dropTarget != _originSlot)
+            //CraftSlotUI는 드래그 대상에서 제외
+            if (dropTarget is CraftSlotUI)
             {
-                if (_originSlot is InventorySlotUI originInvSlot && dropTarget is InventorySlotUI targetInvSlot)
-                {
-                    Inventory.Instance.SetItemAtoB(originInvSlot.Index, targetInvSlot.Index);
-                }
+                ResetState(); // 아무 것도 하지 않음
+                Debug.LogWarning("123");
+                return;
+            }
 
-                // QuickSlot 간 이동이 필요한 경우 이곳에 추가 로직 작성
+            if (_originSlot is InventorySlotUI originInvSlot &&
+                dropTarget is InventorySlotUI targetInvSlot &&
+                dropTarget != _originSlot)
+            {
+                Inventory.Instance.SetItemAtoB(originInvSlot.Index, targetInvSlot.Index);
             }
         }
 

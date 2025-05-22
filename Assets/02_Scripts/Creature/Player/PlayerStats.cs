@@ -35,6 +35,7 @@ public class PlayerStats : CharacterStats
         // GameManager에 플레이어 등록
         GameManager.Instance.RegisterPlayer(this);
         _player = GetComponent<PlayerController>();
+        ResearchSystem.Instance.ApplyModifiersTo(this);
     }
 
     public void GainExperience(int exp)
