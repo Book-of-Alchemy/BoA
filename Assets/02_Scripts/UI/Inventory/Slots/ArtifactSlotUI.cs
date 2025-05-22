@@ -14,7 +14,10 @@ public class ArtifactSlotUI : SlotUIBase<ArtifactData>, ISelectHandler
     {
         OnBtnSelected?.Invoke(_rect,Data);
     }
+    protected override void ShowTooltip(ArtifactData data)
+    {
 
+    }
     public override void OnClick()
     {
         

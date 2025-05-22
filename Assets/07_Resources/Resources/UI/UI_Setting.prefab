@@ -707,7 +707,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82a32545035c1c74a96adbe1ee054763, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiPosition: 0
+  uiPosition: 2
   masterSlider: {fileID: 3188759548632456104}
   bgmslider: {fileID: 5402667390896874676}
   sfxSlider: {fileID: 6653093561677269364}
