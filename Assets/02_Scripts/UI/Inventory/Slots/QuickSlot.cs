@@ -5,6 +5,7 @@ using UnityEngine;
 public class QuickSlot : MonoBehaviour
 {
     [SerializeField] private List<QuickSlotUI> _slots;
+    public List<QuickSlotUI> Slots => _slots;
 
     private void Awake()
     {

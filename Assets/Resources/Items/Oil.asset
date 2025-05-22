@@ -32,7 +32,7 @@ MonoBehaviour:
   tier: 1
   iteminfo_kr: "\uAE30\uBCF8 \uC7AC\uB8CC"
   icon_sprite: Image/Item/Oil
-  sprite: {fileID: 0}
+  sprite: {fileID: 21300000, guid: 0f39498475a15294195df0116a41edcb, type: 3}
   itemRangeSprite: {fileID: 0}
   itemEffectRangeSprite: {fileID: 0}
   itemPrefab: {fileID: 0}

@@ -232,11 +232,11 @@ public class Inventory : Singleton<Inventory>
         return -1;
     }
 
-    private int GetItemIndex(int id)
+    public int GetItemIndex(int id)
     {
         for (int i = 0; i < items.Length; i++)
         {
-            if (items[i].GetItemId() == id)
+            if (items[i] != null && items[i].GetItemId() == id)
                 return i;
         }
 
@@ -287,7 +287,7 @@ public class Inventory : Singleton<Inventory>
         if (!HasItem) return;
         // type 과 enum값이 같은 item을 검색해서 배열로 저장
         InventoryItem[] filtered = Array.FindAll(items, item =>
-            item != null && Array.Exists(types, type => item.GetItemType() == type));
+            item != null && item.itemData != null && Array.Exists(types, type => item.GetItemType() == type));
 
         // ID 순서로 정렬
         Array.Sort(filtered, (a, b) =>
@@ -332,11 +332,16 @@ public class Inventory : Singleton<Inventory>
 
     public void TryCraft()
     {
-        if (_craftList.Count < 1)
+        var validCraftList = _craftList
+            .Where(x => x != null && x.itemData != null)
+            .ToList();
+
+        if (validCraftList.Count < 2)
         {
             UIManager.ShowOnce<UI_Text>("재료가 부족한 것 같다...");
             return;
         }
+
         //제작 결과 담을 변수
         (bool boolResult, RecipeData dataResult, int amount) result;
 
@@ -382,9 +387,9 @@ public class Inventory : Singleton<Inventory>
             _craftList.RemoveAll(slot => slot != null);
 
         }
-        else
+        else if(!boolResult)
         {
-            UIManager.ShowOnce<UI_Text>("재료가 다른 것 같다...");
+            UIManager.ShowOnce<UI_Text>("제작에 실패했다.");
             Debug.Log(boolResult);
         }
 
@@ -415,9 +420,11 @@ public class Inventory : Singleton<Inventory>
     }
     public void RemoveCraftTable(InventoryItem item)
     {
-        _craftList.Remove(item);
+        _craftList.RemoveAll(i => i == null || i.itemData == null || i.GetItemId() == item.GetItemId());
         HighlightCraftableSlots();
         UpdateCraftPreview();
+        if (_craftList.Count < 2)
+            _craftTool.ClearPreviewSlot();
     }
 
     public void Use(InventoryItem item, int index)
@@ -443,9 +450,11 @@ public class Inventory : Singleton<Inventory>
 
     public void Craft(InventoryItem item)
     {
-        //Craft테이블에 item을 같이 넣어야함.
-        _craftList.Add(item);
+        if (_craftList.Count >= 3 || _craftList.Contains(item)) return;
 
+        Debug.Log($"[Craft 호출] {item.itemData.name}");
+     
+        _craftList.Add(item);
         HighlightCraftableSlots();
         UpdateUICraft(item);
         UpdateCraftPreview();
