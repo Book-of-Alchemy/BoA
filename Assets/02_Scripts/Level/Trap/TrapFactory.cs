@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public static class TrapFactory
@@ -19,6 +20,13 @@ public static class TrapFactory
         tile.TrpaOnTile = TrapGO;
         TrapGO.spriteRenderer.sortingOrder = - tile.gridPosition.y * 10;
         TrapGO.transform.SetParent(level.transform);
+        bool detect = false;
+        if (GameManager.Instance.PlayerTransform.equipArtifacts.Any(e => e is TrapDetector))
+        {
+            if(Random.value > 0.1)
+                detect = true;
+        }
+        TrapGO.IsDetected = detect;
         return TrapGO;
     }
 }

@@ -11,16 +11,16 @@ public class TrapDetector : Artifact
     public override void Equip(PlayerStats player)
     {
         base.Equip(player);
-        foreach(var level in TileManger.Instance.levels)
-        {
-            foreach(var tile in level.tiles)
-            {
-                float random = Random.value;
 
-                if(random > 0.1f)
-                    tile.Value.TrpaOnTile.IsDetected = true;
-            }
+        foreach (var tile in TileManger.Instance.curLevel.tiles)
+        {
+            float random = Random.value;
+            if (tile.Value.TrpaOnTile == null) continue;
+
+            if (random > 0.1f)
+                tile.Value.TrpaOnTile.IsDetected = true;
         }
+
     }
 
     public override void UnEquip(PlayerStats player)

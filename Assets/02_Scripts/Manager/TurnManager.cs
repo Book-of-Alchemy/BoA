@@ -121,7 +121,7 @@ public class TurnManager : Singleton<TurnManager>
                     if (unit is PlayerUnit playerUnit)
                     {
                         yield return new WaitUntil(() => !playerUnit.IsWaitingForInput);
-                        Debug.Log($"플레이어 턴 {Time.time}");
+                        //Debug.Log($"플레이어 턴 {Time.time}");
                     }
 
                     int cost = unit.GetModifiedActionCost();
