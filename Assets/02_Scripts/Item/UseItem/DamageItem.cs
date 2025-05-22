@@ -72,11 +72,11 @@ public class DamageItem : BaseItem
         // 사거리 내에 타일을 클릭했는지 확인하는 조건, 사거리 내의 타일을 클릭했다면 효과범위내에 대상들이 있는지 확인
         if (rangeTiles.Contains(mouseClickTile))
         {
-            List<Tile> tiles =TileUtility.GetLineTile(_player.curLevel, _player.CurTile, mouseClickTile);
+            List<Tile> tiles = TileUtility.GetLineTile(_player.curLevel, _player.CurTile, mouseClickTile);
             Tile targetTile = mouseClickTile;
             foreach (Tile objectTile in tiles)
             {
-                if(objectTile.CharacterStatsOnTile != null)
+                if (objectTile.CharacterStatsOnTile != null)
                 {
                     targetTile = objectTile;
                     break;
@@ -132,7 +132,7 @@ public class DamageItem : BaseItem
         {
             if (data.effect_range == 1)
             {
-                tiles = TileUtility.GetNineVisibleTileList(_player.curLevel, targetTile,true);
+                tiles = TileUtility.GetNineVisibleTileList(_player.curLevel, targetTile, true);
             }
             else
             {
@@ -141,10 +141,10 @@ public class DamageItem : BaseItem
         }
         // 마법 정밀 조준 아티팩트 적용부분
         monsterCount = tiles.Count(x => x.CharacterStatsOnTile != null);
-        
-        if (monsterCount >= 3 && data.tags.Contains(Tag.Scroll)&&_player.isPrecisionAim)
+
+        if (monsterCount >= 3 && data.tags.Contains(Tag.Scroll) && _player.isPrecisionAim)
         {
-            _player.statBlock.AddModifier(StatType.FinalDmg,new StatModifier("PrecisionAimforMagic",70,ModifierType.Precent));
+            _player.statBlock.AddModifier(StatType.FinalDmg, new StatModifier("PrecisionAimforMagic", 70, ModifierType.Precent));
         }
 
         foreach (Tile ojTile in tiles)
@@ -157,21 +157,21 @@ public class DamageItem : BaseItem
             }
             if (ojTile.CharacterStatsOnTile != null)
             {
-                if(data.attribute == Attribute.None)
+                if (data.attribute == Attribute.None)
                     EffectProjectileManager.Instance.PlayEffect(ojTile.gridPosition, 30013);
                 if (data.tags.Contains(Tag.Scroll) && _player.isManaOverload) // 마나오버로드 아티팩트 확인하는 부분
                 {
-                    if(data.mp_cost < _player.CurrentMana)
+                    if (data.mp_cost < _player.CurrentMana)
                     {
                         damageValue = data.effect_value + data.effect_value;
                         _player.ChangeMana(-data.mp_cost);
                     }
                 }
-                ojTile.CharacterStatsOnTile.TakeDamage(new DamageInfo(damageValue, (DamageType)data.attribute, _player, ojTile.CharacterStatsOnTile, false, data.tags, data.effect_id));
+                ojTile.CharacterStatsOnTile.TakeDamage(new DamageInfo(damageValue, GetDamageType(data.attribute), _player, ojTile.CharacterStatsOnTile, false, data.tags, data.effect_id));
             }
         }
 
-        TileRuleProccessor.ProcessTileReactions(new DamageInfo(damageValue, (DamageType)data.attribute, _player, null, false, data.tags, data.effect_id), tiles);
+        TileRuleProccessor.ProcessTileReactions(new DamageInfo(damageValue, GetDamageType(data.attribute), _player, null, false, data.tags, data.effect_id), tiles);
 
         Debug.Log(data.name_en);
         if (monsterCount >= 3 && data.tags.Contains(Tag.Scroll) && _player.isPrecisionAim)
@@ -180,7 +180,24 @@ public class DamageItem : BaseItem
         }
         InputManager.Instance.OnMouseClick -= OnClick;
         FinishUse();
-        Destroy(this.gameObject,0.1f);
+        Destroy(this.gameObject, 0.1f);
+    }
+
+    private DamageType GetDamageType(Attribute attribute)
+    {
+        return attribute switch
+        {
+            Attribute.None => DamageType.None,
+            Attribute.Fire => DamageType.Fire,
+            Attribute.Water => DamageType.Water,
+            Attribute.Cold => DamageType.Cold,
+            Attribute.Lightning => DamageType.Lightning,
+            Attribute.Earth => DamageType.Earth,
+            Attribute.Wind => DamageType.Wind,
+            Attribute.Light => DamageType.Light,
+            Attribute.Dark => DamageType.Dark,
+            _ => DamageType.None,
+        };
     }
 
     /// <summary>
@@ -198,7 +215,7 @@ public class DamageItem : BaseItem
         {
             List<Tile> checkItemRangeTiles = new List<Tile>();
 
-            if(targetRange == 0)
+            if (targetRange == 0)
             {
                 if (itemData.effect_range == 1)
                     checkItemRangeTiles = TileUtility.GetNineVisibleTileList(_player.curLevel, mouseTile, false);
@@ -223,7 +240,7 @@ public class DamageItem : BaseItem
     {
         ItemManager.Instance.DestroyRange();
 
-        
+
         if (_player.isMarksman && data.tags.Contains(Tag.Throw))
         {
             targetRange = data.target_range + 1;
@@ -235,7 +252,7 @@ public class DamageItem : BaseItem
         if (targetRange == 0)
             checkRangeTiles = TileUtility.GetItemRangedTile(_player.curLevel, _player.CurTile, targetRange, true);
         else if (targetRange == 1)
-            checkRangeTiles = TileUtility.GetNineVisibleTileList(_player.curLevel, _player.CurTile,true);
+            checkRangeTiles = TileUtility.GetNineVisibleTileList(_player.curLevel, _player.CurTile, true);
         else if (targetRange >= 2)
             checkRangeTiles = TileUtility.GetItemRangedTile(_player.curLevel, _player.CurTile, targetRange, true);
 
@@ -248,13 +265,13 @@ public class DamageItem : BaseItem
     public void SubscribeInput()
     {
         var player = GameManager.Instance.PlayerTransform;
-            if (player != null)
+        if (player != null)
+        {
+            var dungeonBehavior = player.GetComponent<DungeonBehavior>();
+            if (dungeonBehavior != null)
             {
-                var dungeonBehavior = player.GetComponent<DungeonBehavior>();
-                if (dungeonBehavior != null)
-                {
-                    dungeonBehavior.SSubscribeInput();
-                }
+                dungeonBehavior.SSubscribeInput();
             }
+        }
     }
 }

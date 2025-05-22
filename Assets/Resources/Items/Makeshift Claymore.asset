@@ -16,7 +16,7 @@ MonoBehaviour:
   name_en: Makeshift Claymore
   name_kr: "\uAC04\uC774 \uD074\uB808\uC774\uBAA8\uC5B4"
   item_type: 0
-  attribute: 9
+  attribute: 0
   target_range: 1
   effect_range: 0
   effect_type: 5

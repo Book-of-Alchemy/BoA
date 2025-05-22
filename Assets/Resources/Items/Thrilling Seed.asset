@@ -16,7 +16,7 @@ MonoBehaviour:
   name_en: Thrilling Seed
   name_kr: "\uC9DC\uB9BF\uD55C \uC528\uC557"
   item_type: 1
-  attribute: 9
+  attribute: 0
   target_range: -1
   effect_range: -1
   effect_type: 6
