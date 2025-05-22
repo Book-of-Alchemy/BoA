@@ -131,8 +131,13 @@ public class TileManger : Singleton<TileManger>
         UIManager.Show<UI_HUD>().OnDungeonResult();
     }
 
-    public void FailQuest()
+    public void DestroyDungeon()
     {
+        if(levels == null) return;  
 
+        foreach(var level in levels)
+        {
+            Destroy(level.gameObject);
+        }
     }
 }
