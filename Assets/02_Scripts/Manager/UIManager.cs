@@ -44,11 +44,12 @@ public class UIManager : Singleton<UIManager>
     {
         EnsureParents();
         var type = typeof(T);
-        Debug.Log(type);
+        Debug.LogWarning(type);
 
         if (IsOpened<T>()) // 이미 열려있는데 Show를 호출시 UI를 숨기고 리턴
         {
             Hide<T>();
+            Debug.Log(typeof(T));
             return Instance._uiDict.TryGetValue(type, out var openedUI) ? (T)openedUI : null;
         }
 

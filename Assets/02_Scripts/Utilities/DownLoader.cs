@@ -26,7 +26,7 @@ public class DownLoader : EditorWindow
     string questJsonSavePath = "Assets/Resources/Json/Quest.json";
     string researchDBUrl = "https://opensheet.elk.sh/18J2rdxLQUZwBIhTPIzRW7roD1Vwwt9L14FHOvudFGno/HOK_DB";
     string researchJsonSavePath = "Assets/Resources/Json/Research.json";
-    string soundDBUrl = "https://opensheet.elk.sh/";
+    string soundDBUrl = "https://opensheet.elk.sh/1opKr37fwkgj0liXqkWhx_pYQEsf97agKquDpO236kgk/Audio_DB";
     string soundJsonSavePath = "Assets/Resources/Json/Sound.json";
 
     string saveItemSOPath = "Assets/Resources/Items";

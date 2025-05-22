@@ -47,6 +47,7 @@ public class DragManager : MonoBehaviour
     {
         if (_dragIcon != null)
             Destroy(_dragIcon);
+
         if (_draggedItem == null || _dragIcon == null)
         {
             ResetState();
@@ -56,22 +57,16 @@ public class DragManager : MonoBehaviour
         if (eventData.pointerEnter != null)
         {
             var dropTarget = eventData.pointerEnter.GetComponentInParent<IDraggableSlot>();
+
             //드랍이가능하고 원래 드래그전 슬롯이아니라면
-            if (dropTarget != null && dropTarget != _originSlot)
+            if (dropTarget is InventorySlotUI targetInvSlot &&
+                  _originSlot is InventorySlotUI originInvSlot &&
+                  dropTarget != _originSlot)
             {
-                if(dropTarget.GetItem() == null)
-                {
-                    Inventory.Instance.SetItemAtoB(_originSlot.Index,dropTarget.Index);
-                }
-                else
-                {
-                    Inventory.Instance.SetItemAtoB(_originSlot.Index, dropTarget.Index);
-                }
+                Inventory.Instance.SetItemAtoB(originInvSlot.Index, targetInvSlot.Index);
             }
         }
-
-        _draggedItem = null;
-        _originSlot = null;
+        ResetState();
     }
     private void ResetState()
     {

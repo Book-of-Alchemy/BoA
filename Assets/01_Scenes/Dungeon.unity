@@ -916,7 +916,6 @@ MonoBehaviour:
   - {fileID: 1047735267}
   - {fileID: 1722000325}
   - {fileID: 1931860809}
-  uiList: []
 --- !u!4 &1313927561
 Transform:
   m_ObjectHideFlags: 0
@@ -989,6 +988,50 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d3168c0dca9b03542b68ec394282d218, type: 3}
+--- !u!1 &1489184912
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1489184913}
+  - component: {fileID: 1489184914}
+  m_Layer: 0
+  m_Name: ResearchSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1489184913
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1489184912}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3.6057067, y: -1.3871684, z: -3.5716853}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1489184914
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1489184912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d07f6852fbbb6a145b37d23ea3ead311, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1551207454
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1009,6 +1052,10 @@ PrefabInstance:
       propertyPath: facilityDataBase
       value: 
       objectReference: {fileID: 11400000, guid: fd9dec103ed1ddf429fa7b2193380602, type: 2}
+    - target: {fileID: 3107400911350595328, guid: 2e3d548e3203bc64c897c17cd763b7e9, type: 3}
+      propertyPath: researchDataBase
+      value: 
+      objectReference: {fileID: 11400000, guid: 2c29d62853e2ecf43bde07d3c2fc8864, type: 2}
     - target: {fileID: 3107400911350595328, guid: 2e3d548e3203bc64c897c17cd763b7e9, type: 3}
       propertyPath: StatusEffectDataBase
       value: 
@@ -1172,6 +1219,63 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dragIconPrefab: {fileID: 8318920896015334679, guid: 5621e1b73863ac8448959407d4b2c76d, type: 3}
+--- !u!1 &1682112657
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1682112659}
+  - component: {fileID: 1682112658}
+  m_Layer: 0
+  m_Name: SODataManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1682112658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1682112657}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17e11bd76f18ae143b709603224d230d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tileDataBase: {fileID: 11400000, guid: 3b38638883768d946bcf1f6695507f0d, type: 2}
+  enemyDataBase: {fileID: 11400000, guid: fe5112d6adcb6364bba839c0b620c889, type: 2}
+  questDataBase: {fileID: 11400000, guid: 69f36144dd01d7640a6860674d752327, type: 2}
+  projectileDataBase: {fileID: 11400000, guid: 0e7a19d9e26daaa4e87559533a2df0a2, type: 2}
+  effectDataBase: {fileID: 11400000, guid: 0e1d3de297452ea4baccf6d60ce92783, type: 2}
+  itemDataBase: {fileID: 11400000, guid: cd8bd01065132854094ebeead4b9e911, type: 2}
+  StatusEffectDataBase: {fileID: 11400000, guid: 4a63df85c3a103a438b42495e80af951, type: 2}
+  ArtifactDataBase: {fileID: 11400000, guid: 86d17cc3ee7572d48a168afc70fb0c7d, type: 2}
+  environmentalDataBase: {fileID: 11400000, guid: add19ce1a70d3244dbb0b89406e31ed9, type: 2}
+  facilityDataBase: {fileID: 11400000, guid: fd9dec103ed1ddf429fa7b2193380602, type: 2}
+  envRuleDataBase: {fileID: 11400000, guid: 6b0fc0a72a5484447a34000ff3424ff2, type: 2}
+  researchDataBase: {fileID: 11400000, guid: 2c29d62853e2ecf43bde07d3c2fc8864, type: 2}
+  playerPrefab: {fileID: 6804339739346013789, guid: 3999d0f34cbe9ef418c5a85ae2944482, type: 3}
+--- !u!4 &1682112659
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1682112657}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 4.1781464, y: 1.4602538, z: -3.770775}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1722000324
 GameObject:
   m_ObjectHideFlags: 0
@@ -1364,3 +1468,5 @@ SceneRoots:
   - {fileID: 1837043087}
   - {fileID: 641113208}
   - {fileID: 1003650866}
+  - {fileID: 1489184913}
+  - {fileID: 1682112659}
