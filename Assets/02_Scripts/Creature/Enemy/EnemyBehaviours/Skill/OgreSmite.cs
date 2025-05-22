@@ -18,6 +18,16 @@ public class OgreSmite : EnemySkill, ICooltime
         coolTime = 80;
         availableTime = 0;
     }
+
+    private void OnEnable()
+    {
+        stats.OnDead += OnDead;
+    }
+
+    private void OnDisable()
+    {
+        stats.OnDead -= OnDead;
+    }
     public override SkillUseState CanUse()//캔유즈 실행후 enemy 애니메이션 실행 예정
     {
         int currentTime = TurnManager.Instance.globalTime;
@@ -77,5 +87,10 @@ public class OgreSmite : EnemySkill, ICooltime
             }
         }
         attackBaseBehaviour.EndTurn();
+    }
+
+    void OnDead()
+    {
+        ItemManager.Instance.DestroyBossRange(gameObject.name);
     }
 }
