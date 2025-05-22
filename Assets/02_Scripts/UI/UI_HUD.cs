@@ -136,7 +136,13 @@ public class UI_HUD : UIBase
 
     private void OnDisable()
     {
-        if(GameManager.Instance.PlayerTransform.TryGetComponent<PlayerStats>(out var player))
+        //던전-마을로 씬전환할때 UI_HUD가 비활성화 되면서 이 메서드가 호출되는데 플레이어가 파괴된 상태에서 접근을 시도하여 오류가 발생함.
+        //널체크 추가했습니다.
+        if(GameManager.Instance != null 
+            && GameManager.Instance.PlayerTransform != null 
+            && GameManager.Instance.PlayerTransform.TryGetComponent<PlayerStats>(out var player))
+        {
             player.OnLevelChanged -= UpdateLevelTxt;
+        }
     }
 }
