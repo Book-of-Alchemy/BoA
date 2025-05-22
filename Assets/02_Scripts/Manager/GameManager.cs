@@ -15,20 +15,24 @@ public class GameManager : Singleton<GameManager>
     {
         base.Awake();
         killTracker = new KillTracker();
+    }
+
+    private void OnEnable()
+    {
         if (killTracker != null)
             MonsterEvents.OnMonsterKilled += killTracker.ReportKill;
         // gameSceneManager의 이벤트 구독 , 씬이 바뀔때마다 메서드 실행됨
         GameSceneManager.Instance.OnSceneTypeChanged += SceneChange;
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
-        //구독 해제
         if (GameSceneManager.HasInstance)
             GameSceneManager.Instance.OnSceneTypeChanged -= SceneChange;
         if (killTracker != null)
             MonsterEvents.OnMonsterKilled -= killTracker.ReportKill;
     }
+    
     public void SceneChange(SceneType sceneType)
     {
         OnSceneTypeChanged?.Invoke(sceneType);
