@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: pierce
   m_EditorClassIdentifier: 
   id: pierce
-  type: 0
+  type: 1
   clip: {fileID: 8300000, guid: fa4de6c55e5eefc439ca35b8e802ab3f, type: 3}
   audioClipPath: 

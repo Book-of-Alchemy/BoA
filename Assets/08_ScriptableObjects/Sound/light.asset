@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: light
   m_EditorClassIdentifier: 
   id: light
-  type: 0
+  type: 1
   clip: {fileID: 8300000, guid: 641e34adce6159641a47fcd0900ec6cd, type: 3}
   audioClipPath: 

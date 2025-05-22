@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: wind
   m_EditorClassIdentifier: 
   id: wind
-  type: 0
+  type: 1
   clip: {fileID: 8300000, guid: 96066b6ccf51f0a4d8e7d4272cf89133, type: 3}
   audioClipPath: 

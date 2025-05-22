@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: earth
   m_EditorClassIdentifier: 
   id: earth
-  type: 0
+  type: 1
   clip: {fileID: 8300000, guid: 80bc0716dfab3444c9505556f60e6e2c, type: 3}
   audioClipPath: 

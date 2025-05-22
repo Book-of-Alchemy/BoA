@@ -118,7 +118,7 @@ public class SoundManager : MonoBehaviour
             t += Time.deltaTime;
             float pct = t / crossfadeTime;
             from.volume = Mathf.Lerp(startVol, 0f, pct);
-            to.volume = Mathf.Lerp(0f, to.volume, pct);
+            to.volume = Mathf.Lerp(0f, fixedBGMVolume, pct);
             yield return null;
         }
         from.Stop();
