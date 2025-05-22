@@ -33,7 +33,7 @@ public class UI_DungeonResult : UIBase
         _currentGold = Inventory.Instance.Gold;
 
         //텍스트 초기화
-        _locationTxt.text = $"{TileManger.Instance.curLevelIndex}층 : 숲";
+        _locationTxt.text = $"{TileManger.Instance.curLevelDepth}층 : 숲";
 
         //획득 아이템 텍스트 출력
         _itemTxt.text = string.Empty;
@@ -54,6 +54,7 @@ public class UI_DungeonResult : UIBase
         
         _itemLoaded = true;
         _endGainGold = false;
+        QuestManager.Instance.AcceptedQuest = null;
     }
 
     private void SetResultText()

@@ -158,7 +158,6 @@ public class QuestManager : Singleton<QuestManager>
         this.CompleteQuest(AcceptedQuest.Data.id);
         Debug.Log($"퀘스트 '{AcceptedQuest.Data.quest_name_kr}' (ID: {AcceptedQuest.Data.id})를 완료하고 저장했습니다.");
         
-        AcceptedQuest = null;
         OnQuestAccepted = null;
         Unsubscribe();
     }

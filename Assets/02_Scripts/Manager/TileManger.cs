@@ -11,6 +11,7 @@ public class TileManger : Singleton<TileManger>
     public List<Level> levels = new List<Level>();
     public Level curLevel;
     public int curLevelIndex;
+    public int curLevelDepth;
     public LevelGenerator levelGenerator;
     public GameObject groundPrefab;
     public GameObject wallPrefab;
@@ -38,6 +39,7 @@ public class TileManger : Singleton<TileManger>
         //if (sceneType != SceneType.Dungeon) return;
         
         curLevelIndex = 0;
+        curLevelDepth = 1;
         quest = null;
         if (QuestManager.Instance.AcceptedQuest == null)// 향후 수정 임시코드
         {
@@ -87,8 +89,9 @@ public class TileManger : Singleton<TileManger>
         Level prevLevel = curLevel;
         curLevelIndex++;
         OnGetDown?.Invoke(curLevelIndex);
-        if (curLevelIndex < levels.Count)
+        if (curLevelIndex <= levels.Count)
         {
+            curLevelDepth++;
             TurnManager.Instance.RemoveAllEnemy();
             curLevel = levels[curLevelIndex];
             curLevel.gameObject.SetActive(true);

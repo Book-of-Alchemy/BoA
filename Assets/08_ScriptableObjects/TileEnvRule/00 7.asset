@@ -16,6 +16,6 @@ MonoBehaviour:
   sourceTileType: 2
   reactionDamageType: 2
   effect_ID: -1
-  resultTileType: 0
+  resultTileType: 8
   damageMultiplier: 0
   emittedDamageType: 0
