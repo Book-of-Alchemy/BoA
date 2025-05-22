@@ -18,16 +18,26 @@ public class UI_Main : UIBase
 
     public void OnClickNewGame()
     {
-        //UIManager.Show<UI_HUD>();
-       GameSceneManager.Instance.ChangeScene(SceneType.Town);
+        // 데이터 초기화
+        if (DataManager.HasInstance && DataManager.Instance != null)
+        {
+            DataManager.Instance.ResetData();
+            Debug.Log("새 게임을 시작합니다. 데이터를 초기화했습니다.");
+        }
+        
+        //// 시설 데이터 초기화
+        //if (FacilityManager.HasInstance && FacilityManager.Instance != null)
+        //{
+        //    FacilityManager.Instance.ResetFacilityData();
+        //    Debug.Log("시설 데이터를 초기화했습니다.");
+        //}
 
-        //UIManager.Show<UI_HUD>();
-        //HideDirect();
+        GameSceneManager.Instance.ChangeScene(SceneType.Town);
     }
 
     public void OnClickLoadGame()
     {
-        GameSceneManager.Instance.ChangeScene(SceneType.Dungeon);
+        GameSceneManager.Instance.ChangeScene(SceneType.Town);
     }
 
     public void OnClickSetting()
