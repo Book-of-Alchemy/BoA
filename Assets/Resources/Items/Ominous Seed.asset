@@ -31,7 +31,7 @@ MonoBehaviour:
   price: 25
   tier: 1
   iteminfo_kr: "\uC5B4\uB460 \uAE30\uBCF8 \uC7AC\uB8CC"
-  icon_sprite: 
+  icon_sprite: Image/Item/Ominous Seed
   sprite: {fileID: 0}
   itemRangeSprite: {fileID: 0}
   itemEffectRangeSprite: {fileID: 0}

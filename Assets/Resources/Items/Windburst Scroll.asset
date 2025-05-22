@@ -32,8 +32,8 @@ MonoBehaviour:
   tier: 1
   iteminfo_kr: "\uBC14\uB78C \uD3ED\uBC1C\uB85C \uC8FC\uBCC0 \uC801\uC5D0\uAC8C \uD53C\uD574\uB97C
     \uC90D\uB2C8\uB2E4."
-  icon_sprite: 
-  sprite: {fileID: 0}
+  icon_sprite: Image/Item/Windburst Scroll
+  sprite: {fileID: 21300000, guid: 60c1ddd7a2d40224cb3cbc89f529a9c6, type: 3}
   itemRangeSprite: {fileID: 21300000, guid: 545ca318c5a6dfc468a07d3e066eb690, type: 3}
   itemEffectRangeSprite: {fileID: 21300000, guid: 3118db4ab2c968c4ab4f15ddbe31247a, type: 3}
   itemPrefab: {fileID: 0}
