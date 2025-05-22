@@ -94,15 +94,16 @@ public class UI_SelectQuest : UIBase
         if (mainQuest != null)
             CreateQuestButton(mainQuest);
 
-        //서브 퀘스트 배열 저장
-        var subQuests = matched
-            .Where(q => q.quest_Type == QuestType.sub)
-            .OrderBy (q => q.id)
-            .ToList();
+        //서브퀘스트 임시 제거
+        ////서브 퀘스트 배열 저장
+        //var subQuests = matched
+        //    .Where(q => q.quest_Type == QuestType.sub)
+        //    .OrderBy (q => q.id)
+        //    .ToList();
 
-        //서브 퀘스트 버튼생성
-        for (int i = 0; i < subQuests.Count; i++)
-            CreateQuestButton(subQuests[i]);
+        ////서브 퀘스트 버튼생성
+        //for (int i = 0; i < subQuests.Count; i++)
+        //    CreateQuestButton(subQuests[i]);
     }
 
     private void CreateQuestButton(QuestData quest)

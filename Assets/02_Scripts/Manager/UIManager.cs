@@ -1,13 +1,17 @@
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 public class UIManager : Singleton<UIManager>
 {
     [SerializeField] private List<Transform> parents;
     private Dictionary<System.Type, UIBase> _uiDict = new();
+    private Canvas _canvas;
 
     [Tooltip("한번 출력되는 UI의 생명기간")]
     [SerializeField] static private float _fadeOutDuration = 1.4f;
+
+    public Canvas GetCanvas() => _canvas != null ? _canvas : null;
 
     private static void EnsureParents()
     {
@@ -19,6 +23,8 @@ public class UIManager : Singleton<UIManager>
                 Debug.LogError("Canvas를 찾을 수 없습니다.");
                 return;
             }
+            if(Instance._canvas ==null)
+                Instance._canvas = canvas.GetComponent<Canvas>();
 
             Instance.parents = new List<Transform>
             { 
@@ -28,6 +34,7 @@ public class UIManager : Singleton<UIManager>
             };
         }
     }
+
     public static void SetParents(List<Transform> parents)
     {
         Instance.parents = parents;
