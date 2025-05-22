@@ -239,11 +239,6 @@ public class UI_Inventory : UIBase
             _inventory.FilterAndDisplay(types);
         else //기본 인벤토리는 필터링 없기때문에 
             _inventory.RestoreBeforeFilter();
-
-        foreach (var item in types)
-        {
-            Debug.Log(item);
-        }
         _isFirstTypeSet = false;
     }
 

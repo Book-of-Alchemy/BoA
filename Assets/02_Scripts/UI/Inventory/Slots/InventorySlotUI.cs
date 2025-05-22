@@ -52,7 +52,17 @@ public class InventorySlotUI : SlotUIBase<InventoryItem>, ISelectHandler, IDesel
 
     protected override void UpdateUI(InventoryItem data)
     {
-        if (_btn != null) _btn?.onClick.AddListener(OnClick);
+        if (data?.itemData == null)
+        {
+            ClearUI(); 
+            return;
+        }
+
+        if (_btn != null)
+        {
+            _btn.onClick.RemoveAllListeners();
+            _btn.onClick.AddListener(OnClick);
+        }
         if (_countTxt != null) _countTxt.text = data.Amount.ToString();
         if (_icon != null) _icon.sprite = data.GetSprite();
         _icon.enabled = data != null;
@@ -64,6 +74,7 @@ public class InventorySlotUI : SlotUIBase<InventoryItem>, ISelectHandler, IDesel
 
     protected override void ClearUI()
     {
+        if (_icon == null || _icon.gameObject == null) return;
         _icon.sprite = null;
         _countTxt.text = string.Empty;
         _icon.enabled = false;
@@ -81,7 +92,13 @@ public class InventorySlotUI : SlotUIBase<InventoryItem>, ISelectHandler, IDesel
     {
         if (!HasData) return;
 
-        //인벤토리타입(키)에 맞는 액션(Value) 찾기
+        var item = _data;
+
+        // Consumable 타입 검사
+        if (item.GetItemType() != Item_Type.Consumable)
+            return;
+
+        //인벤토리타입에 맞는 액션 찾기
         if (_OnClickActions.TryGetValue(_uiInventory.CurType, out var action))
         {
             //찾았다면 Invoke

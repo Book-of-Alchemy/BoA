@@ -15,6 +15,7 @@ public class CraftTool : MonoBehaviour
         }
 
         int index = FindSlot();
+        if (index == -1) return;
         _slotCraft[index].Index = index;
         _slotCraft[index].SetData(item);
     }

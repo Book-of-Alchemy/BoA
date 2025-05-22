@@ -61,7 +61,7 @@ public class Alchemy : MonoBehaviour
         List<(ItemData materials, int amount)> materials = new List<(ItemData materials, int amount)>();
         materials.Add((material1, material1Amount));
         materials.Add((material2, material2Amount));
-        materials.Add((material3, material2Amount));
+        materials.Add((material3, material3Amount));
         string curMaterialKey = GetMaterialsKey(materials);
         if (recipeKey.ContainsKey(curMaterialKey))
         {
@@ -152,7 +152,8 @@ public class Alchemy : MonoBehaviour
             //레시피 재료 아이템 1,2,3번의 비어있는지 검사
             recipeItemIds.Add(recipe.material_1_item_id);
             recipeItemIds.Add(recipe.material_2_item_id);
-            if (recipe.material_3_item_id != -1) recipeItemIds.Add(recipe.material_3_item_id);
+            if (recipe.material_3_item_id != -1) 
+                recipeItemIds.Add(recipe.material_3_item_id);
 
             //현재 선택한 재료들이 recipeDatas에 배열에서 인덱스 recipe에 부분집합인지 검사
             if (craftItemIds.IsSubsetOf(recipeItemIds))
