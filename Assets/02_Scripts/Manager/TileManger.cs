@@ -18,27 +18,25 @@ public class TileManger : Singleton<TileManger>
     public static event Action<int> OnGetDown;
     PlayerStats player => GameManager.Instance.PlayerTransform;
     QuestProgress quest = null;
-    protected override void Awake()
-    {
-        base.Awake();
-        GameSceneManager.Instance.OnSceneTypeChanged += GenerateDungeon;
-    }
+    
+    
+    //protected void OnEnable()
+    //{
+    //    GameSceneManager.Instance.OnSceneTypeChanged += GenerateDungeon;
 
-    private void Start()//임시코드
-    {
-        //SetLevelGenerator(tileData.biomeSet[0], 8, 40, 40);
-        //curLevel = GenerateLevel();
-        //GenerateDungeon(SceneType.Dungeon);
-    }
+    //}
 
-    private void OnDestroy()
-    {
-        GameSceneManager.Instance.OnSceneTypeChanged -= GenerateDungeon;
-    }
 
-    public void GenerateDungeon(SceneType sceneType)
+    //protected void OnDisable()
+    //{
+    //    GameSceneManager.Instance.OnSceneTypeChanged -= GenerateDungeon;
+    //}
+
+
+    public void GenerateDungeon()
     {
-        if (sceneType != SceneType.Dungeon) return;
+        //if (sceneType != SceneType.Dungeon) return;
+        
         curLevelIndex = 0;
         quest = null;
         if (QuestManager.Instance.AcceptedQuest == null)// 향후 수정 임시코드
@@ -53,6 +51,7 @@ public class TileManger : Singleton<TileManger>
         curLevel = levels[curLevelIndex];
         OnGetDown?.Invoke(curLevelIndex);
         SetLevel(curLevel);
+        Debug.Log("generate dungeon");
     }
 
 

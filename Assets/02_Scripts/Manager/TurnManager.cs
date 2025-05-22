@@ -4,6 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using System;
 using static UnityEngine.UI.CanvasScaler;
+using UnityEngine.SceneManagement;
 
 public class TurnManager : Singleton<TurnManager>
 {
@@ -29,14 +30,26 @@ public class TurnManager : Singleton<TurnManager>
     [SerializeField]private float originSpeed = 10;
 
     [SerializeField] private UnitBase curUnit;
-    private void Start()//테스트용 임시코드
-    {
-        foreach (var unit in FindObjectsOfType<UnitBase>())
-        {
-            AddUnit(unit);
-        }
-        StartTurnCycle();
-    }
+
+
+
+    //void OnEnable()
+    //{
+    //    GameSceneManager.Instance.OnSceneTypeChanged += OnSceneLoaded;
+    //}
+
+    //void OnDisable()
+    //{
+    //    GameSceneManager.Instance.OnSceneTypeChanged -= OnSceneLoaded;
+    //}
+
+    //public void OnSceneLoaded(SceneType sceneType)
+    //{
+    //    ResetManager();
+    //    if(sceneType == SceneType.Dungeon)
+    //        StartTurnCycle();   
+    //}
+
     public void StartTurnCycle()
     {
         StartCoroutine(TickLoop());
@@ -188,5 +201,30 @@ public class TurnManager : Singleton<TurnManager>
 
         unitIds.Remove(tileEffect.GetInstanceID());
         allTileEffects.Remove(tileEffect);
+    }
+
+    public void ResetManager()
+    {
+        // 현재 진행 중인 코루틴 중단
+        StopAllCoroutines();
+
+        // 현재 유닛, 타일 이펙트 목록 초기화
+        foreach (var unit in allUnits.ToArray())
+        {
+            if (unit != null)
+                Destroy(unit.gameObject);
+        }
+
+        foreach (var effect in allTileEffects.ToArray())
+        {
+            if (effect != null)
+                Destroy(effect.gameObject);
+        }
+
+        allUnits.Clear();
+        allTileEffects.Clear();
+        unitIds.Clear();
+
+        _globalTime = 0;
     }
 }
