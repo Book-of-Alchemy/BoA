@@ -3,6 +3,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System;
 using System.Collections.Generic;
+using static UnityEditor.Progress;
 
 public class InventorySlotUI : SlotUIBase<InventoryItem>, ISelectHandler, IDeselectHandler, IDraggableSlot
 {
@@ -94,9 +95,8 @@ public class InventorySlotUI : SlotUIBase<InventoryItem>, ISelectHandler, IDesel
 
         var item = _data;
 
-        // Consumable 타입 검사
-        if (item.GetItemType() != Item_Type.Consumable)
-            return;
+
+     
 
         //인벤토리타입에 맞는 액션 찾기
         if (_OnClickActions.TryGetValue(_uiInventory.CurType, out var action))
@@ -113,6 +113,9 @@ public class InventorySlotUI : SlotUIBase<InventoryItem>, ISelectHandler, IDesel
 
     private void OnInventoryClick()
     {
+        var item = _data;
+        // Consumable 타입 검사
+        if (item.GetItemType() != Item_Type.Consumable) return;
         UIManager.Show<UI_Action>((int)_uiInventory.CurType, _rectTransform, _data, Index);
     }
 

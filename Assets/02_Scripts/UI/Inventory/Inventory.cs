@@ -236,7 +236,7 @@ public class Inventory : Singleton<Inventory>
     {
         for (int i = 0; i < items.Length; i++)
         {
-            if (items[i].GetItemId() == id)
+            if (items[i] != null && items[i].GetItemId() == id)
                 return i;
         }
 
