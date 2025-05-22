@@ -30,6 +30,8 @@ public class GameSceneManager : Singleton<GameSceneManager>
     {
         base.Awake();
 
+        if (Instance != this)
+            return;
         RegisterSceneBase(new MainMenuScene());
         RegisterSceneBase(new DungeonScene());
         RegisterSceneBase(new TownScene());
@@ -123,8 +125,11 @@ public class GameSceneManager : Singleton<GameSceneManager>
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        Debug.LogWarning("Called");
-        
+        if (scene.name == SceneType.Loading.ToString())
+            return;
+
+        Debug.LogWarning($"로드된 씬: {scene.name}");
+
         // 이미 처리 중이면 중복 호출 방지
         if (_isProcessingSceneLoad) 
         {
