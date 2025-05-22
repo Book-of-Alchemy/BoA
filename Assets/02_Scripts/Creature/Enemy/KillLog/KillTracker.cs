@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public class KillTracker
 {
     private Dictionary<int, int> totalKillCounts = new();   // 전체 킬 수 int key = ID  int value = amount
