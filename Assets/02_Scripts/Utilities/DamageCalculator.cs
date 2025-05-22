@@ -77,7 +77,7 @@ public static class DamageCalculator
 
     public static float CalculateDamage(DamageInfo damageInfo)
     {
-        if(damageInfo.target == null)
+        if (damageInfo.target == null)
             return 0f;
         CharacterStats source = damageInfo.source;
         CharacterStats target = damageInfo.target;
@@ -144,8 +144,43 @@ public static class DamageCalculator
 
         result = elementalDef * baseDamage;//속성 대미지 계산
         //버프 디버프에 의한 대미지 계산 추가
-        result = result * (1 - target.Defence / (50 + target.Defence));//방어력 계산
+        result = result * (1 - target.Defence / (50f + (float)target.Defence));//방어력 계산
         Debug.Log($"최종 대미지 : {result}");
+
+        return result;
+    }
+
+    public static string GetIntroSoundID(Tag[] tags)
+    {
+        string result = "";
+        foreach (Tag tag in tags)
+        {
+            result = tag switch
+            {
+                Tag.Throw => "throwing",
+                Tag.Scroll => "scroll",
+                _ => result,
+            };
+        }
+        return result;
+    }
+    public static string GetImpactSoundID(Attribute attribute)
+    {
+        string result = "";
+
+        result = attribute switch
+        {
+            Attribute.Fire => "fire",
+            Attribute.Water => "scroll",
+            Attribute.Cold => "cold",
+            Attribute.Lightning => "lightning",
+            Attribute.Earth => "earth",
+            Attribute.Wind => "wind",
+            Attribute.Light => "light",
+            Attribute.Dark => "dark",
+            Attribute.Oil => "water",
+            _ => result,
+        };
 
         return result;
     }

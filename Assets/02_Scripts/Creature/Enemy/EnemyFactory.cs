@@ -160,6 +160,7 @@ public class EnemyFactory : Singleton<EnemyFactory>
     {
         enemy.CurTile = tile;
         enemy.curLevel = tile.curLevel;
+        enemy.isDead = false;
         tile.CharacterStatsOnTile = enemy;
         //tile.isOccupied = true;
         TurnManager.Instance.AddUnit(enemy.unitBase);

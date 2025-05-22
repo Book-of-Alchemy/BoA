@@ -54,18 +54,26 @@ public class DragManager : MonoBehaviour
             return;
         }
 
+
         if (eventData.pointerEnter != null)
         {
             var dropTarget = eventData.pointerEnter.GetComponentInParent<IDraggableSlot>();
 
-            //드랍이가능하고 원래 드래그전 슬롯이아니라면
-            if (dropTarget is InventorySlotUI targetInvSlot &&
-                  _originSlot is InventorySlotUI originInvSlot &&
-                  dropTarget != _originSlot)
+            // 오직 InventorySlotUI 또는 QuickSlotUI 끼리만 드래그 허용
+            bool validSource = _originSlot is InventorySlotUI || _originSlot is QuickSlotUI;
+            bool validTarget = dropTarget is InventorySlotUI || dropTarget is QuickSlotUI;
+
+            if (validSource && validTarget && dropTarget != _originSlot)
             {
-                Inventory.Instance.SetItemAtoB(originInvSlot.Index, targetInvSlot.Index);
+                if (_originSlot is InventorySlotUI originInvSlot && dropTarget is InventorySlotUI targetInvSlot)
+                {
+                    Inventory.Instance.SetItemAtoB(originInvSlot.Index, targetInvSlot.Index);
+                }
+
+                // QuickSlot 간 이동이 필요한 경우 이곳에 추가 로직 작성
             }
         }
+
         ResetState();
     }
     private void ResetState()
