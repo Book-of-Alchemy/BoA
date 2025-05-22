@@ -54,6 +54,16 @@ public class SoundManager : MonoBehaviour
             Destroy(gameObject);
     }
 
+    private void OnEnable()
+    {
+        GameSceneManager.Instance.OnSceneTypeChanged += OnSceneChange;
+    }
+
+    private void OnDisable()
+    {
+        GameSceneManager.Instance.OnSceneTypeChanged -= OnSceneChange;
+    }
+
     public void Play(string id)
     {
         if (!map.TryGetValue(id, out SoundData data)) return;
@@ -140,6 +150,36 @@ public class SoundManager : MonoBehaviour
     {
         mixer.SetFloat("SFXVolume", linear <= 0.0001f ? -80f : Mathf.Log10(linear) * 20f);
         sfxVolume = linear;
+    }
+
+    public void OnSceneChange(SceneType sceneType)
+    {
+        switch (sceneType)
+        {
+            case SceneType.MainMenu:
+                Play("Village");
+                break;
+            case SceneType.Town:
+                Play("Village");
+                break;
+            case SceneType.Dungeon:
+                Play(GetProperBGM(QuestManager.Instance.AcceptedQuest));
+                break;
+            default:
+                Play("Village");
+                break;
+        }
+    }
+
+    string GetProperBGM(QuestProgress progress)
+    {
+        if (progress == null) return "Village";
+        return progress.Data.biome_id switch
+        {
+            120001 => "Forest",
+            _ => "Village",
+        };
+
     }
 
 }
