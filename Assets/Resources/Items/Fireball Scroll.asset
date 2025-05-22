@@ -22,7 +22,7 @@ MonoBehaviour:
   effect_type: 0
   tag: 
   tags: 010000000e00000005000000
-  effect_value: 50
+  effect_value: 1
   effect_id: -1
   effect_duration: -1
   effect_strength: -1

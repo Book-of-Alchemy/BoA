@@ -31,7 +31,7 @@ MonoBehaviour:
   price: 20
   tier: 1
   iteminfo_kr: "\uAE30\uBCF8 \uC7AC\uB8CC"
-  icon_sprite: 
+  icon_sprite: Image/Item/Oil
   sprite: {fileID: 0}
   itemRangeSprite: {fileID: 0}
   itemEffectRangeSprite: {fileID: 0}
