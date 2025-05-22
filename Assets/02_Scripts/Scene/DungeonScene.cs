@@ -5,6 +5,7 @@ public class DungeonScene : SceneBase
     protected override void Initialize()
     {
         // 기존 Awake() 안에 있던 초기화 코드
+        UIManager.Instance.RefreshUIList();
     }
 
     public override void OnEnter()

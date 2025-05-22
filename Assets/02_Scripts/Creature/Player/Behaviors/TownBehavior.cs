@@ -84,6 +84,7 @@ public class TownBehavior : PlayerBaseBehavior
         im.OnDashEnd += HandleDashEnd;
         im.OnInteract += HandleInteractInput;
         im.OnMouseClick += HandleMouseClick;
+        im.OnCancel += HandleCancelInput;
     }
 
     protected override void UnsubscribeInput()
@@ -94,6 +95,12 @@ public class TownBehavior : PlayerBaseBehavior
         im.OnDashEnd -= HandleDashEnd;
         im.OnInteract -= HandleInteractInput;
         im.OnMouseClick -= HandleMouseClick;
+        im.OnCancel -= HandleCancelInput;
+    }
+
+    private void HandleCancelInput()
+    {
+        UIManager.CloseLastOpenedUI();
     }
 
     private void HandleDashStart()

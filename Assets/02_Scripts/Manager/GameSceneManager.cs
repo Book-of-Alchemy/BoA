@@ -8,7 +8,8 @@ public enum SceneType
 {
     MainMenu,
     Dungeon,
-    Town
+    Town,
+    Loading
 }
 
 public class GameSceneManager : Singleton<GameSceneManager>
@@ -18,6 +19,7 @@ public class GameSceneManager : Singleton<GameSceneManager>
     private SceneType _currentScene;
     private SceneBase _currentSceneBase;
     private readonly Dictionary<SceneType, SceneBase> _sceneMap = new();
+    private SceneType _targetSceneType; // 로딩 후 전환될 씬 타입
 
     public SceneType CurrentSceneType => _currentScene;
 
@@ -28,6 +30,7 @@ public class GameSceneManager : Singleton<GameSceneManager>
         RegisterSceneBase(new MainMenuScene());
         RegisterSceneBase(new DungeonScene());
         RegisterSceneBase(new TownScene());
+        RegisterSceneBase(new LoadingScene());
 
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
@@ -43,26 +46,77 @@ public class GameSceneManager : Singleton<GameSceneManager>
         OnSceneTypeChanged?.Invoke(_currentScene);
     }
 
-    public void ChangeScene(SceneType nextScene)//씬 전환 메서드(비동기 로딩 시작)
+    public void ChangeScene(SceneType nextScene)
     {
-        _currentScene = nextScene;
+        _targetSceneType = nextScene; // 목표 씬 저장
+        _currentScene = SceneType.Loading; // 로딩 씬으로 전환
         StartCoroutine(LoadRoutine());
     }
 
-    private IEnumerator LoadRoutine()//비동기 로딩
+    private IEnumerator LoadRoutine()
     {
         _currentSceneBase?.OnExit();// 이전 씬의 정리
 
-        //다음 씬 비동기 로딩, 자동 전환 잠시 막기
-        AsyncOperation loadOperation = SceneManager.LoadSceneAsync(_currentScene.ToString());
+        // 로딩 씬 비동기 로딩, 자동 전환
+        AsyncOperation loadingOperation = SceneManager.LoadSceneAsync(SceneType.Loading.ToString());
+        while (!loadingOperation.isDone)
+        {
+            yield return null;
+        }
+
+        // 로딩 UI가 나타나면 목표 씬 비동기 로딩 시작
+        yield return StartCoroutine(LoadTargetScene());
+    }
+
+    private IEnumerator LoadTargetScene()
+    {
+        // 실제 목표 씬 비동기 로딩
+        AsyncOperation loadOperation = SceneManager.LoadSceneAsync(_targetSceneType.ToString());
         loadOperation.allowSceneActivation = false;
 
-        //90프로 완료될때까지 매 프레임 대기
-        while (loadOperation.progress < 0.9f)
+        // 시간 기반 로딩 구현
+        float minLoadTime = 2.0f; // 최소 로딩 시간(초)
+        float timer = 0f;
+        
+        while (timer < minLoadTime)
+        {
+            timer += Time.deltaTime;
+            
+            // 시간 기반 진행률 계산 (0-1 사이 값)
+            float timeProgress = Mathf.Clamp01(timer / minLoadTime);
+            
+            // 실제 로딩 진행률
+            float realProgress = Mathf.Clamp01(loadOperation.progress / 0.9f);
+            
+            // 두 진행률 중 더 큰 값을 사용 (실제 로딩이 느린 경우 대비)
+            float finalProgress = Mathf.Max(timeProgress, realProgress);
+            
+            // UI 업데이트
+            LoadingUI.Instance?.UpdateProgress(finalProgress);
+            
+            // 로딩이 90% 이상이고 타이머가 최소 시간의 80%를 넘었다면
+            if (loadOperation.progress >= 0.9f && timer >= minLoadTime * 0.8f)
+            {
+                // 남은 시간 계산
+                float remainTime = minLoadTime - timer;
+                if (remainTime > 0)
+                {
+                    yield return new WaitForSeconds(remainTime);
+                }
+                
+                loadOperation.allowSceneActivation = true;
+                break;
+            }
+            
             yield return null;
-
-        //로딩 최종 승인
-        loadOperation.allowSceneActivation = true;
+        }
+        
+        // 로딩이 완료되지 않았다면 활성화
+        if (!loadOperation.isDone)
+        {
+            loadOperation.allowSceneActivation = true;
+        }
+        
         yield return null;
     }
 

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4393161730607427208}
   - component: {fileID: 3107400911350595328}
+  - component: {fileID: 2877656687088126413}
   m_Layer: 0
   m_Name: DataManager
   m_TagString: Untagged
@@ -55,4 +56,17 @@ MonoBehaviour:
   environmentalDataBase: {fileID: 11400000, guid: add19ce1a70d3244dbb0b89406e31ed9, type: 2}
   facilityDataBase: {fileID: 11400000, guid: fd9dec103ed1ddf429fa7b2193380602, type: 2}
   envRuleDataBase: {fileID: 11400000, guid: 6b0fc0a72a5484447a34000ff3424ff2, type: 2}
+  researchDataBase: {fileID: 11400000, guid: 2c29d62853e2ecf43bde07d3c2fc8864, type: 2}
   playerPrefab: {fileID: 6804339739346013789, guid: 3999d0f34cbe9ef418c5a85ae2944482, type: 3}
+--- !u!114 &2877656687088126413
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2462369948667505458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d500b45b3ffbe043bf4302a231ec95d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -15,11 +15,11 @@ MonoBehaviour:
   id: 201027
   name_en: Cold Seed
   name_kr: "\uCC28\uAC00\uC6B4 \uC528\uC557"
-  item_type: 1
-  attribute: 9
+  item_type: 0
+  attribute: 0
   target_range: -1
   effect_range: -1
-  effect_type: 6
+  effect_type: 0
   tag: 
   tags: 15000000
   effect_value: -1
@@ -31,8 +31,8 @@ MonoBehaviour:
   price: 25
   tier: 1
   iteminfo_kr: "\uB0C9\uAE30 \uAE30\uBCF8 \uC7AC\uB8CC"
-  icon_sprite: 
-  sprite: {fileID: 0}
+  icon_sprite: Image/Item/Cold Seed
+  sprite: {fileID: 21300000, guid: b2d7f03f480ca9943acac1075bfbe3ba, type: 3}
   itemRangeSprite: {fileID: 0}
   itemEffectRangeSprite: {fileID: 0}
   itemPrefab: {fileID: 0}
