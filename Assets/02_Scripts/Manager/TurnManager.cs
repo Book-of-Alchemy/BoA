@@ -52,6 +52,7 @@ public class TurnManager : Singleton<TurnManager>
 
     public void StartTurnCycle()
     {
+        AddUnit(GameManager.Instance.PlayerTransform.GetComponent<PlayerUnit>());
         StartCoroutine(TickLoop());
     }
 
