@@ -67,6 +67,7 @@ public class DamageItem : BaseItem
         InputManager.Instance.OnMouseMove -= CheckEffectRange; // 마우스 위치에따라 보여주는 매서드 구독해제
         ItemManager.Instance.DestroyItemRange(); // 아이템 사거리 삭제
         ItemManager.Instance.DestroyRange(); // 아이템 효과 범위 삭제
+        InputManager.Instance.OnMouseClick -= OnClick;
 
         Vector2Int mouseWorldPos = Vector2Int.RoundToInt(mouseClickPos);
         GameManager.Instance.PlayerTransform.curLevel.tiles.TryGetValue(mouseWorldPos, out mouseClickTile);
@@ -74,6 +75,7 @@ public class DamageItem : BaseItem
         // 사거리 내에 타일을 클릭했는지 확인하는 조건, 사거리 내의 타일을 클릭했다면 효과범위내에 대상들이 있는지 확인
         if (rangeTiles.Contains(mouseClickTile))
         {
+
             List<Tile> tiles = TileUtility.GetLineTile(_player.curLevel, _player.CurTile, mouseClickTile);
             Tile targetTile = mouseClickTile;
             foreach (Tile objectTile in tiles)
@@ -184,7 +186,7 @@ public class DamageItem : BaseItem
         {
             _player.statBlock.RemoveModifier(StatType.FinalDmg, "PrecisionAimforMagic");
         }
-        InputManager.Instance.OnMouseClick -= OnClick;
+
         SoundManager.Instance.Play(DamageCalculator.GetImpactSoundID(data.attribute));
         FinishUse();
         Destroy(this.gameObject, 0.1f);
