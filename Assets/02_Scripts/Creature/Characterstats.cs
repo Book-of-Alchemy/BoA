@@ -269,7 +269,7 @@ public abstract class CharacterStats : MonoBehaviour
 
         UIManager.ShowOnce<DamageText>(value, transform.position);
         CurrentHealth -= value;
-        Debug.Log($"{gameObject.name}는 {value}의 피해를 받았습니다.");
+        //Debug.Log($"{gameObject.name}는 {value}의 피해를 받았습니다.");
         OnTakeDamage?.Invoke(damageInfo);
         _anim.PlayKnockBack();
     }

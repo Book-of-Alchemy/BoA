@@ -141,7 +141,7 @@ public class QuestManager : Singleton<QuestManager>
 
         AcceptedQuest.UpdateProgress(value);
 
-        if (AcceptedQuest.ProgressVal > AcceptedQuest.CompleteVal)
+        if (AcceptedQuest.ProgressVal >= AcceptedQuest.CompleteVal)
             QuestCleared();
     }
 

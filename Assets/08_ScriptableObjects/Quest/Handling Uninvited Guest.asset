@@ -21,7 +21,7 @@ MonoBehaviour:
   is_fixed_map: 0
   dungeon_floor_count: 8
   quest_Type: 0
-  main_object_type: 0
+  main_object_type: 1
   main_object_text_kr: "\uC564\uD2B8 \uC4F0\uB7EC\uD2B8\uB9AC\uAE30"
   reward1: 3
   reward2: 3

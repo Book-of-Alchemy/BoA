@@ -1,10 +1,13 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public class KillTracker
 {
     private Dictionary<int, int> totalKillCounts = new();   // 전체 킬 수 int key = ID  int value = amount
     private Dictionary<int, int> dungeonKillCounts = new(); // 던전 한정 킬 수
+    
 
     /// <summary>
     /// 몬스터 처치 보고
@@ -35,6 +38,18 @@ public class KillTracker
     public int GetDungeonKillCount(int monsterID)
     {
         return dungeonKillCounts.TryGetValue(monsterID, out var count) ? count : 0;
+    }
+
+    public Dictionary<string,int> GetEachDungeonKillCount()
+    {
+        Dictionary<string, int> result = new Dictionary<string, int>();
+        Dictionary<int, EnemyData> enemyDataById = SODataManager.Instance.enemyDataBase.enemyDataById;
+        if (enemyDataById == null) return null;
+        foreach(var enemy in dungeonKillCounts)
+        {
+            result[enemyDataById[enemy.Key].name_kr] = enemy.Value;
+        }
+        return result;
     }
 
     /// <summary>

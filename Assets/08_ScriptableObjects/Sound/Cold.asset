@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: cold
   m_EditorClassIdentifier: 
   id: cold
-  type: 0
+  type: 1
   clip: {fileID: 8300000, guid: 3b401b8a62779fa4da703ef4d32e0b2e, type: 3}
   audioClipPath: 

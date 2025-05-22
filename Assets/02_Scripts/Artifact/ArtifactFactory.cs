@@ -42,8 +42,26 @@ public static class ArtifactFactory
                 cumulative += weight[j];
                 if (rand <= cumulative)
                 {
-                    int randItemIndex = UnityEngine.Random.Range(0, artifactsList[j].Count);
-                    selectArtifacts.Add(artifactsList[j][randItemIndex]);
+                    if (artifactsList[j].Count == 0)
+                    {
+                        for(int k = 0; k < weight.Length; k++)
+                        {
+                            if (artifactsList[k].Count != 0)
+                            {
+                                int randItemIndex2 = UnityEngine.Random.Range(0, artifactsList[k].Count);
+                                selectArtifacts.Add(artifactsList[k][randItemIndex2]);
+                                artifactsList[k].Remove(artifactsList[k][randItemIndex2]);
+                                break;
+                            }
+                        }
+                    }
+                    else 
+                    {
+                        int randItemIndex = UnityEngine.Random.Range(0, artifactsList[j].Count);
+                        selectArtifacts.Add(artifactsList[j][randItemIndex]);
+                        artifactsList[j].Remove(artifactsList[j][randItemIndex]);
+                        break;
+                    }
                     break;
                 }
             }
