@@ -16,7 +16,7 @@ MonoBehaviour:
   name_en: Twig
   name_kr: "\uB098\uBB47\uAC00\uC9C0"
   item_type: 1
-  attribute: 9
+  attribute: 0
   target_range: -1
   effect_range: -1
   effect_type: 6

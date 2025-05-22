@@ -16,7 +16,7 @@ MonoBehaviour:
   name_en: Ominous Seed
   name_kr: "\uBD88\uAE38\uD55C \uC528\uC557"
   item_type: 1
-  attribute: 9
+  attribute: 0
   target_range: -1
   effect_range: -1
   effect_type: 6

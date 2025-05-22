@@ -16,7 +16,7 @@ MonoBehaviour:
   name_en: Windburst Scroll
   name_kr: "\uBC14\uB78C \uD3ED\uBC1C \uC2A4\uD06C\uB864"
   item_type: 0
-  attribute: 4
+  attribute: 6
   target_range: 0
   effect_range: 2
   effect_type: 0

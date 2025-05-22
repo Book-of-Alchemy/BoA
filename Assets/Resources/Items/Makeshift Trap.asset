@@ -16,7 +16,7 @@ MonoBehaviour:
   name_en: Makeshift Trap
   name_kr: "\uAC04\uC774 \uD568\uC815"
   item_type: 0
-  attribute: 9
+  attribute: 0
   target_range: 1
   effect_range: 0
   effect_type: 5
