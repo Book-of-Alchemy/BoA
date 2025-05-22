@@ -127,7 +127,7 @@ public class TileManger : Singleton<TileManger>
     }
     public void EndQuest()
     {
-        UIManager.Show<UI_HUD>().OnDungeonResult();
+        UIManager.Show<UI_DungeonResult>();
     }
 
     public void DestroyDungeon()

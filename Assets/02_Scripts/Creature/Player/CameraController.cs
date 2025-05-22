@@ -24,8 +24,6 @@ public class CameraController : Singleton<CameraController>
         // 필요한 UI 창 타입을 모두 체크
         return UIManager.IsOpened<UI_Menu>()
             || UIManager.IsOpened<UI_Inventory>()
-            || UIManager.IsOpened<UI_Craft>()
-            || UIManager.IsOpened<UI_Equipment>()
             || UIManager.IsOpened<UI_Setting>()
             || UIManager.IsOpened<UI_Research>()
             || UIManager.IsOpened<UI_SelectQuest>();

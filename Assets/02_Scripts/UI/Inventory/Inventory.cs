@@ -27,6 +27,7 @@ public class Inventory : Singleton<Inventory>
 
     public event Action<int> OnGoldChanged;
 
+    public CraftTool GetCraftTool()=> _craftTool;
     protected override void Awake()
     {
         base.Awake();

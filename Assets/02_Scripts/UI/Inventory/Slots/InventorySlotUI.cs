@@ -128,6 +128,7 @@ public class InventorySlotUI : SlotUIBase<InventoryItem>, ISelectHandler, IDesel
 
     private void OnCraftClick()
     {
+        if (DragManager.Instance.IsDragging) return;
         Inventory.Instance.Craft(_data);
     }
 
