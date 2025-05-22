@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: trap active
   m_EditorClassIdentifier: 
   id: trap active
-  type: 0
+  type: 1
   clip: {fileID: 8300000, guid: f643bd7779358a0429bced9897fb6ab3, type: 3}
   audioClipPath: 

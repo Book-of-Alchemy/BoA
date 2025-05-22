@@ -44,6 +44,7 @@ public static class ArtifactFactory
                 {
                     int randItemIndex = UnityEngine.Random.Range(0, artifactsList[j].Count);
                     selectArtifacts.Add(artifactsList[j][randItemIndex]);
+                    artifactsList[j].Remove(artifactsList[j][randItemIndex]);
                     break;
                 }
             }

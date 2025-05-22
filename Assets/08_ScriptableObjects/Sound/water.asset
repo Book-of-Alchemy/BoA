@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: water
   m_EditorClassIdentifier: 
   id: water
-  type: 0
+  type: 1
   clip: {fileID: 8300000, guid: 5ebfa7ba361398544baa0d613be5ddd5, type: 3}
   audioClipPath: 
