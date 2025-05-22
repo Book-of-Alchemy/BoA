@@ -5,14 +5,26 @@ public class DungeonScene : SceneBase
     protected override void Initialize()
     {
         // 기존 Awake() 안에 있던 초기화 코드
-        UIManager.Instance.RefreshUIList();
+        
     }
 
     public override void OnEnter()
     {
-        if (!UIManager.IsOpened<UI_HUD>())
+        UIManager.Instance.RefreshUIList();
+        // UI 확인 전에 UIManager가 준비되었는지 확인
+        if (UIManager.Instance != null)
         {
-            UIManager.Show<UI_HUD>();
+            try
+            {
+                if (!UIManager.IsOpened<UI_HUD>())
+                {
+                    UIManager.Show<UI_HUD>();
+                }
+            }
+            catch (System.Exception e)
+            {
+             
+            }
         }
     }
 

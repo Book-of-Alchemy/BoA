@@ -11,9 +11,9 @@ using static UnityEditor.Experimental.GraphView.GraphView;
 public class DamageItem : BaseItem
 {
     [Header("사용 아이템 정보")]
-    private bool _isObject;
     private List<Tile> rangeTiles = new List<Tile>();
     private Tile mouseClickTile;
+    private int targetRange;
     public float moveSpeed = 5f;
 
 
@@ -31,7 +31,6 @@ public class DamageItem : BaseItem
         transform.position = new Vector3(_player.CurTile.gridPosition.x, _player.CurTile.gridPosition.y + 0.5f, 0);
         transform.localScale = new Vector3(2, 2, 1);
         SetType(data);
-        _isObject = false;
     }
 
     /// <summary>
@@ -118,7 +117,7 @@ public class DamageItem : BaseItem
         int damageValue = data.effect_value;
         int monsterCount;
         List<Tile> tiles = new List<Tile>();
-        if (data.target_range == 0)
+        if (targetRange == 0)
         {
             if (data.effect_range == 1)
             {
@@ -129,7 +128,7 @@ public class DamageItem : BaseItem
                 tiles = TileUtility.GetItemRangedTile(_player.curLevel, targetTile, data.effect_range, false);
             }
         }
-        else if (data.target_range > 0)
+        else if (targetRange > 0)
         {
             if (data.effect_range == 1)
             {
@@ -198,13 +197,21 @@ public class DamageItem : BaseItem
         if (rangeTiles.Contains(mouseTile))
         {
             List<Tile> checkItemRangeTiles = new List<Tile>();
-            if (itemData.effect_range == 0)
-                checkItemRangeTiles = TileUtility.GetItemRangedTile(_player.curLevel, mouseTile, itemData.effect_range,true);
-            else if (itemData.effect_range == 1)
-                checkItemRangeTiles = TileUtility.GetNineTileList(_player.curLevel, mouseTile);
-            else if (itemData.effect_range >= 2)
-                checkItemRangeTiles = TileUtility.GetItemRangedTile(_player.curLevel, mouseTile, itemData.effect_range,true);
 
+            if(targetRange == 0)
+            {
+                if (itemData.effect_range == 1)
+                    checkItemRangeTiles = TileUtility.GetNineVisibleTileList(_player.curLevel, mouseTile, false);
+                else
+                    checkItemRangeTiles = TileUtility.GetItemRangedTile(_player.curLevel, mouseTile, itemData.effect_range, false);
+            }
+            else
+            {
+                if (itemData.effect_range == 1)
+                    checkItemRangeTiles = TileUtility.GetNineVisibleTileList(_player.curLevel, mouseTile, true);
+                else
+                    checkItemRangeTiles = TileUtility.GetItemRangedTile(_player.curLevel, mouseTile, itemData.effect_range, true);
+            }
             ItemManager.Instance.CreateItemRange(checkItemRangeTiles);
         }
     }
@@ -216,7 +223,7 @@ public class DamageItem : BaseItem
     {
         ItemManager.Instance.DestroyRange();
 
-        int targetRange;
+        
         if (_player.isMarksman && data.tags.Contains(Tag.Throw))
         {
             targetRange = data.target_range + 1;
@@ -228,7 +235,7 @@ public class DamageItem : BaseItem
         if (targetRange == 0)
             checkRangeTiles = TileUtility.GetItemRangedTile(_player.curLevel, _player.CurTile, targetRange, true);
         else if (targetRange == 1)
-            checkRangeTiles = TileUtility.GetNineTileList(_player.curLevel, _player.CurTile);
+            checkRangeTiles = TileUtility.GetNineVisibleTileList(_player.curLevel, _player.CurTile,true);
         else if (targetRange >= 2)
             checkRangeTiles = TileUtility.GetItemRangedTile(_player.curLevel, _player.CurTile, targetRange, true);
 
@@ -237,30 +244,6 @@ public class DamageItem : BaseItem
         return checkRangeTiles;
     }
 
-    /// <summary>
-    /// 범위 안에 오브젝트 있는지 확인
-    /// </summary>
-    /// <param name="data"></param>
-    /// <param name="choiceTile"></param>
-    public void CheckObject(ItemData data, Tile choiceTile)
-    {
-        List<Tile> checkList = new List<Tile>();
-        if (data.effect_range == 1)
-            checkList = TileUtility.GetNineTileList(_player.curLevel, choiceTile);
-        else if (data.effect_range >= 2 && data.target_range > 0)
-            checkList = TileUtility.GetItemRangedTile(_player.curLevel, choiceTile, data.effect_range, true);
-        else if (data.effect_range >= 2 && data.target_range == 0)
-            checkList = TileUtility.GetItemRangedTile(_player.curLevel, choiceTile, data.effect_range, false);
-
-        //List<Tile> checkList = TileUtility.GetLineTile(_player.curLevel, _player.curTile, _choiceTile, true);
-        foreach (Tile tile in checkList)
-        {
-            if (tile.CharacterStatsOnTile != null)
-            {
-                _isObject = true;
-            }
-        }
-    }
 
     public void SubscribeInput()
     {

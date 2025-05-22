@@ -45,11 +45,11 @@ public class GameSceneManager : Singleton<GameSceneManager>
         _sceneMap[sceneBase.SceneType] = sceneBase;
     }
 
-    public void SetSceneType(SceneType newType)//씬 갱신 메서드
-    {
-        _currentScene = newType;
-        OnSceneTypeChanged?.Invoke(_currentScene);
-    }
+    //public void SetSceneType(SceneType newType)//씬 갱신 메서드
+    //{
+    //    _currentScene = newType;
+    //    OnSceneTypeChanged?.Invoke(_currentScene);
+    //}
 
     public void ChangeScene(SceneType nextScene)
     {
