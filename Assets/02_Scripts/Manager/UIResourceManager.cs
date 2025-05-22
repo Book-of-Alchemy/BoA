@@ -15,37 +15,45 @@ public class UIResourceManager : Singleton<UIResourceManager>
         else
         {
             var asset = Resources.Load<T>(key);
-            if (asset != null)
-                uiList.Add(key, asset);
+            if (asset == null)
+            {
+                Debug.LogError($"UI 리소스 찾을 수 없음 : {key}");
+                return null;
+            }
+            uiList[key] = asset;
             return asset;
         }
     }
 
     public T InstantiateUI<T>(string key, Transform parent = null) where T : UIBase
     {
+        var prefab = LoadUIToKey<T>(key);
+        if (prefab == null) return null;
+
         var asset = Instantiate(LoadUIToKey<T>(key), parent);
+        asset.name = typeof(T).ToString();
         return asset;
     }
 
-    public T LoadAsset<T>() where T : MonoBehaviour
-    {
-        var key = typeof(T).ToString();
-        if (objList.TryGetValue(key, out var mono))
-        {
-            return (T)mono;
-        }
-        else
-        {
-            var asset = Resources.Load<T>(key);
-            if (asset != null)
-                objList.Add(key, asset);
-            return asset;
-        }
-    }
+    //public T LoadAsset<T>() where T : MonoBehaviour
+    //{
+    //    var key = typeof(T).ToString();
+    //    if (objList.TryGetValue(key, out var mono))
+    //    {
+    //        return (T)mono;
+    //    }
+    //    else
+    //    {
+    //        var asset = Resources.Load<T>(key);
+    //        if (asset != null)
+    //            objList.Add(key, asset);
+    //        return asset;
+    //    }
+    //}
 
-    public T InstantiateAsset<T>(Transform parent = null) where T : MonoBehaviour
-    {
-        var asset = Instantiate(LoadAsset<T>(), parent);
-        return asset;
-    }
+    //public T InstantiateAsset<T>(Transform parent = null) where T : MonoBehaviour
+    //{
+    //    var asset = Instantiate(LoadAsset<T>(), parent);
+    //    return asset;
+    //}
 }

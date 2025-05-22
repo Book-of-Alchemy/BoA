@@ -18,5 +18,5 @@ MonoBehaviour:
   description: "\uD50C\uB808\uC774\uC5B4\uAC00 \uC5BB\uB294 \uBCF4\uD638\uB9C9 \uC591\uC774
     40% \uC99D\uAC00\uD569\uB2C8\uB2E4."
   icon_sprite_id: 
-  icon_sprite: {fileID: 0}
+  icon_sprite: {fileID: 21300000, guid: 9197c29db6457aa4ea2cc26a9097c193, type: 3}
   rarity: 1

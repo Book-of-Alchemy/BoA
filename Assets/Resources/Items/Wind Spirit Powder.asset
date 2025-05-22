@@ -31,8 +31,8 @@ MonoBehaviour:
   price: 10
   tier: 1
   iteminfo_kr: "\uBC14\uB78C \uAE30\uBCF8 \uC7AC\uB8CC"
-  icon_sprite: 
-  sprite: {fileID: 0}
+  icon_sprite: Image/Item/Wind Spirit Powder
+  sprite: {fileID: 21300000, guid: 6c672ba5e9389a7488cbc9518e96baa3, type: 3}
   itemRangeSprite: {fileID: 0}
   itemEffectRangeSprite: {fileID: 0}
   itemPrefab: {fileID: 0}

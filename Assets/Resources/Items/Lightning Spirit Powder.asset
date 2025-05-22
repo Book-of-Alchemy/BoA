@@ -31,8 +31,8 @@ MonoBehaviour:
   price: 10
   tier: 1
   iteminfo_kr: "\uBC88\uAC1C \uAE30\uBCF8 \uC7AC\uB8CC"
-  icon_sprite: 
-  sprite: {fileID: 0}
+  icon_sprite: Image/Item/Lightning Spirit Powder
+  sprite: {fileID: 21300000, guid: d240ba7e9d60d6042a9e3f79e0f426e7, type: 3}
   itemRangeSprite: {fileID: 0}
   itemEffectRangeSprite: {fileID: 0}
   itemPrefab: {fileID: 0}

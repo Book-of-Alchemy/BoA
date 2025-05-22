@@ -29,7 +29,10 @@ public class LibraryFacility : MonoBehaviour, IFacilityUI
                 return;
 
             case 1:
-                Debug.Log("지식의 전당 열림");
+                if (!UIManager.IsOpened<UI_Research>())
+                {
+                    UIManager.Show<UI_Research>();
+                }
                 break;
 
             case 2:

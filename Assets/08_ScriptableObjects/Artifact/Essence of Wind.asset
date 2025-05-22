@@ -17,5 +17,5 @@ MonoBehaviour:
   name_en: Essence of Wind
   description: "\uBC14\uB78C \uC18D\uC131 \uC800\uD56D\uB825\uC774 20% \uC99D\uAC00\uD55C\uB2E4."
   icon_sprite_id: 
-  icon_sprite: {fileID: 0}
+  icon_sprite: {fileID: 21300000, guid: d25326447f96d5b479e6a7765bcc4ae2, type: 3}
   rarity: 0
