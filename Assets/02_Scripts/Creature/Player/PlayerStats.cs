@@ -75,6 +75,7 @@ public class PlayerStats : CharacterStats
     public override void Die()
     {
         base.Die();
+        UIManager.Show<UI_DungeonResult>();
         _player.OnDisable();
     }
 

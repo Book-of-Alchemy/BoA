@@ -80,7 +80,11 @@ public class UI_DungeonResult : UIBase
         if (Input.GetKeyDown(KeyCode.Return) && _goldCoroutine == null)
         {
             if (_endGainGold == true)
+            {
                 HideDirect();
+                GameSceneManager.Instance.ChangeScene(SceneType.Town);
+            }
+                
 
             //인벤토리에서 아이템제거
             _itemTxt.text = string.Empty;
