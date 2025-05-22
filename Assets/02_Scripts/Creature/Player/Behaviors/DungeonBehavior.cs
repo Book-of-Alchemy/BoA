@@ -32,6 +32,8 @@ public class DungeonBehavior : PlayerBaseBehavior
     private Coroutine _attackBuffer;
     private Coroutine _highlightBuffer;
     private Coroutine _mousePathCoroutine;
+    // 반복 이동용 코루틴 핸들
+    private Coroutine _holdMoveCoroutine;
 
     // 마지막 이동 방향 (하이라이트용)
     private Vector2Int _lastMoveDir = Vector2Int.right;
@@ -91,6 +93,7 @@ public class DungeonBehavior : PlayerBaseBehavior
     protected override void SubscribeInput()
     {
         InputManager.OnMove += HandleMove;
+        InputManager.OnMove += HandleHoldMove;
         InputManager.OnAttack += HandleAttack;
         InputManager.OnDashStart += HandleDashStart;   // Shift 누름
         InputManager.OnDashEnd += HandleDashEnd;     // Shift 뗌
@@ -112,6 +115,7 @@ public class DungeonBehavior : PlayerBaseBehavior
     protected override void UnsubscribeInput()
     {
         InputManager.OnMove -= HandleMove;
+        InputManager.OnMove -= HandleHoldMove;
         InputManager.OnAttack -= HandleAttack;
         InputManager.OnDashStart -= HandleDashStart;
         InputManager.OnDashEnd -= HandleDashEnd;
@@ -128,6 +132,7 @@ public class DungeonBehavior : PlayerBaseBehavior
     public void UnsubscribeConInput()
     {
         InputManager.OnMove -= HandleMove;
+        InputManager.OnMove -= HandleHoldMove;
         InputManager.OnAttack -= HandleAttack;
         InputManager.OnDashStart -= HandleDashStart;
         InputManager.OnDashEnd -= HandleDashEnd;
@@ -630,6 +635,8 @@ public class DungeonBehavior : PlayerBaseBehavior
             return;
         }
 
+        // 반복 이동 취소
+        StopHoldMove();
     }
 
     // ──────────── 메뉴 키(Tab) ────────────
@@ -693,5 +700,101 @@ public class DungeonBehavior : PlayerBaseBehavior
             return;
 
         Controller.onActionConfirmed?.Invoke();
+    }
+
+    private void HandleHoldMove(Vector2 raw)
+    {
+        if (IsUIOpen())
+        {
+            StopHoldMove();
+            return;
+        }
+
+        if (raw == Vector2.zero)
+        {
+            StopHoldMove();
+            return;
+        }
+
+        if (_holdMoveCoroutine != null) 
+            return;
+
+        _holdMoveCoroutine = StartCoroutine(HoldMoveWithDelay(raw));
+    }
+
+    private IEnumerator HoldMoveWithDelay(Vector2 initialRaw)
+    {
+        float holdTimeRequired = 0.5f;
+        float elapsedTime = 0f;
+        
+        while (elapsedTime < holdTimeRequired)
+        {
+            if (InputManager.Instance.MoveInput != initialRaw)
+            {
+                _holdMoveCoroutine = null;
+                yield break;
+            }
+            
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        
+        bool isHoldMoveStarted = false;
+        
+        yield return BufferInput(dir => {
+            if (dir != Vector2Int.zero)
+            {
+                isHoldMoveStarted = true;
+                StartCoroutine(HoldMove(dir));
+            }
+        });
+        
+        if (!isHoldMoveStarted)
+        {
+            _holdMoveCoroutine = null;
+        }
+    }
+
+    // 실제 반복 이동을 수행하는 코루틴
+    private IEnumerator HoldMove(Vector2Int dir)
+    {
+        Coroutine activeHoldMove = null;
+        
+        activeHoldMove = _holdMoveCoroutine;
+        
+        while (InputManager.Instance.MoveInput == new Vector2(dir.x, dir.y))
+        {
+            if (Controller.isPlayerTurn && !_isMoving)
+            {
+                var cur = _stats.CurTile.gridPosition;
+                var nxt = cur + dir;
+                
+                if (!_stats.curLevel.tiles.TryGetValue(nxt, out var tile) ||
+                    !tile.IsWalkable ||
+                    tile.CharacterStatsOnTile != null)
+                {
+                    Shake();
+                    break; 
+                }
+                
+                ExecuteMove(dir);
+                yield return new WaitUntil(() => !_isMoving);
+            }
+            yield return null;
+        }
+
+        if (_holdMoveCoroutine == activeHoldMove)
+        {
+            _holdMoveCoroutine = null;
+        }
+    }
+
+    private void StopHoldMove()
+    {
+        if (_holdMoveCoroutine != null)
+        {
+            StopCoroutine(_holdMoveCoroutine);
+            _holdMoveCoroutine = null;
+        }
     }
 }
