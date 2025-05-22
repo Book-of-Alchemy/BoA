@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bac40a70a67fe9b48943f97c6218d671, type: 3}
-  m_Name: water
+  m_Name: lightning
   m_EditorClassIdentifier: 
-  id: water
+  id: lightning
   type: 0
-  clip: {fileID: 8300000, guid: 5ebfa7ba361398544baa0d613be5ddd5, type: 3}
+  clip: {fileID: 8300000, guid: 5dc25732c9404864b843e40011534d77, type: 3}
   audioClipPath: 

@@ -15,17 +15,17 @@ public enum Item_Type
 [JsonConverter(typeof(StringEnumConverter))]
 public enum Attribute
 {
-    Non_elemental,
+    None,
     Fire,
     Water,
     Cold,
-    Wind,
     Lightning,
     Earth,
+    Wind,
     Light,
     Dark,
-    None,
     Oil,
+    Non_elemental,
 }
 
 [JsonConverter(typeof(StringEnumConverter))]
