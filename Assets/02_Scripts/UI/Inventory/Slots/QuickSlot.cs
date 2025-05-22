@@ -15,21 +15,22 @@ public class QuickSlot : MonoBehaviour
         }
     }
 
-    private void Update()
+    private void OnEnable()
     {
-        //테스트용 코드 PlayerInput과 연결예정
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            _slots[0].UseItem();
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            _slots[1].UseItem();
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            _slots[2].UseItem();
-        }
+        InputManager.Instance.OnQuickSlotUse += HandleQuickSlotUse;
     }
 
+    private void OnDisable()
+    {
+        InputManager.Instance.OnQuickSlotUse -= HandleQuickSlotUse;
+    }
+    private void HandleQuickSlotUse(int index)
+    {
+        // 1-based index로 받았기 때문에 -1 처리
+        int slotIndex = index - 1;
+        if (slotIndex >= 0 && slotIndex < _slots.Count)
+        {
+            _slots[slotIndex].UseItem();
+        }
+    }
 }
