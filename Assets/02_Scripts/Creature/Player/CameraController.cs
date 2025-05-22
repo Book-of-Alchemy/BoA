@@ -18,6 +18,19 @@ public class CameraController : Singleton<CameraController>
     // Awake 시 한 번 저장할 초기 offset
     private Vector2 initialOffset;
 
+    // UI가 열려있는지 체크하는 메서드
+    private bool IsUIOpen()
+    {
+        // 필요한 UI 창 타입을 모두 체크
+        return UIManager.IsOpened<UI_Menu>()
+            || UIManager.IsOpened<UI_Inventory>()
+            || UIManager.IsOpened<UI_Craft>()
+            || UIManager.IsOpened<UI_Equipment>()
+            || UIManager.IsOpened<UI_Setting>()
+            || UIManager.IsOpened<UI_Research>()
+            || UIManager.IsOpened<UI_SelectQuest>();
+    }
+
     protected override void Awake()
     {
         base.Awake();
@@ -58,11 +71,17 @@ public class CameraController : Singleton<CameraController>
 
     private void OnPanStart()
     {
+        if (IsUIOpen())
+            return;
+            
         lastMouseScreenPos = InputManager.Instance.MouseScreenPosition;
     }
 
     private void OnPan(Vector2 screenPos)
     {
+        if (IsUIOpen())
+            return;
+            
         float camZ = -Camera.main.transform.position.z;
         Vector3 lastW = Camera.main.ScreenToWorldPoint(new Vector3(lastMouseScreenPos.x, lastMouseScreenPos.y, camZ));
         Vector3 currentW = Camera.main.ScreenToWorldPoint(new Vector3(screenPos.x, screenPos.y, camZ));
@@ -75,6 +94,9 @@ public class CameraController : Singleton<CameraController>
 
     private void OnZoom(float delta)
     {
+        if (IsUIOpen())
+            return;
+            
         var lens = vcam.m_Lens;
         lens.OrthographicSize -= delta * zoomStep;
         vcam.m_Lens = lens;

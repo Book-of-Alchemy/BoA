@@ -16,7 +16,7 @@ MonoBehaviour:
   name_en: Rough Leather
   name_kr: "\uAC70\uCE5C \uAC00\uC8FD"
   item_type: 1
-  attribute: 9
+  attribute: 0
   target_range: -1
   effect_range: -1
   effect_type: 6

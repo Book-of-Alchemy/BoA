@@ -16,7 +16,7 @@ MonoBehaviour:
   name_en: Weakening Spore
   name_kr: "\uC57D\uD654 \uD3EC\uC790"
   item_type: 1
-  attribute: 9
+  attribute: 0
   target_range: -1
   effect_range: -1
   effect_type: 6

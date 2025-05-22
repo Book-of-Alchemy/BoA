@@ -16,7 +16,7 @@ MonoBehaviour:
   name_en: Throwing Dagger
   name_kr: "\uD22C\uCC99\uC6A9 \uB2E8\uAC80"
   item_type: 0
-  attribute: 9
+  attribute: 0
   target_range: 7
   effect_range: 0
   effect_type: 0

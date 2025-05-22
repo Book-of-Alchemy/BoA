@@ -19,6 +19,7 @@ public class ElectrofiedWaterTile : TileEffect, IGround, IWater,IExpirable
 
         StatusEffectFactory.CreateEffect(220012, CurTile.CharacterStatsOnTile);
         Burn burn = null;
+        LeftTime -= ActionCost;
         if (CurTile.CharacterStatsOnTile != null)
         {
             burn = CurTile.CharacterStatsOnTile.activeEffects
