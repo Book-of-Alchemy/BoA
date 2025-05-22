@@ -114,6 +114,7 @@ public class QuestManager : Singleton<QuestManager>
 
     public void AcceptQuest(QuestData quest)
     {
+        Unsubscribe();
         if (AcceptedQuest == null)
         {
             AcceptedQuest = new QuestProgress(quest);
@@ -159,8 +160,7 @@ public class QuestManager : Singleton<QuestManager>
         
         AcceptedQuest = null;
         OnQuestAccepted = null;
-        MonsterEvents.OnMonsterKilled -= CheckBoss;
-        TileManger.OnGetDown -= UpdateProgress;
+        Unsubscribe();
     }
 
     public List<int> GetClearedQuestIds()
@@ -211,5 +211,11 @@ public class QuestManager : Singleton<QuestManager>
         {
             UpdateProgress(1);
         }
+    }
+
+    void Unsubscribe()
+    {
+        MonsterEvents.OnMonsterKilled -= CheckBoss;
+        TileManger.OnGetDown -= UpdateProgress;
     }
 }
