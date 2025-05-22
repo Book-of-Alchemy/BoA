@@ -162,6 +162,8 @@ public class EnemyFactory : Singleton<EnemyFactory>
         enemy.curLevel = tile.curLevel;
         enemy.isDead = false;
         tile.CharacterStatsOnTile = enemy;
+        var sr = enemy.GetComponent<SpriteRenderer>();
+        sr.sortingOrder = -10 * tile.gridPosition.y;
         //tile.isOccupied = true;
         TurnManager.Instance.AddUnit(enemy.unitBase);
     }
