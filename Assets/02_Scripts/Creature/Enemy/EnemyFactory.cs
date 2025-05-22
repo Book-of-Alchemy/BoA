@@ -168,7 +168,7 @@ public class EnemyFactory : Singleton<EnemyFactory>
 
     public void TrySpawnBoss(Level level,QuestData data)
     {
-        //if(data.main_object_type != ObjectType.DefeatBoss || !level.isLastFloor) return;
+        if(data.main_object_type != ObjectType.DefeatBoss || !level.isLastFloor) return;
 
         int bossID = GetBossIDByQuestID(data.id); bossID = 230008;
         if (bossID == -1) return;

@@ -60,6 +60,7 @@ public class ItemManager : Singleton<ItemManager>
         for (int i = 0; i < tiles.Count; i++)
         {
             rangeTilePrefabs[i].transform.position = new Vector3(tiles[i].gridPosition.x, tiles[i].gridPosition.y, 0);
+            GetSortingOrder(rangeTilePrefabs[i], tiles[i]);
             rangeTilePrefabs[i].SetActive(true);
         }
     }
@@ -85,6 +86,7 @@ public class ItemManager : Singleton<ItemManager>
         for (int i = 0; i < tiles.Count; i++)
         {
             itemRangeTilePrefabs[i].transform.position = new Vector3(tiles[i].gridPosition.x, tiles[i].gridPosition.y, 0);
+            GetSortingOrder(itemRangeTilePrefabs[i], tiles[i]);
             itemRangeTilePrefabs[i].SetActive(true);
         }
     }
@@ -114,6 +116,7 @@ public class ItemManager : Singleton<ItemManager>
         {
             bossRangeTilePrefabs[objectName][i].transform.position = new Vector3(tiles[i].gridPosition.x, tiles[i].gridPosition.y, 0);
             bossRangeTilePrefabs[objectName][i].SetActive(true);
+            GetSortingOrder(bossRangeTilePrefabs[objectName][i], tiles[i]);
         }
     }
 
@@ -127,5 +130,9 @@ public class ItemManager : Singleton<ItemManager>
         }
     }
 
-
+    void GetSortingOrder(GameObject gameObject, Tile tile)
+    {
+        var sr = gameObject.GetComponent<SpriteRenderer>();
+        sr.sortingOrder = -10 * tile.gridPosition.y - 1;
+    }
 }

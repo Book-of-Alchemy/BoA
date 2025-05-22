@@ -89,7 +89,7 @@ public class TileManger : Singleton<TileManger>
         Level prevLevel = curLevel;
         curLevelIndex++;
         OnGetDown?.Invoke(curLevelIndex);
-        if (curLevelIndex <= levels.Count)
+        if (curLevelIndex < levels.Count)
         {
             curLevelDepth++;
             TurnManager.Instance.RemoveAllEnemy();
@@ -130,7 +130,7 @@ public class TileManger : Singleton<TileManger>
     }
     public void EndQuest()
     {
-        UIManager.Show<UI_HUD>().OnDungeonResult();
+        UIManager.Show<UI_DungeonResult>();
     }
 
     public void DestroyDungeon()
