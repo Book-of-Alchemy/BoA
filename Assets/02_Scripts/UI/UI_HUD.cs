@@ -102,7 +102,8 @@ public class UI_HUD : UIBase
 
     public void UpdateQuestTxt()
     {
-        _questTxt.text = QuestManager.Instance.AcceptedQuest.Data.quest_name_kr;
+        if(QuestManager.Instance.AcceptedQuest != null)
+            _questTxt.text = QuestManager.Instance.AcceptedQuest.Data.quest_name_kr;
     }
 
     public void OnClickCraft() // Call At OnClick Event

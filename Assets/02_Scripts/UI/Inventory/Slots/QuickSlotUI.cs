@@ -30,7 +30,17 @@ public class QuickSlotUI : SlotUIBase<InventoryItem>, IDropHandler, IDraggableSl
         _countTxt.text = string.Empty;
         _icon.enabled = false;
     }
+    protected override void ShowTooltip(InventoryItem data)
+    {
+        if (data == null || data.itemData == null) return;
 
+        UIManager.Show<UI_ItemTooltip>(data.itemData);
+    }
+
+    protected override void HideTooltip()
+    {
+        UIManager.Hide<UI_ItemTooltip>();
+    }
     public override void OnClick()
     {
         

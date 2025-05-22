@@ -14,6 +14,8 @@ public class UI_Setting : UIBase
 
     public override void Opened(params object[] param)
     {
+        UIManager.CloseLastOpenedUI();
+
         masterSlider.onValueChanged.RemoveAllListeners();
         bgmslider.onValueChanged.RemoveAllListeners();
         sfxSlider.onValueChanged.RemoveAllListeners();

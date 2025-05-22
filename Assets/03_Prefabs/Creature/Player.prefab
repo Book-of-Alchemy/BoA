@@ -102,22 +102,50 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c0c14779bb63db4ab19b735f8305e53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  statBlock:
+    stats:
+      keys: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d0000000e0000000f000000100000001100000012000000130000001400000015000000160000001700000018000000190000001a0000001b0000001c0000001d0000001e0000001f000000
+      values:
+      - baseValue: 100
+      - baseValue: 50
+      - baseValue: 10
+      - baseValue: 5
+      - baseValue: 10
+      - baseValue: 150
+      - baseValue: 5
+      - baseValue: 100
+      - baseValue: 6
+      - baseValue: 1
+      - baseValue: 0
+      - baseValue: 0
+      - baseValue: 0
+      - baseValue: 0
+      - baseValue: 0
+      - baseValue: 0
+      - baseValue: 0
+      - baseValue: 0
+      - baseValue: 100
+      - baseValue: 100
+      - baseValue: 100
+      - baseValue: 100
+      - baseValue: 100
+      - baseValue: 100
+      - baseValue: 100
+      - baseValue: 100
+      - baseValue: 100
+      - baseValue: 100
+      - baseValue: 100
+      - baseValue: 100
+      - baseValue: 100
+      - baseValue: 100
   level: 1
   experience: 0
-  maxHealth: 100
   currentHealth: 100
-  maxMana: 50
+  currentShield: 0
   currentMana: 50
-  attackMin: 15
-  attackMax: 30
-  defense: 20
-  critChance: 0.1
-  critDamage: 1.5
-  evasion: 0.05
-  accuracy: 1
-  actionPoints: 1
-  visionRange: 6
-  attackRange: 1
+  isHidden: 0
+  isInvincible: 0
+  hasImmunityToAll: 0
   curLevel: {fileID: 0}
   curTile:
     curLevel: {fileID: 0}
@@ -125,21 +153,16 @@ MonoBehaviour:
     tileType: 0
     environmentType: 0
     isDoorPoint: 0
-    isOccupied: 0
-    canSeeThrough: 1
-    isExplored: 0
-    isOnSight: 0
+    IsOccupied: 0
     trpaOnTile: {fileID: 0}
     mapObject: {fileID: 0}
     itemsOnTile: []
-  fire: 0
-  water: 0
-  ice: 0
-  electric: 0
-  earth: 0
-  wind: 0
-  light: 0
-  dark: 0
+    groundEffect: {fileID: 0}
+    airEffect: {fileID: 0}
+  isManaOverload: 0
+  isEasyInstallationKit: 0
+  isMarksman: 0
+  isPrecisionAim: 0
 --- !u!114 &4635203555950173870
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -235,8 +258,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b958394a0a1d504780d789eb42afa21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentTime: 0
   nextActionTime: 0
-  actionCost: 10
-  actionCostMultiplier: 1
   Stats: {fileID: 0}

@@ -88,16 +88,23 @@ public class InventorySlotUI : SlotUIBase<InventoryItem>, ISelectHandler, IDesel
         if (_textObject != null) HideText();
     }
 
+    protected override void ShowTooltip(InventoryItem data)
+    {
+        if (data == null || data.itemData == null) return;
 
+        UIManager.Show<UI_ItemTooltip>(data.itemData);
+    }
+
+    protected override void HideTooltip()
+    {
+         UIManager.Hide<UI_ItemTooltip>();
+    }
     public override void OnClick()
     {
         if (!HasData) return;
 
         var item = _data;
-
-
-     
-
+        HideTooltip();
         //인벤토리타입에 맞는 액션 찾기
         if (_OnClickActions.TryGetValue(_uiInventory.CurType, out var action))
         {
