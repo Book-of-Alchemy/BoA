@@ -98,7 +98,7 @@ public class Inventory : Singleton<Inventory>
         Debug.Log($"골드 {amount}를 사용했습니다. 현재 골드: {_gold}");
     }
 
-    // 다른 클래스(예: DataManager)에서 골드를 직접 설정할 수 있는 메서드
+    
     public void SetGold(int amount)
     {
         _gold = Mathf.Max(0, amount);
@@ -187,9 +187,12 @@ public class Inventory : Singleton<Inventory>
         }
         else
         {
-            //빈 슬롯을 못찾았다.
             //가방이 다참.
-            Debug.Log("가방이 다참");
+            if (GameManager.Instance.PlayerTransform != null)
+            {
+                ItemFactory.Instance.DropItem(itemData.id, GameManager.Instance.PlayerTransform.CurTile, amount);
+                UIManager.ShowOnce<UI_Text>("가방이 가득 찼습니다. 아이템을 떨어뜨립니다.");
+            }
             return null;
         }
     }
@@ -430,6 +433,11 @@ public class Inventory : Singleton<Inventory>
     public void Use(InventoryItem item, int index)
     {
         Debug.Log("UseAction");
+        if (item.GetItemType() != Item_Type.Consumable)
+        {
+            UIManager.ShowOnce<UI_Text>("사용가능한 아이템이 아니다.");
+            return;
+        }
         var controller = GameManager.Instance.PlayerTransform.GetComponent<DungeonBehavior>();
         controller.UseItem(item.itemData);
 

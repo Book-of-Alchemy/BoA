@@ -122,7 +122,7 @@ public class InventorySlotUI : SlotUIBase<InventoryItem>, ISelectHandler, IDesel
     {
         var item = _data;
         // Consumable 타입 검사
-        if (item.GetItemType() != Item_Type.Consumable) return;
+        //if (item.GetItemType() != Item_Type.Consumable) return;
         UIManager.Show<UI_Action>((int)_uiInventory.CurType, _rectTransform, _data, Index);
     }
 
