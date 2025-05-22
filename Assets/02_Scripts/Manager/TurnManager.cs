@@ -72,6 +72,7 @@ public class TurnManager : Singleton<TurnManager>
 
             foreach(var effect in allTileEffects.ToArray())
             {
+                if (effect == null) continue;
                 if (!effect.gameObject.activeSelf)
                 {
                     RemoveTileEffectt(effect);

@@ -9,7 +9,7 @@ public class EnvironmentalPool : MonoBehaviour
     /// </summary>
     public Queue<EnvironmentPrefab> environmentPrefabs = new Queue<EnvironmentPrefab>();
     public GameObject prefab;
-    public int initialSize = 5;
+    public int initialSize = 20;
 
     private void Awake()
     {
@@ -45,7 +45,6 @@ public class EnvironmentalPool : MonoBehaviour
         Vector2Int gridPosition = tile.gridPosition;
         Vector3 spawnPosition = new Vector3(gridPosition.x, gridPosition.y, 0);
         obj.transform.position = spawnPosition;
-        obj.baseRenderer.sortingOrder = -9000;
         obj.CurTile = tile;
         obj.gameObject.SetActive(true);
 
@@ -54,9 +53,9 @@ public class EnvironmentalPool : MonoBehaviour
 
     public void ReturnToPool(EnvironmentPrefab obj)
     {
+        obj.OnReturn();
         obj.transform.SetParent(this.transform);
         obj.transform.localPosition = Vector3.zero;
-        obj.OnReturn();
         obj.gameObject.SetActive(false);
         environmentPrefabs.Enqueue(obj.GetComponent<EnvironmentPrefab>());
     }
