@@ -34,6 +34,8 @@ public class QuestDetail : MonoBehaviour
         //퀘스트 수락
         QuestManager.Instance.AcceptQuest(_currentQuest);
         UIManager.Hide<UI_SelectQuest>();
+
+        GameSceneManager.Instance.ChangeScene(SceneType.Dungeon);
     }
 
     public void OnDecline()
