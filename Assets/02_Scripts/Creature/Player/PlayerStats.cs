@@ -36,6 +36,8 @@ public class PlayerStats : CharacterStats
         GameManager.Instance.RegisterPlayer(this);
         _player = GetComponent<PlayerController>();
         ResearchSystem.Instance.ApplyModifiersTo(this);
+        CurrentHealth = MaxHealth;
+        CurrentMana = MaxMana;
     }
 
     public void GainExperience(int exp)
