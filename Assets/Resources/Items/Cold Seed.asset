@@ -16,7 +16,7 @@ MonoBehaviour:
   name_en: Cold Seed
   name_kr: "\uCC28\uAC00\uC6B4 \uC528\uC557"
   item_type: 1
-  attribute: 9
+  attribute: 0
   target_range: -1
   effect_range: -1
   effect_type: 6

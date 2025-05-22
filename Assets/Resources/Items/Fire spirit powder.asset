@@ -16,7 +16,7 @@ MonoBehaviour:
   name_en: Fire Spirit Powder
   name_kr: "\uD654\uC5FC \uC815\uB839\uC758 \uAC00\uB8E8"
   item_type: 1
-  attribute: 9
+  attribute: 0
   target_range: -1
   effect_range: -1
   effect_type: 6

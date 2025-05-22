@@ -16,7 +16,7 @@ MonoBehaviour:
   name_en: Paralyzing Spore
   name_kr: "\uB9C8\uBE44 \uD3EC\uC790"
   item_type: 1
-  attribute: 9
+  attribute: 0
   target_range: -1
   effect_range: -1
   effect_type: 6

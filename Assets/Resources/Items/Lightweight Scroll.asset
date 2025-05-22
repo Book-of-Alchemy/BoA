@@ -16,7 +16,7 @@ MonoBehaviour:
   name_en: Lightweight Scroll
   name_kr: "\uACBD\uB7C9\uD654 \uC2A4\uD06C\uB864"
   item_type: 0
-  attribute: 9
+  attribute: 0
   target_range: 0
   effect_range: 0
   effect_type: 2

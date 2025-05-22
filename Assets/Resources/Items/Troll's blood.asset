@@ -16,7 +16,7 @@ MonoBehaviour:
   name_en: Troll's Blood
   name_kr: "\uD2B8\uB864\uC758 \uD53C"
   item_type: 2
-  attribute: 9
+  attribute: 0
   target_range: -1
   effect_range: -1
   effect_type: 6

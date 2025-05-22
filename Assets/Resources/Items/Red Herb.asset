@@ -16,7 +16,7 @@ MonoBehaviour:
   name_en: Red Herb
   name_kr: "\uBD89\uC740 \uC57D\uCD08"
   item_type: 1
-  attribute: 9
+  attribute: 0
   target_range: -1
   effect_range: -1
   effect_type: 6

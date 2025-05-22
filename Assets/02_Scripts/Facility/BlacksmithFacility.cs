@@ -24,7 +24,7 @@ public class BlacksmithFacility : MonoBehaviour, IFacilityUI
         switch (level)
         {
             case 0:
-                UIManager.Show<UI_Text>("대장간은 아직 들어갈 수 없습니다.");
+                UIManager.ShowOnce<UI_Text>("대장간은 아직 들어갈 수 없습니다.");
                 return;
 
             case 1:

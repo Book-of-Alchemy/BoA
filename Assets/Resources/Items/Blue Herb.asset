@@ -16,7 +16,7 @@ MonoBehaviour:
   name_en: Blue Herb
   name_kr: "\uD478\uB978 \uC57D\uCD08"
   item_type: 1
-  attribute: 9
+  attribute: 0
   target_range: -1
   effect_range: -1
   effect_type: 6

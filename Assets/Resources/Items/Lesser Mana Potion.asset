@@ -16,7 +16,7 @@ MonoBehaviour:
   name_en: Lesser Mana Potion
   name_kr: "\uD558\uAE09 \uB9C8\uB825 \uBB3C\uC57D"
   item_type: 0
-  attribute: 9
+  attribute: 0
   target_range: 0
   effect_range: 0
   effect_type: 1
