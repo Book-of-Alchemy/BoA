@@ -16,13 +16,13 @@ MonoBehaviour:
   name_en: Fireball Scroll
   name_kr: "\uD654\uC5FC\uAD6C \uC2A4\uD06C\uB864"
   item_type: 0
-  attribute: 1
+  attribute: 0
   target_range: 4
   effect_range: 0
   effect_type: 0
   tag: 
   tags: 010000000e00000005000000
-  effect_value: 50
+  effect_value: 1
   effect_id: -1
   effect_duration: -1
   effect_strength: -1

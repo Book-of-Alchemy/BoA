@@ -17,5 +17,5 @@ MonoBehaviour:
   name_en: Essence of Cold
   description: "\uB0C9\uAE30 \uC18D\uC131 \uC800\uD56D\uB825\uC774 20% \uC99D\uAC00\uD55C\uB2E4."
   icon_sprite_id: 
-  icon_sprite: {fileID: 0}
+  icon_sprite: {fileID: 21300000, guid: 361e25ecce2f2d045908a908a41eaff2, type: 3}
   rarity: 0

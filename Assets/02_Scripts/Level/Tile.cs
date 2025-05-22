@@ -44,7 +44,7 @@ public class Tile
 
     public int AstarCost => CalculateAstarCost();
     public bool IsWalkable => CalculateIsWalkable();
-    public bool isOccupied;// map object or characterstat여부에 따라 자동으로 결정
+    public bool IsOccupied =  false;// map object or characterstat여부에 따라 자동으로 결정
     public bool CanSeeThrough => CalculateCanSeeThrough();//벽타일 or map object의 canseethrough 여부에 따라 자동으로 결정
     public event Action onIsExploredChanged;
     private bool isExplored;
@@ -142,8 +142,8 @@ public class Tile
         {
             TileType.wall => false,
             TileType.secretWall => false,
-            TileType.ground => !isOccupied,
-            TileType.door => !isOccupied,
+            TileType.ground => !IsOccupied,
+            TileType.door => !IsOccupied,
             TileType.empty => false,
             _ => false
         };
@@ -161,8 +161,8 @@ public class Tile
         {
             TileType.wall => false,
             TileType.secretWall => false,
-            TileType.ground => !isOccupied,
-            TileType.door => !isOccupied,
+            TileType.ground => !IsOccupied,
+            TileType.door => !IsOccupied,
             _ => true,
         };
         if (airEffect != null && (airEffect is FogTile || airEffect is ToxicAirTile))
@@ -171,6 +171,20 @@ public class Tile
         }
 
         return isCanSeeThrough;
+    }
+
+    private bool CalculateIsOccupied()
+    {
+        if (tileType == TileType.wall)
+            return true;
+
+        if (mapObject != null && mapObject.IsOccuPying)
+            return true;
+
+        if (characterStatsOnTile != null)
+            return true;
+
+        return false;
     }
 
     public void AffectOnTile(TileReactionResult reactionResult, bool isAir)

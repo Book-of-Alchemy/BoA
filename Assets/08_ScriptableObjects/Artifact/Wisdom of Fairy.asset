@@ -17,5 +17,5 @@ MonoBehaviour:
   name_en: Wisdom of Fairy
   description: "\uCD5C\uB300 MP\uAC00 50% \uC99D\uAC00\uD55C\uB2E4."
   icon_sprite_id: 
-  icon_sprite: {fileID: 0}
+  icon_sprite: {fileID: 21300000, guid: a11275178f4594c41b3aaf2d809b4ecb, type: 3}
   rarity: 1

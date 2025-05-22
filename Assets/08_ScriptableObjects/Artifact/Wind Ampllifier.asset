@@ -17,5 +17,5 @@ MonoBehaviour:
   name_en: Wind Ampllifier
   description: "\uBC14\uB78C \uC18D\uC131 \uD53C\uD574\uB7C9\uC774 30% \uC99D\uAC00\uD569\uB2C8\uB2E4."
   icon_sprite_id: 
-  icon_sprite: {fileID: 0}
+  icon_sprite: {fileID: 21300000, guid: 8b793266572a6d14390674ce90bfae4d, type: 3}
   rarity: 1

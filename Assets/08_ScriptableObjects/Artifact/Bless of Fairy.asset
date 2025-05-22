@@ -17,5 +17,5 @@ MonoBehaviour:
   name_en: Bless of Fairy
   description: "\uCD5C\uB300 HP\uAC00 50% \uC99D\uAC00\uD55C\uB2E4."
   icon_sprite_id: 
-  icon_sprite: {fileID: 0}
+  icon_sprite: {fileID: 21300000, guid: 057b93e77450b554ab2a25b5e44ae571, type: 3}
   rarity: 1

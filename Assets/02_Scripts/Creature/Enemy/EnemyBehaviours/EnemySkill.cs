@@ -3,17 +3,25 @@ using System.Collections.Generic;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
+public enum SkillUseState
+{
+    CannotUse,       // 조건 미달
+    Preparing,       // 준비단계 (이번 턴에 애니메이션 안 나감)
+    ReadyToCast      // 준비완료 → 애니메이션 실행 가능
+}
+
 public abstract class EnemySkill : MonoBehaviour
 {
     protected EnemyStats stats;
     protected AttackBaseBehaviour attackBaseBehaviour;
+    public virtual bool IsPreparing => false;
     protected virtual void Awake()
     {
         stats = GetComponent<EnemyStats>();
         attackBaseBehaviour = GetComponent<AttackBaseBehaviour>();
     }
 
-    public abstract bool CanUse();//캔유즈 실행후 enemy 애니메이션 실행 예정
+    public abstract SkillUseState CanUse();//캔유즈 실행후 enemy 애니메이션 실행 예정
     public abstract void Use(); //스킬 애니메이션 중간에 실행 예정
 
     /// <summary>

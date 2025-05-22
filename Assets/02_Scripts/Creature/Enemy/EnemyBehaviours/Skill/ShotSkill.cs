@@ -7,7 +7,7 @@ public class ShotSkill : EnemySkill
 {
     List<Tile> neighbors => attackBaseBehaviour.adjacentiveTile;
     List<Tile> attackRange => attackBaseBehaviour.attackRangeTile;
-    public override bool CanUse()
+    public override SkillUseState CanUse()
     {
         
         foreach (Tile tile in neighbors)
@@ -16,7 +16,7 @@ public class ShotSkill : EnemySkill
             {
                 if(player.IsHidden)
                     continue;
-                return false;
+                return SkillUseState.CannotUse;
             }
         }
 
@@ -27,11 +27,11 @@ public class ShotSkill : EnemySkill
                 if (player.IsHidden)
                     continue;
                 attackBaseBehaviour.playetStats = player;
-                return true;
+                return SkillUseState.ReadyToCast;
             }
         }
 
-        return false;
+        return SkillUseState.CannotUse;
     }
     public override void Use()
     {

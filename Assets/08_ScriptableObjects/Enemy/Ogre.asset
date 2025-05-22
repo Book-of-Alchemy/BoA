@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6abc21a19d57d034aba438aa49a01fc6, type: 3}
+  m_Name: Ogre
+  m_EditorClassIdentifier: 
+  id: 230008
+  prefab: {fileID: 1362996599380649307, guid: c1eaf19bacc043541a2d8b020031ac0b, type: 3}
+  name_kr: "\uC624\uC6B0\uAC70"
+  biome_id: 120001
+  sight: 10
+  attack_range: 1
+  min_level: 15
+  max_level: 99
+  base_hp: 400
+  hp_per_level: 30
+  base_atk: 30
+  atk_per_level: 3
+  base_def: 5
+  def_per_level: 0
+  resist_fire: 0
+  resist_water: 0
+  resist_cold: 0
+  resist_wind: 0
+  resist_lightning: 0
+  resist_earth: 0
+  resist_light: 0
+  resist_dark: 0
+  isBoss: 1
