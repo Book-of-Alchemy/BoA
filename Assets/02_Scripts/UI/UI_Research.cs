@@ -65,7 +65,7 @@ public class UI_Research : UIBase
 
     private void UpdateGoldUI(int amount)
     {
-        _goldText.text = $"{amount :NO}";
+        _goldText.text = $"{amount:N0}";
     }
 
     private void LoadResearchData()
