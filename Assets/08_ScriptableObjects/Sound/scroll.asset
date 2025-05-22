@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: scroll
   m_EditorClassIdentifier: 
   id: scroll
-  type: 1
+  type: 0
   clip: {fileID: 8300000, guid: 9d60eaebbbcf99e46989b0a958caf2c9, type: 3}
   audioClipPath: 

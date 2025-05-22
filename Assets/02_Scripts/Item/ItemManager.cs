@@ -21,6 +21,11 @@ public class ItemManager : Singleton<ItemManager>
         rangeTiles = new GameObject("RangeTiles");
         itemRangeTiles = new GameObject("ItemRangeTiles");
         bossRangeTiles = new GameObject("BossRangeTiles");
+
+        rangeTiles.transform.SetParent(transform);
+        itemRangeTiles.transform.SetParent(transform);
+        bossRangeTiles.transform.SetParent(transform);
+
     }
 
     //public BaseItem CreateItem(ItemData data)

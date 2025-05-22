@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: page flip
   m_EditorClassIdentifier: 
   id: page flip
-  type: 1
+  type: 0
   clip: {fileID: 8300000, guid: 59af0340b73c1d345af93cf9f277ebff, type: 3}
   audioClipPath: 
