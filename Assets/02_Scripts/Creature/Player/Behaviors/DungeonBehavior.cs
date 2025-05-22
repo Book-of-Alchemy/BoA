@@ -729,7 +729,30 @@ public class DungeonBehavior : PlayerBaseBehavior
         
         while (elapsedTime < holdTimeRequired)
         {
-            if (InputManager.Instance.MoveInput != initialRaw)
+            Vector2 currentInput = InputManager.Instance.MoveInput;
+            if (currentInput == Vector2.zero)
+            {
+                _holdMoveCoroutine = null;
+                yield break;
+            }
+            
+            bool inputChanged = false;
+            
+            // x축 방향이 완전히 반대로 바뀌면 취소
+            if ((initialRaw.x > 0 && currentInput.x < 0) || 
+                (initialRaw.x < 0 && currentInput.x > 0))
+            {
+                inputChanged = true;
+            }
+            
+            // y축 방향이 완전히 반대로 바뀌면 취소
+            if ((initialRaw.y > 0 && currentInput.y < 0) || 
+                (initialRaw.y < 0 && currentInput.y > 0))
+            {
+                inputChanged = true;
+            }
+            
+            if (inputChanged)
             {
                 _holdMoveCoroutine = null;
                 yield break;
@@ -755,28 +778,25 @@ public class DungeonBehavior : PlayerBaseBehavior
         }
     }
 
-    // 실제 반복 이동을 수행하는 코루틴
     private IEnumerator HoldMove(Vector2Int dir)
     {
-        Coroutine activeHoldMove = null;
-        
-        activeHoldMove = _holdMoveCoroutine;
-        
-        while (InputManager.Instance.MoveInput == new Vector2(dir.x, dir.y))
+        var activeHoldMove = _holdMoveCoroutine;
+
+        while (InputManager.Instance.MoveInput != Vector2.zero)
         {
             if (Controller.isPlayerTurn && !_isMoving)
             {
                 var cur = _stats.CurTile.gridPosition;
                 var nxt = cur + dir;
-                
+
                 if (!_stats.curLevel.tiles.TryGetValue(nxt, out var tile) ||
                     !tile.IsWalkable ||
                     tile.CharacterStatsOnTile != null)
                 {
                     Shake();
-                    break; 
+                    break;
                 }
-                
+
                 ExecuteMove(dir);
                 yield return new WaitUntil(() => !_isMoving);
             }
@@ -784,9 +804,7 @@ public class DungeonBehavior : PlayerBaseBehavior
         }
 
         if (_holdMoveCoroutine == activeHoldMove)
-        {
             _holdMoveCoroutine = null;
-        }
     }
 
     private void StopHoldMove()

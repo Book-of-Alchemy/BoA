@@ -143,6 +143,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""QuickSlot"",
+                    ""type"": ""Button"",
+                    ""id"": ""d351aee5-53a6-48bf-9778-debf01e4f235"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -519,6 +528,72 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""RightClick"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c4c7a702-1822-4d17-9921-e41e254ebcac"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""QuickSlot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""648e976f-03aa-4d6c-8dc0-12b85ea0ac73"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""QuickSlot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d49f6e68-178b-4c6f-8701-9ea3c8125f4d"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""QuickSlot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a2be6210-c44d-4670-8d7c-9075cdc61f4a"",
+                    ""path"": ""<Keyboard>/4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""QuickSlot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""be7d37af-7d73-4b78-ae95-9b4a2468f693"",
+                    ""path"": ""<Keyboard>/5"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""QuickSlot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3b755384-0fb6-40ae-bc44-e65dda9ef275"",
+                    ""path"": ""<Keyboard>/6"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""QuickSlot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -540,6 +615,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_PC_Space = m_PC.FindAction("Space", throwIfNotFound: true);
         m_PC_Zoom = m_PC.FindAction("Zoom", throwIfNotFound: true);
         m_PC_RightClick = m_PC.FindAction("RightClick", throwIfNotFound: true);
+        m_PC_QuickSlot = m_PC.FindAction("QuickSlot", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -614,6 +690,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_PC_Space;
     private readonly InputAction m_PC_Zoom;
     private readonly InputAction m_PC_RightClick;
+    private readonly InputAction m_PC_QuickSlot;
     public struct PCActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -631,6 +708,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @Space => m_Wrapper.m_PC_Space;
         public InputAction @Zoom => m_Wrapper.m_PC_Zoom;
         public InputAction @RightClick => m_Wrapper.m_PC_RightClick;
+        public InputAction @QuickSlot => m_Wrapper.m_PC_QuickSlot;
         public InputActionMap Get() { return m_Wrapper.m_PC; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -679,6 +757,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @RightClick.started += instance.OnRightClick;
             @RightClick.performed += instance.OnRightClick;
             @RightClick.canceled += instance.OnRightClick;
+            @QuickSlot.started += instance.OnQuickSlot;
+            @QuickSlot.performed += instance.OnQuickSlot;
+            @QuickSlot.canceled += instance.OnQuickSlot;
         }
 
         private void UnregisterCallbacks(IPCActions instance)
@@ -722,6 +803,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @RightClick.started -= instance.OnRightClick;
             @RightClick.performed -= instance.OnRightClick;
             @RightClick.canceled -= instance.OnRightClick;
+            @QuickSlot.started -= instance.OnQuickSlot;
+            @QuickSlot.performed -= instance.OnQuickSlot;
+            @QuickSlot.canceled -= instance.OnQuickSlot;
         }
 
         public void RemoveCallbacks(IPCActions instance)
@@ -754,5 +838,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnSpace(InputAction.CallbackContext context);
         void OnZoom(InputAction.CallbackContext context);
         void OnRightClick(InputAction.CallbackContext context);
+        void OnQuickSlot(InputAction.CallbackContext context);
     }
 }

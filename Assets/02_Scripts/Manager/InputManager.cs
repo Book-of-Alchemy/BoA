@@ -31,6 +31,7 @@ public class InputManager : Singleton<InputManager>
     public event Action<Vector2> OnPan;           // 우클릭 드래그 중 커서 위치
     public event Action OnRightClickStart;        // 우클릭 눌림
     public event Action OnRightClickEnd;          // 우클릭 뗌
+    public event Action<int> OnQuickSlotUse;          
     
     
     public bool EnableMouseTracking { get; set; } = false;
@@ -122,6 +123,23 @@ public class InputManager : Singleton<InputManager>
         {
             _rightClickHeld = false;
             OnRightClickEnd?.Invoke();
+        };
+        _input.PC.QuickSlot.performed += ctx =>
+        {
+            var control = ctx.control;
+
+            if (control.name == "1")
+                OnQuickSlotUse?.Invoke(1);
+            else if (control.name == "2")
+                OnQuickSlotUse?.Invoke(2);
+            else if (control.name == "3")
+                OnQuickSlotUse?.Invoke(3);
+            else if (control.name == "4")
+                OnQuickSlotUse?.Invoke(4);
+            else if (control.name == "5")
+                OnQuickSlotUse?.Invoke(5);
+            else if (control.name == "6")
+                OnQuickSlotUse?.Invoke(6);
         };
     }
 
