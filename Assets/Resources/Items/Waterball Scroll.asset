@@ -16,7 +16,7 @@ MonoBehaviour:
   name_en: Waterball Scroll
   name_kr: "\uBB3C\uC758 \uAD6C\uCCB4 \uC2A4\uD06C\uB864"
   item_type: 0
-  attribute: 0
+  attribute: 2
   target_range: 4
   effect_range: 0
   effect_type: 0

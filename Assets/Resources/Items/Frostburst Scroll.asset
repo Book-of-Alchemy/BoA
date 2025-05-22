@@ -16,7 +16,7 @@ MonoBehaviour:
   name_en: Frostburst Scroll
   name_kr: "\uB0C9\uAE30 \uD3ED\uBC1C \uC2A4\uD06C\uB864"
   item_type: 0
-  attribute: 0
+  attribute: 3
   target_range: 0
   effect_range: 2
   effect_type: 0

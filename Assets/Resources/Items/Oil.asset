@@ -15,11 +15,11 @@ MonoBehaviour:
   id: 201018
   name_en: Oil
   name_kr: "\uAE30\uB984"
-  item_type: 0
-  attribute: 0
+  item_type: 1
+  attribute: 9
   target_range: -1
   effect_range: -1
-  effect_type: 0
+  effect_type: 6
   tag: 
   tags: 15000000
   effect_value: -1

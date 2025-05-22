@@ -16,10 +16,10 @@ MonoBehaviour:
   name_en: Lesser Healing Potion
   name_kr: "\uD558\uAE09 \uCE58\uC720 \uBB3C\uC57D"
   item_type: 0
-  attribute: 0
+  attribute: 9
   target_range: 0
   effect_range: 0
-  effect_type: 0
+  effect_type: 1
   tag: 
   tags: 030000000e000000130000001f000000
   effect_value: 50

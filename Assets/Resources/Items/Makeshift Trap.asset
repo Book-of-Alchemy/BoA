@@ -16,10 +16,10 @@ MonoBehaviour:
   name_en: Makeshift Trap
   name_kr: "\uAC04\uC774 \uD568\uC815"
   item_type: 0
-  attribute: 0
+  attribute: 9
   target_range: 1
   effect_range: 0
-  effect_type: 0
+  effect_type: 5
   tag: 
   tags: 020000000e00000004000000
   effect_value: 180001

@@ -15,11 +15,11 @@ MonoBehaviour:
   id: 201012
   name_en: Blue Herb
   name_kr: "\uD478\uB978 \uC57D\uCD08"
-  item_type: 0
-  attribute: 0
+  item_type: 1
+  attribute: 9
   target_range: -1
   effect_range: -1
-  effect_type: 0
+  effect_type: 6
   tag: 
   tags: 15000000
   effect_value: -1

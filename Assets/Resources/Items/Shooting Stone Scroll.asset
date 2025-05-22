@@ -16,7 +16,7 @@ MonoBehaviour:
   name_en: Shooting Stone Scroll
   name_kr: "\uBC14\uC704 \uC0AC\uCD9C \uC2A4\uD06C\uB864"
   item_type: 0
-  attribute: 0
+  attribute: 6
   target_range: 4
   effect_range: 0
   effect_type: 0

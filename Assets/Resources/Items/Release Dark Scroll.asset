@@ -16,7 +16,7 @@ MonoBehaviour:
   name_en: Release Dark Scroll
   name_kr: "\uC5B4\uB460 \uBC29\uCD9C \uC2A4\uD06C\uB864"
   item_type: 0
-  attribute: 0
+  attribute: 8
   target_range: 0
   effect_range: 2
   effect_type: 0
