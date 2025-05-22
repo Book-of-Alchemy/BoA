@@ -87,7 +87,7 @@ public class GameSceneManager : Singleton<GameSceneManager>
             float realProgress = Mathf.Clamp01(loadOperation.progress / 0.9f);
             
             // 두 진행률 중 더 큰 값을 사용
-            float finalProgress = Mathf.Max(timeProgress, realProgress);
+            float finalProgress = Mathf.Min(timeProgress, realProgress);
             
             // UI 업데이트
             LoadingUI.Instance?.UpdateProgress(finalProgress);
