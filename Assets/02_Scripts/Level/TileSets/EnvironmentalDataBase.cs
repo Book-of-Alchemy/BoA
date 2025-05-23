@@ -21,7 +21,9 @@ public class EnvironmentalDataBase : ScriptableObject
             }
 
             if (datasByType.ContainsKey(data.environment_type))
+            {
 
+            }
             datasByType[data.environment_type] = data;
         }
     }
