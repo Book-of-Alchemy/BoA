@@ -458,7 +458,7 @@ public class DungeonBehavior : PlayerBaseBehavior
         _savedTurnSpeed = tm.turnSpeed;
         tm.turnSpeed *= 10;
         Controller.moveSpeed *= 10;
-        Time.timeScale *= 10;
+        //Time.timeScale *= 10;
     }
 
     // ────────────────────────────────────────────────────────
@@ -475,7 +475,7 @@ public class DungeonBehavior : PlayerBaseBehavior
         var tm = TurnManager.Instance;
         tm.turnSpeed = _savedTurnSpeed;
         Controller.moveSpeed /= 10;
-        Time.timeScale /= 10;
+        //Time.timeScale /= 10;
     }
 
     // ────────────────────────────────────────────────────────

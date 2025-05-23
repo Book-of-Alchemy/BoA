@@ -122,7 +122,7 @@ public class TurnManager : Singleton<TurnManager>
 
                     if (unit is PlayerUnit playerUnit)
                     {
-                        Debug.Log($"{Time.time}");
+
                         yield return new WaitUntil(() => !playerUnit.IsWaitingForInput);
                     }
 
