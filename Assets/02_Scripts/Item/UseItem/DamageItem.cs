@@ -1,13 +1,9 @@
 using DG.Tweening;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using UnityEngine;
-using UnityEngine.InputSystem.XR;
-using static UnityEditor.Experimental.GraphView.GraphView;
-using static UnityEngine.InputManagerEntry;
+
 
 [System.Serializable]
 public class DamageItem : BaseItem
