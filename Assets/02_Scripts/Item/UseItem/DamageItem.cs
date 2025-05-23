@@ -162,6 +162,12 @@ public class DamageItem : BaseItem
                 case Attribute.Fire:
                     EffectProjectileManager.Instance.PlayEffect(ojTile.gridPosition, 30010);
                     break;
+                case Attribute.Earth:
+                    EffectProjectileManager.Instance.PlayEffect(ojTile.gridPosition, 30012);
+                    break;
+                case Attribute.Dark:
+                    EffectProjectileManager.Instance.PlayEffect(ojTile.gridPosition, 30021);
+                    break;
             }
             if (ojTile.CharacterStatsOnTile != null)
             {
