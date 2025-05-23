@@ -450,6 +450,7 @@ public class Inventory : Singleton<Inventory>
 
         RemoveItem(index);
         UIManager.Hide<UI_Action>();
+        UIManager.Hide<UI_ItemTooltip>();
         UIManager.Hide<UI_Inventory>();
     }
 
