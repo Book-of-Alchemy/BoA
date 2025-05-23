@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
 
+using System.Linq;
 public class OilTile : TileEffect, IGround, IWater
 {
     public override EnvironmentType EnvType => EnvironmentType.Oil;

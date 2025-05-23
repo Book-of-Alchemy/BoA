@@ -1,23 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using System;
-using static UnityEngine.UI.CanvasScaler;
-using UnityEngine.SceneManagement;
 
 public class TurnManager : Singleton<TurnManager>
 {
     public List<UnitBase> allUnits = new List<UnitBase>();
     public List<TileEffect> allTileEffects = new List<TileEffect>();
     HashSet<int> unitIds = new HashSet<int>();
-    
+
     // 글로벌 시간 변경 이벤트 추가
     public event Action OnGlobalTimeChanged;
-    
-    [SerializeField]private int _globalTime = 0;
-    public int globalTime 
-    { 
+
+    [SerializeField] private int _globalTime = 0;
+    public int globalTime
+    {
         get => _globalTime;
         private set
         {
@@ -25,9 +22,9 @@ public class TurnManager : Singleton<TurnManager>
             OnGlobalTimeChanged?.Invoke();
         }
     }
-    
+
     public float turnSpeed = 10;//나눈 값을 기준으로 정함 5 = 0.2초 10 = 0.1초 향후 이걸 기준으로 가속 + 도트윈 + 애니메이션에도 적용
-    [SerializeField]private float originSpeed = 10;
+    [SerializeField] private float originSpeed = 10;
 
     [SerializeField] private UnitBase curUnit;
 
@@ -84,7 +81,7 @@ public class TurnManager : Singleton<TurnManager>
                     enemyUnit.UpdateVisual();
             }
 
-            foreach(var effect in allTileEffects.ToArray())
+            foreach (var effect in allTileEffects.ToArray())
             {
                 if (effect == null) continue;
                 if (!effect.gameObject.activeSelf)
@@ -106,7 +103,7 @@ public class TurnManager : Singleton<TurnManager>
                 if (unit == null || !unit.gameObject.activeSelf)
                     continue;
 
-                
+
                 if (unit.NextActionTime <= globalTime)
                 {
                     curUnit = unit;
@@ -118,11 +115,11 @@ public class TurnManager : Singleton<TurnManager>
 
                     unit.StartTurn();
 
-                    if (unit is PlayerUnit playerUnit)
-                    {
-                        yield return new WaitUntil(() => !playerUnit.IsWaitingForInput);
-                        //Debug.Log($"플레이어 턴 {Time.time}");
-                    }
+                    //if (unit is PlayerUnit playerUnit)
+                    //{
+                    //    yield return new WaitUntil(() => !playerUnit.IsWaitingForInput);
+                    //    //Debug.Log($"플레이어 턴 {Time.time}");
+                    //}
 
                     int cost = unit.GetModifiedActionCost();
                     //Debug.Log($"[Tick {globalTime}] {unit.name} 턴 시작 (cost: {cost})");
@@ -132,11 +129,11 @@ public class TurnManager : Singleton<TurnManager>
                     turnSpeed = originSpeed;
                     //yield return wait;
                     //if (!unit.IsPlayer)//일단 enemy만 로직적으로 대기처리 향후 player역시 0.1f대기가 아닌 로직적 대기 현재 player 턴처리문제로 enemy가 인접해있을때 못따라오는 현상 종종발생
-                        yield return new WaitUntil(() => !unit.ActionInProgress || unit == null || !unit.gameObject.activeSelf);
+                    yield return new WaitUntil(() => !unit.ActionInProgress || unit == null || !unit.gameObject.activeSelf);
                     //else
                     //{
-                        UpdateAllUnitVisual();
-                        //yield return null;
+                    UpdateAllUnitVisual();
+                    //yield return null;
                     //}
                 }
             }
@@ -181,7 +178,7 @@ public class TurnManager : Singleton<TurnManager>
 
     public void RemoveAllEnemy()
     {
-        foreach(var unit in allUnits.ToArray())
+        foreach (var unit in allUnits.ToArray())
         {
             if (unit.IsPlayer) continue;
             unitIds.Remove(unit.GetInstanceID());
