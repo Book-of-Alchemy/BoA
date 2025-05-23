@@ -212,7 +212,6 @@ public class UI_Inventory : UIBase
             {
                 //type에 맞는 InventoryTool 노출
                 SetCurType(type);
-                //_toolList[i].gameObject.SetActive(true);
                 _tabList[i].color = _activeColor;
                 UIManager.Hide<UI_Action>();
             }
