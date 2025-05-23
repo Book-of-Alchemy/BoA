@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bac40a70a67fe9b48943f97c6218d671, type: 3}
   m_Name: MainMenu
   m_EditorClassIdentifier: 
-  id: Village
+  id: MainMenu
   type: 0
-  clip: {fileID: 8300000, guid: 9b9782f82ee75f84c930d5002f7a189f, type: 3}
+  clip: {fileID: 8300000, guid: 5543adee85193a3458fc08140481a579, type: 3}
   audioClipPath: 

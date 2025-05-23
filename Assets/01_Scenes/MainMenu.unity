@@ -173,6 +173,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d8b1cd57f28b61444a2a749e6a94a628, type: 2}
   - {fileID: 11400000, guid: 07eaf91ed2fbc4e4c9e5a29a80a231a6, type: 2}
   - {fileID: 11400000, guid: dd49d6f3a232b7a4eadebce8836d038c, type: 2}
+  - {fileID: 11400000, guid: 443f05ed430627849969c16b6c3ae3f0, type: 2}
   masterVolume: 0.5
   bgmVolume: 0.5
   sfxVolume: 0.5
