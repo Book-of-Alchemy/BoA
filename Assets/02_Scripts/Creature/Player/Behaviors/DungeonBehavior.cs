@@ -612,7 +612,7 @@ public class DungeonBehavior : PlayerBaseBehavior
 
             _currentItem.CancelUse();
             _currentItem = null;
-            SubscribeInput();
+            //SubscribeInput();
             return;
         }
 
