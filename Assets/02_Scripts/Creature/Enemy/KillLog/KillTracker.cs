@@ -74,13 +74,7 @@ public class KillTracker
         return total;
     }
 
-    public void PrintAllKills()
-    {
-        foreach (var pair in totalKillCounts)
-            Debug.Log($"몬스터 {pair.Key}: {pair.Value}회");
-        foreach (var pair in dungeonKillCounts)
-            Debug.Log($"몬스터 {pair.Key}: {pair.Value}회");
-    }
+
 
     /// <summary>
     /// 던전 시작 시 초기화할 수 있도록 선택적으로 제공

@@ -61,7 +61,6 @@ public class QuickSlotUI : SlotUIBase<InventoryItem>, IDropHandler, IDraggableSl
         }
         else
         {
-            Debug.LogWarning("아이템이 인벤토리에 존재하지 않음");
             ClearUI();
         }
     }

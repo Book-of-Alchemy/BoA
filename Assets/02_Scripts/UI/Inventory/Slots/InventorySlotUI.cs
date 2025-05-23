@@ -112,7 +112,6 @@ public class InventorySlotUI : SlotUIBase<InventoryItem>, ISelectHandler, IDesel
         }
         else
         {
-            Debug.LogWarning($"{_uiInventory.CurType}에 대한 버튼 액션이 없음.");
         }
         //UIManager.Show<UI_Action>((int)_uiInventory.CurType, transform as RectTransform, _data, Index);
     }
@@ -182,13 +181,11 @@ public class InventorySlotUI : SlotUIBase<InventoryItem>, ISelectHandler, IDesel
     {
         if (_borderImage == null)
         {
-            Debug.LogWarning("BorderImage없음.");
             return;
         }
 
         if (isOn)
         {
-            _borderImage.color = _highlightBorderColor; //강조색상 적용
         }
         else
         {

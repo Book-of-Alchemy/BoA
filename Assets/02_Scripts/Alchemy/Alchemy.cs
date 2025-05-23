@@ -51,10 +51,6 @@ public class Alchemy : MonoBehaviour
     }
     public (bool, RecipeData, int) CreateItem(ItemData material1, int material1Amount, ItemData material2, int material2Amount, ItemData material3 = null, int material3Amount = 0)
     {
-        Debug.Log($"재료 1 과 수량 :{material1},{material1Amount}");
-        Debug.Log($"재료 2 와 수량 :{material2},{material2Amount}");
-        if(material3!=null)
-            Debug.Log($"재료 3 과 수량 :{material3},{material3Amount}");
         List<(ItemData materials, int amount)> materials = new List<(ItemData materials, int amount)>();
         materials.Add((material1, material1Amount));
         materials.Add((material2, material2Amount));
@@ -73,13 +69,11 @@ public class Alchemy : MonoBehaviour
         }
         else 
         {
-            Debug.Log("레시피가 없습니다.");
             return (isReady, null, 0);
         }
 
         if (isReady)
         {
-            Debug.Log($"제작 성공 {resultRecipe.recipe_name_kr} : {resultRecipe.output_amount} ");
             //ItemData item = ResourceManager.Instance.dicItemData[resultRecipe.output_item_id];
             //return (isReady, item, amount); 
             
@@ -92,7 +86,6 @@ public class Alchemy : MonoBehaviour
         }
         else
         {
-            Debug.Log("제작 실패");
             return (isReady, null, 0);
         }
         // 레시피 결과물 리턴 추가
@@ -104,7 +97,6 @@ public class Alchemy : MonoBehaviour
         // 재료의 수량과, 아이디가 null이면 리턴
         if (materials.materials == null || materials.amount == 0)
         {
-            Debug.Log("재료가 없습니다.");
             return;
         }
         else if (materials.materials.id == recipe.material_1_item_id)
@@ -129,7 +121,6 @@ public class Alchemy : MonoBehaviour
         if (materials.amount < recipeAmount)
         {
             isReady = false;
-            Debug.Log($"{materials.materials.name_kr}의 수량이 부족합니다.");
         }
         else if (materials.amount >= recipeAmount)
         {
@@ -168,7 +159,6 @@ public class Alchemy : MonoBehaviour
         // 재료 개수 검사
         if (curCraftTableIds == null || (curCraftTableIds.Count != 2 && curCraftTableIds.Count != 3))
         {
-            Debug.LogWarning("재료가 없거나 일치하지 않음.");
             return null;
         }
 
@@ -216,7 +206,6 @@ public class Alchemy : MonoBehaviour
             }
         }
 
-        Debug.Log("일치하는 레시피가 없음");
         return null;
     }
 }

@@ -94,7 +94,6 @@ public class EnemyStats : CharacterStats, IPoolableId
         var prefab = dropItemData.itemPrefab;
         if (prefab == null)
         {
-            Debug.LogError($"[{name}] 아아템 데이터에 프리팹이 할당되지 않음");
             return;
         }
 

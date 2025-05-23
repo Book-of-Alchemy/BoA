@@ -135,7 +135,6 @@ public class UI_Inventory : UIBase
         }
         else
         {
-            Debug.Log("Add Param EInventoryType");
         }
     }
 

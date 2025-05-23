@@ -1,4 +1,4 @@
-﻿using UnityEditor;
+using UnityEditor;
 using UnityEngine;
 using System.IO;
 using System.Collections.Generic;
@@ -38,7 +38,6 @@ public class RoomBuilderTool : EditorWindow
     {
         if (root == null)
         {
-            Debug.LogError("Tile Root Object를 지정해주세요.");
             return;
         }
 
@@ -99,6 +98,5 @@ public class RoomBuilderTool : EditorWindow
         AssetDatabase.CreateAsset(preset, assetPath);
         AssetDatabase.SaveAssets();
 
-        Debug.Log($"RoomPreset 생성 완료: {assetPath}");
     }
 }

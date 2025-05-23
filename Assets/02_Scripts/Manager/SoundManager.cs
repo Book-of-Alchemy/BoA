@@ -144,7 +144,7 @@ public class SoundManager : MonoBehaviour
     public void SetBGMVolume(float linear)
     {
         mixer.SetFloat("BGMVolume", linear <= 0.0001f ? -80f : Mathf.Log10(linear) * 20f);
-        Debug.Log($"{linear}");
+
         bgmVolume = linear;
     }
 

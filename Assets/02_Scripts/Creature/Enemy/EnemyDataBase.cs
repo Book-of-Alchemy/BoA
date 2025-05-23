@@ -24,7 +24,6 @@ public class EnemyDataBase : ScriptableObject
             }
             else
             {
-                Debug.LogWarning($"Duplicate Enemy ID detected: {enemy.id} in {enemy.name}");
             }
 
             if (!enemyDataByBiome.ContainsKey(enemy.biome_id))

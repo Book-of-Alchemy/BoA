@@ -57,7 +57,6 @@ public class UI_Action : UIBase
         }
         else
         {
-            Debug.LogError("Opened Param is Wrong");
             HideDirect();
         }
     }

@@ -162,7 +162,6 @@ public class TownBehavior : PlayerBaseBehavior
         var npcs = _interactZone.NPCs;
         if (npcs.Count == 0)
         {
-            Debug.Log("주변에 NPC가 없습니다.");
             return;
         }
 
@@ -176,7 +175,6 @@ public class TownBehavior : PlayerBaseBehavior
             //if (npcComp != null)
             //    npc.ShowDialogue();
             //else
-               Debug.LogWarning("NPC 컴포넌트가 없습니다.");
         }
     }
 }

@@ -117,7 +117,6 @@ public class LoadingUI : MonoBehaviour
     {
         if (canvasGroup == null)
         {
-            Debug.LogError("CanvasGroup이 없습니다!");
             return;
         }
 

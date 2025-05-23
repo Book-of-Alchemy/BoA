@@ -81,7 +81,6 @@ public class DungeonBehavior : PlayerBaseBehavior
         }
         else
         {
-            Debug.LogError("highlightPrefab이 할당되지 않았습니다!");
         }
 
 
@@ -385,6 +384,8 @@ public class DungeonBehavior : PlayerBaseBehavior
         _spriteRenderer.sortingOrder = -nxt.y * 10 + 1;
         _animator.PlayMove();
 
+        transform.DOKill();
+
         transform
             .DOMove(new Vector3(nxt.x, nxt.y, 0),1/(Controller.moveSpeed*3))
             .SetEase(Ease.Linear)
@@ -573,7 +574,6 @@ public class DungeonBehavior : PlayerBaseBehavior
 
             if (targetStats.gameObject.CompareTag("NPC"))
             {
-                Debug.Log("NPC입니다");
                 return;
             }
         }
@@ -640,7 +640,6 @@ public class DungeonBehavior : PlayerBaseBehavior
     // ──────────── 메뉴 키(Tab) ────────────
     private void HandleMenu()
     {
-        Debug.Log("HandleMenu 호출됨");
         if (UIManager.IsOpened<UI_Menu>())
         {
             UIManager.Get<UI_Menu>().HideDirect();

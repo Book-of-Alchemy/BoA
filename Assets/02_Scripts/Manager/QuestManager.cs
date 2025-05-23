@@ -73,7 +73,6 @@ public class QuestManager : Singleton<QuestManager>
                 if (questData != null && questData.quest_Type != QuestType.sub)
                 {
                     _clearedQuests.Add(questData);
-                    //Debug.Log($"완료한 퀘스트 복원: ID {questId} - {questData.quest_name_kr}");
                 }
             }
             
@@ -87,7 +86,6 @@ public class QuestManager : Singleton<QuestManager>
                 if (questData != null)
                 {
                     AcceptedQuest = new QuestProgress(questData);
-                    //Debug.Log($"수락 중인 퀘스트 복원: ID {acceptedQuestId} - {questData.quest_name_kr}");
                 }
             }
         }
@@ -132,7 +130,6 @@ public class QuestManager : Singleton<QuestManager>
 
             // DataManager에 퀘스트 수락 정보 저장
             this.AcceptQuest(quest.id);
-            Debug.Log($"퀘스트 '{quest.quest_name_kr}' (ID: {quest.id})를 수락하고 저장했습니다.");
         }
     }
 
@@ -157,7 +154,6 @@ public class QuestManager : Singleton<QuestManager>
         }
         // DataManager에 퀘스트 완료 정보 저장
         this.CompleteQuest(AcceptedQuest.Data.id);
-        Debug.Log($"퀘스트 '{AcceptedQuest.Data.quest_name_kr}' (ID: {AcceptedQuest.Data.id})를 완료하고 저장했습니다.");
         
         OnQuestAccepted = null;
         Unsubscribe();

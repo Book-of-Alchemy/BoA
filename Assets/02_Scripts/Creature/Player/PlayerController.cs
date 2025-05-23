@@ -68,7 +68,6 @@ public class PlayerController : MonoBehaviour
                 break;
 
             default:
-                Debug.LogError($"Unsupported SceneType: {sceneType}");
                 return;
         }
 
