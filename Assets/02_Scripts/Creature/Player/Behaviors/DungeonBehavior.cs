@@ -201,6 +201,7 @@ public class DungeonBehavior : PlayerBaseBehavior
     private void HandleMouseClick(Vector3 worldPos)
     {
         //UI열려있으면 무시
+        Debug.Log($"클릭 입력 받은 시간 {Time.time}");
         if (IsUIOpen() || _currentItem != null || !Controller.isPlayerTurn || _isMoving || _mousePathCoroutine != null)
             return;
 
@@ -221,7 +222,7 @@ public class DungeonBehavior : PlayerBaseBehavior
 
         if (!_stats.curLevel.tiles.TryGetValue(goalPos, out Tile goalTile))
             return;
-
+        Debug.Log($"공격 로직 시작시간 {Time.time}");
         // 공격 조건
         Vector2Int curPos = _stats.CurTile.gridPosition;
         Vector2Int delta = goalPos - curPos;
@@ -413,7 +414,7 @@ public class DungeonBehavior : PlayerBaseBehavior
             return;
         if (!Controller.isPlayerTurn || _attackBuffer != null)
             return;
-        
+        Debug.Log($"공격로직이 시작된 시간 {Time.time}");
         Vector2Int targetPos = _stats.CurTile.gridPosition + _lastMoveDir;
         if (_stats.curLevel.tiles.TryGetValue(targetPos, out Tile frontTile) &&
             frontTile.CharacterStatsOnTile != null &&
@@ -435,7 +436,7 @@ public class DungeonBehavior : PlayerBaseBehavior
     public void OnAttackHit()
     {
         Vector2Int targetPos = _stats.CurTile.gridPosition + _lastMoveDir;
-
+        Debug.Log($"공격이 발동된 시간 {Time.time}");
         if (_stats.curLevel.tiles.TryGetValue(targetPos, out Tile tile)
             && tile.CharacterStatsOnTile != null)
         {
