@@ -123,7 +123,7 @@ public class TileManger : Singleton<TileManger>
 
     public void SpawnItem(Level level)
     {
-        ItemFactory.Instance.ItemSpawnAtStart(level);
+        ItemFactory.Instance.SpawnRecipeItems(level);
     }
     public void EndQuest()
     {

@@ -37,6 +37,8 @@ public class UI_Inventory : UIBase
     [SerializeField] private UIAnimator _uiAnimator;
     [SerializeField] private Animator _animator;
     [SerializeField] private GameObject _canvasGroup;
+
+    [SerializeField] private GameObject _recipeWindow;
     public int SlotCount => _slotUIList.Count;
 
     public event Action<EInventoryType> OnInventoryChanged;
@@ -263,17 +265,22 @@ public class UI_Inventory : UIBase
     private void ActiveWindow()
     {
         _windowList[(int)_curType].gameObject.SetActive(true);
-        if (_curType switch // type이 _commonWindow가 필요한 인벤토리 타입인지 검사
+
+        bool needsCommon = _curType switch
         {
             EInventoryType.Craft or EInventoryType.Inventory or EInventoryType.Equipment => true,
             _ => false
-        }) //조건문 끝
+        };
+        _commonWindow.SetActive(needsCommon);
+
+        // 추가: Craft 타입일 경우 RecipeWindow 활성화
+        if (_curType == EInventoryType.Craft)
         {
-            _commonWindow.SetActive(true); //필요한 타입이라면 공용Window 활성화
+            _recipeWindow?.SetActive(true);
         }
         else
-        { 
-            _commonWindow.SetActive(false); // 아니라면 비활성화
+        {
+            _recipeWindow?.SetActive(false);
         }
     }
     

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: abcedefe
   m_EditorClassIdentifier: 
   id: 110003
-  quest_name_kr: abcde
+  quest_name_kr: "\uBD88\uAE38\uD55C \uC9D5\uC870"
   quest_name_en: abcedefe
   biome_id: 120001
   base_monster_level: 4
