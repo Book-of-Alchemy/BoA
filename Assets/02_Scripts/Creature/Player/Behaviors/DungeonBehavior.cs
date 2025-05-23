@@ -384,6 +384,8 @@ public class DungeonBehavior : PlayerBaseBehavior
         _spriteRenderer.sortingOrder = -nxt.y * 10 + 1;
         _animator.PlayMove();
 
+        transform.DOKill();
+
         transform
             .DOMove(new Vector3(nxt.x, nxt.y, 0),1/(Controller.moveSpeed*3))
             .SetEase(Ease.Linear)
