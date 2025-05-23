@@ -1,5 +1,3 @@
-using JetBrains.Annotations;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -14,7 +12,6 @@ public class Alchemy : MonoBehaviour
     private void Start()
     {
         Init();
-        //CreateItem(ResourceManager.Instance.dicItemData[201001], 4, ResourceManager.Instance.dicItemData[201002], 3);
     }
 
     private void Init()
@@ -222,104 +219,4 @@ public class Alchemy : MonoBehaviour
         Debug.Log("일치하는 레시피가 없음");
         return null;
     }
-
-    //private void CreateItem(ItemData material1, int material1Amount, ItemData material2, int material2Amount, ItemData material3 = null, int material3Amount = 0)
-    //{
-    //    if (material3 == null)
-    //    {
-    //        foreach (var recipes in ResourceManager.Instance.recipeDatas)
-    //        {
-    //            if ((recipes.material_1_item_id == material1.item_id) || (recipes.material_1_item_id == material2.item_id))
-    //            {
-    //                firstExceptionRecipes.Add(recipes);
-    //            }
-    //        }
-    //
-    //        foreach (var recipes in firstExceptionRecipes)
-    //        {
-    //            if ((recipes.material_2_item_id == material1.item_id) || (recipes.material_2_item_id == material2.item_id))
-    //            {
-    //                secondExceptionRecipes.Add(recipes);
-    //            }
-    //        }
-    //
-    //        foreach (var recipes in secondExceptionRecipes)
-    //        {
-    //            if ((recipes.material_3_item_id == null))
-    //            {
-    //                thirdExceptionRecipes.Add(recipes);
-    //            }
-    //        }
-    //    }
-    //    else if (material3 != null)
-    //    {
-    //        foreach (var recipes in ResourceManager.Instance.recipeDatas)
-    //        {
-    //            if ((recipes.material_1_item_id == material1.item_id) || (recipes.material_1_item_id == material2.item_id) || (recipes.material_1_item_id == material3.item_id))
-    //            {
-    //                firstExceptionRecipes.Add(recipes);
-    //            }
-    //        }
-    //
-    //        foreach (var recipes in firstExceptionRecipes)
-    //        {
-    //            if ((recipes.material_2_item_id == material1.item_id) || (recipes.material_2_item_id == material2.item_id) || (recipes.material_2_item_id == material3.item_id))
-    //            {
-    //                secondExceptionRecipes.Add(recipes);
-    //            }
-    //        }
-    //        foreach (var recipes in secondExceptionRecipes)
-    //        {
-    //            if ((recipes.material_3_item_id == material1.item_id) || (recipes.material_3_item_id == material2.item_id) || (recipes.material_3_item_id == material3.item_id))
-    //            {
-    //                thirdExceptionRecipes.Add(recipes);
-    //            }
-    //        }
-    //    }
-    //
-    //    if (thirdExceptionRecipes.Count == 0)
-    //    {
-    //        Debug.Log("레시피를 찾을 수 없습니다.");
-    //    }
-    //    else if (thirdExceptionRecipes.Count > 1)
-    //    {
-    //        Debug.Log("찾은 레시피의 갯수가 많습니다.");
-    //    }
-    //    else if (thirdExceptionRecipes.Count == 1)
-    //    {
-    //        resultRecipe = thirdExceptionRecipes[0];
-    //    }
-    //
-    //    if (material3 == null)
-    //    {
-    //        if ((resultRecipe.material_1_item_id == material1.item_id)&& (resultRecipe.material_2_item_id == material2.item_id))
-    //        {
-    //            if (resultRecipe.material_1_count > material1Amount)
-    //            {
-    //                isMaterial1 = false;
-    //                Debug.Log("Material1의 수량이 부족하다.");
-    //                //수량이 부족하다
-    //            }
-    //            if (resultRecipe.material_2_count > material2Amount)
-    //            {
-    //                isMaterial2 = false;
-    //                //수량이 부족하다
-    //            }
-    //
-    //            if (resultRecipe.material_1_count <= material1Amount && resultRecipe.material_2_count < material2Amount)
-    //            {
-    //                // 수량 충분
-    //                isMaterial1 = true;
-    //                isMaterial2 = true;
-    //            }
-    //        }
-    //        else if (resultRecipe.material_1_item_id == material2.item_id)
-    //        {
-    //
-    //        }
-    //    }
-    //
-    //    
-    //}
-
 }

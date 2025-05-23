@@ -32,9 +32,7 @@ public class UI_ItemTooltip : UIBase
 
     private void SetPositionToMouse()
     {
-        //if(_canvas == null)
-        //    Canvas canvas = GetComponentInParent<Canvas>();
-        //else
+
         var canvas = _canvas;
 
 

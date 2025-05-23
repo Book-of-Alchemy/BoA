@@ -1,6 +1,3 @@
-using System;
-using Unity.VisualScripting;
-
 public abstract class SceneBase
 {
     public abstract SceneType SceneType { get; }

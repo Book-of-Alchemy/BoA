@@ -3,7 +3,6 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System;
 using System.Collections.Generic;
-using static UnityEditor.Progress;
 
 public class InventorySlotUI : SlotUIBase<InventoryItem>, ISelectHandler, IDeselectHandler, IDraggableSlot
 {

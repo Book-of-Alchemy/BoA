@@ -1,7 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
-using System.Collections;
 using DG.Tweening;
 
 public class UI_StatusEffectIcon : MonoBehaviour
