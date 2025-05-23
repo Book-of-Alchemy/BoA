@@ -108,6 +108,7 @@ public class UI_Inventory : UIBase
 
     public override void HideDirect() //Call at OnClick Event 
     {
+        Inventory.Instance.RemoveCraftList();
         _uiAnimator.FadeOut(OnHide);//애니메이션 전에 인벤토리 하위 숨기기
         _addBtn.onClick.RemoveAllListeners();
         _removeBtn.onClick.RemoveAllListeners();

@@ -16,7 +16,7 @@ public class Inventory : Singleton<Inventory>
 
     public ItemData[] itemDataArr; // 테스트용 아이템 데이터 배열]
 
-    private List<InventoryItem> _craftList = new(); // 제작 테이블에 올라간 아이템list
+    [SerializeField] private List<InventoryItem> _craftList = new(); // 제작 테이블에 올라간 아이템list
     private List<int> _highlightItemIds = new List<int>(); // 강조되는 아이템 list
 
     //인벤토리 아이템 유무 bool변수
@@ -388,7 +388,7 @@ public class Inventory : Singleton<Inventory>
                     RemoveItem(index, amo);
                 }
             }
-            _craftList.RemoveAll(slot => slot != null);
+            RemoveCraftList();
 
         }
         else if(!boolResult)
@@ -399,6 +399,12 @@ public class Inventory : Singleton<Inventory>
 
         //Debug.Log(dataResult);
     }
+
+    public void RemoveCraftList()
+    {
+        _craftList.RemoveAll(slot => slot != null);
+    }
+
     private void UpdateCraftPreview()
     {
         //2개 이상부터 검사
