@@ -667,6 +667,7 @@ public class DungeonBehavior : PlayerBaseBehavior
     }
     private bool HasNewEnemy(HashSet<CharacterStats> initial, List<CharacterStats> current)
     {
+        if (initial == null || current == null) return false;
         foreach (var e in current)
             if (!initial.Contains(e))
                 return true;
