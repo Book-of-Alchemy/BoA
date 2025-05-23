@@ -248,7 +248,7 @@ public class UI_Inventory : UIBase
     private void OnPageFlip()
     {
         ActiveWindow();
-
+        SoundManager.Instance.Play("page flip");
         // 확률적으로 책넘기는 Animation 실행
         int rand = UnityEngine.Random.value < 0.5f ? 0 : 1;
         if(rand == 0)
