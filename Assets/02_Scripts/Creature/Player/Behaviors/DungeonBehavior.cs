@@ -698,6 +698,7 @@ public class DungeonBehavior : PlayerBaseBehavior
         if (!Controller.isPlayerTurn || _isMoving || _mousePathCoroutine != null || _currentItem != null)
             return;
 
+        UIManager.ShowOnce<UI_Text>("1턴 휴식");
         Controller.onActionConfirmed?.Invoke();
     }
 
