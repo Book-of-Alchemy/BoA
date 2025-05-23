@@ -16,7 +16,7 @@ public class QuestProgress
         ProgressVal = 0;
         //ActiveEvent가 변경사항이 있을 수 있음.
         //퀘스트 달성 조건은 진행도가 FloorCount에 도달하는것 
-        if (data.main_object_type == ObjectType.ActivateEvent)
+        if (data.main_object_type == ObjectType.ReachLastEscape)
             CompleteVal = data.dungeon_floor_count;
         else
             CompleteVal = 1;
@@ -70,7 +70,7 @@ public class QuestManager : Singleton<QuestManager>
             foreach (int questId in clearedQuestIds)
             {
                 QuestData questData = FindQuestDataById(questId);
-                if (questData != null)
+                if (questData != null && questData.quest_Type != QuestType.sub)
                 {
                     _clearedQuests.Add(questData);
                     //Debug.Log($"완료한 퀘스트 복원: ID {questId} - {questData.quest_name_kr}");
@@ -141,7 +141,6 @@ public class QuestManager : Singleton<QuestManager>
         if (AcceptedQuest == null) return;
 
         AcceptedQuest.UpdateProgress(value);
-
         if (AcceptedQuest.ProgressVal >= AcceptedQuest.CompleteVal)
             QuestCleared();
     }
@@ -152,8 +151,10 @@ public class QuestManager : Singleton<QuestManager>
         if (AcceptedQuest == null) return;
 
         AcceptedQuest.ClearQuest();
-        _clearedQuests.Add(AcceptedQuest.Data);
-        
+        if (AcceptedQuest.Data.quest_Type == QuestType.main)
+        {
+            _clearedQuests.Add(AcceptedQuest.Data);
+        }
         // DataManager에 퀘스트 완료 정보 저장
         this.CompleteQuest(AcceptedQuest.Data.id);
         Debug.Log($"퀘스트 '{AcceptedQuest.Data.quest_name_kr}' (ID: {AcceptedQuest.Data.id})를 완료하고 저장했습니다.");
@@ -194,10 +195,15 @@ public class QuestManager : Singleton<QuestManager>
         // PlayerData에서 수락한 퀘스트 목록에서 제거하고 완료한 퀘스트 목록에 추가
         if (DataManager.Instance != null)
         {
-            if (DataManager.Instance.GetPlayerData().AcceptedQuests.Contains(questId))
+            var data = DataManager.Instance.GetPlayerData().AcceptedQuests;
+            var quest = FindQuestDataById(questId);
+            if (data.Contains(questId))
             {
                 DataManager.Instance.GetPlayerData().AcceptedQuests.Remove(questId);
-                DataManager.Instance.GetPlayerData().ClearedQuests.Add(questId);
+                if (quest != null && quest.quest_Type == QuestType.main)
+                {
+                    DataManager.Instance.GetPlayerData().ClearedQuests.Add(questId);
+                }
                 DataManager.Instance.SaveData();
             }
         }
