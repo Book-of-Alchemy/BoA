@@ -11,6 +11,10 @@ public class EnemyDataBase : ScriptableObject
 
     private void OnEnable()
     {
+        Arrange();
+    }
+    public void Arrange()
+    {
         enemyDataById.Clear();
         enemyDataByBiome.Clear();
 
@@ -34,7 +38,6 @@ public class EnemyDataBase : ScriptableObject
             enemyDataByBiome[enemy.biome_id].Add(enemy);
         }
     }
-
     public EnemyData GetEnemyById(int id)
     {
         enemyDataById.TryGetValue(id, out var data);

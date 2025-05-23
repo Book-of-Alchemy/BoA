@@ -10,16 +10,16 @@ public class EnvRuleDataBase : ScriptableObject
 
     private void OnEnable()
     {
+        Arrange();
+    }
+
+    public void Arrange()
+    {
         ruleDic.Clear();
-        if (envRuleDatas == null) return;
 
         foreach (var ruleData in envRuleDatas)
         {
             if (ruleData == null) continue;
-
-            if (ruleDic.ContainsKey((ruleData.reactionDamageType, ruleData.sourceTileType)))
-            {
-            }
 
             ruleDic[(ruleData.reactionDamageType, ruleData.sourceTileType)] = ruleData;
         }

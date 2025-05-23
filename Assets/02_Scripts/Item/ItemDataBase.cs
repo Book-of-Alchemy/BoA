@@ -15,10 +15,13 @@ public class ItemDataBase : ScriptableObject
 
     private void OnEnable()
     {
+        Arrange();
+    }
+    public void Arrange()
+    {
         ArrangeItemData();
         ArrangeRecipeData();
     }
-
     private void ArrangeItemData()
     {
         dicItemData.Clear();

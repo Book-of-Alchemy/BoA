@@ -9,10 +9,10 @@ public class StatusEffectDataBase : ScriptableObject
 
     private void OnEnable()
     {
-        ArrangeData();
+        Arrange();
     }
 
-    void ArrangeData()
+    public void Arrange()
     {
         statusEffectsDataById.Clear();
 
@@ -23,9 +23,6 @@ public class StatusEffectDataBase : ScriptableObject
             if (!statusEffectsDataById.ContainsKey(data.id))
             {
                 statusEffectsDataById.Add(data.id, data);
-            }
-            else
-            {
             }
         }
     }

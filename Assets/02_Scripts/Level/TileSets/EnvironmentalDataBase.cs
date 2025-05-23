@@ -11,19 +11,17 @@ public class EnvironmentalDataBase : ScriptableObject
 
     private void OnEnable()
     {
+        Arrange();
+    }
+    public void Arrange()
+    {
         datasByType.Clear();
 
         foreach (var data in environmentalDatas)
         {
             if (data == null)
-            {
                 continue;
-            }
 
-            if (datasByType.ContainsKey(data.environment_type))
-            {
-
-            }
             datasByType[data.environment_type] = data;
         }
     }

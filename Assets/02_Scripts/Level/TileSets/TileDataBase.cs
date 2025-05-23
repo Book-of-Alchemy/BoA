@@ -14,12 +14,17 @@ public class TileDataBase : ScriptableObject
 
     private void OnEnable()
     {
+        Arrange();
+    }
+
+    public void Arrange()
+    {
         biomsetByID.Clear();
 
-        foreach(var biome in biomeSet)
+        foreach (var biome in biomeSet)
         {
-            
-   
+
+
             biomsetByID[biome.id] = biome;
         }
     }

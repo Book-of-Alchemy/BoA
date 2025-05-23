@@ -25,7 +25,7 @@ public class BiomeSet : ScriptableObject
 
    
 
-    private void OnValidate()
+    private void OnEnable()
     {
         CategorizeRoomPresets();
     }

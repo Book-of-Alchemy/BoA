@@ -10,10 +10,10 @@ public class ArtifactDataBase : ScriptableObject
 
     private void OnEnable()
     {
-        ArrangeData();
+        Arrange();
     }
 
-    void ArrangeData()
+    public void Arrange()
     {
         artifactsDataById.Clear();
 
@@ -22,12 +22,7 @@ public class ArtifactDataBase : ScriptableObject
             if (data == null) continue;
 
             if (!artifactsDataById.ContainsKey(data.id))
-            {
                 artifactsDataById.Add(data.id, data);
-            }
-            else
-            {
-            }
         }
     }
 
