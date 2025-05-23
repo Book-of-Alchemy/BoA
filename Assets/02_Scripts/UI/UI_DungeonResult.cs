@@ -76,9 +76,18 @@ public class UI_DungeonResult : UIBase
     private void Update()
     {
         //아이템 로드가 된 후 입력을 통해 아이템을 골드로 환산
-        if (!_itemLoaded) return;
 
-        if (Input.GetKeyDown(KeyCode.Return) && _goldCoroutine == null)
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            OnEnterKeyDown();
+        }
+
+    }
+
+    public void OnEnterKeyDown()
+    {
+        if (!_itemLoaded) return;
+        if ( _goldCoroutine == null)
         {
             if (_endGainGold == true)
             {
@@ -93,7 +102,7 @@ public class UI_DungeonResult : UIBase
                 }
                 GameSceneManager.Instance.ChangeScene(SceneType.Town);
             }
-                
+
 
             //인벤토리에서 아이템제거
             _itemTxt.text = string.Empty;

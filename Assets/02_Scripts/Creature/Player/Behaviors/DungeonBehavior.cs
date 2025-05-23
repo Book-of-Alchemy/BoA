@@ -200,7 +200,7 @@ public class DungeonBehavior : PlayerBaseBehavior
     private void HandleMouseClick(Vector3 worldPos)
     {
         //UI열려있으면 무시
-        if (IsUIOpen() || _currentItem != null || !Controller.isPlayerTurn || _isMoving || _mousePathCoroutine != null)
+        if (IsUIOpen() || _currentItem != null)
             return;
 
         //아이템 사용중일 땐 이동 무시
@@ -210,8 +210,13 @@ public class DungeonBehavior : PlayerBaseBehavior
             return;
         }
 
-        if (!Controller.isPlayerTurn || _isMoving || _mousePathCoroutine != null)
+        if (!Controller.isPlayerTurn || _isMoving)
             return;
+
+        if (_mousePathCoroutine != null)
+        {
+            StopMousePathMovement();
+        }
 
         Vector2Int goalPos = new Vector2Int(
             Mathf.RoundToInt(worldPos.x),
@@ -679,6 +684,7 @@ public class DungeonBehavior : PlayerBaseBehavior
             StopCoroutine(_mousePathCoroutine);
             _mousePathCoroutine = null;
         }
+        transform.DOKill();
 
         //TurnManager.Instance.turnSpeed = _savedMouseTurnSpeed;
         //Time.timeScale = _savedMouseTimeScale;
@@ -692,6 +698,7 @@ public class DungeonBehavior : PlayerBaseBehavior
         if (!Controller.isPlayerTurn || _isMoving || _mousePathCoroutine != null || _currentItem != null)
             return;
 
+        UIManager.ShowOnce<UI_Text>("1턴 휴식");
         Controller.onActionConfirmed?.Invoke();
     }
 
