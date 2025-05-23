@@ -19,6 +19,8 @@ public class TrapItem : BaseItem
     }
     public override void CancelUse()
     {
+        SubscribeInput();
+
         InputManager.Instance.OnMouseMove -= CheckEffectRange;
         InputManager.Instance.OnMouseClick -= OnClick;
 
@@ -86,6 +88,18 @@ public class TrapItem : BaseItem
             FinishUse();
             InputManager.Instance.OnMouseClick -= OnClick;
             Destroy(this.gameObject);
+        }
+    }
+    public void SubscribeInput()
+    {
+        var player = GameManager.Instance.PlayerTransform;
+        if (player != null)
+        {
+            var dungeonBehavior = player.GetComponent<DungeonBehavior>();
+            if (dungeonBehavior != null)
+            {
+                dungeonBehavior.SSubscribeInput();
+            }
         }
     }
 }
