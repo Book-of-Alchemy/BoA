@@ -1,7 +1,5 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 using System;
-using UnityEngine.EventSystems;
 
 public class InputManager : Singleton<InputManager>
 {
@@ -90,12 +88,8 @@ public class InputManager : Singleton<InputManager>
         };
         _input.PC.MouseClick.performed += _ =>
         {
-            Debug.Log($"EnableMouseTracking : {EnableMouseTracking},EventSystem.current.IsPointerOverGameObject {EventSystem.current.IsPointerOverGameObject()} ");
             if (!EnableMouseTracking) return;
             // UI 위면 무시
-            //if (EventSystem.current != null &&
-            //    EventSystem.current.IsPointerOverGameObject())
-            //    return;
             OnMouseClick?.Invoke(MouseWorldPosition);
         };
         // 취소
