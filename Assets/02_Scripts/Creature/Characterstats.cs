@@ -303,7 +303,7 @@ public abstract class CharacterStats : MonoBehaviour
         _spriteRenderer.color = new Color(1f,1f, 1f, IsHidden ? 0.7f: 1f);
     }
     public virtual void Die()
-    {
+    {   
         Debug.Log($"{gameObject.name}이(가) 사망했습니다.");
         _anim.PlayDeath();
     }

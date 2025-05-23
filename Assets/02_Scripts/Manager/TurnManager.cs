@@ -115,11 +115,11 @@ public class TurnManager : Singleton<TurnManager>
 
                     unit.StartTurn();
 
-                    //if (unit is PlayerUnit playerUnit)
-                    //{
-                    //    yield return new WaitUntil(() => !playerUnit.IsWaitingForInput);
-                    //    //Debug.Log($"플레이어 턴 {Time.time}");
-                    //}
+                    if (unit is PlayerUnit playerUnit)
+                    {
+                        yield return new WaitUntil(() => !playerUnit.IsWaitingForInput);
+                        //Debug.Log($"플레이어 턴 {Time.time}");
+                    }
 
                     int cost = unit.GetModifiedActionCost();
                     //Debug.Log($"[Tick {globalTime}] {unit.name} 턴 시작 (cost: {cost})");

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -51,7 +52,7 @@ public class EnemyStats : CharacterStats, IPoolableId
         Debug.Log($"{gameObject.name}이(가) 사망했습니다.");
         TryDropItem();
         GiveExpToPlayer();
-
+        _anim.PlayDeath();
         if (CurTile != null)
         {
             CurTile.CharacterStatsOnTile = null;
@@ -63,14 +64,16 @@ public class EnemyStats : CharacterStats, IPoolableId
         }
         
         StopAllCoroutines(); // 모든 코루틴 중지
-
+        StartCoroutine(DelayedReturn());
         
-        
-        if (EnemyFactory.Instance.enemyPool != null)
-        {
-            EnemyFactory.Instance.enemyPool.ReturnToPool(this);
-        }
     }
+    IEnumerator DelayedReturn()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        EnemyFactory.Instance.enemyPool.ReturnToPool(this);
+    }
+    
     private void GiveExpToPlayer()
     {
         var player = GameManager.Instance.PlayerTransform;
