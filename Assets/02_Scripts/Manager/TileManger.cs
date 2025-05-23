@@ -115,7 +115,6 @@ public class TileManger : Singleton<TileManger>
 
         player.curLevel = level;
         player.MoveToTile(level.startTile);
-        player._spriteRenderer.sortingOrder = -10 * level.startTile.gridPosition.y + 1;
         player.transform.position = spawnPosition;
     }
 
