@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -72,10 +73,11 @@ public class SoundManager : MonoBehaviour
             case SoundType.SFX:
                 AudioPool.Instance.PlayeOneShot(data.clip, fixedSFXVolume, GetGroup(data.type));
                 SetMasterVolume(masterVolume);
-                SetBGMVolume(sfxVolume);
+                SetSFXVolume(sfxVolume);
                 break;
             case SoundType.BGM:
                 PlayBGM(data);
+                
                 SetMasterVolume(masterVolume);
                 SetBGMVolume(bgmVolume);
                 break;
@@ -142,6 +144,7 @@ public class SoundManager : MonoBehaviour
     public void SetBGMVolume(float linear)
     {
         mixer.SetFloat("BGMVolume", linear <= 0.0001f ? -80f : Mathf.Log10(linear) * 20f);
+        Debug.Log($"{linear}");
         bgmVolume = linear;
     }
 
@@ -151,11 +154,12 @@ public class SoundManager : MonoBehaviour
         sfxVolume = linear;
     }
 
-    public void OnSceneChange(SceneType sceneType)
+    public async void OnSceneChange(SceneType sceneType)
     {
         switch (sceneType)
         {
             case SceneType.MainMenu:
+                await Task.Delay(100);
                 Play("Village");
                 break;
             case SceneType.Town:
