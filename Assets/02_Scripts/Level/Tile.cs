@@ -95,7 +95,10 @@ public class Tile
     public List<BaseItem> itemsOnTile = new List<BaseItem>();
     public TileEffect groundEffect;
     public TileEffect airEffect;
-
+    public void RefreshSight()
+    {
+        onIsOnSightChanged?.Invoke();
+    }
 
 
     private int CalculateAstarCost()

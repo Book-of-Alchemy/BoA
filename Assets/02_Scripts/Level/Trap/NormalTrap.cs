@@ -19,5 +19,6 @@ public class NormalTrap : TrapBase
                 continue;
             effect.CharacterStatsOnTile.TakeDamage(damageInfo);
         }
+        SoundManager.Instance.Play("trap active");
     }
 }

@@ -86,6 +86,7 @@ public class OgreSmite : EnemySkill, ICooltime
                 tile.CharacterStatsOnTile.TakeDamage(damageInfo);
             }
         }
+        SoundManager.Instance.Play("Explosion");
         attackBaseBehaviour.EndTurn();
     }
 

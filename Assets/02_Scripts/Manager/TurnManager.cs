@@ -140,7 +140,7 @@ public class TurnManager : Singleton<TurnManager>
                     //}
                 }
             }
-
+            TileUtility.RefreshLevelSight();
             globalTime++;
             yield return null;
         }
