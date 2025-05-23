@@ -8,8 +8,8 @@ public class DamageText : UIBase //데미지Text를 띄우는 UI 클래스
     [SerializeField] private TextMeshProUGUI _text;
     [SerializeField] private RectTransform _rectTransform;
     [SerializeField] private float _duration = 1.0f;
-    [SerializeField] private float _jumpDistance = 5f;
-    [SerializeField] private float _jumpPower = 30f;
+    [SerializeField] private float _jumpDistance = 70f;
+    [SerializeField] private float _jumpPower = 150f;
 
     public override void Opened(params object[] param)
     {

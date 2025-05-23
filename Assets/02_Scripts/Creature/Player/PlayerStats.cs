@@ -68,8 +68,6 @@ public class PlayerStats : CharacterStats
             UIManager.Show<UI_Text>("유물을 획득하지 못할 것 같다...");
     }
 
-
-
     public override void Heal(float amount)
     {
         base.Heal(amount);
