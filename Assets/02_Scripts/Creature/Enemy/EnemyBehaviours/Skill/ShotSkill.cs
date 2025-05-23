@@ -46,6 +46,7 @@ public class ShotSkill : EnemySkill
 
     public override void DealDamage()
     {
+        SoundManager.Instance.Play("pierce");
         stats.Attack(attackBaseBehaviour.playetStats, 2f);
         attackBaseBehaviour.EndTurn();
     }

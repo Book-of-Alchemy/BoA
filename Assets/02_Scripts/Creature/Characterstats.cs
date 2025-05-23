@@ -172,7 +172,7 @@ public abstract class CharacterStats : MonoBehaviour
 
     public UnitBase unitBase { get; protected set; }
     protected CharacterAnimator _anim;
-    protected SpriteRenderer _spriteRenderer;
+    public SpriteRenderer _spriteRenderer;
 
     //체력 변경 이벤트
     public event Action OnHealthRatioChanged;

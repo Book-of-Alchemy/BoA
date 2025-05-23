@@ -425,4 +425,26 @@ public static class TileUtility
 
         return result;
     }
+
+    public static void RefreshLevelSight()
+    {
+        Level level = TileManger.Instance.curLevel;
+        if (level == null) return;
+
+        // 전체 타일 초기화: 시야 끔
+        foreach (var tile in level.tiles.Values)
+        {
+            tile.IsOnSight = false;
+        }
+
+        // 시야 안에 들어오는 타일 계산
+        List<Tile> visibleTiles = GameManager.Instance.PlayerTransform.tilesOnVision;
+
+        // 해당 타일들만 시야 켬
+        foreach (var tile in visibleTiles)
+        {
+            tile.IsOnSight = true;
+        }
+    }
+
 }
