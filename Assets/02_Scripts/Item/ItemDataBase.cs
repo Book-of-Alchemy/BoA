@@ -13,7 +13,7 @@ public class ItemDataBase : ScriptableObject
     public Dictionary<int, RecipeData> recipeById = new Dictionary<int, RecipeData>();
     private int intNullvalue = -1;
 
-    private void OnValidate()
+    private void OnEnable()
     {
         ArrangeItemData();
         ArrangeRecipeData();

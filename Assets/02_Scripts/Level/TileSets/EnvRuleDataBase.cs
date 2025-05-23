@@ -8,7 +8,7 @@ public class EnvRuleDataBase : ScriptableObject
 
     public Dictionary<(DamageType, EnvironmentType), EnvRuleData> ruleDic = new Dictionary<(DamageType, EnvironmentType), EnvRuleData>();
 
-    private void OnValidate()
+    private void OnEnable()
     {
         ruleDic.Clear();
         if (envRuleDatas == null) return;

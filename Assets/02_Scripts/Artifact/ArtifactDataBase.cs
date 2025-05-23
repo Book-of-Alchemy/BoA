@@ -8,7 +8,7 @@ public class ArtifactDataBase : ScriptableObject
     public List<ArtifactData> artifacts = new List<ArtifactData>();
     public Dictionary<int, ArtifactData> artifactsDataById = new Dictionary<int, ArtifactData>();
 
-    private void OnValidate()
+    private void OnEnable()
     {
         ArrangeData();
     }

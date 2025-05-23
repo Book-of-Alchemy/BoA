@@ -7,7 +7,7 @@ public class StatusEffectDataBase : ScriptableObject
     public List<StatusEffectData> statusEffects = new List<StatusEffectData>();
     public Dictionary<int, StatusEffectData> statusEffectsDataById = new Dictionary<int, StatusEffectData>();
 
-    private void OnValidate()
+    private void OnEnable()
     {
         ArrangeData();
     }

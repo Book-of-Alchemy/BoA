@@ -12,7 +12,7 @@ public class TileDataBase : ScriptableObject
 
     public Dictionary<int, BiomeSet> biomsetByID = new Dictionary<int, BiomeSet>();
 
-    private void OnValidate()
+    private void OnEnable()
     {
         biomsetByID.Clear();
 

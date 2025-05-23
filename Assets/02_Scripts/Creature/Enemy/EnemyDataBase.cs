@@ -9,7 +9,7 @@ public class EnemyDataBase : ScriptableObject
     public Dictionary<int, EnemyData> enemyDataById = new Dictionary<int, EnemyData>();
     public Dictionary<int, List<EnemyData>> enemyDataByBiome = new Dictionary<int, List<EnemyData>>();
 
-    private void OnValidate()
+    private void OnEnable()
     {
         enemyDataById.Clear();
         enemyDataByBiome.Clear();

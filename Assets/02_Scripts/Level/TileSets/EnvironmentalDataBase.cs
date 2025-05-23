@@ -9,7 +9,7 @@ public class EnvironmentalDataBase : ScriptableObject
 
     public Dictionary<EnvironmentType, EnvironmentalData> datasByType = new Dictionary<EnvironmentType, EnvironmentalData>();
 
-    private void OnValidate()
+    private void OnEnable()
     {
         datasByType.Clear();
 
