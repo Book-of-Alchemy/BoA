@@ -163,17 +163,14 @@ public class InventorySlotUI : SlotUIBase<InventoryItem>, ISelectHandler, IDesel
     }
     public void SetItemBlurColor()
     {
-        //_itemSprite.color = _blurColor; 
         _icon.color = _blurColor; 
     }
     public void SetItemNormalColor()
     {
-        //_itemSprite.color = _normalBorderColor;
         _icon.color = _normalBorderColor;
     }
     public void SetItemopaque()
     {
-        //_itemSprite.color = _opaqueColor;
         _icon.color = _opaqueColor;
     }
 
@@ -186,6 +183,7 @@ public class InventorySlotUI : SlotUIBase<InventoryItem>, ISelectHandler, IDesel
 
         if (isOn)
         {
+            _borderImage.color = _highlightBorderColor; //강조색상 적용
         }
         else
         {
