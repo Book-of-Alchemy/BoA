@@ -386,7 +386,7 @@ public class Inventory : Singleton<Inventory>
         }
         else if(!boolResult)
         {
-            UIManager.ShowOnce<UI_Text>("제작에 실패했다.");
+            UIManager.ShowOnce<UI_Text>("수량이 부족하거나 재료가 다릅니다.");
         }
 
     }

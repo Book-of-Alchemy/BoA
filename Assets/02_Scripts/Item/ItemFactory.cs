@@ -86,6 +86,7 @@ public class ItemFactory : Singleton<ItemFactory>
         }
 
         List<Tile> startRoomTiles = TileUtility.GetRoomTileOnLeaf(level, level.startLeaf);
+
         SpawnItemOnTile(startRoomTiles, 5);
     }
 
@@ -132,14 +133,28 @@ public class ItemFactory : Singleton<ItemFactory>
     void SpawnItemOnTile(List<Tile> availableTiles, int spawnCount)
     {
         availableTiles.Remove(TileManger.Instance.curLevel.startTile);
-        for (int i = 0; i < spawnCount && availableTiles.Count > 0; i++)
+        List<RecipeData> recipePool = new List<RecipeData>(recipeDataById.Values);
+
+        RecipeData recipe = recipePool[Random.Range(0, recipePool.Count - 1)];
+
+        if (availableTiles.Count == 0) return;
+
+        // 필요한 재료 ID 리스트
+        List<int> materialIds = new List<int>();
+        if (recipe.material_1_item_id >= 0) materialIds.Add(recipe.material_1_item_id);
+        if (recipe.material_2_item_id >= 0) materialIds.Add(recipe.material_2_item_id);
+        if (recipe.material_3_item_id >= 0) materialIds.Add(recipe.material_3_item_id);
+
+        foreach (int materialId in materialIds)
         {
+            if (availableTiles.Count == 0) break;
             Tile targetTile = availableTiles[UnityEngine.Random.Range(0, availableTiles.Count)];
             availableTiles.Remove(targetTile);
-            int id = GetRandomItemId(dicItemByType[Item_Type.Material]);
-            ItemData itemData = itemdataById[id];
-            BaseItem item = DropItem(itemData, targetTile);
 
+            if (itemdataById.TryGetValue(materialId, out var itemData))
+            {
+                DropItem(itemData, targetTile, 5); // 수량은 필요 시 조정
+            }
         }
     }
 
