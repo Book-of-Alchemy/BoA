@@ -213,14 +213,13 @@ public abstract class CharacterStats : MonoBehaviour
         float baseDamage = UnityEngine.Random.Range(AttackMin, AttackMax);
         //치명타 게산
         bool isCrit = UnityEngine.Random.value < CritChance / 100f;
-        if (isCrit)
-            Debug.Log("치명타 발생!");
+        
 
         DamageInfo damageInfo = new DamageInfo(baseDamage, damageType, this, target, isCrit);
 
 
         target.TakeDamage(damageInfo);
-        Debug.Log($"{gameObject.name}가 {target.gameObject.name}을 공격함니다." + $"속성:{damageType}, 기본 대미지:{baseDamage}");
+        //Debug.Log($"{gameObject.name}가 {target.gameObject.name}을 공격함니다." + $"속성:{damageType}, 기본 대미지:{baseDamage}");
     }
     /// <summary>
     /// 공격 배율이 있는경우
@@ -237,7 +236,7 @@ public abstract class CharacterStats : MonoBehaviour
         DamageInfo damageInfo = new DamageInfo(baseDamage, damageType, this, target, isCrit);
 
         target.TakeDamage(damageInfo);
-        Debug.Log($"{gameObject.name}가 {target.gameObject.name}을 공격함니다." + $"속성:{damageType}, 기본 대미지:{baseDamage}");
+        //Debug.Log($"{gameObject.name}가 {target.gameObject.name}을 공격함니다." + $"속성:{damageType}, 기본 대미지:{baseDamage}");
     }
     public virtual void TakeDamage(DamageInfo damageInfo)
     {
@@ -283,13 +282,13 @@ public abstract class CharacterStats : MonoBehaviour
     {
         float multiplier = RegenerationMultiplier / 100f;
         CurrentHealth += amount * multiplier;
-        Debug.Log($"{gameObject.name}는 {amount * multiplier}만큼 회복되었습니다.");
+        //Debug.Log($"{gameObject.name}는 {amount * multiplier}만큼 회복되었습니다.");
     }
 
     public void ChangeMana(float amount)
     {
         CurrentMana += amount;
-        Debug.Log($"{gameObject.name}는 {amount}만큼 마나가 회복되었습니다.");
+        //Debug.Log($"{gameObject.name}는 {amount}만큼 마나가 회복되었습니다.");
     }
 
     public virtual void GetShield(float amount)
@@ -330,8 +329,8 @@ public abstract class CharacterStats : MonoBehaviour
     {
         effect.Initialize(TurnManager.Instance.globalTime);
         effect.OnApply(this);
-        if (effect.TryRegist(this))
-            Debug.Log($"{name}에게 {effect.data.name_kr} 적용됨");
+        if (effect.TryRegist(this)) { }
+            
     }
 
     public void TickEffects(int globalTime)
@@ -342,7 +341,7 @@ public abstract class CharacterStats : MonoBehaviour
             if (activeEffects[i].IsExpired)
             {
                 activeEffects[i].OnExpire(this);
-                Debug.Log($"{name}의 {activeEffects[i].data.name_kr} 해제됨");
+                //Debug.Log($"{name}의 {activeEffects[i].data.name_kr} 해제됨");
                 activeEffects.RemoveAt(i);
             }
         }

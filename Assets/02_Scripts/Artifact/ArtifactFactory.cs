@@ -63,7 +63,7 @@ public static class ArtifactFactory
                 }
             }
         }
-        Debug.Log($"아티팩트 리스트{selectArtifacts[0]},{selectArtifacts[1]},{selectArtifacts[2]}");
+        //Debug.Log($"아티팩트 리스트{selectArtifacts[0]},{selectArtifacts[1]},{selectArtifacts[2]}");
         return selectArtifacts.ToArray();
 
     }

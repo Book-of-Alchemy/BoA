@@ -49,7 +49,7 @@ public class EnemyStats : CharacterStats, IPoolableId
         isDead = true; // 사망 처리 시작
         OnDead?.Invoke();
         MonsterEvents.RaiseKill(id);
-        Debug.Log($"{gameObject.name}이(가) 사망했습니다.");
+
         TryDropItem();
         GiveExpToPlayer();
         _anim.PlayDeath();

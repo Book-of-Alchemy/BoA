@@ -241,7 +241,7 @@ public class LevelGenerator : MonoBehaviour
             return;
         scretLeaf.roomType = RoomType.secret;
         extraLeaves.Remove(scretLeaf);
-        Debug.Log($"scretLeaf = {scretLeaf.rect.center}");
+        
     }
 
     Leaf FindClosestLeaf(Leaf leaf, List<Leaf> leaves)

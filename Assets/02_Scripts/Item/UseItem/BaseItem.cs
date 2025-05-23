@@ -52,7 +52,7 @@ public abstract class BaseItem : MonoBehaviour
         //Init(data, _curTile);
         dropAmount = amount;
         _curTile.itemsOnTile.Add(this);
-        Debug.Log("아이템 버려짐");
+        //Debug.Log("아이템 버려짐");
         _handler = () => AddItem(data);
         _curTile.onCharacterChanged += _handler;
         _curTile.onIsOnSightChanged += UpdateVisual;

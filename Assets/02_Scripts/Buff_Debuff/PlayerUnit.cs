@@ -32,7 +32,7 @@ public class PlayerUnit : UnitBase
         controller.isPlayerTurn = true;
         isActionDone = false;
         
-        Debug.Log("플레이어의 입력을 기다립니다.");
+        //Debug.Log("플레이어의 입력을 기다립니다.");
     }
 
     private void OnActionConfirmed()

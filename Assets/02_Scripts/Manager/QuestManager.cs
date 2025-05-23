@@ -73,7 +73,7 @@ public class QuestManager : Singleton<QuestManager>
                 if (questData != null)
                 {
                     _clearedQuests.Add(questData);
-                    Debug.Log($"완료한 퀘스트 복원: ID {questId} - {questData.quest_name_kr}");
+                    //Debug.Log($"완료한 퀘스트 복원: ID {questId} - {questData.quest_name_kr}");
                 }
             }
             
@@ -87,7 +87,7 @@ public class QuestManager : Singleton<QuestManager>
                 if (questData != null)
                 {
                     AcceptedQuest = new QuestProgress(questData);
-                    Debug.Log($"수락 중인 퀘스트 복원: ID {acceptedQuestId} - {questData.quest_name_kr}");
+                    //Debug.Log($"수락 중인 퀘스트 복원: ID {acceptedQuestId} - {questData.quest_name_kr}");
                 }
             }
         }

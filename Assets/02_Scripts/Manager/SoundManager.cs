@@ -160,7 +160,7 @@ public class SoundManager : MonoBehaviour
         {
             case SceneType.MainMenu:
                 await Task.Delay(100);
-                Play("Village");
+                Play("MainMenu");
                 break;
             case SceneType.Town:
                 Play("Village");

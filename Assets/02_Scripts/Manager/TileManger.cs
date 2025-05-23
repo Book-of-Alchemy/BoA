@@ -50,7 +50,7 @@ public class TileManger : Singleton<TileManger>
         curLevel = levels[curLevelIndex];
         OnGetDown?.Invoke(curLevelIndex);
         SetLevel(curLevel);
-        Debug.Log("generate dungeon");
+        
     }
 
 

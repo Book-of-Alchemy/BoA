@@ -61,7 +61,7 @@ public class PlayerStats : CharacterStats
         statBlock.SetBaseValue(StatType.Attack, 10 + 1 * level);
         OnExperienceChanged?.Invoke();
         OnLevelChanged?.Invoke(level);
-        Debug.Log("레벨업 " + level);
+        //Debug.Log("레벨업 " + level);
         if (level < 62)
             UIManager.Show<UI_LvSelect>();
         else
