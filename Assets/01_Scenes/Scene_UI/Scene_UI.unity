@@ -421,6 +421,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96320c6276fe1b043be3c6036ace1d14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  nextActionTime: 0
   Stats: {fileID: 0}
 --- !u!1 &522490726
 GameObject:
@@ -655,6 +656,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b958394a0a1d504780d789eb42afa21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  nextActionTime: 0
   Stats: {fileID: 0}
 --- !u!1 &916698578
 GameObject:
@@ -1021,6 +1023,9 @@ MonoBehaviour:
   StatusEffectDataBase: {fileID: 11400000, guid: 4a63df85c3a103a438b42495e80af951, type: 2}
   ArtifactDataBase: {fileID: 11400000, guid: 86d17cc3ee7572d48a168afc70fb0c7d, type: 2}
   environmentalDataBase: {fileID: 11400000, guid: add19ce1a70d3244dbb0b89406e31ed9, type: 2}
+  facilityDataBase: {fileID: 0}
+  envRuleDataBase: {fileID: 0}
+  researchDataBase: {fileID: 0}
   playerPrefab: {fileID: 6804339739346013789, guid: 3999d0f34cbe9ef418c5a85ae2944482, type: 3}
 --- !u!1 &1533619445
 GameObject:
@@ -3266,7 +3271,6 @@ MonoBehaviour:
   - {fileID: 2076388714}
   - {fileID: 271232315}
   - {fileID: 988688591}
-  uiList: []
 --- !u!4 &2023912632
 Transform:
   m_ObjectHideFlags: 0

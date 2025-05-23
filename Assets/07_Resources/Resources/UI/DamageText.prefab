@@ -151,5 +151,5 @@ MonoBehaviour:
   _text: {fileID: 2825084442342792382}
   _rectTransform: {fileID: 5981477481345538548}
   _duration: 1.5
-  _jumpDistance: 5
-  _jumpPower: 30
+  _jumpDistance: 70
+  _jumpPower: 150
