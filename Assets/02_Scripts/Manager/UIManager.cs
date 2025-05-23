@@ -157,6 +157,18 @@ public class UIManager : Singleton<UIManager>
 
     public static bool IsOpened<T>() where T : UIBase //UI 열렸는지 체크
     {
-        return Instance._uiDict.TryGetValue(typeof(T), out var ui) && ui.gameObject.activeInHierarchy;
+        var type = typeof(T);
+        if(Instance._uiDict.TryGetValue(typeof(T), out var ui) && ui.gameObject.activeInHierarchy)
+        {
+            if (ui == null || ui.gameObject == null)
+            {
+                Instance._uiDict.Remove(type);
+                return false;
+            }
+
+            return ui.gameObject.activeSelf;
+        }
+        return false;
+            
     }
 }

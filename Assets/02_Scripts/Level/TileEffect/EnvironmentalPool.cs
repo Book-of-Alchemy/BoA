@@ -17,10 +17,6 @@ public class EnvironmentalPool : MonoBehaviour
         InitObjectPool();
     }
 
-    private void Update()
-    {
-        Debug.Log($"{environmentPrefabs.Count}");
-    }
     private void InitObjectPool()
     {
         EnvironmentalFactory.Instance.environmentalPool = this;

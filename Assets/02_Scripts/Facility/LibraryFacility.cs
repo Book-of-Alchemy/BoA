@@ -31,7 +31,7 @@ public class LibraryFacility : MonoBehaviour, IFacilityUI
             case 1:
                 if (!UIManager.IsOpened<UI_Research>())
                 {
-                    UIManager.ShowOnce<UI_Research>();
+                    UIManager.Show<UI_Research>();
                 }
                 break;
 

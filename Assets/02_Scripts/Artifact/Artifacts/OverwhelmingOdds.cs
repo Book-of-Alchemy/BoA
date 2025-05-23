@@ -42,17 +42,18 @@ public class OverwhelmingOdds : Artifact
     // 피해량 감소
     public void ActiveOverwhelmingOddsDefence(DamageInfo damageInfo)
     {
-        if ((damageInfo.source.CurrentHealth / damageInfo.source.MaxHealth) <= 0.3f)
+        if (damageInfo.target== null) return;
+        if ((damageInfo.target.CurrentHealth / damageInfo.target.MaxHealth) <= 0.3f)
         {
             modifier2 = new StatModifier("OverwhelmingOddsDefence", 10, ModifierType.Precent);
-            damageInfo.source.statBlock.AddModifier(StatType.Defence, modifier2);
-            damageInfo.source.OnTakeDamage += RemoveOverwhelmingOddsDefenceModifier;
+            damageInfo.target.statBlock.AddModifier(StatType.Defence, modifier2);
+            damageInfo.target.OnTakeDamage += RemoveOverwhelmingOddsDefenceModifier;
         }
     }
     public void RemoveOverwhelmingOddsDefenceModifier(DamageInfo damageInfo)
     {
-        damageInfo.source.statBlock.RemoveModifier(StatType.Defence, modifier2);
-        damageInfo.source.OnTakeDamage -= RemoveOverwhelmingOddsDefenceModifier;
+        damageInfo.target.statBlock.RemoveModifier(StatType.Defence, modifier2);
+        damageInfo.target.OnTakeDamage -= RemoveOverwhelmingOddsDefenceModifier;
     }
 
 
