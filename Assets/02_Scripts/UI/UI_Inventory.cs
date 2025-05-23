@@ -165,6 +165,7 @@ public class UI_Inventory : UIBase
 
     public void BookClosed()
     {
+        UIManager.Hide<UI_ItemTooltip>();
         UIManager.Hide<UI_Inventory>();
     }
 
