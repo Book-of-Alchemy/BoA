@@ -43,6 +43,7 @@ public class DamageItem : BaseItem
     }
     public override void CancelUse()
     {
+        SubscribeInput();
         InputManager.Instance.OnMouseMove -= CheckEffectRange;
         InputManager.Instance.OnMouseClick -= OnClick;
 
@@ -105,7 +106,7 @@ public class DamageItem : BaseItem
         {
             Debug.Log("거리범위에 해당하는 타일을 누르지 않았습니다.");
             CancelUse();
-            SubscribeInput();
+            //SubscribeInput();
         }
     }
 
