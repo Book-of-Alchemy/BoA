@@ -30,7 +30,6 @@ public class CraftTool : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning("슬롯이  null ");
             }
         }
 

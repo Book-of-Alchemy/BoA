@@ -18,9 +18,8 @@ public class TileDataBase : ScriptableObject
 
         foreach(var biome in biomeSet)
         {
-            if (biomsetByID.ContainsKey(biome.id))
-                Debug.LogWarning($"중복된 바이옴입니다 ID : {biome.id}");
-
+            
+   
             biomsetByID[biome.id] = biome;
         }
     }

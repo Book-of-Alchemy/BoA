@@ -1,4 +1,4 @@
-﻿using UnityEditor;
+using UnityEditor;
 using UnityEngine;
 
 public class GridAlignTool : EditorWindow
@@ -33,7 +33,6 @@ public class GridAlignTool : EditorWindow
 
         if (selected.Length == 0)
         {
-            Debug.LogWarning("정렬할 오브젝트를 선택해주세요.");
             return;
         }
 
@@ -55,6 +54,5 @@ public class GridAlignTool : EditorWindow
             selected[i].transform.position = newPos;
         }
 
-        Debug.Log($"정렬 완료: {selected.Length}개 오브젝트를 {columns}열 그리드로 정렬");
     }
 }

@@ -187,7 +187,6 @@ public class ItemFactory : Singleton<ItemFactory>
     {
         if (!itemdataById.TryGetValue(id, out ItemData data))
         {
-            Debug.LogWarning($"{id} is not exist!");
             return null;
         }
         GameObject go = new GameObject(data.name_en);
@@ -213,7 +212,6 @@ public class ItemFactory : Singleton<ItemFactory>
     {
         if (!itemdataById.TryGetValue(id, out ItemData data))
         {
-            Debug.LogWarning($"{id} is not exist!");
             return null;
         }
         GameObject go = new GameObject(data.name_en);

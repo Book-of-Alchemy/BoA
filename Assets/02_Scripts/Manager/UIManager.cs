@@ -19,7 +19,6 @@ public class UIManager : Singleton<UIManager>
             var canvas = GameObject.Find("Canvas");
             if (canvas == null)
             {
-                Debug.LogError("Canvas를 찾을 수 없습니다.");
                 return;
             }
             if(Instance._canvas ==null)
@@ -50,12 +49,10 @@ public class UIManager : Singleton<UIManager>
     {
         EnsureParents();
         var type = typeof(T);
-        Debug.LogWarning(type);
 
         if (IsOpened<T>()) // 이미 열려있는데 Show를 호출시 UI를 숨기고 리턴
         {
             Hide<T>();
-            Debug.Log(typeof(T));
             return Instance._uiDict.TryGetValue(type, out var openedUI) ? (T)openedUI : null;
         }
 
@@ -68,7 +65,6 @@ public class UIManager : Singleton<UIManager>
             var prefab = UIResourceManager.Instance.LoadUIToKey<T>(key);
             if (prefab == null)
             {
-                Debug.LogError($"프리팹을 찾을 수 없음: {key}");
                 return null;
             }
 

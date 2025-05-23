@@ -27,7 +27,6 @@ public class ArtifactDataBase : ScriptableObject
             }
             else
             {
-                Debug.LogWarning($"Duplicate Enemy ID detected: {data.id} in {data.name}");
             }
         }
     }

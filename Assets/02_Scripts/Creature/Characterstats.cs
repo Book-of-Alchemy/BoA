@@ -219,7 +219,6 @@ public abstract class CharacterStats : MonoBehaviour
 
 
         target.TakeDamage(damageInfo);
-        //Debug.Log($"{gameObject.name}가 {target.gameObject.name}을 공격함니다." + $"속성:{damageType}, 기본 대미지:{baseDamage}");
     }
     /// <summary>
     /// 공격 배율이 있는경우
@@ -230,13 +229,10 @@ public abstract class CharacterStats : MonoBehaviour
         float baseDamage = UnityEngine.Random.Range(AttackMin, AttackMax) * multiplier;
         //치명타 게산
         bool isCrit = UnityEngine.Random.value < CritChance / 100f;
-        if (isCrit)
-            Debug.Log("치명타 발생!");
 
         DamageInfo damageInfo = new DamageInfo(baseDamage, damageType, this, target, isCrit);
 
         target.TakeDamage(damageInfo);
-        //Debug.Log($"{gameObject.name}가 {target.gameObject.name}을 공격함니다." + $"속성:{damageType}, 기본 대미지:{baseDamage}");
     }
     public virtual void TakeDamage(DamageInfo damageInfo)
     {
@@ -253,13 +249,11 @@ public abstract class CharacterStats : MonoBehaviour
         {
             if (value > CurrentShield)
             {
-                Debug.Log($"{gameObject.name}는 쉴드에 {CurrentShield}의 피해를 받았습니다.");
                 value -= CurrentShield;
                 CurrentShield = 0;
             }
             else
             {
-                Debug.Log($"{gameObject.name}는 쉴드에 {value}의 피해를 받았습니다.");
                 CurrentShield -= value;
                 value = 0;
             }
@@ -267,7 +261,6 @@ public abstract class CharacterStats : MonoBehaviour
 
         UIManager.ShowOnce<DamageText>(value, transform.position);
         CurrentHealth -= value;
-        //Debug.Log($"{gameObject.name}는 {value}의 피해를 받았습니다.");
         OnTakeDamage?.Invoke(damageInfo);
         _anim.PlayKnockBack();
     }
@@ -282,13 +275,11 @@ public abstract class CharacterStats : MonoBehaviour
     {
         float multiplier = RegenerationMultiplier / 100f;
         CurrentHealth += amount * multiplier;
-        //Debug.Log($"{gameObject.name}는 {amount * multiplier}만큼 회복되었습니다.");
     }
 
     public void ChangeMana(float amount)
     {
         CurrentMana += amount;
-        //Debug.Log($"{gameObject.name}는 {amount}만큼 마나가 회복되었습니다.");
     }
 
     public virtual void GetShield(float amount)
@@ -303,7 +294,6 @@ public abstract class CharacterStats : MonoBehaviour
     }
     public virtual void Die()
     {   
-        Debug.Log($"{gameObject.name}이(가) 사망했습니다.");
         _anim.PlayDeath();
     }
 
@@ -341,7 +331,6 @@ public abstract class CharacterStats : MonoBehaviour
             if (activeEffects[i].IsExpired)
             {
                 activeEffects[i].OnExpire(this);
-                //Debug.Log($"{name}의 {activeEffects[i].data.name_kr} 해제됨");
                 activeEffects.RemoveAt(i);
             }
         }

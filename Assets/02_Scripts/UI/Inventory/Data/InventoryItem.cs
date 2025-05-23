@@ -22,8 +22,6 @@ public class InventoryItem : IItemObservable // Inventory에 배열로 존재하
             Amount += amount;
             OnItemChanged?.Invoke();
         }
-        else
-            Debug.LogWarning("다른 종류의 아이템추가");
     }
 
     public int DecreaseAmount(int amount = 1) //아이템 제거 0이되면 Null
@@ -45,7 +43,6 @@ public class InventoryItem : IItemObservable // Inventory에 배열로 존재하
             return itemData.sprite;
         else
         {
-            Debug.LogWarning("Null에서 GetSprite호출");
             return null;
         }
     }
@@ -56,7 +53,6 @@ public class InventoryItem : IItemObservable // Inventory에 배열로 존재하
             return itemData.id;
         else
         {
-            Debug.LogWarning("Null에서 GetItemId호출");
             return -1;
         }
     }
@@ -67,7 +63,6 @@ public class InventoryItem : IItemObservable // Inventory에 배열로 존재하
             return itemData.name_kr;
         else
         {
-            Debug.LogWarning("Null에서 GetItemName 호출");
             return string.Empty;
         }
     }
@@ -78,7 +73,6 @@ public class InventoryItem : IItemObservable // Inventory에 배열로 존재하
             return itemData.iteminfo_kr;
         else
         {
-            Debug.LogWarning("Null에서 GetItemDesc 호출");
             return string.Empty;
         }
     }

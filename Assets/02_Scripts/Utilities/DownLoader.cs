@@ -127,12 +127,10 @@ public class DownLoader : EditorWindow
         if (www.result == UnityWebRequest.Result.Success)
         {
             File.WriteAllText(savePath, www.downloadHandler.text);
-            Debug.Log($"JSON 저장 완료: {savePath}");
             AssetDatabase.Refresh(); // 에디터에 변경 사항 반영
         }
         else
         {
-            Debug.LogError($"다운로드 실패: {www.error}");
         }
     }
 
@@ -165,7 +163,6 @@ public class DownLoader : EditorWindow
         {
             if (data == null)
             {
-                Debug.LogError("data가 null입니다!");
                 continue;
             }
             ItemData so = ScriptableObject.CreateInstance<ItemData>();
@@ -206,7 +203,6 @@ public class DownLoader : EditorWindow
         }
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
-        Debug.Log("Json변환 완료");
     }
 
     /// <summary>
@@ -232,7 +228,6 @@ public class DownLoader : EditorWindow
         {
             if (data == null)
             {
-                Debug.LogError("data가 null입니다!");
                 continue;
             }
             RecipeData so = ScriptableObject.CreateInstance<RecipeData>();
@@ -257,7 +252,6 @@ public class DownLoader : EditorWindow
         }
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
-        Debug.Log("Json변환 완료");
     }
 
     /// <summary>
@@ -283,7 +277,6 @@ public class DownLoader : EditorWindow
         {
             if (data == null)
             {
-                Debug.LogError("data가 null입니다!");
                 continue;
             }
             StatusEffectData so = ScriptableObject.CreateInstance<StatusEffectData>();
@@ -304,7 +297,6 @@ public class DownLoader : EditorWindow
         }
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
-        Debug.Log("Json변환 완료");
     }
 
     /// <summary>
@@ -330,7 +322,6 @@ public class DownLoader : EditorWindow
         {
             if (data == null)
             {
-                Debug.LogError("data가 null입니다!");
                 continue;
             }
             ArtifactData so = ScriptableObject.CreateInstance<ArtifactData>();
@@ -347,7 +338,6 @@ public class DownLoader : EditorWindow
         }
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
-        Debug.Log("Json변환 완료");
     }
 
 
@@ -374,7 +364,6 @@ public class DownLoader : EditorWindow
         {
             if (data == null)
             {
-                Debug.LogError("data가 null입니다!");
                 continue;
             }
             QuestData so = ScriptableObject.CreateInstance<QuestData>();
@@ -402,7 +391,6 @@ public class DownLoader : EditorWindow
         }
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
-        Debug.Log("Json변환 완료");
     }
 
     /// <summary>
@@ -428,7 +416,6 @@ public class DownLoader : EditorWindow
         {
             if (data == null)
             {
-                Debug.LogError("data가 null입니다!");
                 continue;
             }
             ResearchData so = ScriptableObject.CreateInstance<ResearchData>();
@@ -449,7 +436,6 @@ public class DownLoader : EditorWindow
         }
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
-        Debug.Log("Json변환 완료");
     }
 
     void SoundConvertJsonToSO()
@@ -472,7 +458,6 @@ public class DownLoader : EditorWindow
         {
             if (data == null)
             {
-                Debug.LogError("data가 null입니다!");
                 continue;
             }
             SoundData so = ScriptableObject.CreateInstance<SoundData>();
@@ -486,7 +471,6 @@ public class DownLoader : EditorWindow
         }
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
-        Debug.Log("Json변환 완료");
     }
 
 

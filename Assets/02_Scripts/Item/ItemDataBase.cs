@@ -33,7 +33,6 @@ public class ItemDataBase : ScriptableObject
             }
             else
             {
-                Debug.LogWarning($"Duplicate Enemy ID detected: {data.id} in {data.name}");
             }
 
             if (!dicItemByType.ContainsKey(data.item_type))
@@ -60,7 +59,6 @@ public class ItemDataBase : ScriptableObject
             }
             else
             {
-                Debug.LogWarning($"Duplicate Enemy ID detected: {data.id} in {data.name}");
             }
         }
     }

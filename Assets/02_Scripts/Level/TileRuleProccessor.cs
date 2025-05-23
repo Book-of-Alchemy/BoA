@@ -120,7 +120,6 @@ public static class TileRuleProccessor
 
                 if (result.isReacted)
                 {
-                    Debug.Log($"Reaction on {(isAir ? "Air" : "Ground")} EnvType at Tile ({tile.gridPosition}) -> {result.resultTileType}");
                     tile.AffectOnTile(result, isAir);
 
                 }
