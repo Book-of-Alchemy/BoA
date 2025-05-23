@@ -4,7 +4,7 @@ using UnityEngine;
 public class UIResourceManager : Singleton<UIResourceManager>
 {
     public Dictionary<string, UIBase> uiList = new Dictionary<string, UIBase>();
-    public Dictionary<string, Object> objList = new Dictionary<string, Object>();
+    //public Dictionary<string, Object> objList = new Dictionary<string, Object>();
 
     public T LoadUIToKey<T>(string key) where T : UIBase
     {
