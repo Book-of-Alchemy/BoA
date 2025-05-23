@@ -385,19 +385,17 @@ public class DungeonBehavior : PlayerBaseBehavior
         _animator.PlayMove();
 
         transform.DOKill();
+        
+        // 피격 또는 신규 적 발견 시 즉시 중단
+        if (_stats.CurrentHealth < _startHp ||
+            HasNewEnemy(_initialEnemiesInSight, GetEnemiesInSight()))
+        {
+            StopMousePathMovement();
+        }
 
         transform
             .DOMove(new Vector3(nxt.x, nxt.y, 0),1/(Controller.moveSpeed*3))
             .SetEase(Ease.Linear)
-            .OnUpdate(() =>
-            {
-                // 피격 또는 신규 적 발견 시 즉시 중단
-                if (_stats.CurrentHealth < _startHp ||
-                    HasNewEnemy(_initialEnemiesInSight, GetEnemiesInSight()))
-                {
-                    StopMousePathMovement();
-                }
-            })
             .OnComplete(() =>
             {
                 // 애니메이션이 완전히 끝난 시점에 이동 플래그 해제 및 턴 소비
