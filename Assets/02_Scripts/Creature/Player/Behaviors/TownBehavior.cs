@@ -45,22 +45,22 @@ public class TownBehavior : PlayerBaseBehavior
     }
     private void FixedUpdate()
     {
-        //// 자동 이동 로직
-        //if (_isAutoMoving)
-        //{
-        //    Vector2 currentPos = _rb.position;
-        //    Vector2 toTarget = _clickTarget - currentPos;
-        //    if (toTarget.magnitude <= _stopPoint)
-        //    {
-        //        _isAutoMoving = false;
-        //        _moveDir = Vector2.zero;
-        //        _animator.SetWalking(false);
-        //    }
-        //    else
-        //    {
-        //        _moveDir = toTarget.normalized;
-        //    }
-        //}
+        // 자동 이동 로직
+        if (_isAutoMoving)
+        {
+            Vector2 currentPos = _rb.position;
+            Vector2 toTarget = _clickTarget - currentPos;
+            if (toTarget.magnitude <= _stopPoint)
+            {
+                _isAutoMoving = false;
+                _moveDir = Vector2.zero;
+                _animator.SetWalking(false);
+            }
+            else
+            {
+                _moveDir = toTarget.normalized;
+            }
+        }
 
         if (_moveDir != Vector2.zero)
         {
@@ -89,6 +89,7 @@ public class TownBehavior : PlayerBaseBehavior
         im.OnInteract += HandleInteractInput;
         im.OnMouseClick += HandleMouseClick;
         im.OnCancel += HandleCancelInput;
+        im.OnMenu += HandleOnMenuInput;
     }
 
     protected override void UnsubscribeInput()
@@ -100,6 +101,7 @@ public class TownBehavior : PlayerBaseBehavior
         im.OnInteract -= HandleInteractInput;
         im.OnMouseClick -= HandleMouseClick;
         im.OnCancel -= HandleCancelInput;
+        im.OnMenu -= HandleOnMenuInput;
     }
 
     private void HandleCancelInput()
@@ -176,6 +178,10 @@ public class TownBehavior : PlayerBaseBehavior
             //    npc.ShowDialogue();
             //else
         }
+    }
+    private void HandleOnMenuInput()
+    {
+        UIManager.ShowOnce<UI_Text>("메뉴 구현 전");
     }
 }
 

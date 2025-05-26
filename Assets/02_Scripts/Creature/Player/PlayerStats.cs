@@ -75,8 +75,8 @@ public class PlayerStats : CharacterStats
     public override void Die()
     {
         base.Die();
+        isInvincible = true;
         UIManager.Show<UI_DungeonResult>();
-        
         _player.OnDisable();
     }
 
