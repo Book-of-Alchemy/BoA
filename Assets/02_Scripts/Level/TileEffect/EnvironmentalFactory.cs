@@ -43,7 +43,6 @@ public class EnvironmentalFactory : Singleton<EnvironmentalFactory>
         }
         else
         {
-            Debug.Log($"factory debug{prefab.GetComponent(effectType)}");
         }
 
         prefab.baseRenderer.sortingOrder = -10 * tile.gridPosition.y + offset;

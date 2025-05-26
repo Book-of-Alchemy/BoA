@@ -28,7 +28,6 @@ public class ResourceManager : Singleton<ResourceManager>
         itemDatas = Resources.LoadAll<ItemData>($"{itemPath}");
         if (itemDatas == null)
         {
-            Debug.Log("아이템 리소스를 찾지 못했습니다.");
             return;
         }
         for (int i = 0; i < itemDatas.Length; i++)
@@ -39,7 +38,6 @@ public class ResourceManager : Singleton<ResourceManager>
         recipeDatas = Resources.LoadAll<RecipeData>($"{recipePath}");
         if (itemDatas == null)
         {
-            Debug.Log("레시피 리소스를 찾지 못했습니다.");
             return;
         }
         typeObjectPrefab = Resources.Load<GameObject>($"{TypePath}/TypeObject");

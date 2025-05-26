@@ -128,7 +128,6 @@ public class GameSceneManager : Singleton<GameSceneManager>
         if (scene.name == SceneType.Loading.ToString())
             return;
 
-        Debug.LogWarning($"로드된 씬: {scene.name}");
 
         // 이미 처리 중이면 중복 호출 방지
         if (_isProcessingSceneLoad) 
@@ -140,7 +139,6 @@ public class GameSceneManager : Singleton<GameSceneManager>
         
         if (!Enum.TryParse(scene.name, out SceneType parsedType))// 씬이름을 통해 정의해둔 타입으로 파싱
         {
-            Debug.LogWarning($"Cannot parse scene name: {scene.name}");
             _isProcessingSceneLoad = false;
             return;
         }
@@ -156,7 +154,6 @@ public class GameSceneManager : Singleton<GameSceneManager>
         }
         else
         {
-            Debug.LogWarning($"다음씬은 매핑되지 않았습니다. {_currentScene}");
         }
         
         _isProcessingSceneLoad = false;

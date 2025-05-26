@@ -97,7 +97,6 @@ public class FacilityManager : Singleton<FacilityManager>
     {
         string jsonData = JsonUtility.ToJson(_playerFacilities, true);
         File.WriteAllText(SaveFilePath, jsonData);
-        Debug.Log($"시설 데이터가 저장되었습니다: {SaveFilePath}");
     }
 
     public void ResetFacilityData()
@@ -109,6 +108,5 @@ public class FacilityManager : Singleton<FacilityManager>
         
         _playerFacilities = new PlayerFacilityData();
         SetupDefaultFacilities();
-        Debug.Log("시설 데이터가 초기화되었습니다.");
     }
 }

@@ -16,6 +16,18 @@ public class SODataManager : Singleton<SODataManager>
     public ResearchDataBase researchDataBase;
     public GameObject playerPrefab;
 
+
+    protected override void Awake()
+    {
+        base.Awake();
+        tileDataBase.Arrange();
+        enemyDataBase.Arrange();
+        itemDataBase.Arrange();
+        StatusEffectDataBase.Arrange();
+        ArtifactDataBase.Arrange();
+        environmentalDataBase.Arrange();
+        envRuleDataBase.Arrange();
+    }
     public QuestDataBase GetQuestDataBase()
     {
         return questDataBase;

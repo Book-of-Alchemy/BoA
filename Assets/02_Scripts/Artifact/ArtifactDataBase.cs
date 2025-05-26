@@ -8,12 +8,12 @@ public class ArtifactDataBase : ScriptableObject
     public List<ArtifactData> artifacts = new List<ArtifactData>();
     public Dictionary<int, ArtifactData> artifactsDataById = new Dictionary<int, ArtifactData>();
 
-    private void OnValidate()
+    private void OnEnable()
     {
-        ArrangeData();
+        Arrange();
     }
 
-    void ArrangeData()
+    public void Arrange()
     {
         artifactsDataById.Clear();
 
@@ -22,13 +22,7 @@ public class ArtifactDataBase : ScriptableObject
             if (data == null) continue;
 
             if (!artifactsDataById.ContainsKey(data.id))
-            {
                 artifactsDataById.Add(data.id, data);
-            }
-            else
-            {
-                Debug.LogWarning($"Duplicate Enemy ID detected: {data.id} in {data.name}");
-            }
         }
     }
 

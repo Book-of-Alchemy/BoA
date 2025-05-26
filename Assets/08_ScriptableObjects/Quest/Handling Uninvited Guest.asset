@@ -22,7 +22,7 @@ MonoBehaviour:
   dungeon_floor_count: 5
   quest_Type: 0
   main_object_type: 4
-  main_object_text_kr: "\uC564\uD2B8 \uC4F0\uB7EC\uD2B8\uB9AC\uAE30"
+  main_object_text_kr: "\uC624\uC6B0\uAC70 \uC4F0\uB7EC\uD2B8\uB9AC\uAE30"
   reward1: 3
   reward2: 3
   reward3: 3

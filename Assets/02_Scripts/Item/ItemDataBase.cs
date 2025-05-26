@@ -13,12 +13,15 @@ public class ItemDataBase : ScriptableObject
     public Dictionary<int, RecipeData> recipeById = new Dictionary<int, RecipeData>();
     private int intNullvalue = -1;
 
-    private void OnValidate()
+    private void OnEnable()
+    {
+        Arrange();
+    }
+    public void Arrange()
     {
         ArrangeItemData();
         ArrangeRecipeData();
     }
-
     private void ArrangeItemData()
     {
         dicItemData.Clear();
@@ -33,7 +36,6 @@ public class ItemDataBase : ScriptableObject
             }
             else
             {
-                Debug.LogWarning($"Duplicate Enemy ID detected: {data.id} in {data.name}");
             }
 
             if (!dicItemByType.ContainsKey(data.item_type))
@@ -60,7 +62,6 @@ public class ItemDataBase : ScriptableObject
             }
             else
             {
-                Debug.LogWarning($"Duplicate Enemy ID detected: {data.id} in {data.name}");
             }
         }
     }

@@ -9,7 +9,11 @@ public class EnemyDataBase : ScriptableObject
     public Dictionary<int, EnemyData> enemyDataById = new Dictionary<int, EnemyData>();
     public Dictionary<int, List<EnemyData>> enemyDataByBiome = new Dictionary<int, List<EnemyData>>();
 
-    private void OnValidate()
+    private void OnEnable()
+    {
+        Arrange();
+    }
+    public void Arrange()
     {
         enemyDataById.Clear();
         enemyDataByBiome.Clear();
@@ -24,7 +28,6 @@ public class EnemyDataBase : ScriptableObject
             }
             else
             {
-                Debug.LogWarning($"Duplicate Enemy ID detected: {enemy.id} in {enemy.name}");
             }
 
             if (!enemyDataByBiome.ContainsKey(enemy.biome_id))
@@ -35,7 +38,6 @@ public class EnemyDataBase : ScriptableObject
             enemyDataByBiome[enemy.biome_id].Add(enemy);
         }
     }
-
     public EnemyData GetEnemyById(int id)
     {
         enemyDataById.TryGetValue(id, out var data);

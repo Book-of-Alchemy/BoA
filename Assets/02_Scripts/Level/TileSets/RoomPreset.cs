@@ -55,7 +55,7 @@ public class RoomPreset : ScriptableObject
     [SerializeField]
     private List<TileInfoForRoom> tileList;
 
-    private void OnValidate()
+    private void OnEnable()
     {
         RebuildDictionaryFromTileList();
         roomSizeType = GetRoomSizeType();

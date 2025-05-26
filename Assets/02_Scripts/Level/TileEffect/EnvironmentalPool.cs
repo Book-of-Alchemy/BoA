@@ -36,10 +36,6 @@ public class EnvironmentalPool : MonoBehaviour
         {
             obj = environmentPrefabs.Dequeue();
             TileEffect tileEffect = obj.GetComponent<TileEffect>();
-            if(tileEffect == null)
-            {
-                Debug.Log("getfrompool check");
-            }
             DestroyImmediate(tileEffect);
             //Destroy(tileEffect);
         }

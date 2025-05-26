@@ -49,7 +49,7 @@ public class EnemyStats : CharacterStats, IPoolableId
         isDead = true; // 사망 처리 시작
         OnDead?.Invoke();
         MonsterEvents.RaiseKill(id);
-        Debug.Log($"{gameObject.name}이(가) 사망했습니다.");
+
         TryDropItem();
         GiveExpToPlayer();
         _anim.PlayDeath();
@@ -94,7 +94,6 @@ public class EnemyStats : CharacterStats, IPoolableId
         var prefab = dropItemData.itemPrefab;
         if (prefab == null)
         {
-            Debug.LogError($"[{name}] 아아템 데이터에 프리팹이 할당되지 않음");
             return;
         }
 

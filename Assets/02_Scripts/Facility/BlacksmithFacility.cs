@@ -28,7 +28,6 @@ public class BlacksmithFacility : MonoBehaviour, IFacilityUI
                 return;
 
             case 1:
-                Debug.Log("대장간이다.");
                 break;
 
             case 2:

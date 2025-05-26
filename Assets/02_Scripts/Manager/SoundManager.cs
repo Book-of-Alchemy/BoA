@@ -144,7 +144,7 @@ public class SoundManager : MonoBehaviour
     public void SetBGMVolume(float linear)
     {
         mixer.SetFloat("BGMVolume", linear <= 0.0001f ? -80f : Mathf.Log10(linear) * 20f);
-        Debug.Log($"{linear}");
+
         bgmVolume = linear;
     }
 
@@ -160,7 +160,7 @@ public class SoundManager : MonoBehaviour
         {
             case SceneType.MainMenu:
                 await Task.Delay(100);
-                Play("Village");
+                Play("MainMenu");
                 break;
             case SceneType.Town:
                 Play("Village");

@@ -49,10 +49,8 @@ public abstract class BaseItem : MonoBehaviour
     public void DropItem(ItemData data, int amount, Tile dropTile = null)
     {
         DropInit(data, dropTile);//테스트를 위하여 일단 수정했습니다...(04.29 이성재)
-        //Init(data, _curTile);
         dropAmount = amount;
         _curTile.itemsOnTile.Add(this);
-        Debug.Log("아이템 버려짐");
         _handler = () => AddItem(data);
         _curTile.onCharacterChanged += _handler;
         _curTile.onIsOnSightChanged += UpdateVisual;

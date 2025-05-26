@@ -24,7 +24,6 @@ public class UI_StatusEffectIcon : MonoBehaviour
             iconImage = GetComponentInChildren<Image>();
             if (iconImage == null)
             {
-                Debug.LogWarning("UI_StatusEffectIcon: 자식 오브젝트에서 Image 컴포넌트를 찾을 수 없습니다.");
             }
         }
     }
@@ -57,28 +56,23 @@ public class UI_StatusEffectIcon : MonoBehaviour
                 iconName = char.ToUpper(iconName[0]) + iconName.Substring(1);
             }
             
-            Debug.Log($"상태 효과 아이콘 로드 시도: {iconName}, 원본 이름: {effect.data.icon_sprite}");
             
             Sprite iconSprite = Resources.Load<Sprite>($"Image/Bufficon/{iconName}");
             if (iconSprite != null)
             {
                 iconImage.sprite = iconSprite;
-                Debug.Log($"상태 효과 아이콘 로드 성공: {iconName}");
             }
             else
             {
-                Debug.LogWarning($"상태 효과 아이콘을 찾을 수 없음: {iconName}");
                 
                 // 두 번째 시도: 원본 이름 그대로 시도
                 iconSprite = Resources.Load<Sprite>($"Image/Bufficon/{effect.data.icon_sprite}");
                 if (iconSprite != null)
                 {
                     iconImage.sprite = iconSprite;
-                    Debug.Log($"원본 이름으로 상태 효과 아이콘 로드 성공: {effect.data.icon_sprite}");
                 }
                 else
                 {
-                    Debug.LogError($"모든 방법으로 상태 효과 아이콘을 찾을 수 없음: {effect.data.icon_sprite}");
                 }
             }
         }

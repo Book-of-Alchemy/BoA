@@ -62,7 +62,6 @@ public class DragManager : MonoBehaviour
             if (dropTarget is CraftSlotUI)
             {
                 ResetState(); // 아무 것도 하지 않음
-                Debug.LogWarning("123");
                 return;
             }
 

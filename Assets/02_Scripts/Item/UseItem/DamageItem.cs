@@ -97,14 +97,11 @@ public class DamageItem : BaseItem
                 {
                     if (itemData != null)
                         AttackBehavior(itemData, targetTile);
-                    else
-                        Debug.Log("데이터가 null");
                 }
                 ));
         }
         else
         {
-            Debug.Log("거리범위에 해당하는 타일을 누르지 않았습니다.");
             CancelUse();
             //SubscribeInput();
         }
@@ -183,7 +180,6 @@ public class DamageItem : BaseItem
 
         TileRuleProccessor.ProcessTileReactions(new DamageInfo(damageValue, GetDamageType(data.attribute), _player, null, false, data.tags, data.effect_id), tiles);
 
-        Debug.Log(data.name_en);
         if (monsterCount >= 3 && data.tags.Contains(Tag.Scroll) && _player.isPrecisionAim)
         {
             _player.statBlock.RemoveModifier(StatType.FinalDmg, "PrecisionAimforMagic");

@@ -27,7 +27,6 @@ public class SpritePivotBatchSetter : EditorWindow
     {
         if (spriteSheet == null)
         {
-            Debug.LogError("스프라이트 시트를 지정해 주세요.");
             return;
         }
 
@@ -49,11 +48,9 @@ public class SpritePivotBatchSetter : EditorWindow
             EditorUtility.SetDirty(importer);
             importer.SaveAndReimport();
 
-            Debug.Log("Pivot 일괄 변경 완료!");
         }
         else
         {
-            Debug.LogError("해당 텍스처가 Multiple 스프라이트가 아닙니다.");
         }
     }
 }

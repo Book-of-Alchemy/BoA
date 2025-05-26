@@ -12,14 +12,18 @@ public class TileDataBase : ScriptableObject
 
     public Dictionary<int, BiomeSet> biomsetByID = new Dictionary<int, BiomeSet>();
 
-    private void OnValidate()
+    private void OnEnable()
+    {
+        Arrange();
+    }
+
+    public void Arrange()
     {
         biomsetByID.Clear();
 
-        foreach(var biome in biomeSet)
+        foreach (var biome in biomeSet)
         {
-            if (biomsetByID.ContainsKey(biome.id))
-                Debug.LogWarning($"중복된 바이옴입니다 ID : {biome.id}");
+
 
             biomsetByID[biome.id] = biome;
         }

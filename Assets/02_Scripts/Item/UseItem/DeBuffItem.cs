@@ -111,6 +111,8 @@ private List<Tile> rangeTiles = new List<Tile>();
     }
     public override void CancelUse()
     {
+        SubscribeInput();
+
         InputManager.Instance.OnMouseMove -= CheckEffectRange;
         InputManager.Instance.OnMouseClick -= OnClick;
 
@@ -120,5 +122,17 @@ private List<Tile> rangeTiles = new List<Tile>();
 
         // 이 게임 오브젝트 파괴
         Destroy(this.gameObject);
+    }
+    public void SubscribeInput()
+    {
+        var player = GameManager.Instance.PlayerTransform;
+        if (player != null)
+        {
+            var dungeonBehavior = player.GetComponent<DungeonBehavior>();
+            if (dungeonBehavior != null)
+            {
+                dungeonBehavior.SSubscribeInput();
+            }
+        }
     }
 }

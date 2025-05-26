@@ -65,7 +65,6 @@ public class Inventory : Singleton<Inventory>
             // DataManager에서 골드 가져오기
             _gold = DataManager.Instance.GetPlayerData().Gold;
             OnGoldChanged?.Invoke(_gold);
-            Debug.Log($"DataManager에서 골드를 로드했습니다: {_gold}");
         }
     }
 
@@ -77,7 +76,6 @@ public class Inventory : Singleton<Inventory>
             // DataManager의 PlayerData에 골드 설정 및 저장
             DataManager.Instance.GetPlayerData().Gold = _gold;
             DataManager.Instance.SaveData();
-            Debug.Log($"골드 {_gold}를 DataManager에 저장했습니다.");
         }
     }
 
@@ -87,7 +85,6 @@ public class Inventory : Singleton<Inventory>
         OnGoldChanged?.Invoke(_gold); //골드 변화시 UI에서 갱신
         // 변경된 골드 저장
         SaveGoldToDataManager();
-        Debug.Log($"골드 {amount}를 획득했습니다. 현재 골드: {_gold}");
     }
 
     public void DecreaseGold(int amount)
@@ -96,7 +93,6 @@ public class Inventory : Singleton<Inventory>
         OnGoldChanged?.Invoke(_gold);
         // 변경된 골드 저장
         SaveGoldToDataManager();
-        Debug.Log($"골드 {amount}를 사용했습니다. 현재 골드: {_gold}");
     }
 
     
@@ -104,7 +100,6 @@ public class Inventory : Singleton<Inventory>
     {
         _gold = Mathf.Max(0, amount);
         OnGoldChanged?.Invoke(_gold);
-        Debug.Log($"골드가 {_gold}로 설정되었습니다.");
     }
 
     // DataManager에서 가져온 골드 관련 메서드
@@ -120,7 +115,6 @@ public class Inventory : Singleton<Inventory>
             DataManager.Instance.SaveData();
         }
         
-        Debug.Log($"Inventory: {amount} 골드 추가, 현재 골드: {_gold}");
     }
 
     public bool SpendGold(int amount)
@@ -137,7 +131,6 @@ public class Inventory : Singleton<Inventory>
                 DataManager.Instance.SaveData();
             }
             
-            Debug.Log($"Inventory: {amount} 골드 사용, 현재 골드: {_gold}");
             return true;
         }
         return false;
@@ -395,11 +388,9 @@ public class Inventory : Singleton<Inventory>
         }
         else if(!boolResult)
         {
-            UIManager.ShowOnce<UI_Text>("제작에 실패했다.");
-            Debug.Log(boolResult);
+            UIManager.ShowOnce<UI_Text>("수량이 부족하거나 재료가 다릅니다.");
         }
 
-        //Debug.Log(dataResult);
     }
 
     public void RemoveCraftList()
@@ -449,7 +440,6 @@ public class Inventory : Singleton<Inventory>
 
     public void Use(InventoryItem item, int index)
     {
-        Debug.Log("UseAction");
         if (item.GetItemType() != Item_Type.Consumable)
         {
             UIManager.ShowOnce<UI_Text>("사용가능한 아이템이 아니다.");
@@ -466,7 +456,6 @@ public class Inventory : Singleton<Inventory>
 
     public void Drop(InventoryItem item,int index)
     {
-        Debug.Log("DropAction");
         //현재 DropItem은 아이템 EffectType이 DamageType만 가능
         ItemFactory.Instance.DropItem(item.itemData.id, GameManager.Instance.PlayerTransform.CurTile, item.Amount);
 
@@ -479,7 +468,6 @@ public class Inventory : Singleton<Inventory>
         var count = _craftList.Count(x => x != null);
         if (count >= 3 || _craftList.Contains(item)) return;
 
-        Debug.Log($"[Craft 호출] {item.itemData.name}");
      
         _craftList.Add(item);
         HighlightCraftableSlots();
@@ -495,13 +483,11 @@ public class Inventory : Singleton<Inventory>
 
     public void Equip(InventoryItem item)
     {
-        Debug.Log("EquipAction");
         UIManager.Hide<UI_Action>();
     }
 
     public void UnEquip(InventoryItem item)
     {
-        Debug.Log("UnEquipAction");
         UIManager.Hide<UI_Action>();
     }
 

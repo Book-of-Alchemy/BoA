@@ -17,7 +17,6 @@ public class UIResourceManager : Singleton<UIResourceManager>
             var asset = Resources.Load<T>(key);
             if (asset == null)
             {
-                Debug.LogError($"UI 리소스 찾을 수 없음 : {key}");
                 return null;
             }
             uiList[key] = asset;

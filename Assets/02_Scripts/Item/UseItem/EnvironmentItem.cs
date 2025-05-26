@@ -25,6 +25,7 @@ public class EnvironmentItem : BaseItem
     }
     public override void CancelUse()
     {
+        SubscribeInput();
         InputManager.Instance.OnMouseMove -= CheckEffectRange;
         InputManager.Instance.OnMouseClick -= OnClick;
 
@@ -115,14 +116,11 @@ public class EnvironmentItem : BaseItem
                 {
                     if (itemData != null)
                         EnvironmentBehavior(itemData, targetTile);
-                    else
-                        Debug.Log("데이터가 null");
                 }
                 ));
         }
         else
         {
-            Debug.Log("거리범위에 해당하는 타일을 누르지 않았습니다.");
             CancelUse();
             SubscribeInput();
         }
@@ -167,7 +165,6 @@ public class EnvironmentItem : BaseItem
             }
         }
 
-        Debug.Log(data.name_en);
 
         FinishUse();
         Destroy(this.gameObject, 0.1f);

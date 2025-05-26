@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TileManger : Singleton<TileManger>
 {
-    public TileDataBase tileData;
+    public TileDataBase tileData => SODataManager.Instance.tileDataBase;
     public List<Level> levels = new List<Level>();
     public Level curLevel;
     public int curLevelIndex;
@@ -50,7 +50,7 @@ public class TileManger : Singleton<TileManger>
         curLevel = levels[curLevelIndex];
         OnGetDown?.Invoke(curLevelIndex);
         SetLevel(curLevel);
-        Debug.Log("generate dungeon");
+        
     }
 
 

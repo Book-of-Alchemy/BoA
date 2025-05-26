@@ -14,12 +14,10 @@ public class UI_ItemTooltip : UIBase
     {
         if (param == null || param.Length == 0 || !(param[0] is ItemData data))
         {
-            Debug.LogError("Invalid param for tooltip");
             return;
         }
         _canvasGroup.blocksRaycasts = false;
         _canvas = UIManager.Instance.GetCanvas();
-        Debug.Log(_canvas);
 
         _itemName.text = data.name_kr;
         _description.text = data.iteminfo_kr;

@@ -17,8 +17,6 @@ public class DragableSlot : MonoBehaviour, IPointerDownHandler, IBeginDragHandle
     private void Awake()
     {
         _slot = GetComponent<IDraggableSlot>();
-        if (_slot == null)
-            Debug.LogError("IDraggableSlot 인터페이스를 구현한 컴포넌트가 필요합니다.");
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -36,7 +34,6 @@ public class DragableSlot : MonoBehaviour, IPointerDownHandler, IBeginDragHandle
             return;
 
         var icon = _slot.GetItem().GetSprite();
-        Debug.Log($"드래그 된 아이템 정보 : {_slot.GetItem().GetItemName()}");
         DragManager.Instance.BeginDrag(_slot, _slot.GetItem(), icon, eventData.position);
     }
 

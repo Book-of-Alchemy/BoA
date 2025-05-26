@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d8051a1180897974893b7323ca5fa5e2, type: 3}
-  m_Name: deepinside
+  m_Name: Deepinside
   m_EditorClassIdentifier: 
   id: 110002
   quest_name_kr: "\uB354 \uAE4A\uC740 \uACF3\uC73C\uB85C"

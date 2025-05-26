@@ -7,12 +7,12 @@ public class StatusEffectDataBase : ScriptableObject
     public List<StatusEffectData> statusEffects = new List<StatusEffectData>();
     public Dictionary<int, StatusEffectData> statusEffectsDataById = new Dictionary<int, StatusEffectData>();
 
-    private void OnValidate()
+    private void OnEnable()
     {
-        ArrangeData();
+        Arrange();
     }
 
-    void ArrangeData()
+    public void Arrange()
     {
         statusEffectsDataById.Clear();
 
@@ -23,10 +23,6 @@ public class StatusEffectDataBase : ScriptableObject
             if (!statusEffectsDataById.ContainsKey(data.id))
             {
                 statusEffectsDataById.Add(data.id, data);
-            }
-            else
-            {
-                Debug.LogWarning($"Duplicate Enemy ID detected: {data.id} in {data.name}");
             }
         }
     }

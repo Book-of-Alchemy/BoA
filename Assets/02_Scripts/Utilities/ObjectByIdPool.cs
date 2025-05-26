@@ -30,7 +30,6 @@ public class ObjectByIdPool<T, U> : MonoBehaviour where T : MonoBehaviour,IPoola
         {
             if (prefabInfo == null || prefabInfo.prefab == null)
             {
-                Debug.LogError("PrefabWithId에 null 포함");
                 continue;
             }
 
@@ -73,7 +72,6 @@ public class ObjectByIdPool<T, U> : MonoBehaviour where T : MonoBehaviour,IPoola
         }
         else
         {
-            Debug.LogError($"ID {id}에 해당하는 Prefab이 없습니다!");
             return null;
         }
 
@@ -104,7 +102,6 @@ public class ObjectByIdPool<T, U> : MonoBehaviour where T : MonoBehaviour,IPoola
         }
         else
         {
-            Debug.LogError($"ID {id}에 해당하는 Prefab이 없습니다!");
             return null;
         }
 
@@ -123,7 +120,6 @@ public class ObjectByIdPool<T, U> : MonoBehaviour where T : MonoBehaviour,IPoola
     {
         if (!poolDictionary.ContainsKey(obj.Id))
         {
-            Debug.LogWarning($"ID {obj.Id}에 해당하는 풀을 찾을 수 없습니다. 오브젝트를 삭제합니다.");
             Destroy(obj.gameObject);
             return;
         }

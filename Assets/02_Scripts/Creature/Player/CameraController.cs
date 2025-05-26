@@ -37,7 +37,6 @@ public class CameraController : Singleton<CameraController>
         transposer = vcam.GetCinemachineComponent<CinemachineFramingTransposer>();
         if (transposer == null)
         {
-            Debug.LogError("CameraController2D: FramingTransposer를 찾을 수 없습니다.");
             enabled = false;
             return;
         }

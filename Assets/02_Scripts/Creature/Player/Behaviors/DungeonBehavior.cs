@@ -81,7 +81,6 @@ public class DungeonBehavior : PlayerBaseBehavior
         }
         else
         {
-            Debug.LogError("highlightPrefab이 할당되지 않았습니다!");
         }
 
 
@@ -385,18 +384,18 @@ public class DungeonBehavior : PlayerBaseBehavior
         _spriteRenderer.sortingOrder = -nxt.y * 10 + 1;
         _animator.PlayMove();
 
+        transform.DOKill();
+        
+        // 피격 또는 신규 적 발견 시 즉시 중단
+        if (_stats.CurrentHealth < _startHp ||
+            HasNewEnemy(_initialEnemiesInSight, GetEnemiesInSight()))
+        {
+            StopMousePathMovement();
+        }
+
         transform
-            .DOMove(new Vector3(nxt.x, nxt.y, 0),1/(Controller.moveSpeed*3))
+            .DOMove(new Vector3(nxt.x, nxt.y, 0),1/(Controller.moveSpeed))
             .SetEase(Ease.Linear)
-            .OnUpdate(() =>
-            {
-                // 피격 또는 신규 적 발견 시 즉시 중단
-                if (_stats.CurrentHealth < _startHp ||
-                    HasNewEnemy(_initialEnemiesInSight, GetEnemiesInSight()))
-                {
-                    StopMousePathMovement();
-                }
-            })
             .OnComplete(() =>
             {
                 // 애니메이션이 완전히 끝난 시점에 이동 플래그 해제 및 턴 소비
@@ -573,7 +572,6 @@ public class DungeonBehavior : PlayerBaseBehavior
 
             if (targetStats.gameObject.CompareTag("NPC"))
             {
-                Debug.Log("NPC입니다");
                 return;
             }
         }
@@ -640,7 +638,6 @@ public class DungeonBehavior : PlayerBaseBehavior
     // ──────────── 메뉴 키(Tab) ────────────
     private void HandleMenu()
     {
-        Debug.Log("HandleMenu 호출됨");
         if (UIManager.IsOpened<UI_Menu>())
         {
             UIManager.Get<UI_Menu>().HideDirect();
@@ -670,6 +667,7 @@ public class DungeonBehavior : PlayerBaseBehavior
     }
     private bool HasNewEnemy(HashSet<CharacterStats> initial, List<CharacterStats> current)
     {
+        if (initial == null || current == null) return false;
         foreach (var e in current)
             if (!initial.Contains(e))
                 return true;
