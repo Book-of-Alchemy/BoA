@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CraftTool : MonoBehaviour
@@ -9,10 +10,8 @@ public class CraftTool : MonoBehaviour
 
     public void UpdateSlot(InventoryItem item)
     {
-        if (_slotCraft[2].HasData)//가득찼다면 더 이상 업데이트 X
-        {
+        if (_slotCraft.All(slot => slot.HasData)) //슬롯이 가득찼다면 리턴
             return;
-        }
 
         int index = FindSlot();
         if (index == -1) return;
