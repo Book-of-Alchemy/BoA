@@ -579,6 +579,8 @@ public class DungeonBehavior : PlayerBaseBehavior
 
     public void UseItem(ItemData data)
     {
+        if (!Controller.isPlayerTurn) return;
+
         UnsubscribeConInput();
         _currentItem = ItemFactory.Instance.CreateItem(data.id);
         
