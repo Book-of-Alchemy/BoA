@@ -25,6 +25,7 @@ public class EnvironmentItem : BaseItem
     }
     public override void CancelUse()
     {
+        SubscribeInput();
         InputManager.Instance.OnMouseMove -= CheckEffectRange;
         InputManager.Instance.OnMouseClick -= OnClick;
 

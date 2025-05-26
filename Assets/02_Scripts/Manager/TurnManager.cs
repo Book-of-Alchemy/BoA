@@ -60,10 +60,15 @@ public class TurnManager : Singleton<TurnManager>
         while (allUnits.Count > 0)
         {
             // 매 턴 시작할 때마다 파괴된유닛 모두 제거
-            allUnits.RemoveAll(u => u == null || !u.gameObject.activeInHierarchy);
-
-            if (allUnits.Count == 0)
-                yield break;
+            for (int i = allUnits.Count - 1; i >= 0; i--)
+            {
+                var unit = allUnits[i];
+                if (unit == null || !unit.gameObject.activeInHierarchy)
+                {
+                    allUnits.RemoveAt(i);
+                }
+            }
+            //allUnits.RemoveAll(u => u == null || !u.gameObject.activeInHierarchy);
 
             allUnits.Sort((a, b) => ComparePlayer(a, b));
 
@@ -117,6 +122,7 @@ public class TurnManager : Singleton<TurnManager>
 
                     if (unit is PlayerUnit playerUnit)
                     {
+
                         yield return new WaitUntil(() => !playerUnit.IsWaitingForInput);
                     }
 
@@ -126,16 +132,17 @@ public class TurnManager : Singleton<TurnManager>
 
                     turnSpeed = originSpeed;
                     //yield return wait;
-                    //if (!unit.IsPlayer)//일단 enemy만 로직적으로 대기처리 향후 player역시 0.1f대기가 아닌 로직적 대기 현재 player 턴처리문제로 enemy가 인접해있을때 못따라오는 현상 종종발생
-                    yield return new WaitUntil(() => !unit.ActionInProgress || unit == null || !unit.gameObject.activeSelf);
-                    //else
+                    if (!unit.IsPlayer)//일단 enemy만 로직적으로 대기처리 향후 player역시 0.1f대기가 아닌 로직적 대기 현재 player 턴처리문제로 enemy가 인접해있을때 못따라오는 현상 종종발생
+                        yield return new WaitUntil(() => !unit.ActionInProgress || unit == null || !unit.gameObject.activeSelf);
+                    else UpdateAllUnitVisual();
                     //{
-                    UpdateAllUnitVisual();
-                    //yield return null;
-                    //}
+
+                        //yield return null;
+                        //}
                 }
             }
-            TileUtility.RefreshLevelSight();
+            //TileUtility.RefreshLevelSight();
+            UpdateAllUnitVisual();
             globalTime++;
             yield return null;
         }

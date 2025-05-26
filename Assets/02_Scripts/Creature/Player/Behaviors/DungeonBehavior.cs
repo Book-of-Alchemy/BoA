@@ -394,7 +394,7 @@ public class DungeonBehavior : PlayerBaseBehavior
         }
 
         transform
-            .DOMove(new Vector3(nxt.x, nxt.y, 0),1/(Controller.moveSpeed*3))
+            .DOMove(new Vector3(nxt.x, nxt.y, 0),1/(Controller.moveSpeed))
             .SetEase(Ease.Linear)
             .OnComplete(() =>
             {
@@ -667,6 +667,7 @@ public class DungeonBehavior : PlayerBaseBehavior
     }
     private bool HasNewEnemy(HashSet<CharacterStats> initial, List<CharacterStats> current)
     {
+        if (initial == null || current == null) return false;
         foreach (var e in current)
             if (!initial.Contains(e))
                 return true;
