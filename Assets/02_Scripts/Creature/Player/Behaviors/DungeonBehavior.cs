@@ -34,6 +34,9 @@ public class DungeonBehavior : PlayerBaseBehavior
     // 반복 이동용 코루틴 핸들
     private Coroutine _holdMoveCoroutine;
 
+    private bool _isMouseMove = false;
+    private List<Tile> _mouseMovePath;    // 남은 경로 저장용
+
     // 마지막 이동 방향 (하이라이트용)
     private Vector2Int _lastMoveDir = Vector2Int.right;
 
@@ -209,14 +212,6 @@ public class DungeonBehavior : PlayerBaseBehavior
             return;
         }
 
-        if (!Controller.isPlayerTurn || _isMoving)
-            return;
-
-        if (_mousePathCoroutine != null)
-        {
-            StopMousePathMovement();
-        }
-
         Vector2Int goalPos = new Vector2Int(
             Mathf.RoundToInt(worldPos.x),
             Mathf.RoundToInt(worldPos.y)
@@ -224,6 +219,17 @@ public class DungeonBehavior : PlayerBaseBehavior
 
         if (!_stats.curLevel.tiles.TryGetValue(goalPos, out Tile goalTile))
             return;
+
+        if (_isMouseMove)
+        {
+            StopMousePathMovement();
+            StartNewMousePath(goalPos, goalTile);
+            return;
+        }
+
+        if (!Controller.isPlayerTurn || _isMoving)
+            return;
+
         // 공격 조건
         Vector2Int curPos = _stats.CurTile.gridPosition;
         Vector2Int delta = goalPos - curPos;
@@ -246,9 +252,19 @@ public class DungeonBehavior : PlayerBaseBehavior
         }
 
         // 이동 처리
+        StartNewMousePath(goalPos, goalTile);
+    }
+
+    private void StartNewMousePath(Vector2Int goalPos, Tile goalTile)
+    {
+        // 이동 처리
         List<Tile> path = AstarPlayerPathFinder.FindPath(_stats.CurTile, goalTile, _stats.curLevel);
         if (path == null || path.Count <= 1)
             return;
+
+        // 남은 이동 경로를 멤버 변수에 저장
+        _mouseMovePath = path;
+        _isMouseMove = true;
 
         // 시간 스케일 5배 적용
         //_savedMouseTimeScale = Time.timeScale;
@@ -260,8 +276,12 @@ public class DungeonBehavior : PlayerBaseBehavior
         _startHp = _stats.CurrentHealth;
         _initialEnemiesInSight = new HashSet<CharacterStats>(GetEnemiesInSight());
 
-        _mousePathCoroutine = StartCoroutine(MoveAlongPath(path));
+        // 코루틴 실행
+        if (_mousePathCoroutine != null)
+            StopMousePathMovement();
+        _mousePathCoroutine = StartCoroutine(MoveAlongPath());
     }
+
     private void ExecuteMouseAttack(Tile targetTile)
     {
         //UI열려있으면 무시
@@ -276,12 +296,12 @@ public class DungeonBehavior : PlayerBaseBehavior
         // 공격 애니메이션 재생
         _animator.PlayAttack();
     }
-    private IEnumerator MoveAlongPath(List<Tile> path)
+    private IEnumerator MoveAlongPath()
     {
         // 현재 위치 제외
-        path.RemoveAt(0);
+        _mouseMovePath.RemoveAt(0);
 
-        foreach (var tile in path)
+        foreach (var tile in _mouseMovePath)
         {
             // 이전 이동이 끝날 때까지 대기
             yield return new WaitUntil(() => !_isMoving);
@@ -306,6 +326,9 @@ public class DungeonBehavior : PlayerBaseBehavior
         //TurnManager.Instance.turnSpeed = _savedMouseTurnSpeed;
         //Time.timeScale = _savedMouseTimeScale;
 
+        // 자동이동 종료
+        _isMouseMove = false;
+        _mouseMovePath = null;
         _mousePathCoroutine = null;
     }
     // ────────────────────────────────────────────────────────
@@ -341,10 +364,26 @@ public class DungeonBehavior : PlayerBaseBehavior
         //UI열려있으면 무시
         if (IsUIOpen())
             return;
+
+        if (raw == Vector2.zero)
+            return;
+
+        // 자동이동 중이면 중단하고 수동 이동 실행
+        if (_isMouseMove)
+        {
+            StopMousePathMovement();
+            // 자동이동 중단 후 즉시 이동 실행
+            _moveBuffer = StartCoroutine(BufferInput(dir =>
+            {
+                ExecuteMove(dir);
+                _moveBuffer = null;
+            }));
+            return;
+        }
+
         if (!Controller.isPlayerTurn||
             _isMoving ||
-            _moveBuffer != null ||
-            raw == Vector2.zero)
+            _moveBuffer != null)
             return;
 
         _moveBuffer = StartCoroutine(BufferInput(dir =>
@@ -413,6 +452,22 @@ public class DungeonBehavior : PlayerBaseBehavior
         //UI열려있으면 무시
         if (IsUIOpen())
             return;
+
+
+        if (_isMouseMove)
+        {
+            StopMousePathMovement();
+            Vector2Int targetTransform = _stats.CurTile.gridPosition + _lastMoveDir;
+            if (_stats.curLevel.tiles.TryGetValue(targetTransform, out Tile targetTile) &&
+                targetTile.CharacterStatsOnTile != null &&
+                targetTile.CharacterStatsOnTile.gameObject.CompareTag("NPC"))
+            {
+                return;
+            }
+            _attackBuffer = StartCoroutine(BufferAttack());
+            return;
+        }
+
         if (!Controller.isPlayerTurn || _attackBuffer != null)
             return;
         Vector2Int targetPos = _stats.CurTile.gridPosition + _lastMoveDir;
@@ -559,6 +614,11 @@ public class DungeonBehavior : PlayerBaseBehavior
         if (IsUIOpen())
             return;
 
+        if (_isMouseMove)
+        {
+            StopMousePathMovement();
+        }
+
         if (!Controller.isPlayerTurn)
             return;
 
@@ -580,6 +640,11 @@ public class DungeonBehavior : PlayerBaseBehavior
     public void UseItem(ItemData data)
     {
         if (!Controller.isPlayerTurn) return;
+
+        if (_isMouseMove)
+        {
+            StopMousePathMovement();
+        }
 
         UnsubscribeConInput();
         _currentItem = ItemFactory.Instance.CreateItem(data.id);
@@ -684,6 +749,8 @@ public class DungeonBehavior : PlayerBaseBehavior
             StopCoroutine(_mousePathCoroutine);
             _mousePathCoroutine = null;
         }
+        _isMouseMove = false;
+        _mouseMovePath = null;
         transform.DOKill();
 
         //TurnManager.Instance.turnSpeed = _savedMouseTurnSpeed;
@@ -694,6 +761,17 @@ public class DungeonBehavior : PlayerBaseBehavior
 
     private void HandleRest()
     {
+        if (_isMouseMove)
+        {
+            StopMousePathMovement();
+            if (Controller.isPlayerTurn)
+            {
+                UIManager.ShowOnce<UI_Text>("1턴 휴식");
+                Controller.onActionConfirmed?.Invoke();
+            }
+            return;
+        }
+
         // 플레이어 턴이 아니거나 이동/아이템 사용 중이면 무시
         if (!Controller.isPlayerTurn || _isMoving || _mousePathCoroutine != null || _currentItem != null)
             return;
