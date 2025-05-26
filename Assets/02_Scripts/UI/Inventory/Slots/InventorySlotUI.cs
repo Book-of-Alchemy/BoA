@@ -63,18 +63,26 @@ public class InventorySlotUI : SlotUIBase<InventoryItem>, ISelectHandler, IDesel
             _btn.onClick.RemoveAllListeners();
             _btn.onClick.AddListener(OnClick);
         }
-        if (_countTxt != null) _countTxt.text = data.Amount.ToString();
-        if (_icon != null) _icon.sprite = data.GetSprite();
-        _icon.enabled = data != null;
-        _imageObject = _icon.gameObject;
-        _textObject = _countTxt.gameObject;
+        if (_countTxt != null)
+        {
+            _countTxt.text = data.Amount.ToString();
+            _textObject = _countTxt.gameObject;
+        }
+
+        if (_icon != null)
+        {
+            _icon.sprite = data.GetSprite();
+            _icon.enabled = true;
+            _icon.gameObject.SetActive(true);
+            _imageObject = _icon.gameObject;
+        }
         ShowIcon();
         ShowText();
     }
 
     protected override void ClearUI()
     {
-        if (_icon == null || _icon.gameObject == null) return;
+        //if (_icon == null || _icon.gameObject == null) return;
         _icon.sprite = null;
         _countTxt.text = string.Empty;
         _icon.enabled = false;
@@ -139,10 +147,13 @@ public class InventorySlotUI : SlotUIBase<InventoryItem>, ISelectHandler, IDesel
 
     public void ReduceItem(int amount = 1) // 아이템 수량감소
     {
-        if(int.TryParse(_countTxt.text, out int i))
+        if (_data == null || _data.itemData == null) return;
+
+        if (int.TryParse(_countTxt.text, out int i))
         {
             i -= amount;
-            _countTxt.text = i.ToString();
+            int cnt = Mathf.Max(0, i);
+            _countTxt.text = cnt.ToString();
         }
     }
 

@@ -249,7 +249,9 @@ public class Inventory : Singleton<Inventory>
 
     private void RemoveItem(int index, int amount = 1)
     {
-        if(items[index].Amount >= 1)
+        if (items[index] == null) return;
+
+        if (items[index].Amount >= 1)
         {
             int value = items[index].DecreaseAmount(amount);
             if (value == 0)
@@ -293,17 +295,16 @@ public class Inventory : Singleton<Inventory>
         InventoryItem[] filtered = Array.FindAll(items, item =>
             item != null && item.itemData != null && Array.Exists(types, type => item.GetItemType() == type));
 
+        _uiInventory.ClearAllSlots();
+        if (filtered.Length == 0) return;
+
         // ID 순서로 정렬
         Array.Sort(filtered, (a, b) =>
             string.Compare(a.GetItemId().ToString(), b.GetItemId().ToString()));
 
-        if(filtered.Length != 0)
-        {
-            _uiInventory.ClearAllSlots();
-
-            for (int i = 0; i < filtered.Length; i++)
-                _uiInventory.SetInventorySlot(i, filtered[i]); // UI 슬롯에 재배치
-        }
+        for (int i = 0; i < filtered.Length; i++)
+            _uiInventory.SetInventorySlot(i, filtered[i]); // UI 슬롯에 재배치
+        
     }
     public List<InventoryItem> GetAllItems()
     {
@@ -336,6 +337,7 @@ public class Inventory : Singleton<Inventory>
 
     public void TryCraft()
     {
+        //유효 슬롯 필터링
         var validCraftList = _craftList
             .Where(x => x != null && x.itemData != null)
             .ToList();
@@ -349,18 +351,18 @@ public class Inventory : Singleton<Inventory>
         //제작 결과 담을 변수
         (bool boolResult, RecipeData dataResult, int amount) result;
 
-        if (_craftList.Count >= 3)
+        if (validCraftList.Count >= 3)
         {
             result = _alchemy.CreateItem(
-            _craftList[0].itemData, _craftList[0].Amount,
-            _craftList[1].itemData, _craftList[1].Amount,
-            _craftList[2].itemData, _craftList[2].Amount);
+            validCraftList[0].itemData, validCraftList[0].Amount,
+            validCraftList[1].itemData, validCraftList[1].Amount,
+            validCraftList[2].itemData, validCraftList[2].Amount);
         }
         else // 1개를 넣고 제작을 시도했을때 처리도 추가해야함.
         {
             result = _alchemy.CreateItem(
-            _craftList[0].itemData, _craftList[0].Amount,
-            _craftList[1].itemData, _craftList[1].Amount);
+            validCraftList[0].itemData, validCraftList[0].Amount,
+            validCraftList[1].itemData, validCraftList[1].Amount);
         }
         var (boolResult, dataResult, amount) = result;
 
@@ -402,7 +404,8 @@ public class Inventory : Singleton<Inventory>
 
     public void RemoveCraftList()
     {
-        _craftList.RemoveAll(slot => slot != null);
+        //_craftList.RemoveAll(slot => slot != null);
+        _craftList.Clear();
     }
 
     private void UpdateCraftPreview()
@@ -430,11 +433,18 @@ public class Inventory : Singleton<Inventory>
     }
     public void RemoveCraftTable(InventoryItem item)
     {
-        _craftList.RemoveAll(i => i == null || i.itemData == null || i.GetItemId() == item.GetItemId());
+        _craftList.RemoveAll(i => ReferenceEquals(i, item));
         HighlightCraftableSlots();
         UpdateCraftPreview();
         if (_craftList.Count < 2)
             _craftTool.ClearPreviewSlot();
+
+        Debug.Log($"[CRAFT LIST 상태 확인]");
+        for (int i = 0; i < _craftList.Count; i++)
+        {
+            var craft = _craftList[i];
+            Debug.Log($"Slot {i}: {(craft == null ? "NULL" : craft.itemData?.name_kr ?? "NoData")}");
+        }
     }
 
     public void Use(InventoryItem item, int index)
@@ -466,7 +476,8 @@ public class Inventory : Singleton<Inventory>
 
     public void Craft(InventoryItem item)
     {
-        if (_craftList.Count >= 3 || _craftList.Contains(item)) return;
+        var count = _craftList.Count(x => x != null);
+        if (count >= 3 || _craftList.Contains(item)) return;
 
         Debug.Log($"[Craft 호출] {item.itemData.name}");
      
@@ -514,7 +525,7 @@ public class Inventory : Singleton<Inventory>
         HashSet<int> craftItemIds = new HashSet<int>();
         foreach (var item in _craftList)
         {
-            if (item != null)
+            if (item != null && item.itemData != null)
                 craftItemIds.Add(item.GetItemId());
         }
 

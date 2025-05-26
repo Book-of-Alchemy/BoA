@@ -60,6 +60,7 @@ public class UI_Inventory : UIBase
         { EInventoryType.Craft, new[] { Item_Type.Material, } },
         { EInventoryType.Equipment, new[] { Item_Type.Special, } },
     };
+
     public bool IsOpened { get; private set; }
 
     private Color _unActiveColor = Color.gray;
@@ -163,7 +164,12 @@ public class UI_Inventory : UIBase
     public void BookOpened() //Open Animation 이벤트에서 호출
     {
         //열렸다면 모든 하위요소 FadeIn
-        _uiAnimator.FadeIn(()=> ShowRightTool(_showType));
+        _uiAnimator.FadeIn(() =>
+        {
+            ShowRightTool(_showType);
+            Inventory.Instance.RestoreBeforeFilter();
+        });
+
     }
 
     public void BookClosed()
@@ -174,6 +180,7 @@ public class UI_Inventory : UIBase
 
     public void SetInventorySlot(int index, InventoryItem item) //슬롯에 아이템 UI 갱신
     {
+        Debug.Log($"SetInventorySlot({index}, {item.itemData?.name_kr})");
         _slotUIList[index].SetData(item);
     }
 
@@ -237,12 +244,6 @@ public class UI_Inventory : UIBase
             ActiveWindow();
         
         Inventory.Instance.ClearAllHighlights();
-
-        //현재 Type의 값(필터링할 아이템 타입들) 찾아서 인벤토리 필터링
-        if (_typeFilter.TryGetValue(type, out Item_Type[] types))
-            _inventory.FilterAndDisplay(types);
-        else //기본 인벤토리는 필터링 없기때문에 
-            _inventory.RestoreBeforeFilter();
         _isFirstTypeSet = false;
     }
 
@@ -273,7 +274,13 @@ public class UI_Inventory : UIBase
         };
         _commonWindow.SetActive(needsCommon);
 
-        // 추가: Craft 타입일 경우 RecipeWindow 활성화
+        //현재 Type의 값(필터링할 아이템 타입들) 찾아서 인벤토리 필터링
+        if (_typeFilter.TryGetValue(_curType, out Item_Type[] types))
+            _inventory.FilterAndDisplay(types);
+        else //기본 인벤토리는 필터링 없기때문에 
+            _inventory.RestoreBeforeFilter();
+
+        // Craft 타입일 경우 RecipeWindow 활성화
         if (_curType == EInventoryType.Craft)
         {
             _recipeWindow?.SetActive(true);
@@ -287,6 +294,7 @@ public class UI_Inventory : UIBase
     private void OnFliped()// Call At FlipLeft,Right Animation Event
     {
         _uiAnimator.FadeIn();
+        
     }
 
     public void HighlightSlot(int index)

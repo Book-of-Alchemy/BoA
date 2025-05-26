@@ -44,8 +44,7 @@ public abstract class SlotUIBase<T> : MonoBehaviour, IPointerEnterHandler, IPoin
         }
         else
         {
-            if (_data != null)
-                UpdateUI(_data);
+            UpdateUI(_data);
         }
     }
 

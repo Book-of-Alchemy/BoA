@@ -28,13 +28,13 @@ public class InventoryItem : IItemObservable // Inventory에 배열로 존재하
 
     public int DecreaseAmount(int amount = 1) //아이템 제거 0이되면 Null
     {
+        if (Amount <= 0 || amount <= 0) return Amount;
+
         Amount -= amount;
 
-        if(Amount <= 0)
-        {
-            Amount = 0;
+        if(Amount == 0)
             itemData = null;
-        }
+
         OnItemChanged?.Invoke();
         return Amount;
     }
