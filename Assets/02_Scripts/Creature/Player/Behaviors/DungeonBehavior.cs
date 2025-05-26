@@ -46,6 +46,9 @@ public class DungeonBehavior : PlayerBaseBehavior
     // 하이라이트 인스턴스
     private GameObject _highlightInstance;
 
+    // 컨트롤 키로 선택된 방향 저장용
+    private Vector2Int _ctrlSelectedDir;
+
     // 아이템 사용
     private BaseItem _currentItem;
 
@@ -74,7 +77,7 @@ public class DungeonBehavior : PlayerBaseBehavior
         _stats = GetComponent<PlayerStats>();
         _animator = GetComponent<CharacterAnimator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
-
+        Application.targetFrameRate = 60;
         InputManager.Instance.EnableMouseTracking = true;
 
         if (highlightPrefab != null)
@@ -179,7 +182,7 @@ public class DungeonBehavior : PlayerBaseBehavior
             Mathf.RoundToInt(worldPos.x),
             Mathf.RoundToInt(worldPos.y)
         );
-        
+
 
         if (_stats.curLevel != null && !_stats.curLevel.tiles.ContainsKey(gridPos))
         {
@@ -248,7 +251,7 @@ public class DungeonBehavior : PlayerBaseBehavior
             {
                 ExecuteMouseAttack(goalTile);
                 return;
-            }   
+            }
         }
 
         // 이동 처리
@@ -403,7 +406,7 @@ public class DungeonBehavior : PlayerBaseBehavior
             return;
         }
 
-        if (!Controller.isPlayerTurn||
+        if (!Controller.isPlayerTurn ||
             _isMoving)
             return;
 
@@ -423,7 +426,7 @@ public class DungeonBehavior : PlayerBaseBehavior
             return;
 
         _lastMoveDir = dir;
-        
+
         if (dir.x != 0)
             _spriteRenderer.flipX = dir.x < 0;
 
@@ -431,7 +434,7 @@ public class DungeonBehavior : PlayerBaseBehavior
 
         var cur = _stats.CurTile.gridPosition;
         var nxt = cur + dir;
-        
+
         if (!_stats.curLevel.tiles.TryGetValue(nxt, out var tile) ||
             !tile.IsWalkable ||
              tile.CharacterStatsOnTile != null)
@@ -449,7 +452,7 @@ public class DungeonBehavior : PlayerBaseBehavior
         _animator.PlayMove();
 
         transform.DOKill();
-        
+
         // 피격 또는 신규 적 발견 시 즉시 중단
         if (_stats.CurrentHealth < _startHp ||
             HasNewEnemy(_initialEnemiesInSight, GetEnemiesInSight()))
@@ -458,7 +461,7 @@ public class DungeonBehavior : PlayerBaseBehavior
         }
 
         transform
-            .DOMove(new Vector3(nxt.x, nxt.y, 0),1/(Controller.moveSpeed))
+            .DOMove(new Vector3(nxt.x, nxt.y, 0), 1 / (Controller.moveSpeed))
             .SetEase(Ease.Linear)
             .OnComplete(() =>
             {
@@ -512,16 +515,16 @@ public class DungeonBehavior : PlayerBaseBehavior
     private IEnumerator BufferAttack()
     {
         yield return new WaitForSeconds(_inputBufferDuration);
-        
+
         // 공격 실행 직전에 턴 상태 확인
         if (!Controller.isPlayerTurn)
         {
             _attackBuffer = null;
             yield break;
         }
-        
+
         _animator.PlayAttack();
-        
+
         _attackBuffer = null;
     }
     public void OnAttackHit()
@@ -582,6 +585,7 @@ public class DungeonBehavior : PlayerBaseBehavior
             return;
 
         _isCtrlHeld = true;
+        _ctrlSelectedDir = _lastMoveDir; // 현재 방향으로 초기화
 
         if (_highlightInstance == null)
             _highlightInstance = Instantiate(highlightPrefab);
@@ -600,6 +604,13 @@ public class DungeonBehavior : PlayerBaseBehavior
         _isCtrlHeld = false;
         if (_highlightBuffer != null)
             StopCoroutine(_highlightBuffer);
+
+        // 컨트롤을 뗄 때 선택된 방향을 _lastMoveDir에 저장
+        if (_ctrlSelectedDir != Vector2Int.zero)
+        {
+            _lastMoveDir = _ctrlSelectedDir;
+        }
+
         HideHighlight();
     }
 
@@ -609,7 +620,7 @@ public class DungeonBehavior : PlayerBaseBehavior
         {
             yield return BufferInput(dir =>
             {
-                _lastMoveDir = dir;
+                _ctrlSelectedDir = dir;
                 UpdateHighlightPosition();
             });
         }
@@ -619,7 +630,7 @@ public class DungeonBehavior : PlayerBaseBehavior
     private void UpdateHighlightPosition()
     {
         var cur = _stats.CurTile.gridPosition;
-        var tgt = cur + _lastMoveDir;
+        var tgt = cur + _ctrlSelectedDir;
 
         if (!_stats.curLevel.tiles.TryGetValue(tgt, out var tile))
         {
@@ -688,9 +699,9 @@ public class DungeonBehavior : PlayerBaseBehavior
 
         UnsubscribeConInput();
         _currentItem = ItemFactory.Instance.CreateItem(data.id);
-        
+
         if (_currentItem == null) return;
-        
+
         _highlightInstance.SetActive(false);
         _currentItem.ItemUseDone += HandleItemUseDone;
         _currentItem.UseItem(data);
@@ -701,13 +712,13 @@ public class DungeonBehavior : PlayerBaseBehavior
         if (_currentItem == null) return;
 
         _currentItem.ItemUseDone -= HandleItemUseDone;
-        
+
         // 아이템 사용 완료 시에도 턴 상태 확인
         if (Controller.isPlayerTurn)
         {
             Controller.onActionConfirmed?.Invoke();
         }
-        
+
         _currentItem = null;
         InputManager.Instance.EnableMouseTracking = true;
         SubscribeInput();
@@ -840,7 +851,7 @@ public class DungeonBehavior : PlayerBaseBehavior
             return;
         }
 
-        if (_holdMoveCoroutine != null) 
+        if (_holdMoveCoroutine != null)
             return;
 
         _holdMoveCoroutine = StartCoroutine(HoldMoveWithDelay(raw));
@@ -848,9 +859,9 @@ public class DungeonBehavior : PlayerBaseBehavior
 
     private IEnumerator HoldMoveWithDelay(Vector2 initialRaw)
     {
-        float holdTimeRequired = 0.5f;
+        float holdTimeRequired = 0.2f;
         float elapsedTime = 0f;
-        
+
         while (elapsedTime < holdTimeRequired)
         {
             Vector2 currentInput = InputManager.Instance.MoveInput;
@@ -859,44 +870,51 @@ public class DungeonBehavior : PlayerBaseBehavior
                 _holdMoveCoroutine = null;
                 yield break;
             }
-            
+
             bool inputChanged = false;
-            
+
             // x축 방향이 완전히 반대로 바뀌면 취소
-            if ((initialRaw.x > 0 && currentInput.x < 0) || 
+            if ((initialRaw.x > 0 && currentInput.x < 0) ||
                 (initialRaw.x < 0 && currentInput.x > 0))
             {
                 inputChanged = true;
             }
-            
+
             // y축 방향이 완전히 반대로 바뀌면 취소
-            if ((initialRaw.y > 0 && currentInput.y < 0) || 
+            if ((initialRaw.y > 0 && currentInput.y < 0) ||
                 (initialRaw.y < 0 && currentInput.y > 0))
             {
                 inputChanged = true;
             }
-            
+
             if (inputChanged)
             {
                 _holdMoveCoroutine = null;
                 yield break;
             }
-            
+
             elapsedTime += Time.deltaTime;
             yield return null;
         }
-        
-        bool isHoldMoveStarted = false;
-        
-        yield return BufferInput(dir => {
+
+        Vector2 finalInput = InputManager.Instance.MoveInput;
+        if (finalInput != Vector2.zero)
+        {
+            var dir = new Vector2Int(
+                finalInput.x > 0 ? 1 : finalInput.x < 0 ? -1 : 0,
+                finalInput.y > 0 ? 1 : finalInput.y < 0 ? -1 : 0
+            );
+
             if (dir != Vector2Int.zero)
             {
-                isHoldMoveStarted = true;
                 StartCoroutine(HoldMove(dir));
             }
-        });
-        
-        if (!isHoldMoveStarted)
+            else
+            {
+                _holdMoveCoroutine = null;
+            }
+        }
+        else
         {
             _holdMoveCoroutine = null;
         }
@@ -908,8 +926,7 @@ public class DungeonBehavior : PlayerBaseBehavior
 
         while (InputManager.Instance.MoveInput != Vector2.zero)
         {
-            // 턴 상태 확인을 더 엄격하게
-            if (Controller.isPlayerTurn && !_isMoving && _moveBuffer == null)
+            if (!_isMoving && _moveBuffer == null)
             {
                 var cur = _stats.CurTile.gridPosition;
                 var nxt = cur + dir;
@@ -924,10 +941,6 @@ public class DungeonBehavior : PlayerBaseBehavior
 
                 ExecuteMove(dir);
                 yield return new WaitUntil(() => !_isMoving);
-                
-                // 이동 완료 후 턴이 끝났는지 확인
-                if (!Controller.isPlayerTurn)
-                    break;
             }
             yield return null;
         }
