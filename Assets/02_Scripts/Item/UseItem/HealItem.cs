@@ -5,7 +5,10 @@ public class HealItem : BaseItem
 {
     public override void UseItem(ItemData data)
     {
-        if(data.tags.Contains(Tag.HP))
+        Inventory.Instance.RemoveItem(
+    Inventory.Instance.GetItemIndex(itemData.id)
+    );
+        if (data.tags.Contains(Tag.HP))
         {
             GameManager.Instance.PlayerTransform.Heal(data.effect_value);
             FinishUse();

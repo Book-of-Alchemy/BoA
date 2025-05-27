@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DeBuffItem : BaseItem
 {
-private List<Tile> rangeTiles = new List<Tile>();
+    private List<Tile> rangeTiles = new List<Tile>();
     private void UseInit(ItemData data)
     {
         itemData = data;
@@ -27,7 +27,7 @@ private List<Tile> rangeTiles = new List<Tile>();
         if (targetRange == 0)
             checkRangeTiles = TileUtility.GetItemRangedTile(_player.curLevel, _player.CurTile, targetRange, true);
         else if (targetRange == 1)
-            checkRangeTiles = TileUtility.GetNineVisibleTileList(_player.curLevel, _player.CurTile,true);
+            checkRangeTiles = TileUtility.GetNineVisibleTileList(_player.curLevel, _player.CurTile, true);
         else if (targetRange >= 2)
             checkRangeTiles = TileUtility.GetItemRangedTile(_player.curLevel, _player.CurTile, targetRange, true);
         ItemManager.Instance.CreateRange(checkRangeTiles);
@@ -68,6 +68,9 @@ private List<Tile> rangeTiles = new List<Tile>();
         InputManager.Instance.OnMouseMove -= CheckEffectRange; // 마우스 위치에따라 보여주는 매서드 구독해제
         ItemManager.Instance.DestroyItemRange(); // 아이템 사거리 삭제
         ItemManager.Instance.DestroyRange(); // 아이템 효과 범위 삭제
+        Inventory.Instance.RemoveItem(
+    Inventory.Instance.GetItemIndex(itemData.id)
+    );
         Vector2Int mouseWorldPos = Vector2Int.RoundToInt(mouseClickPos);
         _player.curLevel.tiles.TryGetValue(mouseWorldPos, out Tile mouseTile);
 
@@ -89,7 +92,7 @@ private List<Tile> rangeTiles = new List<Tile>();
             {
                 if (itemData.effect_range == 1)
                 {
-                    tiles = TileUtility.GetNineVisibleTileList(_player.curLevel, mouseTile,true);
+                    tiles = TileUtility.GetNineVisibleTileList(_player.curLevel, mouseTile, true);
                 }
                 else
                 {
@@ -99,9 +102,9 @@ private List<Tile> rangeTiles = new List<Tile>();
 
             foreach (Tile tile in tiles)
             {
-                if(tile.CharacterStatsOnTile != null)
+                if (tile.CharacterStatsOnTile != null)
                 {
-                    StatusEffectFactory.CreateEffect(itemData.effect_id,itemData.effect_strength,itemData.effect_duration,10,tile.CharacterStatsOnTile);
+                    StatusEffectFactory.CreateEffect(itemData.effect_id, itemData.effect_strength, itemData.effect_duration, 10, tile.CharacterStatsOnTile);
                 }
             }
             InputManager.Instance.OnMouseClick -= OnClick;
