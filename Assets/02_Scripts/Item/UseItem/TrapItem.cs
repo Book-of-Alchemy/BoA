@@ -79,6 +79,9 @@ public class TrapItem : BaseItem
         InputManager.Instance.OnMouseMove -= CheckEffectRange; // 마우스 위치에따라 보여주는 매서드 구독해제
         ItemManager.Instance.DestroyItemRange(); // 아이템 사거리 삭제
         ItemManager.Instance.DestroyRange(); // 아이템 효과 범위 삭제
+        Inventory.Instance.RemoveItem(
+    Inventory.Instance.GetItemIndex(itemData.id)
+    );
         Vector2Int mouseWorldPos = Vector2Int.RoundToInt(mouseClickPos);
         _player.curLevel.tiles.TryGetValue(mouseWorldPos, out Tile mouseTile);
 

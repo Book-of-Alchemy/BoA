@@ -64,6 +64,9 @@ public class DamageItem : BaseItem
         ItemManager.Instance.DestroyItemRange(); // 아이템 사거리 삭제
         ItemManager.Instance.DestroyRange(); // 아이템 효과 범위 삭제
         InputManager.Instance.OnMouseClick -= OnClick;
+        Inventory.Instance.RemoveItem(
+            Inventory.Instance.GetItemIndex(itemData.id)
+            );
 
         Vector2Int mouseWorldPos = Vector2Int.RoundToInt(mouseClickPos);
         GameManager.Instance.PlayerTransform.curLevel.tiles.TryGetValue(mouseWorldPos, out mouseClickTile);

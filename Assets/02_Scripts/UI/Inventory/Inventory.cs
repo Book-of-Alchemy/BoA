@@ -240,7 +240,7 @@ public class Inventory : Singleton<Inventory>
         return -1;
     }
 
-    private void RemoveItem(int index, int amount = 1)
+    public void RemoveItem(int index, int amount = 1)
     {
         if (items[index] == null) return;
 

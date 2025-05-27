@@ -46,13 +46,13 @@ public class EnemyStats : CharacterStats, IPoolableId
         {
             return;
         }
+        base.Die();
         isDead = true; // 사망 처리 시작
         OnDead?.Invoke();
         MonsterEvents.RaiseKill(id);
 
         TryDropItem();
         GiveExpToPlayer();
-        _anim.PlayDeath();
         if (CurTile != null)
         {
             CurTile.CharacterStatsOnTile = null;

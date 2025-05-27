@@ -8,6 +8,7 @@ public class LavaTile : TileEffect, IGround,IWater
         {
             var target = CurTile.CharacterStatsOnTile;
             DamageInfo damage = new DamageInfo(target.MaxHealth * 0.1f,DamageType.Fire ,null, target);
+            target.TakeDamage(damage);
             TileRuleProccessor.ProcessTileReactions(damage, CurTile);
         }
 
