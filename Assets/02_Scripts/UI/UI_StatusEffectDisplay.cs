@@ -6,8 +6,6 @@ public class UI_StatusEffectDisplay : MonoBehaviour
     [SerializeField] private CharacterStats targetStats; // 표시할 대상(보통 플레이어)
     [SerializeField] private GameObject statusEffectIconPrefab; // 상태 효과 아이콘 프리팹
     [SerializeField] private Transform iconsContainer; // 아이콘들을 담을 컨테이너
-    [SerializeField] private float iconSpacing = 5f; // 아이콘 간격
-    [SerializeField] private int maxIconsPerRow = 6; // 한 줄에 표시할 최대 아이콘 수
     
     private Dictionary<StatusEffect, UI_StatusEffectIcon> activeIconDictionary = new Dictionary<StatusEffect, UI_StatusEffectIcon>();
     
@@ -107,9 +105,6 @@ public class UI_StatusEffectDisplay : MonoBehaviour
                 activeIconDictionary[effect].UpdateIcon();
             }
         }
-        
-        // 아이콘 배치 재조정
-        ArrangeIcons();
     }
     
     // 새 상태 효과 아이콘 추가
@@ -131,28 +126,6 @@ public class UI_StatusEffectDisplay : MonoBehaviour
         {
             Destroy(icon.gameObject);
             activeIconDictionary.Remove(effect);
-        }
-    }
-    
-    // 아이콘들을 그리드 형태로 정렬
-    private void ArrangeIcons()
-    {
-        int index = 0;
-        foreach (var icon in activeIconDictionary.Values)
-        {
-            int row = index / maxIconsPerRow;
-            int col = index % maxIconsPerRow;
-            
-            RectTransform rectTransform = icon.GetComponent<RectTransform>();
-            float iconWidth = rectTransform.rect.width;
-            float iconHeight = rectTransform.rect.height;
-            
-            rectTransform.anchoredPosition = new Vector2(
-                col * (iconWidth + iconSpacing),
-                -row * (iconHeight + iconSpacing)
-            );
-            
-            index++;
         }
     }
 } 

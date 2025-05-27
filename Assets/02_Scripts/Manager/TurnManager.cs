@@ -2,9 +2,198 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Threading.Tasks;
+using UnityEditor.PackageManager.Requests;
 
 public class TurnManager : Singleton<TurnManager>
 {
+    public List<UnitBase> allUnits = new List<UnitBase>();
+    public List<TileEffect> allTileEffects = new List<TileEffect>();
+    private HashSet<int> unitIds = new HashSet<int>();
+    private bool _stopRequested = false;
+    public event Action OnGlobalTimeChanged;
+
+    [SerializeField] private int _globalTime = 0;
+    public int globalTime
+    {
+        get => _globalTime;
+        private set
+        {
+            _globalTime = value;
+            OnGlobalTimeChanged?.Invoke();
+        }
+    }
+
+    public float turnSpeed = 10;
+    [SerializeField] private float originSpeed = 10;
+
+    [SerializeField] private UnitBase curUnit;
+
+    public async void StartTurnCycle()
+    {
+        _stopRequested = false;
+        AddUnit(GameManager.Instance.PlayerTransform.GetComponent<PlayerUnit>());
+
+        while (allUnits.Count > 0 && _stopRequested == false)
+        {
+            CleanupUnits();
+            ProcessEffects();
+            ProccessUnitStatus();
+            foreach (var unit in allUnits.ToArray())
+            {
+                if (_stopRequested == true)
+                    return;
+
+                if (unit == null || !unit.gameObject.activeSelf)
+                    continue;
+
+                if (unit.NextActionTime <= globalTime)
+                {
+                    curUnit = unit;
+
+                    if (!unit.IsPlayer && unit.CurTile != null && !unit.CurTile.IsOnSight)
+                        turnSpeed = 200;
+
+                    unit.StartTurn();
+
+                    if (unit is PlayerUnit player)
+                    {
+                        while (unit.ActionInProgress && _stopRequested == false)
+                        { 
+                            await Task.Yield();
+                        }
+                    }
+                    else
+                    {
+                        while (unit.ActionInProgress && unit != null && unit.gameObject.activeSelf && unit.ActionInProgress && _stopRequested == false)
+                            await Task.Delay(5); // 10ms 대기
+                    }
+
+                    unit.NextActionTime += unit.GetModifiedActionCost();
+                    turnSpeed = originSpeed;
+
+                    if (unit.IsPlayer)
+                        UpdateAllUnitVisual();
+                }
+            }
+
+            UpdateAllUnitVisual();
+            globalTime++;
+        }
+    }
+
+    public void StopTurnCycle()
+    {
+        _stopRequested = true;
+    }
+
+    void CleanupUnits()
+    {
+        for (int i = allUnits.Count - 1; i >= 0; i--)
+        {
+            if (allUnits[i] == null || !allUnits[i].gameObject.activeInHierarchy)
+                allUnits.RemoveAt(i);
+        }
+    }
+    public void RemoveAllEnemy()
+    {
+        foreach (var unit in allUnits.ToArray())
+        {
+            if (unit.IsPlayer) continue;
+            unitIds.Remove(unit.GetInstanceID());
+            allUnits.Remove(unit);
+        }
+    }
+    void ProccessUnitStatus()
+    {
+        foreach (var unit in allUnits.ToArray())
+        {
+            if (unit == null) continue;// null 체크
+            if (!unit.gameObject.activeSelf)
+            {
+                RemoveUnit(unit);
+                continue;
+            }
+            unit.Stats?.TickEffects(globalTime);
+            if (unit is EnemyUnit enemyUnit)
+                enemyUnit.UpdateVisual();
+        }
+    }
+    void ProcessEffects()
+    {
+        foreach (var effect in allTileEffects.ToArray())
+        {
+            if (effect == null || !effect.gameObject.activeSelf)
+            {
+                RemoveTileEffectt(effect);
+                continue;
+            }
+
+            if (effect.NextActionTime <= globalTime)
+            {
+                effect.StartTurn();
+                effect.NextActionTime += effect.ActionCost;
+                effect.OnTurnEnd();
+            }
+        }
+    }
+
+    void UpdateAllUnitVisual()
+    {
+        foreach (var unit in allUnits)
+        {
+            if (unit == null) continue;
+            if (unit is EnemyUnit enemy)
+                enemy.UpdateVisual();
+        }
+    }
+
+    public void AddUnit(UnitBase unit)
+    {
+        if (unitIds.Add(unit.GetInstanceID()))
+        {
+            allUnits.Add(unit);
+            unit.Init();
+        }
+    }
+
+    public void RemoveUnit(UnitBase unit)
+    {
+        unitIds.Remove(unit.GetInstanceID());
+        allUnits.Remove(unit);
+    }
+
+    public void AddTileEffect(TileEffect effect)
+    {
+        if (unitIds.Add(effect.GetInstanceID()))
+            allTileEffects.Add(effect);
+    }
+
+    public void RemoveTileEffectt(TileEffect effect)
+    {
+        unitIds.Remove(effect.GetInstanceID());
+        allTileEffects.Remove(effect);
+    }
+
+    public void ResetManager()
+    {
+        StopAllCoroutines();
+
+        foreach (var unit in allUnits)
+            if (unit != null)
+                Destroy(unit.gameObject);
+
+        foreach (var effect in allTileEffects)
+            if (effect != null)
+                Destroy(effect.gameObject);
+
+        allUnits.Clear();
+        allTileEffects.Clear();
+        unitIds.Clear();
+        _globalTime = 0;
+    }
+}
+/*{
     public List<UnitBase> allUnits = new List<UnitBase>();
     public List<TileEffect> allTileEffects = new List<TileEffect>();
     HashSet<int> unitIds = new HashSet<int>();
@@ -70,30 +259,43 @@ public class TurnManager : Singleton<TurnManager>
             }
             //allUnits.RemoveAll(u => u == null || !u.gameObject.activeInHierarchy);
 
-            allUnits.Sort((a, b) => ComparePlayer(a, b));
+            //allUnits.Sort((a, b) => ComparePlayer(a, b));
 
             // 버프/디버프 처리 + visual 처리
-            foreach (var unit in allUnits.ToArray())
+            for (int i = 0; i < allUnits.Count; i++)
             {
-                if (unit == null) continue;// null 체크
-                if (!unit.gameObject.activeSelf)
+                var unit = allUnits[i];
+                if (unit == null || !unit.gameObject.activeSelf)
                 {
                     RemoveUnit(unit);
                     continue;
                 }
+
                 unit.Stats?.TickEffects(globalTime);
                 if (unit is EnemyUnit enemyUnit)
                     enemyUnit.UpdateVisual();
             }
-
-            foreach (var effect in allTileEffects.ToArray())
+            //foreach (var unit in allUnits.ToArray())
+            //{
+            //    if (unit == null) continue;// null 체크
+            //    if (!unit.gameObject.activeSelf)
+            //    {
+            //        RemoveUnit(unit);
+            //        continue;
+            //    }
+            //    unit.Stats?.TickEffects(globalTime);
+            //    if (unit is EnemyUnit enemyUnit)
+            //        enemyUnit.UpdateVisual();
+            //}
+            for (int i = 0; i < allTileEffects.Count; i++)
             {
-                if (effect == null) continue;
-                if (!effect.gameObject.activeSelf)
+                var effect = allTileEffects[i];
+                if (effect == null || !effect.gameObject.activeSelf)
                 {
                     RemoveTileEffectt(effect);
                     continue;
                 }
+
                 if (effect.NextActionTime <= globalTime)
                 {
                     effect.StartTurn();
@@ -101,6 +303,21 @@ public class TurnManager : Singleton<TurnManager>
                     effect.OnTurnEnd();
                 }
             }
+            //foreach (var effect in allTileEffects.ToArray())
+            //{
+            //    if (effect == null) continue;
+            //    if (!effect.gameObject.activeSelf)
+            //    {
+            //        RemoveTileEffectt(effect);
+            //        continue;
+            //    }
+            //    if (effect.NextActionTime <= globalTime)
+            //    {
+            //        effect.StartTurn();
+            //        effect.NextActionTime += effect.ActionCost;
+            //        effect.OnTurnEnd();
+            //    }
+            //}
 
             // 실제 턴 처리
             foreach (var unit in allUnits.ToArray())
@@ -180,7 +397,8 @@ public class TurnManager : Singleton<TurnManager>
         unitIds.Remove(unit.GetInstanceID());
         allUnits.Remove(unit);
     }
-
+    public void StopTurnCycle() { 
+    }
     public void RemoveAllEnemy()
     {
         foreach (var unit in allUnits.ToArray())
@@ -230,4 +448,4 @@ public class TurnManager : Singleton<TurnManager>
 
         _globalTime = 0;
     }
-}
+}*/

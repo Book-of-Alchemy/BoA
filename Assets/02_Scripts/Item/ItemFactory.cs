@@ -193,7 +193,7 @@ public class ItemFactory : Singleton<ItemFactory>
             _ => go.AddComponent<MaterialItem>()
         };
         item.DropItem(data, quantity, targetTile);
-        item.spriteRenderer.sortingOrder = -8000;
+        item.spriteRenderer.sortingOrder = - 10 * targetTile.gridPosition.y -1;
         item.transform.SetParent(targetTile.curLevel.transform);
 
         return item;
@@ -217,7 +217,7 @@ public class ItemFactory : Singleton<ItemFactory>
             _ => go.AddComponent<MaterialItem>()
         };
         item.DropItem(data, quantity, targetTile);
-        item.spriteRenderer.sortingOrder = -8000;
+        item.spriteRenderer.sortingOrder = -10 * targetTile.gridPosition.y - 1; ;
         item.transform.SetParent(targetTile.curLevel.transform);
 
         return item;
