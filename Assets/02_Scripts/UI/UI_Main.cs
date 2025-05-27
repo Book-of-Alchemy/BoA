@@ -7,7 +7,7 @@ public class UI_Main : UIBase
     [SerializeField] private Button[] _menuBtn;
 
     public override bool IsClosable => false;
-
+    private QuestData _currentQuest;
     private void Start()
     {
         _menuBtn[0].Select();
@@ -32,7 +32,22 @@ public class UI_Main : UIBase
 
     public void OnClickLoadGame()
     {
-        GameSceneManager.Instance.ChangeScene(SceneType.Town);
+        if(DataManager.Instance == null)
+        {
+            if (QuestManager.Instance != null && QuestManager.Instance.AcceptedQuest != null)
+            {
+                int questId = QuestManager.Instance.AcceptedQuest.Data.id;
+                DataManager.Instance.GetPlayerData().AcceptedQuests.Clear();
+                QuestManager.Instance.AcceptedQuest = null;
+                DataManager.Instance.SaveData();
+            }
+            GameSceneManager.Instance.ChangeScene(SceneType.Town);
+        }
+        else
+        {
+            UIManager.ShowOnce<UI_Text>("저장 데이터가 없습니다.");
+        }
+        
     }
 
     public void OnClickSetting()
