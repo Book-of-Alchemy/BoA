@@ -179,7 +179,6 @@ public class UI_Inventory : UIBase
 
     public void SetInventorySlot(int index, InventoryItem item) //슬롯에 아이템 UI 갱신
     {
-        Debug.Log($"SetInventorySlot({index}, {item.itemData?.name_kr})");
         _slotUIList[index].SetData(item);
     }
 

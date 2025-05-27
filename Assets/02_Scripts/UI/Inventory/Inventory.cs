@@ -252,8 +252,8 @@ public class Inventory : Singleton<Inventory>
                 items[index] = null;
                 _uiInventory.RemoveItem(index);
             }
-            else
-                _uiInventory.ReduceItem(index,amount);
+            //else
+            //    _uiInventory.ReduceItem(index,amount);
 
         }
     }
@@ -448,7 +448,6 @@ public class Inventory : Singleton<Inventory>
         var controller = GameManager.Instance.PlayerTransform.GetComponent<DungeonBehavior>();
         controller.UseItem(item.itemData);
 
-        RemoveItem(index);
         UIManager.Hide<UI_Action>();
         UIManager.Hide<UI_ItemTooltip>();
         UIManager.Hide<UI_Inventory>();
