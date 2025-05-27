@@ -20,13 +20,13 @@ public class SODataManager : Singleton<SODataManager>
     protected override void Awake()
     {
         base.Awake();
-        tileDataBase.Arrange();
-        enemyDataBase.Arrange();
-        itemDataBase.Arrange();
-        StatusEffectDataBase.Arrange();
-        ArtifactDataBase.Arrange();
-        environmentalDataBase.Arrange();
-        envRuleDataBase.Arrange();
+        //tileDataBase.Arrange();
+        //enemyDataBase.Arrange();
+        //itemDataBase.Arrange();
+        //StatusEffectDataBase.Arrange();
+        //ArtifactDataBase.Arrange();
+        //environmentalDataBase.Arrange();
+        //envRuleDataBase.Arrange();
     }
     public QuestDataBase GetQuestDataBase()
     {

@@ -10,7 +10,7 @@ public class PlayerStats : CharacterStats
     public bool isEasyInstallationKit = false;
     public bool isMarksman = false;
     public bool isPrecisionAim = false;
-
+    private bool isDead = false;
     //다음레벨까지 필요한 경험치(내부 계산용)
     private int _nextLevelExp => Mathf.FloorToInt(10f * Mathf.Pow(level, 1.5f));
     //다음레벨까지 필요한 경험치(읽기 전용)
@@ -74,9 +74,14 @@ public class PlayerStats : CharacterStats
 
     public override void Die()
     {
+        if (isDead)
+        {
+            return;
+        }
+        isDead = true;
         base.Die();
         UIManager.Show<UI_DungeonResult>();
-        
+        TurnManager.Instance.StopTurnCycle();
         _player.OnDisable();
     }
 

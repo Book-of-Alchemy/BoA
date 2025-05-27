@@ -69,7 +69,7 @@ public class EnemyStats : CharacterStats, IPoolableId
     }
     IEnumerator DelayedReturn()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1f);
 
         EnemyFactory.Instance.enemyPool.ReturnToPool(this);
     }
