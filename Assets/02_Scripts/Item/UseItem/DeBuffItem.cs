@@ -76,6 +76,7 @@ public class DeBuffItem : BaseItem
 
         if (rangeTiles.Contains(mouseTile))
         {
+            FinishUse();
             List<Tile> tiles = new List<Tile>();
             if (itemData.target_range == 0)
             {
@@ -108,7 +109,7 @@ public class DeBuffItem : BaseItem
                 }
             }
             InputManager.Instance.OnMouseClick -= OnClick;
-            FinishUse();
+            
             Destroy(this.gameObject, 0.1f);
         }
     }
