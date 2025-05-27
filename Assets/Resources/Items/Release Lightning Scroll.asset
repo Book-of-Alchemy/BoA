@@ -17,8 +17,8 @@ MonoBehaviour:
   name_kr: "\uBC88\uAC1C \uBC29\uCD9C \uC2A4\uD06C\uB864"
   item_type: 0
   attribute: 4
-  target_range: 0
-  effect_range: 4
+  target_range: 4
+  effect_range: 0
   effect_type: 0
   tag: 
   tags: 010000000d00000009000000
