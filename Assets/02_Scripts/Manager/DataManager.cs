@@ -54,6 +54,11 @@ public class DataManager : Singleton<DataManager>
         }
     }
     
+    public bool HasSaveData()
+    {
+        return File.Exists(savePath);
+    }
+    
     public void ResetData()
     {
         if (File.Exists(savePath))
@@ -62,8 +67,6 @@ public class DataManager : Singleton<DataManager>
         }
         
         playerData = new PlayerData();
-        
-        SaveData();
         
         if (Inventory.HasInstance && Inventory.Instance != null)
         {

@@ -6,31 +6,38 @@ public class InventoryItem : IItemObservable // Inventory에 배열로 존재하
     //아이템의 고유 ID 인덱스와 아이템의id와는 별개로
     public int Amount { get; private set; }
     public ItemData itemData { get; private set; }
-    public bool IsEmpty => itemData == null || Amount <= 0;
+    public bool IsEmpty => Amount <= 0;
 
     public event Action OnItemChanged;
 
     public void AddItem(ItemData data, int amount = 1)
     {
+        if (amount <= 0) return;
+
         //itemData가 비어있다면 아이템 추가
         if (itemData == null)
-            itemData = data;
-
-        //아이템 id가 같을때만 수량증가
-        if (itemData.id == data.id)
         {
-            Amount += amount;
+            itemData = data;
+            Amount = amount;
             OnItemChanged?.Invoke();
+            return;
         }
+
+        if (itemData.id != data.id) return;
+        
+        //아이템 id가 같을때만 수량증가
+        Amount += amount;
+        OnItemChanged?.Invoke();
+        
     }
 
     public int DecreaseAmount(int amount = 1) //아이템 제거 0이되면 Null
     {
         if (Amount <= 0 || amount <= 0) return Amount;
 
-        Amount -= amount;
+        Amount = Mathf.Max(0, Amount - amount);
 
-        if(Amount == 0)
+        if (Amount == 0)
             itemData = null;
 
         OnItemChanged?.Invoke();

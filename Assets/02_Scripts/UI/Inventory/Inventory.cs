@@ -252,8 +252,8 @@ public class Inventory : Singleton<Inventory>
                 items[index] = null;
                 _uiInventory.RemoveItem(index);
             }
-            else
-                _uiInventory.ReduceItem(index,amount);
+            //else
+            //    _uiInventory.ReduceItem(index,amount);
 
         }
     }
