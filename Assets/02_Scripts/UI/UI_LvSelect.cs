@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UI_LvSelect : UIBase
 {
@@ -12,6 +13,7 @@ public class UI_LvSelect : UIBase
     [SerializeField] private List<ArtifactPanelUI> _panels;
 
     public override bool IsClosable => false;
+    private bool _isSelected = false;
 
     public override void HideDirect()
     {
@@ -21,7 +23,7 @@ public class UI_LvSelect : UIBase
     public override void Opened(params object[] param)
     {
         ArtifactData[] data = ArtifactFactory.RandomArtifacts();
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < _panels.Count; i++)
         {
             _panels[i].SetData(data[i], OnArtifactSelected);
             _panels[i].OnBtnSelected += MoveSelectorTo;
@@ -37,8 +39,10 @@ public class UI_LvSelect : UIBase
 
     private void OnArtifactSelected(ArtifactData data) //아티팩트가 선택되면 호출
     {
+        if (_isSelected) return;
         //아티팩트 획득 및 UI FadeOut
         ArtifactFactory.EquipArtifact(data.id);
+        _isSelected = true;
         _uiAnimator.FadeOut(OnFadeOut);
     }
 
