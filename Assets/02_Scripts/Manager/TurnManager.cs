@@ -397,7 +397,8 @@ public class TurnManager : Singleton<TurnManager>
         unitIds.Remove(unit.GetInstanceID());
         allUnits.Remove(unit);
     }
-
+    public void StopTurnCycle() { 
+    }
     public void RemoveAllEnemy()
     {
         foreach (var unit in allUnits.ToArray())
