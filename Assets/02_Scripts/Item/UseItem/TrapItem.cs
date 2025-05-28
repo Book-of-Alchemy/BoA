@@ -101,6 +101,7 @@ public class TrapItem : BaseItem
             if (dungeonBehavior != null)
             {
                 dungeonBehavior.SSubscribeInput();
+                dungeonBehavior.CancelItemUse();
             }
         }
     }

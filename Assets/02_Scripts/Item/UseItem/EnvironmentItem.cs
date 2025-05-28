@@ -182,6 +182,7 @@ public class EnvironmentItem : BaseItem
             if (dungeonBehavior != null)
             {
                 dungeonBehavior.SSubscribeInput();
+                dungeonBehavior.CancelItemUse();
             }
         }
     }

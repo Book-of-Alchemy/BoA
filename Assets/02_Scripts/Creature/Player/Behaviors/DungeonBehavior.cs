@@ -51,10 +51,11 @@ public class DungeonBehavior : PlayerBaseBehavior
 
     // 아이템 사용
     private BaseItem _currentItem;
+    private bool _isItemUsing = false;
 
     // 마우스 경로 이동 시 시간 조절용 필드
-    private float _savedMouseTimeScale;
-    private float _savedMouseTurnSpeed;
+    //private float _savedMouseTimeScale;
+    //private float _savedMouseTurnSpeed;
 
     //UI가 열려있는지 체크
     private bool IsUIOpen()
@@ -77,7 +78,6 @@ public class DungeonBehavior : PlayerBaseBehavior
         _stats = GetComponent<PlayerStats>();
         _animator = GetComponent<CharacterAnimator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        Application.targetFrameRate = 60;
         InputManager.Instance.EnableMouseTracking = true;
 
         if (highlightPrefab != null)
@@ -692,6 +692,8 @@ public class DungeonBehavior : PlayerBaseBehavior
     {
         if (!Controller.isPlayerTurn) return;
 
+        if (_isItemUsing) return;
+
         if (_isMouseMove)
         {
             StopMousePathMovement();
@@ -705,12 +707,14 @@ public class DungeonBehavior : PlayerBaseBehavior
         _highlightInstance.SetActive(false);
         _currentItem.ItemUseDone += HandleItemUseDone;
         _currentItem.UseItem(data);
+        _isItemUsing = true;
     }
 
     private void HandleItemUseDone()
     {
         if (_currentItem == null) return;
 
+        _isItemUsing = false;
         _currentItem.ItemUseDone -= HandleItemUseDone;
 
         // 아이템 사용 완료 시에도 턴 상태 확인
@@ -734,6 +738,7 @@ public class DungeonBehavior : PlayerBaseBehavior
 
             _currentItem.CancelUse();
             _currentItem = null;
+            _isItemUsing = false;
             //SubscribeInput();
             return;
         }
@@ -758,7 +763,10 @@ public class DungeonBehavior : PlayerBaseBehavior
         // 반복 이동 취소
         StopHoldMove();
     }
-
+    public void CancelItemUse()
+    {
+        _isItemUsing = false;
+    }
     // ──────────── 메뉴 키(Tab) ────────────
     private void HandleMenu()
     {

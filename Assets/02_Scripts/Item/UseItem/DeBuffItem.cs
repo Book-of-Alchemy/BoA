@@ -139,6 +139,7 @@ public class DeBuffItem : BaseItem
             if (dungeonBehavior != null)
             {
                 dungeonBehavior.SSubscribeInput();
+                dungeonBehavior.CancelItemUse();
             }
         }
     }
