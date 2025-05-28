@@ -862,6 +862,10 @@ public class DungeonBehavior : PlayerBaseBehavior
         float holdTimeRequired = 0.2f;
         float elapsedTime = 0f;
 
+        // 적 검사 초기화
+        _startHp = _stats.CurrentHealth;
+        _initialEnemiesInSight = new HashSet<CharacterStats>(GetEnemiesInSight());
+
         while (elapsedTime < holdTimeRequired)
         {
             Vector2 currentInput = InputManager.Instance.MoveInput;
@@ -926,6 +930,12 @@ public class DungeonBehavior : PlayerBaseBehavior
 
         while (InputManager.Instance.MoveInput != Vector2.zero)
         {
+            if (_stats.CurrentHealth < _startHp ||
+                HasNewEnemy(_initialEnemiesInSight, GetEnemiesInSight()))
+            {
+                break;
+            }
+
             if (!_isMoving && _moveBuffer == null)
             {
                 var cur = _stats.CurTile.gridPosition;
