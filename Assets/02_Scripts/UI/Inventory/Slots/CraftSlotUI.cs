@@ -41,7 +41,7 @@ public class CraftSlotUI : InventorySlotUI
             return;
         }
 
-        Debug.Log($" 제거 시도 - {_data?.itemData?.name_kr} / {_data?.GetItemId()}");
+        
         Inventory.Instance.RemoveCraftTable(_data);
         RemoveData();
     }

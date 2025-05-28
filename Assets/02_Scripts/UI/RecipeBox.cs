@@ -14,8 +14,8 @@ public class RecipeBox : MonoBehaviour
     public void SetRecipe(RecipeData recipeData)
     {
         // 재료 1, 2 설정
-        ApplyMaterialImage(recipeData.material_1_item_id, _materialImage1);
-        ApplyMaterialImage(recipeData.material_2_item_id, _materialImage2);
+        ApplyImage(recipeData.material_1_item_id, _materialImage1);
+        ApplyImage(recipeData.material_2_item_id, _materialImage2);
 
         // 재료 3 존재 여부
         bool hasThird = recipeData.material_3_item_id != _invalidId;
@@ -23,13 +23,13 @@ public class RecipeBox : MonoBehaviour
         _plusImage2.gameObject.SetActive(hasThird);
 
         if (hasThird)
-            ApplyMaterialImage(recipeData.material_3_item_id, _materialImage3);
+            ApplyImage(recipeData.material_3_item_id, _materialImage3);
 
         // 결과 아이템 설정
-        ApplyResultImage(recipeData.output_item_id, _resultImage);
+        ApplyImage(recipeData.output_item_id, _resultImage);
     }
 
-    private void ApplyMaterialImage(int itemId, Image imageTarget)
+    private void ApplyImage(int itemId, Image imageTarget)
     {
         var data = SODataManager.Instance.itemDataBase.GetItemDataById(itemId);
         if (data != null && data.sprite != null)
@@ -42,20 +42,12 @@ public class RecipeBox : MonoBehaviour
             imageTarget.sprite = null;
             imageTarget.color = Color.clear;
         }
+
+        var tooltip = imageTarget.GetComponent<TooltipHandler>();
+        if (tooltip != null)
+        {
+            tooltip.SetItemId(itemId);
+        }
     }
 
-    private void ApplyResultImage(int itemId, Image imageTarget)
-    {
-        var data = SODataManager.Instance.itemDataBase.GetItemDataById(itemId);
-        if (data != null && data.sprite != null)
-        {
-            imageTarget.sprite = data.sprite;
-            imageTarget.color = Color.white;
-        }
-        else
-        {
-            imageTarget.sprite = null;
-            imageTarget.color = Color.clear;
-        }
-    }
 }

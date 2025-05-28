@@ -430,7 +430,6 @@ public class Inventory : Singleton<Inventory>
         if (_craftList.Count < 2)
             _craftTool.ClearPreviewSlot();
 
-        Debug.Log($"[CRAFT LIST 상태 확인]");
         for (int i = 0; i < _craftList.Count; i++)
         {
             var craft = _craftList[i];
