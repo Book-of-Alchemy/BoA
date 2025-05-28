@@ -11,6 +11,9 @@ public class CameraController : Singleton<CameraController>
     [SerializeField] private float minZoom = 5f;
     [SerializeField] private float maxZoom = 20f;
 
+    [Header("흔들림 소스")]
+    [SerializeField] private CinemachineImpulseSource _source;
+
     private CinemachineVirtualCamera vcam;
     private CinemachineFramingTransposer transposer;
     private Vector2 lastMouseScreenPos;
@@ -119,5 +122,9 @@ public class CameraController : Singleton<CameraController>
     public void RestoreCameraState()
     {
         transposer.m_TrackedObjectOffset = initialOffset;
+    }
+    public void DoImpulse()
+    {
+        _source.GenerateImpulse();
     }
 }

@@ -87,15 +87,14 @@ public class EnvironmentItem : BaseItem
         ItemManager.Instance.DestroyItemRange(); // 아이템 사거리 삭제
         ItemManager.Instance.DestroyRange(); // 아이템 효과 범위 삭제
         InputManager.Instance.OnMouseClick -= OnClick;
-        Inventory.Instance.RemoveItem(
-    Inventory.Instance.GetItemIndex(itemData.id)
-    );
+        
 
         Vector2Int mouseWorldPos = Vector2Int.RoundToInt(mouseClickPos);
         _player.curLevel.tiles.TryGetValue(mouseWorldPos, out Tile mouseTile);
 
         if (rangeTiles.Contains(mouseTile))
         {
+            Inventory.Instance.RemoveItem(Inventory.Instance.GetItemIndex(itemData.id));
             List<Tile> tiles = TileUtility.GetLineTile(_player.curLevel, _player.CurTile, mouseTile);
             Tile targetTile = mouseTile;
             foreach (Tile objectTile in tiles)
@@ -125,7 +124,7 @@ public class EnvironmentItem : BaseItem
         else
         {
             CancelUse();
-            SubscribeInput();
+            //SubscribeInput();
         }
     }
 
@@ -183,6 +182,7 @@ public class EnvironmentItem : BaseItem
             if (dungeonBehavior != null)
             {
                 dungeonBehavior.SSubscribeInput();
+                dungeonBehavior.CancelItemUse();
             }
         }
     }

@@ -12,7 +12,7 @@ public class Slowed : Debuff
     {
         this.data = data;
         this.value = value;
-        this.remainingTime = remainingTime;
+        this.remainingTime = value * 3;
         this.tickInterval = tickInterval;
     }
 
@@ -21,7 +21,8 @@ public class Slowed : Debuff
         base.OnApply(target);
         if (!shouldRegister) return;
         unit = target.unitBase;
-        unit.NextActionTime += value;
+        if (target is EnemyStats)
+            unit.NextActionTime += value;
         modifier = new StatModifier("Slowed", value, ModifierType.Flat);
         unit.ActionCostStat.AddModifier(modifier);
     }

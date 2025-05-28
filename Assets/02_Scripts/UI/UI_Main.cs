@@ -16,23 +16,28 @@ public class UI_Main : UIBase
     public void OnClickNewGame()
     {
         // 데이터 초기화
-        if (DataManager.HasInstance && DataManager.Instance != null)
+        if (DataManager.HasInstance && DataManager.Instance != null&& QuestManager.Instance.AcceptedQuest != null)
+        {
+            int questId = QuestManager.Instance.AcceptedQuest.Data.id;
+            QuestManager.Instance.AcceptedQuest = null;
+            DataManager.Instance.ResetData();
+        }
+        else
         {
             DataManager.Instance.ResetData();
         }
-        
-        //// 시설 데이터 초기화
-        //if (FacilityManager.HasInstance && FacilityManager.Instance != null)
-        //{
-        //    FacilityManager.Instance.ResetFacilityData();
-        //}
+            //// 시설 데이터 초기화
+            //if (FacilityManager.HasInstance && FacilityManager.Instance != null)
+            //{
+            //    FacilityManager.Instance.ResetFacilityData();
+            //}
 
-        GameSceneManager.Instance.ChangeScene(SceneType.Town);
+            GameSceneManager.Instance.ChangeScene(SceneType.Town);
     }
 
     public void OnClickLoadGame()
     {
-        if(DataManager.Instance == null)
+        if(DataManager.Instance.HasSaveData())
         {
             if (QuestManager.Instance != null && QuestManager.Instance.AcceptedQuest != null)
             {

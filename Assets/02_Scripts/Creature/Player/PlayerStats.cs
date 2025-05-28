@@ -114,4 +114,10 @@ public class PlayerStats : CharacterStats
         }
 
     }
+
+    public override void TakeDamage(DamageInfo damageInfo)
+    {
+        base.TakeDamage(damageInfo);
+        CameraController.Instance.DoImpulse();
+    }
 }

@@ -6,7 +6,7 @@ public class HealItem : BaseItem
     public override void UseItem(ItemData data)
     {
         Inventory.Instance.RemoveItem(
-    Inventory.Instance.GetItemIndex(itemData.id)
+    Inventory.Instance.GetItemIndex(data.id)
     );
         if (data.tags.Contains(Tag.HP))
         {
