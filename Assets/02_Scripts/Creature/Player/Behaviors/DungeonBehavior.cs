@@ -51,7 +51,7 @@ public class DungeonBehavior : PlayerBaseBehavior
 
     // 아이템 사용
     private BaseItem _currentItem;
-    private bool _isItemUsing = false;
+    [SerializeField] private bool _isItemUsing = false;
 
     // 마우스 경로 이동 시 시간 조절용 필드
     //private float _savedMouseTimeScale;
@@ -707,7 +707,6 @@ public class DungeonBehavior : PlayerBaseBehavior
         _highlightInstance.SetActive(false);
         _currentItem.ItemUseDone += HandleItemUseDone;
         _currentItem.UseItem(data);
-        _isItemUsing = true;
     }
 
     private void HandleItemUseDone()
@@ -767,6 +766,11 @@ public class DungeonBehavior : PlayerBaseBehavior
     {
         _isItemUsing = false;
     }
+    public void DuplicationlItemUse()
+    {
+        _isItemUsing = true;
+    }
+
     // ──────────── 메뉴 키(Tab) ────────────
     private void HandleMenu()
     {

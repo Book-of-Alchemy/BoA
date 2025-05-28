@@ -13,6 +13,7 @@ public class TrapItem : BaseItem
     public override void UseItem(ItemData data)
     {
         UseInit(data);
+        dungeonBehavior.DuplicationlItemUse();
         rangeTiles = CheckRange(data);
         InputManager.Instance.OnMouseMove += CheckEffectRange;
         InputManager.Instance.OnMouseClick += OnClick;
@@ -94,10 +95,8 @@ public class TrapItem : BaseItem
     }
     public void SubscribeInput()
     {
-        var player = GameManager.Instance.PlayerTransform;
-        if (player != null)
+        if (_player != null)
         {
-            var dungeonBehavior = player.GetComponent<DungeonBehavior>();
             if (dungeonBehavior != null)
             {
                 dungeonBehavior.SSubscribeInput();
