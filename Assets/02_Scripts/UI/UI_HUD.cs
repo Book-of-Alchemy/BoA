@@ -32,12 +32,17 @@ public class UI_HUD : UIBase
     {
         UIManager.Hide<UI_HUD>();
         QuestManager.Instance.OnQuestAccepted -= UpdateQuestTxt;
+        Inventory.Instance.OnGoldChanged -= UpdateGoldUI;
+        TileManger.OnGetDown -= UpdateFloorTxt;
     }
 
     public override void Opened(params object[] param)
     {
         _presenter = new HUDPresenter(this);
         QuestManager.Instance.OnQuestAccepted += UpdateQuestTxt;
+        UpdateQuestTxt();
+
+        TileManger.OnGetDown += UpdateFloorTxt;
 
         //Gold 변화 구독
         Inventory.Instance.OnGoldChanged += UpdateGoldUI;
@@ -72,7 +77,10 @@ public class UI_HUD : UIBase
             }
         }
     }
-
+    public void UpdateFloorTxt(int floor)
+    {
+        _floorTxt.text = $"{floor+1}층";
+    }
     private void UpdateGoldUI(int amount)
     {
         _goldTxt.text = $"{amount:N0}G";
