@@ -41,7 +41,7 @@ public class UI_HUD : UIBase
         _presenter = new HUDPresenter(this);
         QuestManager.Instance.OnQuestAccepted += UpdateQuestTxt;
         UpdateQuestTxt();
-        UpdateFloorTxt(TileManger.Instance.curLevelIndex+1);
+
         TileManger.OnGetDown += UpdateFloorTxt;
 
         //Gold 변화 구독
@@ -79,7 +79,7 @@ public class UI_HUD : UIBase
     }
     public void UpdateFloorTxt(int floor)
     {
-        _floorTxt.text = $"{floor}층";
+        _floorTxt.text = $"{floor+1}층";
     }
     private void UpdateGoldUI(int amount)
     {

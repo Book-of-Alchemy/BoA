@@ -433,7 +433,6 @@ public class Inventory : Singleton<Inventory>
         for (int i = 0; i < _craftList.Count; i++)
         {
             var craft = _craftList[i];
-            Debug.Log($"Slot {i}: {(craft == null ? "NULL" : craft.itemData?.name_kr ?? "NoData")}");
         }
     }
 
