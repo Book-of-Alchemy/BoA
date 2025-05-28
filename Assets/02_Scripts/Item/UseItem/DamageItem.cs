@@ -64,9 +64,7 @@ public class DamageItem : BaseItem
         ItemManager.Instance.DestroyItemRange(); // 아이템 사거리 삭제
         ItemManager.Instance.DestroyRange(); // 아이템 효과 범위 삭제
         InputManager.Instance.OnMouseClick -= OnClick;
-        Inventory.Instance.RemoveItem(
-            Inventory.Instance.GetItemIndex(itemData.id)
-            );
+        
 
         Vector2Int mouseWorldPos = Vector2Int.RoundToInt(mouseClickPos);
         GameManager.Instance.PlayerTransform.curLevel.tiles.TryGetValue(mouseWorldPos, out mouseClickTile);
@@ -74,7 +72,7 @@ public class DamageItem : BaseItem
         // 사거리 내에 타일을 클릭했는지 확인하는 조건, 사거리 내의 타일을 클릭했다면 효과범위내에 대상들이 있는지 확인
         if (rangeTiles.Contains(mouseClickTile))
         {
-
+            Inventory.Instance.RemoveItem(Inventory.Instance.GetItemIndex(itemData.id));
             List<Tile> tiles = TileUtility.GetLineTile(_player.curLevel, _player.CurTile, mouseClickTile);
             Tile targetTile = mouseClickTile;
             foreach (Tile objectTile in tiles)
