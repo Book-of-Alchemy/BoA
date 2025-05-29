@@ -12,7 +12,7 @@ public class GameManager : Singleton<GameManager>
     protected override void Awake()
     {
         base.Awake();
-        Application.targetFrameRate = 60;
+        Application.targetFrameRate = 144;
         killTracker = new KillTracker();
     }
 

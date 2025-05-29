@@ -2,9 +2,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.Threading.Tasks;
+using System.Collections;
 
 public class TurnManager : Singleton<TurnManager>
-{
+/*{
     public List<UnitBase> allUnits = new List<UnitBase>();
     public List<TileEffect> allTileEffects = new List<TileEffect>();
     private HashSet<int> unitIds = new HashSet<int>();
@@ -58,7 +59,7 @@ public class TurnManager : Singleton<TurnManager>
                     {
                         while (unit.ActionInProgress && _stopRequested == false)
                         { 
-                            await Task.Yield();
+                            await Task.Delay(5);
                         }
                     }
                     else
@@ -190,8 +191,8 @@ public class TurnManager : Singleton<TurnManager>
         unitIds.Clear();
         _globalTime = 0;
     }
-}
-/*{
+}*/
+{
     public List<UnitBase> allUnits = new List<UnitBase>();
     public List<TileEffect> allTileEffects = new List<TileEffect>();
     HashSet<int> unitIds = new HashSet<int>();
@@ -446,4 +447,4 @@ public class TurnManager : Singleton<TurnManager>
 
         _globalTime = 0;
     }
-}*/
+}
