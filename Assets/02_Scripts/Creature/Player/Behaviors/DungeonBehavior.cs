@@ -516,7 +516,6 @@ public class DungeonBehavior : PlayerBaseBehavior
     {
         yield return new WaitForSeconds(_inputBufferDuration);
 
-        // 공격 실행 직전에 턴 상태 확인
         if (!Controller.isPlayerTurn)
         {
             _attackBuffer = null;
@@ -529,7 +528,6 @@ public class DungeonBehavior : PlayerBaseBehavior
     }
     public void OnAttackHit()
     {
-        // 공격 히트 시에도 턴 상태 확인
         if (!Controller.isPlayerTurn)
             return;
 
@@ -538,6 +536,7 @@ public class DungeonBehavior : PlayerBaseBehavior
             && tile.CharacterStatsOnTile != null)
         {
             _stats.Attack(tile.CharacterStatsOnTile);
+            CameraController.Instance.DoImpulse();
         }
         Controller.onActionConfirmed?.Invoke();
     }
