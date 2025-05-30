@@ -316,6 +316,19 @@ public class DungeonBehavior : PlayerBaseBehavior
             // 이전 이동이 끝날 때까지 대기
             yield return new WaitUntil(() => !_isMoving);
 
+            if (tile.CharacterStatsOnTile != null)
+            {
+                StopMousePathMovement();
+                yield break;
+            }
+
+            // 중단 조건 검사
+            if (_stats.CurrentHealth < _startHp ||
+                HasNewEnemy(_initialEnemiesInSight, GetEnemiesInSight()))
+            {
+                break;
+            }
+
             // 한 칸 이동 실행
             Vector2Int dir = tile.gridPosition - _stats.CurTile.gridPosition;
             ExecuteMove(dir);
@@ -326,12 +339,7 @@ public class DungeonBehavior : PlayerBaseBehavior
             // 턴 매니저가 플레이어 턴을 다시 열어줄 때까지 대기
             yield return new WaitUntil(() => Controller.isPlayerTurn);
 
-            // 중단 조건 검사
-            if (_stats.CurrentHealth < _startHp ||
-                HasNewEnemy(_initialEnemiesInSight, GetEnemiesInSight()))
-            {
-                break;
-            }
+            
         }
         //TurnManager.Instance.turnSpeed = _savedMouseTurnSpeed;
         //Time.timeScale = _savedMouseTimeScale;
