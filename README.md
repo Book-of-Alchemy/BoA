@@ -11,8 +11,9 @@
 ### 2. [사용된 기술 스택](#2-사용된-기술-스택)  
 ### 3. [게임 사이클](#3-게임-사이클)  
 ### 4. [기술적인 도전 과제](#4-기술적인-도전-과제)  
-### 5. [트러블 슈팅](#5-트러블-슈팅)  
-### 6. [팀원 소개 ](#6-팀원-소개)  
+### 5. [트러블 슈팅](#5-트러블-슈팅)
+### 6. [사용자 개선 사항](#6-사용자-개선-사항)  
+### 7. [팀원 소개](#7-팀원-소개)  
 
 ---
 
@@ -24,17 +25,18 @@
 ---
 
 ## 1️⃣ 프로젝트 개요 및 목표
-
+  **📅프로젝트 개발 기간** : 2025.04.04 ~ 2025.06.02
 > 조합의 서는 전략적 로그라이크 던전 탐험 게임으로, 플레이어는 매번 **랜덤하게 생성되는 던전 맵**에서 **몬스터와 아이템을 탐색**하여 퀘스트를 클리어합니다.
 
 - 🔱 퀘스트 목표 달성을 위해 랜덤하게 생성되는 던전 맵 구조를 탐험할 수 있습니다.  
   ![image](https://github.com/user-attachments/assets/7bdc6ea0-3d15-4513-81a2-7ae404f3e445)
 
 - **던전 탐험을 통해 획득한 재료**를 활용하여 **30여 종의 강력한 아이템**을 제작할 수 있습니다.
-<img src="https://github.com/user-attachments/assets/a4d2f68e-261a-4b47-b4bb-75dc0778123e"
+  
+  <img src="https://github.com/user-attachments/assets/a4d2f68e-261a-4b47-b4bb-75dc0778123e"
      width="300px"
      alt="예시 GIF" />
-<img src="https://github.com/user-attachments/assets/c6ce1429-16cf-478a-afd3-bb0c4a72e046"
+  <img src="https://github.com/user-attachments/assets/c6ce1429-16cf-478a-afd3-bb0c4a72e046"
      width="500px"
      alt="예시 GIF" />
 
@@ -120,26 +122,26 @@
     
     ### BSP(Binary Space Partitioning)
     
-    ![image.png](attachment:d4efc5b8-aa1d-4199-918b-1bb929aa1e67:image.png)
-    
-    ![image.png](attachment:5e54f642-56aa-40a8-8b9f-b5b1d3554349:image.png)
-    
+    ![image](https://github.com/user-attachments/assets/5e1c791c-5eb3-4364-96bd-bf493bb202d0)
+
+    ![image](https://github.com/user-attachments/assets/151406b4-37f5-4427-b3fc-88e7454f37e1)
+
     - Rect 구조체를 기반으로 하여 재귀적 이분법을 통하여 적절한 크기의 임의의 직사각형 조각을 형성
     
     ### Kruskal MST(쿠르스칼 최소신장트리)
     
-    ![image.png](attachment:281d2bc6-4075-4692-b233-17b1ca43483f:image.png)
+    ![image](https://github.com/user-attachments/assets/7f4810b0-d1a9-4e57-8bf5-044229575194)
     
-    ![image.png](attachment:be41da2e-f423-49b8-b10b-efebcc6bc831:image.png)
-    
+    ![image](https://github.com/user-attachments/assets/1b510961-bde2-4ee2-9940-c0e8b7f74a39)
+  
     - Union - Find 메서드를 통하여 각 Rect 간의 연결을 최소한의 거리로 보장
     - 고립되는 방이 생성될 가능성을 배제
     
 - StatBlock / StatEntry 구조
     
     
-    ![image.png](attachment:9562c755-cfa8-4ebc-840a-a46118e855a2:image.png)
-    
+    ![image](https://github.com/user-attachments/assets/87f970f9-19d5-4b55-b1b9-a72a755ac5a2)
+
     - 도입배경
         - 다양한 요소로 인한 스탯 변화 가능성
         - 본래의 스탯을 유지하며 변형된 스탯을 객체 형태로 저장 및 해제할 필요성 증대
@@ -158,7 +160,7 @@
 - Bresenham 알고리즘
     
     
-    ![image.png](attachment:efe997e0-4b91-4ed1-97c0-1c22e78322c6:image.png)
+    ![image](https://github.com/user-attachments/assets/8aa92b34-2b0d-4a87-8b40-be0dfffcb8d4)
     
     - 도입배경
         - 유니티에서 제공되는 RayCast를 이용하여 레스터상에서 직선을 생성할 시 의도되지않은 형태의 레스터 직선을 반환
@@ -169,8 +171,8 @@
         - 레스터 상의 시야 구현 시 브레젠험 직선을 활용하여 시야에 막히는 곳이 있는 지 확인하여 레스터 상의 시야를 구현
 - Template Method 패턴 - 아이템
     
-    ![image.png](attachment:74014386-93a9-4373-8380-89ecaf24f656:image.png)
-    
+    ![image](https://github.com/user-attachments/assets/a8d32d4e-a40f-4b44-aea1-53fcd7105aab)
+
     - 도입배경
         - 하나하나 아이템마다 클래스를 만들기에는 작업량이 많았음
         - 타입별 작동방식은 똑같아서 타입별로 묶어서 사용할 필요성느낌
@@ -179,7 +181,7 @@
         - 다른 타입을 추가하더라도 다른 코드를 건들일 필요가 없음
 - 윈도우 에디터를 이용한 구글스프레드시트 연동 및 SO생성
     
-    ![image.png](attachment:c21abcba-b908-46b2-9da5-32349523ccce:image.png)
+    ![image](https://github.com/user-attachments/assets/9fec2f2a-3a1c-4674-a2c0-2a1816f9486e)
     
     - 도입배경
         - DB를 SO로 변환하는 방법이 필요했지만 여러가지 방법들을 찾아봤는데 불러옴과 동시에 so로 변환하고 수정해서 사용해야 했음
@@ -190,8 +192,8 @@
         - 구글스프레드시트 경로와 json을 저장할 경로, SO저장할 경로 3가지만 작성 필요
         - UnityWebRequest, Newtonsoft.Json, EditorCoroutines를 사용
         
-        ![image.png](attachment:a6fd106e-7d0b-4486-81f2-52a210435889:image.png)
-        
+        ![image](https://github.com/user-attachments/assets/aa5d4bd7-8236-4fb8-a2d6-425c0a78a738)
+
 - 제작 로직
     - 도입배경
         - 제작에 아이템 순서와 상관없이 제작가능하게 하고 싶었음
@@ -210,16 +212,16 @@
 - 쉐이더 그래프 적용
     
     
-    ![원본에셋](attachment:25f6635e-091d-4f4b-a32c-96f9fcc0b705:image.png)
+    ![image](https://github.com/user-attachments/assets/f5c3def2-69d0-4586-8d8b-e1471078451a)
     
     원본에셋
     
-    ![쉐이더 그래프 적용 후](attachment:f0bff7fe-addd-4b20-99e7-4d86aced979a:env.gif)
-    
+    ![env](https://github.com/user-attachments/assets/265f76d6-5365-4fc7-ac7c-dedba4c921d4)
+
     쉐이더 그래프 적용 후
     
-    ![image.png](attachment:59917a9f-4b3b-44b8-a923-6c41f866b6dc:image.png)
-    
+    ![image](https://github.com/user-attachments/assets/c407c0d3-76ee-43b4-b292-2ceef43878a0)
+
     - 도입배경
         - 도트 형태가 아닌 에셋 사용시 다른 에셋과의 괴리감 발생
         - 환경 요소들 중 흐르는 물, 용암, 기름, 독 늪, 전기가 흐르는 물 등은 흐르는 효과 필요
@@ -230,7 +232,7 @@
     
 - Strategy 패턴 기반 Behavior시스템
     
-    ![image.png](attachment:d98d4b3b-3dd4-4db7-9118-47088c468cf7:image.png)
+    ![image](https://github.com/user-attachments/assets/e874cf7b-c668-4e08-a31c-c4a8de52f203)
     
     - 도입배경
         - 던전조작을 플레이어컨트롤러에 구현했으나 씬마다 다른 조작방식 제공이 필요해짐
@@ -269,7 +271,7 @@
         - UI View - Presenter - Model 분리하여 연동
         - Presenter 클래스에서 이벤트를 구독, 변경이 생기면 View 갱신 메서드 호출
             
-            ![그림.png](attachment:944145de-d7ff-4b08-9c73-4895c0059ba2:그림.png)
+            ![image](https://github.com/user-attachments/assets/549aeca6-ebda-4799-b38c-85215174d916)
             
 - UI 슬롯 클래스 통합 설계
     - 도입배경
@@ -290,8 +292,8 @@
             
             DoTween애니메이션용  UIAnimator클래스로 내부요소가 자연스럽게 등장/퇴장 하도록 수정
             
-            ![112.gif](attachment:498e3f48-f1c5-4c65-88bd-e6564861b2c0:112.gif)
-            
+            ![113](https://github.com/user-attachments/assets/0bdbfb90-af86-4ed9-a70e-cd20a06c66b4)
+   
 
 ---
 
@@ -355,13 +357,13 @@
     
     개선 전 턴 처리
     
-    ![image.png](attachment:35754a9a-3a75-4312-8f1d-3e06cdad777b:image.png)
+    ![image](https://github.com/user-attachments/assets/9b2a37fd-2051-43df-a33d-fd138b7fde6d)
     
     Average ≒ 0.4초
     
     개선 후 턴 처리
     
-    ![image.png](attachment:2f767f78-87a5-4f2e-aa44-aba1c6a79039:image.png)
+    ![image](https://github.com/user-attachments/assets/2414acd9-74e8-4a57-9ece-127eddf0c71c)
     
     Average ≒ 0.05초
     
@@ -436,12 +438,12 @@
 
 ---
 
-## 7️⃣ 팀원 소개 및 연락처
+## 7️⃣ 팀원 소개
 
-| 이름 | 파트 | E-mail | 휴대전화 | Git-hub |
-| --- | --- | --- | --- | --- |
-| 양훈모 | 기획 | wing3575@naver.com | 010-9481-7400 | https://github.com/limewing |
-| 서상원 | 개발 | ssw980@naver.com | 010-2231-5437 | https://github.com/sangweon25 |
-| 윤우중 | 개발 | dbsdnwnd1126@gmail.com | 010-7763-7184 | https://github.com/YoonWooJoong |
-| 이성재 | 개발 | sungmars1@naver.com | 010-2995-5670 | [https://github.com/sungmars](https://github.com/sungmars?tab=repositories)/ |
-| 황희돈 | 개발 | judelover27@gmail.com | 010-2762-1197 | https://github.com/judelover27/ |
+| 이름 | 파트 | E-mail | Git-hub |
+| --- | --- | --- | --- |
+| 양훈모 | 기획 | wing3575@naver.com | https://github.com/limewing |
+| 서상원 | 개발 | ssw980@naver.com  | https://github.com/sangweon25 |
+| 윤우중 | 개발 | dbsdnwnd1126@gmail.com  | https://github.com/YoonWooJoong |
+| 이성재 | 개발 | sungmars1@naver.com |  [https://github.com/sungmars](https://github.com/sungmars?tab=repositories)/ |
+| 황희돈 | 개발 | judelover27@gmail.com | https://github.com/judelover27/ |
