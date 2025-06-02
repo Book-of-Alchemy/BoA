@@ -18,7 +18,7 @@
 ---
 
 ## 🎬 프로젝트 소개 영상
-
+[![게임 트레일러](https://img.youtube.com/vi/r2rrU3A1IZ4/0.jpg)](https://youtu.be/r2rrU3A1IZ4)
 - [게임 트레일러 보기](https://youtu.be/r2rrU3A1IZ4)  
 - 던전 내의 재료들로 소모품을 만들어 전투하는 **2D 턴제 로그라이트 게임**
   
