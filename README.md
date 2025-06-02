@@ -21,6 +21,19 @@
 
 - [게임 트레일러 보기](https://youtu.be/r2rrU3A1IZ4)  
 - 던전 내의 재료들로 소모품을 만들어 전투하는 **2D 턴제 로그라이트 게임**
+  
+### 🛠️ 유니티 버전 및 실행
+
+Unity 버전: Unity 2022.3.17f1
+
+시작 씬: Scenes/MainMenu.unity
+
+### 💾 빌드 및 플랫폼
+
+| 플랫폼 | 지원 여부 |
+| --- | --- |
+| Windows | ✅ 지원 |
+| WebGL | ✅ 지원 |
 
 ---
 
@@ -447,3 +460,29 @@
 | 윤우중 | 개발 | dbsdnwnd1126@gmail.com  | https://github.com/YoonWooJoong |
 | 이성재 | 개발 | sungmars1@naver.com |  [https://github.com/sungmars](https://github.com/sungmars?tab=repositories)/ |
 | 황희돈 | 개발 | judelover27@gmail.com | https://github.com/judelover27/ |
+
+## 📄 라이선스
+
+MIT License
+
+Copyright (c) 2025 조합의 서 팀
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+
