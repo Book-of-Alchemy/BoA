@@ -13,7 +13,6 @@ public class Alchemy : MonoBehaviour
     {
         Init();
     }
-
     private void Init()
     {
         CreateRecipeKey();
@@ -26,7 +25,6 @@ public class Alchemy : MonoBehaviour
             recipeKey[Key] = recipe;
         }
     }
-
     private string ChangeKey(RecipeData data)
     {
         var recipeMaterials = new List<int>();

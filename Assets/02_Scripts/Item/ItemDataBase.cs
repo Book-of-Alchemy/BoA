@@ -1,10 +1,14 @@
 
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.U2D;
 
 [CreateAssetMenu(menuName = "Item Data Base")]
 public class ItemDataBase : ScriptableObject
 {
+    [SerializeField]
+    public SpriteAtlas atlas;
+
     public List<ItemData> itemDatas;
     public List<RecipeData> recipeDatas;
     public GameObject typeObjectPrefab;
@@ -13,9 +17,11 @@ public class ItemDataBase : ScriptableObject
     public Dictionary<int, RecipeData> recipeById = new Dictionary<int, RecipeData>();
     private int intNullvalue = -1;
 
+
     private void OnEnable()
     {
         Arrange();
+
     }
     public void Arrange()
     {
@@ -47,6 +53,11 @@ public class ItemDataBase : ScriptableObject
                 dicItemByType[data.item_type].Add(data);
             }
         }
+        foreach (var itemData in itemDatas)
+        {
+            itemData.sprite = atlas.GetSprite(itemData.icon_sprite);
+        }
+
     }
 
     private void ArrangeRecipeData()

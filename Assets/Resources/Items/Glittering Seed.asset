@@ -31,8 +31,8 @@ MonoBehaviour:
   price: 25
   tier: 1
   iteminfo_kr: "\uBE5B \uAE30\uBCF8 \uC7AC\uB8CC"
-  icon_sprite: Image/Item/Glittering Seed
-  sprite: {fileID: 21300000, guid: 6f70ca42cc20544429c24b555b86c729, type: 3}
+  icon_sprite: Glittering Seed
+  sprite: {fileID: 0}
   itemRangeSprite: {fileID: 0}
   itemEffectRangeSprite: {fileID: 0}
   itemPrefab: {fileID: 0}

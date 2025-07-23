@@ -14,12 +14,14 @@ public class DamageItem : BaseItem
     public float moveSpeed = 5f;
 
 
-    /// <summary>
-    /// UseItem 위치, 정보, 스프라이트 초기화
-    /// 현재 init은 dropitem에서도 사용중임 useitem에서 생성되는것은 다른 메서드로 해야함
-    /// drop시 위치가 맞지않는 현상
-    /// </summary>
-    /// <param name="data"></param>
+    public override void UseItem(ItemData data)
+    {
+        UseInit(data);
+        dungeonBehavior.DuplicationlItemUse();
+        rangeTiles = CheckRange(data);
+        InputManager.Instance.OnMouseMove += CheckEffectRange;
+        InputManager.Instance.OnMouseClick += OnClick;
+    }
     public void UseInit(ItemData data)
     {
         _player = GameManager.Instance.PlayerTransform;
@@ -28,19 +30,6 @@ public class DamageItem : BaseItem
         transform.position = new Vector3(_player.CurTile.gridPosition.x, _player.CurTile.gridPosition.y + 0.5f, 0);
         transform.localScale = new Vector3(2, 2, 1);
         SetType(data);
-    }
-
-    /// <summary>
-    /// 아이템 사용 매서드
-    /// </summary>
-    /// <param name="data"></param>
-    public override void UseItem(ItemData data)
-    {
-        UseInit(data);
-        dungeonBehavior.DuplicationlItemUse();
-        rangeTiles = CheckRange(data);
-        InputManager.Instance.OnMouseMove += CheckEffectRange;
-        InputManager.Instance.OnMouseClick += OnClick;
     }
     public override void CancelUse()
     {

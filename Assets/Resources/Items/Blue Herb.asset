@@ -31,8 +31,8 @@ MonoBehaviour:
   price: 25
   tier: 1
   iteminfo_kr: "\uB9C8\uB098 \uD68C\uBCF5 \uAE30\uBCF8 \uC7AC\uB8CC"
-  icon_sprite: Image/Item/Blue Herb
-  sprite: {fileID: 21300000, guid: bc7b28aa6bd8d774287d8ae1d2ca96dd, type: 3}
+  icon_sprite: Blue Herb
+  sprite: {fileID: 0}
   itemRangeSprite: {fileID: 0}
   itemEffectRangeSprite: {fileID: 0}
   itemPrefab: {fileID: 0}

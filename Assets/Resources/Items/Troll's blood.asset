@@ -31,8 +31,8 @@ MonoBehaviour:
   price: 50
   tier: 1
   iteminfo_kr: "\uC232 \uD2B8\uB864\uC758 \uD53C"
-  icon_sprite: Image/Item/Troll's Blood
-  sprite: {fileID: 21300000, guid: 674967624c56b6d40ad398ef716c82b7, type: 3}
+  icon_sprite: Troll's Blood
+  sprite: {fileID: 0}
   itemRangeSprite: {fileID: 0}
   itemEffectRangeSprite: {fileID: 0}
   itemPrefab: {fileID: 0}

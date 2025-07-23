@@ -698,7 +698,7 @@ MonoBehaviour:
   _uiInventory: {fileID: 0}
   _alchemy: {fileID: 1295119673}
   itemDataArr:
-  - {fileID: 11400000, guid: 44faecc9518f2224db5a1db6d841e5f0, type: 2}
+  - {fileID: 0}
 --- !u!4 &1295119675
 Transform:
   m_ObjectHideFlags: 0
